@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    #    se vogliamo salvare i dati su file invece che in memoria
+    #    url: jdbc:h2:file:/data/demo
+    url: jdbc:h2:mem:testdb
+    username: admin
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
