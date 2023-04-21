@@ -2,7 +2,9 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MessageServiceImp implements MessageService{
 
     @Override
