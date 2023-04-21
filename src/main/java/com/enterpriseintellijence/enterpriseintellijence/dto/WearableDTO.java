@@ -7,7 +7,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class WearableDTO {
+public class WearableDTO extends ProductDTO {
 
     private String size;
     private String colour; //TODO: da vedere se utilizzare o meno un ENUM
