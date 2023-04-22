@@ -10,7 +10,9 @@ import lombok.ToString;
 public class TransactionDTO {
 
     private String id;
+
+    // TODO: usare classe apposita per i soldi
     private Float amount;
-    private String paymentMethod;
+    private PaymentMethodDTO paymentMethod;
 
 }
