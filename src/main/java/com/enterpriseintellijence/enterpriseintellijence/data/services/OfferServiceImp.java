@@ -14,13 +14,13 @@ public class OfferServiceImp implements OfferService {
     }
 
     @Override
-    public ResponseEntity<OfferDTO> replaceOffer(OfferDTO offerDTO) {
+    public ResponseEntity<OfferDTO> replaceOffer(String id, OfferDTO offerDTO) {
         //TODO: Implement this method
         return null;
     }
 
     @Override
-    public ResponseEntity<OfferDTO> updateOffer(OfferDTO offerDTO) {
+    public ResponseEntity<OfferDTO> updateOffer(String id, OfferDTO offerDTO) {
         //TODO: Implement this method
         return null;
     }

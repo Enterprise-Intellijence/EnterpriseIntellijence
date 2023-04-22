@@ -14,14 +14,14 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     }
 
     @Override
-    public ResponseEntity<PaymentMethodDTO> replacePaymentMethod(PaymentMethodDTO paymentMethodDTO) {
+    public ResponseEntity<PaymentMethodDTO> replacePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) {
         //TODO: Implement this method
 
         return null;
     }
 
     @Override
-    public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(PaymentMethodDTO paymentMethodDTO) {
+    public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) {
         //TODO: Implement this method
         return null;
     }

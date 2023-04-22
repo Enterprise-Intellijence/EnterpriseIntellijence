@@ -23,7 +23,7 @@ public class DeliveryController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public DeliveryDTO replaceDelivery(@PathVariable("id") String id, @RequestBody DeliveryDTO deliveryDTO) {
-        return deliveryService.replaceDelivery(deliveryDTO).getBody();
+        return deliveryService.replaceDelivery(id, deliveryDTO).getBody();
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")

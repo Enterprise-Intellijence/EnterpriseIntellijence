@@ -14,13 +14,13 @@ public class MessageServiceImp implements MessageService{
     }
 
     @Override
-    public ResponseEntity<MessageDTO> replaceMessage(MessageDTO messageDTO) {
+    public ResponseEntity<MessageDTO> replaceMessage(String id, MessageDTO messageDTO) {
         //TODO: Implement this method
         return null;
     }
 
     @Override
-    public ResponseEntity<MessageDTO> updateMessage(MessageDTO messageDTO) {
+    public ResponseEntity<MessageDTO> updateMessage(String id, MessageDTO messageDTO) {
         //TODO: Implement this method
         return null;
     }
