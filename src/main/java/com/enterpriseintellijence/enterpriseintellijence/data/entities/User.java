@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,14 +22,19 @@ public class User {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
+
     private String password;
+
+    @Column(unique = true, nullable = false, length = 100)
     private String email;
     private byte[] photo;
+
     private Address address;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @OneToOne
     @JoinColumn(name = "default_payment_method")

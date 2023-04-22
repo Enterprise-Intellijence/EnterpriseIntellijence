@@ -1,11 +1,16 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
+
+import org.hibernate.validator.constraints.Length;
+
+import java.util.List;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,12 +18,18 @@ import java.util.List;
 public class UserDTO {
 
     private String id;
+
+    @Length(min = 3, max = 25)
+    @NotNull
     private String username;
+
+    @Length(min = 8, max = 20)
     private String password;
+    @Email
     private String email;
     private byte[] photo;
     private AddressDTO address;
-    private String role;
+    private UserRole role;
     private PaymentMethodDTO defaultPaymentMethod;
     private List<PaymentMethodDTO> paymentMethods;
     private List<OfferDTO> offers;

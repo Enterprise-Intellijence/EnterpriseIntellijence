@@ -10,7 +10,7 @@ import lombok.ToString;
 public class DeliveryDTO {
 
     private String Id;
-    private Order order;
+    private OrderDTO order;
     private Float deliveryCost;
     private String shipper;
 

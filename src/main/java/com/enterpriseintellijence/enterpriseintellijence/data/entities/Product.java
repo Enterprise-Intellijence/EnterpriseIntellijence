@@ -1,6 +1,9 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,10 +25,16 @@ public class Product {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+    @Column(name = "title", length = 100)
+    private String title;
+
+    @Column(name = "description", length = 1000)
     private String description;
 
+    @Column(name = "price", nullable = false)
     private Float price;
 
+    @Column(name = "brand")
     private String brand;
 
     private String condition;
@@ -42,12 +51,13 @@ public class Product {
     @JoinColumn(name = "upload_date")
     private LocalDateTime uploadDate;
 
-    private String visibility;
 
-    private Boolean availability;
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
 
-    @Column(name = "send_date")
-    private LocalDateTime sendDate;
+    @Enumerated(EnumType.STRING)
+    private Availability availability;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")

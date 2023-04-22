@@ -1,10 +1,14 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
+
 import jakarta.persistence.*;
 import jakarta.servlet.annotation.HandlesTypes;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +22,11 @@ public class Order {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    private String state;
+    @Column(name = "order_date")
+    private LocalDateTime orderDate;
+
+    @Enumerated(EnumType.STRING)
+    private OrderState state;
 
     @OneToOne
     @JoinColumn(name = "order_product")

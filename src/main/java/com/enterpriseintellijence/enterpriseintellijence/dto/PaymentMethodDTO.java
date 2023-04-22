@@ -11,6 +11,9 @@ import lombok.ToString;
 public class PaymentMethodDTO {
 
     private String id;
+
+    // TODO: usare pattern per la carta di credito
+
     private String creditCard;
     private String expiryDate;
     private String owner;
