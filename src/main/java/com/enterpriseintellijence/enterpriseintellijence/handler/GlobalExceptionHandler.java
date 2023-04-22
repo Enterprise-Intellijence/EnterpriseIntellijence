@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
@@ -27,6 +28,12 @@ public class GlobalExceptionHandler {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseStatusException entityNotFoundExceptionHandler(WebRequest req, EntityNotFoundException ex) {
+        return new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
 
 
 

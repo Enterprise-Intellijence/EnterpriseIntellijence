@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.PaymentMethodService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +16,11 @@ public class PaymentMethodController {
 
     private final PaymentMethodService paymentMethodService;
 
+    private final ProductRepository productRepository;
+
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentMethodDTO createPaymentMethod(@RequestBody PaymentMethodDTO paymentMethodDTO) {
+    public PaymentMethodDTO createPaymentMethod(@RequestBody PaymentMethodDTO paymentMethodDTO) {productRepository.findAll();
         return paymentMethodService.createPaymentMethod(paymentMethodDTO);
     }
 

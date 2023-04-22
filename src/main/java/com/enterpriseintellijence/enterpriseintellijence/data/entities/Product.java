@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 
 import jakarta.persistence.*;
@@ -9,10 +11,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * @see com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO
+ */
 @Data
 @NoArgsConstructor
 @Entity
@@ -37,34 +41,39 @@ public class Product {
     @Column(name = "brand")
     private String brand;
 
-    private String condition;
+    @Column(name = "condition")
+    @Enumerated(EnumType.STRING)
+    private Condition condition;
     //TODO: che significa condition?
     // usato, nuovo, quasi nuovo, ecc
 
+    @Embedded
     private Address address;
 
-    @JoinColumn(name = "delivery_type")
-    private String deliveryType;
+    @Column(name = "delivery_type")
+    private ProductSize productSize;
 
+    @Column(name = "views", nullable = false)
     private Integer views;
 
-    @JoinColumn(name = "upload_date")
+    @JoinColumn(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
 
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
     private Visibility visibility;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "availability", nullable = false)
     private Availability availability;
 
-
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User seller;
 
-    @ManyToMany(mappedBy = "likes")
-    private List<User> users;
+    @ManyToMany(mappedBy = "likedProducts")
+    private List<User> usersThatLiked;
 
     @OneToMany(mappedBy = "product")
     private List<Offer> offers;
