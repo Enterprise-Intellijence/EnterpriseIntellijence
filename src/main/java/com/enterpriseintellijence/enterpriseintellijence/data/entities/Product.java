@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -27,7 +28,9 @@ public class Product {
 
     private String brand;
 
-    private String condition; //TODO: che significa condition?
+    private String condition;
+    //TODO: che significa condition?
+    // usato, nuovo, quasi nuovo, ecc
 
     private Address address;
 
@@ -37,14 +40,14 @@ public class Product {
     private Integer views;
 
     @JoinColumn(name = "upload_date")
-    private LocalDate uploadDate;
+    private LocalDateTime uploadDate;
 
     private String visibility;
 
     private Boolean availability;
 
     @Column(name = "send_date")
-    private LocalDate sendDate;
+    private LocalDateTime sendDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

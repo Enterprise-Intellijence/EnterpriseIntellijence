@@ -11,12 +11,18 @@ public class ProductService {
         return null;
     }
 
-    public ResponseEntity<ProductDTO> replaceProduct(ProductDTO productDTO) {
+    public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
+        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
+            throw new IllegalArgumentException("Id mismatch");
+        }
         // TODO: 21/04/2023
         return null;
     }
 
-    public ResponseEntity<ProductDTO> updateProduct(ProductDTO productDTO) {
+    public ProductDTO updateProduct(String id, ProductDTO productDTO) {
+        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
+            throw new IllegalArgumentException("Id mismatch");
+        }
         // TODO: 21/04/2023
         return null;
     }
@@ -25,7 +31,7 @@ public class ProductService {
         // TODO: 21/04/2023  
     }
 
-    public ResponseEntity<ProductDTO> productById(String id) {
+    public ProductDTO productById(String id) {
         // TODO: 21/04/2023
         return null;
     }
