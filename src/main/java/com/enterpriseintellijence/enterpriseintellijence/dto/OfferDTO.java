@@ -16,9 +16,9 @@ public class OfferDTO {
     private String id;
     private Float amount;
     private String state;
-    private User offerer;
-    private Product product;
-    private Message message;
-    private Order order;
+    private UserDTO offerer;
+    private ProductDTO product;
+    private MessageDTO message;
+    private OrderDTO order;
 
 }

@@ -1,16 +1,32 @@
 package com.enterpriseintellijence.enterpriseintellijence.service;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
+@RequiredArgsConstructor
 public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    private final ModelMapper modelMapper;
+
     public ProductDTO createProduct(ProductDTO productDTO) {
 
-        // TODO: 21/04/2023
-        return new ProductDTO();
+        productDTO.setUploadDate(LocalDateTime.now());
+        productDTO.setSendDate(LocalDateTime.now());
+        Product product = modelMapper.map(productDTO,Product.class);
+        product = productRepository.save(product);
+
+        return (modelMapper.map(product, ProductDTO.class));
     }
 
     public ProductDTO replaceProduct(String id, ProductDTO productDTO) {

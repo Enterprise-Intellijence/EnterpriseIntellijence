@@ -29,17 +29,17 @@ public class ProductDTO {
     private Float price;
     private String brand;
     private String condition;
-    private Address address;
+    private AddressDTO address;
     private String deliveryType;
     private Integer views;
     private LocalDateTime uploadDate;
     private String visibility;
     private Boolean availability;
     private LocalDateTime sendDate;
-    private User seller;
-    private List<User> users;
-    private List<Offer> offers;
-    private List<Message> messages;
-    private Order order;
+    private UserDTO seller;
+    private List<UserDTO> users;
+    private List<OfferDTO> offers;
+    private List<MessageDTO> messages;
+    private OrderDTO order;
 
 }

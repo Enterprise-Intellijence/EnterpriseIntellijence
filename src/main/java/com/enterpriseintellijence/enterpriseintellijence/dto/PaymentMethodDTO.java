@@ -14,7 +14,7 @@ public class PaymentMethodDTO {
     private String creditCard;
     private String expiryDate;
     private String owner;
-    private User defaultUser;
-    private User ownerUser;
+    private UserDTO defaultUser;
+    private UserDTO ownerUser;
 
 }
