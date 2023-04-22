@@ -5,13 +5,14 @@ import com.enterpriseintellijence.enterpriseintellijence.service.ProductService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(path="/api/v1/products", produces="application/json")
 public class ProductController {
     private final ProductService productService;
@@ -21,6 +22,9 @@ public class ProductController {
     public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO){
         return productService.createProduct(productDTO);
     }
+
+
+
 
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @RequestBody @Valid ProductDTO productDTO){
@@ -40,14 +44,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> productById(@PathVariable("id") String id){
-        return ResponseEntity.ok(productService.productById(id));
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping("")
     public ResponseEntity<Iterable<ProductDTO>> allProduct() {
+        System.out.println("asd");
         return ResponseEntity.ok(productService.findAll());
     }
-
-
 
 }

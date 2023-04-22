@@ -1,0 +1,39 @@
+package com.enterpriseintellijence.enterpriseintellijence.handler;
+
+import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RestControllerAdvice
+@Slf4j
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(IdMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseStatusException idMismatchExceptionHandler(WebRequest req, IdMismatchException ex) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseStatusException illegalArgumentExceptionHandler(WebRequest req, IllegalArgumentException ex) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+
+
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseStatusException defaultErrorHandler(WebRequest req, Exception ex) {
+        return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+}
