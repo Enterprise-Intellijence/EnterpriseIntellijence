@@ -14,7 +14,7 @@ public class ReviewDTO {
     private String title;
     private String description;
     private Integer vote;
-    private User reviewer;
-    private User reviewed;
+    private UserDTO reviewer;
+    private UserDTO reviewed;
 
 }

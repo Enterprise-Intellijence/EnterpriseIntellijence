@@ -15,9 +15,9 @@ public class OrderDTO {
 
     private String id;
     private String state;
-    private Product product;
-    private User user;
-    private Delivery delivery;
-    private Offer offer;
+    private ProductDTO product;
+    private UserDTO user;
+    private DeliveryDTO delivery;
+    private OfferDTO offer;
 
 }

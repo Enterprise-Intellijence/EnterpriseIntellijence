@@ -17,19 +17,19 @@ public class UserDTO {
     private String password;
     private String email;
     private byte[] photo;
-    private Address address;
+    private AddressDTO address;
     private String role;
-    private PaymentMethod defaultPaymentMethod;
-    private List<PaymentMethod> paymentMethods;
-    private List<Offer> offers;
-    private List<com.enterpriseintellijence.enterpriseintellijence.data.entities.User> followers;
-    private List<Product> soldProducts;
-    private List<com.enterpriseintellijence.enterpriseintellijence.data.entities.User> follows;
-    private List<Product> likes;
-    private List<Message> sendMessages;
-    private List<Message> receivedMessages;
-    private List<Order> orders;
-    private List<Review> receivedReviews;
-    private List<Review> sentReviews;
+    private PaymentMethodDTO defaultPaymentMethod;
+    private List<PaymentMethodDTO> paymentMethods;
+    private List<OfferDTO> offers;
+    private List<UserDTO> followers;
+    private List<ProductDTO> soldProducts;
+    private List<UserDTO> follows;
+    private List<ProductDTO> likes;
+    private List<MessageDTO> sendMessages;
+    private List<MessageDTO> receivedMessages;
+    private List<OrderDTO> orders;
+    private List<ReviewDTO> receivedReviews;
+    private List<ReviewDTO> sentReviews;
 
 }

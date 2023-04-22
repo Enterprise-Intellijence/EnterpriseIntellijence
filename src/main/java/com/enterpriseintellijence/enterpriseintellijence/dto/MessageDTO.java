@@ -14,9 +14,9 @@ public class MessageDTO {
 
     private String id;
     private String context;
-    private Product product;
-    private User sendUser;
-    private User receivedUser;
-    private Offer offer;
+    private ProductDTO product;
+    private UserDTO sendUser;
+    private UserDTO receivedUser;
+    private OfferDTO offer;
 
 }
