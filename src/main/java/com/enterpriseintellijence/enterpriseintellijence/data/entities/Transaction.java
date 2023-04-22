@@ -16,6 +16,8 @@ public class Transaction {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+    // TODO: utilizzare una classe specifica per le monete
+    // guardare https://www.baeldung.com/java-money-and-currency
     private Float amount;
     //TODO: serve paymentMethod qui?
     private String paymentMethod;
