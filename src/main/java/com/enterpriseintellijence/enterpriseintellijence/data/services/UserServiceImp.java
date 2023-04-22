@@ -1,16 +1,15 @@
-package com.enterpriseintellijence.enterpriseintellijence.service;
+package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImp implements UserService{
 
     private  final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -22,12 +21,12 @@ public class UserService {
         return null;
     }
 
-    public ResponseEntity<UserDTO> replaceUser(UserDTO userDTO) {
+    public UserDTO replaceUser(String id, UserDTO userDTO) {
         // TODO: 21/04/2023
         return null;
     }
 
-    public ResponseEntity<UserDTO> updateUser(UserDTO userDTO) {
+    public UserDTO updateUser(String id, UserDTO userDTO) {
         // TODO: 21/04/2023
         return null;
     }
@@ -37,7 +36,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity<UserDTO> userById(String id) {
+    public UserDTO userById(String id) {
         // TODO: 21/04/2023
         return null;
     }

@@ -1,7 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
-import com.enterpriseintellijence.enterpriseintellijence.service.ProductService;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,6 @@ public class ProductController {
     public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO){
         return productService.createProduct(productDTO);
     }
-
-
 
 
     @PutMapping(path = "/{id}",consumes="application/json")

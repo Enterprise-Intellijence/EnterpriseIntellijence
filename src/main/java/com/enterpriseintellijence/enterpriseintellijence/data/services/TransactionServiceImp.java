@@ -1,22 +1,21 @@
-package com.enterpriseintellijence.enterpriseintellijence.service;
+package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TransactionService {
+public class TransactionServiceImp implements TransactionService{
     public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
         // TODO: 21/04/2023  
         return null;
     }
 
-    public ResponseEntity<TransactionDTO> replaceTransaction(TransactionDTO transactionDTO) {
+    public TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) {
         // TODO: 21/04/2023  
         return null;
     }
 
-    public ResponseEntity<TransactionDTO> updateTransaction(TransactionDTO transactionDTO) {
+    public TransactionDTO updateTransaction(String id, TransactionDTO transactionDTO) {
         // TODO: 21/04/2023  
         return null;
     }
@@ -25,7 +24,7 @@ public class TransactionService {
         // TODO: 21/04/2023  
     }
 
-    public ResponseEntity<TransactionDTO> transactionById(String id) {
+    public TransactionDTO transactionById(String id) {
         // TODO: 21/04/2023  
         return null;
     }

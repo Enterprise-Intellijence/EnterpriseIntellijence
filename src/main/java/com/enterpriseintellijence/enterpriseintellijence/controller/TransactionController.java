@@ -1,8 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
-import com.enterpriseintellijence.enterpriseintellijence.service.TransactionService;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,12 @@ public class TransactionController {
 
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<TransactionDTO> replaceTransaction(@PathVariable("id") String id, @RequestBody TransactionDTO transactionDTO){
-        return transactionService.replaceTransaction(transactionDTO);
+        return ResponseEntity.ok(transactionService.replaceTransaction(id,transactionDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") String id, @RequestBody TransactionDTO transactionDTO) {
-        return transactionService.updateTransaction(transactionDTO);
+        return ResponseEntity.ok(transactionService.updateTransaction(id,transactionDTO));
     }
 
     @DeleteMapping(path="/{id}")
@@ -38,7 +37,7 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDTO> transactionById(@PathVariable("id") String id){
-        return transactionService.transactionById(id);
+        return ResponseEntity.ok(transactionService.transactionById(id));
     }
 
     @GetMapping("")

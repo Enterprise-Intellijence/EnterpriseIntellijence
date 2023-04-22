@@ -1,22 +1,21 @@
-package com.enterpriseintellijence.enterpriseintellijence.service;
+package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReviewService {
+public class ReviewServiceImp implements ReviewService{
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
         // TODO: 21/04/2023  
         return null;
     }
 
-    public ResponseEntity<ReviewDTO> replaceReview(ReviewDTO reviewDTO) {
+    public ReviewDTO replaceReview(String id, ReviewDTO reviewDTO) {
         // TODO: 21/04/2023  
         return null;
     }
 
-    public ResponseEntity<ReviewDTO> updateReview(ReviewDTO reviewDTO) {
+    public ReviewDTO updateReview(String id, ReviewDTO reviewDTO) {
         // TODO: 21/04/2023  
         return null;
     }
@@ -25,7 +24,7 @@ public class ReviewService {
         // TODO: 21/04/2023  
     }
 
-    public ResponseEntity<ReviewDTO> reviewById(String id) {
+    public ReviewDTO reviewById(String id) {
         // TODO: 21/04/2023  
         
         return null;

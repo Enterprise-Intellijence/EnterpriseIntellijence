@@ -1,8 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
-import com.enterpriseintellijence.enterpriseintellijence.service.UserService;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,12 @@ public class UserController {
 
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO){
-        return userService.replaceUser(userDTO);
+        return ResponseEntity.ok(userService.replaceUser(id,userDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO) {
-        return userService.updateUser(userDTO);
+        return ResponseEntity.ok(userService.updateUser(id,userDTO));
     }
 
     @DeleteMapping(path="/{id}")
@@ -38,7 +37,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> userById(@PathVariable("id") String id){
-        return userService.userById(id);
+        return ResponseEntity.ok(userService.userById(id));
     }
 
     @GetMapping("")
