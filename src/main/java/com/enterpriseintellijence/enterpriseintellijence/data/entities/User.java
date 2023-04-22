@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
 import jakarta.persistence.*;
@@ -30,6 +31,9 @@ public class User {
     @Column(unique = true, nullable = false, length = 100)
     private String email;
     private byte[] photo;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     private Address address;
 

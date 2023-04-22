@@ -10,4 +10,5 @@ public interface UserService {
     void deleteUser(String id);
     UserDTO userById(String id);
     Iterable<UserDTO> findAll();
+
 }

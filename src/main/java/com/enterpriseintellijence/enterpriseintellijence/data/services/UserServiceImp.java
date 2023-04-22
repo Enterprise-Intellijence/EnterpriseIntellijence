@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImp implements UserService{
 
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     public UserDTO createUser(UserDTO userDTO) {
@@ -45,4 +46,5 @@ public class UserServiceImp implements UserService{
         // TODO: 21/04/2023
         return null;
     }
+
 }
