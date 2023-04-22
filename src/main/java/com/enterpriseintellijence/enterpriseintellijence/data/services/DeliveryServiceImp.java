@@ -14,7 +14,7 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     @Override
-    public ResponseEntity<DeliveryDTO> replaceDelivery(DeliveryDTO deliveryDTO) {
+    public ResponseEntity<DeliveryDTO> replaceDelivery(String id, DeliveryDTO deliveryDTO) {
         //TODO: Implement this method
         return null;
     }

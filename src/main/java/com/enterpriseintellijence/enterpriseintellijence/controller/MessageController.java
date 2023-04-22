@@ -23,12 +23,12 @@ public class MessageController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public MessageDTO replaceMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) {
-        return messageService.replaceMessage(messageDTO).getBody();
+        return messageService.replaceMessage(id, messageDTO).getBody();
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) {
-        return messageService.updateMessage(messageDTO);
+        return messageService.updateMessage(id, messageDTO);
     }
 
     @DeleteMapping(path = "/{id}")

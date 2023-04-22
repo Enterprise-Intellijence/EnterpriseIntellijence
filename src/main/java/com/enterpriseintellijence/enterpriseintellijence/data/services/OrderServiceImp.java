@@ -12,12 +12,12 @@ public class OrderServiceImp implements OrderService{
     }
 
     @Override
-    public ResponseEntity<OrderDTO> replaceOrder(OrderDTO orderDTO) {
+    public ResponseEntity<OrderDTO> replaceOrder(String id, OrderDTO orderDTO) {
         return null;
     }
 
     @Override
-    public ResponseEntity<OrderDTO> updateOrder(OrderDTO orderDTO) {
+    public ResponseEntity<OrderDTO> updateOrder(String id, OrderDTO orderDTO) {
         return null;
     }
 

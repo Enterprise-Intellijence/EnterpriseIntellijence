@@ -24,12 +24,12 @@ public class OfferController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public OfferDTO replaceOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) {
-        return offerService.replaceOffer(offerDTO).getBody();
+        return offerService.replaceOffer(id, offerDTO).getBody();
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) {
-        return offerService.updateOffer(offerDTO);
+        return offerService.updateOffer(id, offerDTO);
     }
 
     @DeleteMapping(path = "/{id}")

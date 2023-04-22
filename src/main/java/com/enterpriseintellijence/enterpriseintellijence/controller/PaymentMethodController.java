@@ -26,12 +26,12 @@ public class PaymentMethodController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public PaymentMethodDTO replacePaymentMethod(@PathVariable("id") String id, @RequestBody PaymentMethodDTO paymentMethodDTO) {
-        return paymentMethodService.replacePaymentMethod(paymentMethodDTO).getBody();
+        return paymentMethodService.replacePaymentMethod(id, paymentMethodDTO).getBody();
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(@PathVariable("id") String id, @RequestBody PaymentMethodDTO paymentMethodDTO) {
-        return paymentMethodService.updatePaymentMethod(paymentMethodDTO);
+        return paymentMethodService.updatePaymentMethod(id, paymentMethodDTO);
     }
 
     @DeleteMapping(path = "/{id}")

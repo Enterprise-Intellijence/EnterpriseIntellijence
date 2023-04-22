@@ -23,12 +23,12 @@ public class OrderController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OrderDTO> replaceOrder(@PathVariable("id") String id, @RequestBody OrderDTO orderDTO) {
-        return orderService.replaceOrder(orderDTO);
+        return orderService.replaceOrder(id, orderDTO);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @RequestBody OrderDTO orderDTO) {
-        return orderService.updateOrder(orderDTO);
+        return orderService.updateOrder(id, orderDTO);
     }
 
     @DeleteMapping(path = "/{id}")
