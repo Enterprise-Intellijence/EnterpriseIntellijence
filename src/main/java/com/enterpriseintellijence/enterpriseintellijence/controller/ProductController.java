@@ -24,8 +24,6 @@ public class ProductController {
     }
 
 
-
-
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @RequestBody @Valid ProductDTO productDTO){
         return ResponseEntity.ok(productService.replaceProduct(id, productDTO));
