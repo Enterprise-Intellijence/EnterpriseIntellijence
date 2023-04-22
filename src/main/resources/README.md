@@ -7,4 +7,4 @@ per visualizzare il database sul vostro dbms di fiducia (DBeaver o direttamente 
 - url: jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/mqojqpfn
 - username: mqojqpfn
 - password: m7owJHrcdxgOLXlJy7s6MgcOQtln3OFd
-- database: snuffleupagus
+- database: mqojqpfn

@@ -45,8 +45,10 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests()
-                .requestMatchers("/oauth2/authorization/google", "/oauth/**").permitAll()
+                .requestMatchers("/oauth2/**", "/oauth/**", "/login/**").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .formLogin()
                 .and()
                 .oauth2Login()
                 .userInfoEndpoint()
@@ -58,11 +60,12 @@ public class AppSecurityConfig {
                     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                                         Authentication authentication) throws IOException, ServletException {
 
+                        System.out.println("ppp");
                         CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
                         CustomOAuth2UserService userService = new CustomOAuth2UserService(userRepository);
                         userService.processOAuthPostLogin( oauthUser.getName(), oauthUser.getEmail());
 
-                        response.sendRedirect("/");
+                        response.sendRedirect("http://localhost:8080/api/v1/users");
                     }
                 });
         return http.build();
