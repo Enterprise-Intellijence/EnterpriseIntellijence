@@ -1,4 +1,4 @@
-package com.enterpriseintellijence.enterpriseintellijence.service;
+package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductServiceImp implements ProductService{
 
     private final ProductRepository productRepository;
 

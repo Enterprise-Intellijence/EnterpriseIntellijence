@@ -1,8 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
-import com.enterpriseintellijence.enterpriseintellijence.service.ReviewService;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,12 @@ public class ReviewController {
 
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<ReviewDTO> replaceReview(@PathVariable("id") String id, @RequestBody ReviewDTO reviewDTO){
-        return reviewService.replaceReview(reviewDTO);
+        return ResponseEntity.ok(reviewService.replaceReview(id,reviewDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<ReviewDTO> updateReview(@PathVariable("id") String id, @RequestBody ReviewDTO reviewDTO) {
-        return reviewService.updateReview(reviewDTO);
+        return ResponseEntity.ok(reviewService.updateReview(id,reviewDTO));
     }
 
     @DeleteMapping(path="/{id}")
@@ -38,7 +37,7 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> reviewById(@PathVariable("id") String id){
-        return reviewService.reviewById(id);
+        return ResponseEntity.ok(reviewService.reviewById(id));
     }
 
     @GetMapping("")
