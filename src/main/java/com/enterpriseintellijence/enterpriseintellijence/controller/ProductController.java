@@ -1,7 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
-import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductServiceImp;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(path="/api/v1/products", produces="application/json")
 public class ProductController {
-    private final ProductServiceImp productService;
+    private final ProductService productService;
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
