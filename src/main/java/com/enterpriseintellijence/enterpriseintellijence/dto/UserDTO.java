@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
 import org.hibernate.validator.constraints.Length;
@@ -28,6 +29,7 @@ public class UserDTO {
     @Email
     private String email;
     private byte[] photo;
+    private Provider provider;
     private AddressDTO address;
     private UserRole role;
     private PaymentMethodDTO defaultPaymentMethod;
