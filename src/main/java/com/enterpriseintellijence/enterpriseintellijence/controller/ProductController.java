@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 

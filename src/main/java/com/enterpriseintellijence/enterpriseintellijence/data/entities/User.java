@@ -48,7 +48,7 @@ public class User {
     private List<PaymentMethod> paymentMethods;
 
     @OneToMany(mappedBy = "offerer")
-    private List<Offer> offers;
+    private List<Offer> offersMade;
 
     @ManyToMany(mappedBy = "follows")
     private List<User> followers;
@@ -61,10 +61,10 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> likes;
+    private List<Product> likedProducts;
 
     @OneToMany(mappedBy = "sendUser")
-    private List<Message> sendMessages;
+    private List<Message> sentMessages;
 
     @OneToMany(mappedBy = "receivedUser")
     private List<Message> receivedMessages;
