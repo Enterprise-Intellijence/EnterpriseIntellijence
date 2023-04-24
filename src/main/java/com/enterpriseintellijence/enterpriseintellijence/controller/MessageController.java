@@ -23,22 +23,22 @@ public class MessageController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public MessageDTO replaceMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) {
-        return messageService.replaceMessage(id, messageDTO).getBody();
+        return messageService.replaceMessage(id, messageDTO);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) {
-        return messageService.updateMessage(id, messageDTO);
+        return ResponseEntity.ok(messageService.updateMessage(id, messageDTO));
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<MessageDTO> deleteMessage(@PathVariable("id") String id) {
-        return messageService.deleteMessage(id);
+        return ResponseEntity.ok(messageService.deleteMessage(id));
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<MessageDTO> getMessage(@PathVariable("id") String id) {
-        return messageService.getMessage(id);
+        return ResponseEntity.ok(messageService.getMessage(id));
     }
 }

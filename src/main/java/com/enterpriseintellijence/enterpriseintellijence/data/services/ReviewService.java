@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
+import org.springframework.data.crossstore.ChangeSetPersister;
 
 public interface ReviewService {
     ReviewDTO createReview(ReviewDTO reviewDTO);
