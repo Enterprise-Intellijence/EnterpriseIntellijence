@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface OfferService {
     public OfferDTO createOffer(OfferDTO offerDTO);
-    public ResponseEntity<OfferDTO> replaceOffer(String id, OfferDTO offerDTO);
-    public ResponseEntity<OfferDTO> updateOffer(String id, OfferDTO offerDTO);
-    ResponseEntity<OfferDTO> deleteOffer(String id);
-    ResponseEntity<OfferDTO> getOffer(String id);
+    public OfferDTO replaceOffer(String id, OfferDTO offerDTO);
+    public OfferDTO updateOffer(String id, OfferDTO offerDTO);
+    OfferDTO deleteOffer(String id);
+    OfferDTO getOffer(String id);
 }

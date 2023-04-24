@@ -24,22 +24,22 @@ public class OfferController {
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public OfferDTO replaceOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) {
-        return offerService.replaceOffer(id, offerDTO).getBody();
+        return offerService.replaceOffer(id, offerDTO);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) {
-        return offerService.updateOffer(id, offerDTO);
+        return ResponseEntity.ok(offerService.updateOffer(id, offerDTO));
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<OfferDTO> deleteOffer(@PathVariable("id") String id) {
-        return offerService.deleteOffer(id);
+        return ResponseEntity.ok(offerService.deleteOffer(id));
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<OfferDTO> getOffer(@PathVariable("id") String id) {
-        return offerService.getOffer(id);
+        return ResponseEntity.ok(offerService.getOffer(id));
     }
 }
