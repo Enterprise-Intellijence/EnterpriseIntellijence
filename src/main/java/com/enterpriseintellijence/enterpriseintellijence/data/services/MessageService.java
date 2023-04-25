@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 public interface MessageService {
 
     public MessageDTO createMessage(MessageDTO messageDTO);
-    public ResponseEntity<MessageDTO> replaceMessage(String id, MessageDTO messageDTO);
-    public ResponseEntity<MessageDTO> updateMessage (String id, MessageDTO messageDTO);
-    ResponseEntity<MessageDTO> deleteMessage(String id);
-    ResponseEntity<MessageDTO> getMessage(String id);
+    public MessageDTO replaceMessage(String id, MessageDTO messageDTO);
+    public MessageDTO updateMessage (String id, MessageDTO messageDTO);
+    MessageDTO deleteMessage(String id);
+    MessageDTO getMessage(String id);
 }
