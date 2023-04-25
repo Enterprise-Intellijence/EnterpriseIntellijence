@@ -4,14 +4,15 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 
 import jakarta.persistence.*;
 import jakarta.servlet.annotation.HandlesTypes;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "orders")
 public class Order {
