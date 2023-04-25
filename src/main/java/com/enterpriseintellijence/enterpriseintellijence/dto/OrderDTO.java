@@ -1,13 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Delivery;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
-
 import java.time.LocalDateTime;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.OrderService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
+import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class OrderController {
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @RequestBody OrderDTO orderDTO) {
-        return orderService.updateOrder(id, orderDTO);
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) {
+        return orderService.updateOrder(id, jsonPatch);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -39,7 +40,7 @@ public class OrderController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<OrderDTO> getOrder(@PathVariable("id") String id) {
-        return orderService.getOrder(id);
+        return orderService.getOrderById(id);
     }
 }
 
