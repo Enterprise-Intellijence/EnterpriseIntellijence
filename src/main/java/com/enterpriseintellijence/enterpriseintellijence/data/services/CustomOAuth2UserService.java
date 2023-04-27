@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.CustomOAuth2User;
 import lombok.Builder;
@@ -25,10 +26,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-@RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserRepository userRepository;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user =  super.loadUser(userRequest);
@@ -36,17 +35,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
 
-    public void processOAuthPostLogin(String username, String email) {
-        User existUser = userRepository.getUserByUsername(username);
-
-        if (existUser == null) {
-            User newUser = new User();
-            newUser.setUsername(username);
-            newUser.setProvider(Provider.GOOGLE);
-            newUser.setEmail(email);
-
-            userRepository.save(newUser);
-        }
-
-    }
 }

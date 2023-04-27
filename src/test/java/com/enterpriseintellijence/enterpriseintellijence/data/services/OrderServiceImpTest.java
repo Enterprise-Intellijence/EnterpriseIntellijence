@@ -5,20 +5,27 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.test.context.event.annotation.BeforeTestExecution;
+import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -34,6 +41,10 @@ public class OrderServiceImpTest {
     @BeforeEach
     public void setUp() {
         modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setAmbiguityIgnored(true);
     }
 
     // test corretto
@@ -75,6 +86,7 @@ public class OrderServiceImpTest {
     }
     @Test
     void shouldSaveOneOrder() {
+
 
         Order orderToSave = Order.builder()
                 .orderDate(LocalDateTime.now())
