@@ -21,5 +21,4 @@ public class OrderDTO {
     private UserDTO user;
     private DeliveryDTO delivery;
     private OfferDTO offer;
-
 }

@@ -11,7 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +20,6 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class OrderServiceImpTest {
@@ -29,7 +29,6 @@ public class OrderServiceImpTest {
     @Mock
     private OrderRepository orderRepository;
 
-    @MockBean
     public ModelMapper modelMapper;
 
     @BeforeEach
@@ -37,6 +36,7 @@ public class OrderServiceImpTest {
         modelMapper = new ModelMapper();
     }
 
+    // test corretto
     @Test
     void map() {
 
@@ -50,22 +50,33 @@ public class OrderServiceImpTest {
         orderDTO.setOffer(mock(OfferDTO.class));
         orderDTO.setUser(mock(UserDTO.class));
 
+        Product mockProduct = mock(Product.class);
+        Delivery mockDelivery = mock(Delivery.class);
+        Offer mockOffer = mock(Offer.class);
+        User mockUser = mock(User.class);
+
         Order order = mapToEntity(orderDTO);
+        order.setProduct(mockProduct);
+        order.setDelivery(mockDelivery);
+        order.setOffer(mockOffer);
+        order.setUser(mockUser);
+
         Order expectedOrder = Order.builder()
                 .orderDate(now)
                 .state(OrderState.PURCHASED)
-                .product(mock(Product.class))
-                .delivery(mock(Delivery.class))
-                .offer(mock(Offer.class))
-                .user(mock(User.class))
+                .product(mockProduct)
+                .delivery(mockDelivery)
+                .offer(mockOffer)
+                .user(mockUser)
                 .build();
+
 
         assertThat(expectedOrder).usingRecursiveComparison().isEqualTo(order);
     }
     @Test
     void shouldSaveOneOrder() {
 
-        final var orderToSave = Order.builder()
+        Order orderToSave = Order.builder()
                 .orderDate(LocalDateTime.now())
                 .state(OrderState.PURCHASED)
                 .product(mock(Product.class))
@@ -74,11 +85,11 @@ public class OrderServiceImpTest {
                 .user(mock(User.class))
                 .build();
 
+
         when(orderRepository.save(any(Order.class))).thenReturn(orderToSave);
-        final var saveOrder = orderServiceImp.createOrder(mapToDTO(orderToSave));
-
-
-        assertThat(saveOrder).usingRecursiveComparison().isEqualTo(orderToSave);
+        OrderDTO saveOrder = orderServiceImp.createOrder(mapToDTO(orderToSave));  // da errore qui
+        System.out.println("ciao");
+        assertThat(saveOrder).usingRecursiveComparison().isEqualTo(orderToSave); // sbagliato: si fa equal tra Order e OrderDTO
         verify(orderRepository, times(1)).save(orderToSave);
         verifyNoMoreInteractions(orderRepository);
     }
@@ -86,9 +97,7 @@ public class OrderServiceImpTest {
     public Order mapToEntity(OrderDTO orderDTO) {
         return modelMapper.map(orderDTO, Order.class);
     }
-
     public OrderDTO mapToDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);
     }
-
 }
