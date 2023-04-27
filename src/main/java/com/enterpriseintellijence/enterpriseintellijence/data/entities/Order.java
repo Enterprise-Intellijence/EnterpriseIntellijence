@@ -41,8 +41,9 @@ public class Order {
     @JoinColumn(name = "order_delivery")
     private Delivery delivery;
 
+    // todo: remove comment
     @OneToOne
-    @JoinColumn(name = "order_offer",nullable = false)
+    @JoinColumn(name = "order_offer"/*,nullable = false*/)
     private Offer offer;
 
 }
