@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.handler;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.github.fge.jsonpatch.JsonPatchException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,11 +30,24 @@ public class GlobalExceptionHandler {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(IllegalAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseStatusException illegalAccessExceptionHandler(WebRequest req, IllegalAccessException ex) {
+        return new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseStatusException entityNotFoundExceptionHandler(WebRequest req, EntityNotFoundException ex) {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+
+    @ExceptionHandler(JsonPatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseStatusException jsonPatchExceptionHandler(WebRequest req, JsonPatchException ex) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
 
