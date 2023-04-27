@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +55,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     public ProductDTO getProductById(String id) {
+        // TODO: 27/04/2023 dovrebbe essere optional il product?
         Product product = productRepository.findById(id)
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
@@ -63,8 +65,13 @@ public class ProductServiceImp implements ProductService {
     }
 
     public Iterable<ProductDTO> findAll() {
-        Iterable<Product> products = productRepository.findAll();
-        return mapToDTO(products);
+        // TODO: 27/04/2023 dovrebbe essere una page?
+        /*Iterable<Product> products = productRepository.findAll();
+        return mapToDTO(products);*/
+        // TODO: 27/04/2023 Scalzo la fa così questa(testare il funzionamento):
+        return productRepository.findAll().stream()
+                .map(s -> modelMapper.map(s, ProductDTO.class))
+                .collect(Collectors.toList());
     }
 
 
