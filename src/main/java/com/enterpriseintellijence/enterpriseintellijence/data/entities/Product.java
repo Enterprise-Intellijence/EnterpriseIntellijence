@@ -69,7 +69,7 @@ public class Product {
     private Availability availability;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id"/*, nullable = false*/)
     private User seller;
 
     @ManyToMany(mappedBy = "likedProducts")
