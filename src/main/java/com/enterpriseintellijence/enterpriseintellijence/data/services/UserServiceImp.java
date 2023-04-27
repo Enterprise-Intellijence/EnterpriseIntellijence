@@ -42,9 +42,27 @@ public class UserServiceImp implements UserService{
         return null;
     }
 
+    public UserDTO userByUsername(String username) {
+        return modelMapper.map(userRepository.findByUsername(username),UserDTO.class);
+    }
+
     public Iterable<UserDTO> findAll() {
         // TODO: 21/04/2023
         return null;
+    }
+
+
+    public void processOAuthPostLogin(String username, String email) {
+        UserDTO existUser = userByUsername(username);
+
+        if (existUser == null) {
+            UserDTO newUser = new UserDTO();
+            newUser.setUsername(username);
+            newUser.setProvider(Provider.GOOGLE);
+            newUser.setEmail(email);
+            createUser(newUser);
+        }
+
     }
 
 }
