@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.TransactionService;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,8 @@ public class TransactionController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") String id, @RequestBody TransactionDTO transactionDTO) {
-        return ResponseEntity.ok(transactionService.updateTransaction(id,transactionDTO));
+    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) throws JsonPatchException {
+        return ResponseEntity.ok(transactionService.updateTransaction(id,jsonPatch));
     }
 
     @DeleteMapping(path="/{id}")
