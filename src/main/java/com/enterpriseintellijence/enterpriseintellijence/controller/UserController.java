@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,12 @@ public class UserController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) {
-        return ResponseEntity.ok(userService.updateUser(id,jsonPatch));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) throws JsonPatchException {
+        try {
+            return ResponseEntity.ok(userService.updateUser(id,jsonPatch));
+        } catch (JsonPatchException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DeleteMapping(path="/{id}")
