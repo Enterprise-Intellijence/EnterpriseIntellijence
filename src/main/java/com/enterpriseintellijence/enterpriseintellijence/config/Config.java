@@ -1,5 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
@@ -29,4 +31,10 @@ public class Config {
     public Clock clock() {
         return Clock.systemDefaultZone();
     }
+
+    @Bean
+    public JwtContextUtils jwtContextUtils(){
+        return new JwtContextUtils();
+    }
+
 }
