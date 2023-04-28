@@ -50,7 +50,7 @@ public class OrderServiceImp implements OrderService {
         Order oldOrder = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Order newOrder = mapToEntity(orderDTO);
 
-        User requestingUser = new User(); // get user from context
+        User requestingUser = new User(); //todo: get user from context
 
 
         if(!requestingUser.getId().equals(oldOrder.getUser().getId())) {
@@ -62,8 +62,6 @@ public class OrderServiceImp implements OrderService {
         if(!oldOrder.getState().equals(newOrder.getState())) {
             throw new IllegalAccessException("State cannot be changed");
         }
-
-
 
         newOrder = orderRepository.save(newOrder);
         return mapToDTO(newOrder);

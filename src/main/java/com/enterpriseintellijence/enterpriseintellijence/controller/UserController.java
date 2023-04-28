@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
+import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,13 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO) throws IllegalAccessException {
         return ResponseEntity.ok(userService.replaceUser(id,userDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.updateUser(id,userDTO));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) {
+        return ResponseEntity.ok(userService.updateUser(id,jsonPatch));
     }
 
     @DeleteMapping(path="/{id}")
