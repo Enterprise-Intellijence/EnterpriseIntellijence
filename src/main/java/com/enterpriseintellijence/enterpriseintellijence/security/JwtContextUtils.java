@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class JwtContextUtils {
 
-    public static Optional<String> getUsernameFromContext() {
+    public Optional<String> getUsernameFromContext() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         if (authentication == null) {

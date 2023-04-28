@@ -5,7 +5,9 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
@@ -15,8 +17,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 public class OrderServiceImp implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     private final Clock clock;
@@ -34,12 +35,13 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderCreateDTO orderDTO) {
-
-//        orderDTO.setOrderDate(LocalDateTime.now(clock));
         Order order = mapToEntity(orderDTO);
         order.setOrderDate(LocalDateTime.now(clock));
-        // todo: get user from context
-        // order.setUser();
+
+        UserDTO userDTO = userService.findUserFromContext()
+            .orElseThrow(EntityNotFoundException::new);
+
+        order.setUser(modelMapper.map(userDTO, User.class));
         order = orderRepository.save(order);
         return mapToDTO(order);
     }
@@ -50,8 +52,8 @@ public class OrderServiceImp implements OrderService {
         Order oldOrder = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Order newOrder = mapToEntity(orderDTO);
 
-        User requestingUser = new User(); //todo: get user from context
-
+        UserDTO requestingUser = userService.findUserFromContext()
+            .orElseThrow(EntityNotFoundException::new);
 
         if(!requestingUser.getId().equals(oldOrder.getUser().getId())) {
             throw new IllegalAccessException("User cannot change order");
@@ -84,9 +86,15 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public OrderDTO getOrderById(String id) {
+    public OrderDTO getOrderById(String id) throws IllegalAccessException {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        return mapToDTO(order);
+        OrderDTO orderDTO = mapToDTO(order);
+        UserDTO userDTO = userService.findUserFromContext()
+            .orElseThrow(EntityNotFoundException::new);
+        if(!userDTO.getId().equals(orderDTO.getUser().getId())) {
+            throw new IllegalAccessException("User cannot read other's orders");
+        }
+        return orderDTO;
     }
 
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {

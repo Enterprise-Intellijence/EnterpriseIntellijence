@@ -42,7 +42,7 @@ public class OrderController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<OrderDTO> getOrder(@PathVariable("id") String id) {
+    public ResponseEntity<OrderDTO> getOrder(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 }

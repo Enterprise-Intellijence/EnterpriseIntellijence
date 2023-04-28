@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRep
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,8 @@ public class UserServiceImp implements UserService{
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final JwtContextUtils jwtContextUtils;
+
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = mapToEntity(userDTO);
@@ -82,7 +86,7 @@ public class UserServiceImp implements UserService{
 
 
     public void processOAuthPostLogin(String username, String email) {
-        UserDTO existUser = userByUsername(username);
+        UserDTO existUser = findUserByUsername(username);
 
         if (existUser == null) {
             UserDTO newUser = new UserDTO();
@@ -92,6 +96,12 @@ public class UserServiceImp implements UserService{
             createUser(newUser);
         }
 
+    }
+
+    @Override
+    public Optional<UserDTO> findUserFromContext() {
+        Optional<String> username = jwtContextUtils.getUsernameFromContext();
+        return username.map(this::findUserByUsername);
     }
 
     public void throwOnIdMismatch(String id, UserDTO userDTO){
@@ -108,7 +118,5 @@ public class UserServiceImp implements UserService{
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user,UserDTO.class);}
-
-
 
 }
