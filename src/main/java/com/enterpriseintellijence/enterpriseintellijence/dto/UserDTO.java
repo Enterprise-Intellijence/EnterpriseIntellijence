@@ -9,6 +9,8 @@ import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,6 +18,8 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
+@Builder
 public class UserDTO {
 
     private String id;
