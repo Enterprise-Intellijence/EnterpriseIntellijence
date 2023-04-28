@@ -4,9 +4,12 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductSe
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +34,8 @@ public class ProductController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @RequestBody @Valid ProductDTO productDTO) {
-        return ResponseEntity.ok(productService.updateProduct(id, productDTO));
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @RequestBody JsonPatch patch) throws JsonPatchException {
+        return ResponseEntity.ok(productService.updateProduct(id, patch));
     }
 
     @DeleteMapping(path="/{id}")
@@ -48,8 +51,12 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<Iterable<ProductDTO>> allProduct() {
-        System.out.println("asd");
         return ResponseEntity.ok(productService.findAll());
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<ProductDTO>> getAllPaged(@RequestParam int page,@RequestParam int size){
+        return ResponseEntity.ok(productService.getAllPaged(page,size));
     }
 
 }
