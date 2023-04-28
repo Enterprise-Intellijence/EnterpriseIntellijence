@@ -68,12 +68,12 @@ public class UserServiceImp implements UserService{
         //todo: perchè ritornava un DTO
     }
 
-    public UserDTO userById(String id) {
+    public UserDTO findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapToDto(user);
     }
 
-    public UserDTO userByUsername(String username) {
+    public UserDTO findUserByUsername(String username) {
         return mapToDto(userRepository.findByUsername(username));
     }
 
