@@ -3,13 +3,13 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @ToString
+@Builder
+@AllArgsConstructor
 public class MessageDTO {
 
     private String id;

@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.MessageService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,13 @@ public class MessageController {
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public MessageDTO replaceMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) {
+    public MessageDTO replaceMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) throws IllegalAccessException {
         return messageService.replaceMessage(id, messageDTO);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) {
-        return ResponseEntity.ok(messageService.updateMessage(id, messageDTO));
+    public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @RequestBody JsonPatch patch) throws JsonPatchException {
+        return ResponseEntity.ok(messageService.updateMessage(id, patch));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -38,7 +40,7 @@ public class MessageController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<MessageDTO> getMessage(@PathVariable("id") String id) {
+    public ResponseEntity<MessageDTO> getMessage(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(messageService.getMessage(id));
     }
 }
