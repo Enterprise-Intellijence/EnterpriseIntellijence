@@ -71,8 +71,11 @@ public class UserServiceImp implements UserService{
         return mapToDto(user);
     }
 
-    public UserDTO findByUsername(String username) {
-        return mapToDto(userRepository.findByUsername(username));
+    public Optional<UserDTO> findByUsername(String username) {
+        User user= userRepository.findByUsername(username);
+        if (user==null)
+            return Optional.empty();
+        return Optional.of(mapToDto(user));
     }
 
     public Iterable<UserDTO> findAll() {
@@ -84,9 +87,9 @@ public class UserServiceImp implements UserService{
 
 
     public void processOAuthPostLogin(String username, String email) {
-        UserDTO existUser = findByUsername(username);
+        var existUser = findByUsername(username);
 
-        if (existUser == null) {
+        if (existUser.isEmpty()) {
             UserDTO newUser = new UserDTO();
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
@@ -99,7 +102,10 @@ public class UserServiceImp implements UserService{
     @Override
     public Optional<UserDTO> findUserFromContext() {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
-        return username.map(this::findByUsername);
+        if (username.isEmpty())
+            return Optional.empty();
+
+        return findByUsername(username.get());
     }
 
     public void throwOnIdMismatch(String id, UserDTO userDTO){
