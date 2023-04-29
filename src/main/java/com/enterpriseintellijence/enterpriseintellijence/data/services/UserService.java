@@ -14,7 +14,7 @@ public interface UserService {
     UserDTO findUserById(String id);
     Iterable<UserDTO> findAll();
 
-    UserDTO findByUsername(String username);
+    Optional<UserDTO> findByUsername(String username);
 
 
     void processOAuthPostLogin(String username, String email);

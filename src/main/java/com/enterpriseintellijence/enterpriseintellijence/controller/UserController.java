@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,13 +71,13 @@ public class UserController {
     public Iterable<UserDTO> allUser() {
         return userService.findAll();
     }
-
+/*
     @GetMapping("/google_auth")
     public ResponseEntity<UserDTO> googleAuth(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @AuthenticationPrincipal OAuth2User oauth2User) {
-        model.addAttribute( "userName" , oauth2User.getName());
+         model.addAttribute( "userName" , oauth2User.getName());
         model.addAttribute( "clientName" , authorizedClient.getClientRegistration().getClientName());
         model.addAttribute( "userAttributes" , oauth2User.getAttributes());
-        UserDTO user = userService.findByUsername(oauth2User.getName());
+       UserDTO user = userService.findByUsername(oauth2User.getName());
         if(user == null) {
             user = new UserDTO();
             user.setEmail(oauth2User.getAttributes().get( "email" ).toString());
@@ -85,12 +86,12 @@ public class UserController {
             userService.createUser(user);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/{username}" )
     @PreAuthorize( "#username.equals(authentication.name)")
-    public ResponseEntity<UserDTO> getUser( @PathVariable( "username" ) String username) {
-        UserDTO user = userService.findByUsername(username);
+    public ResponseEntity<Optional<UserDTO>> getUser(@PathVariable( "username" ) String username) {
+        var user = userService.findByUsername(username);
         return ResponseEntity.ok(user);
     }
 
@@ -106,12 +107,13 @@ public class UserController {
 
     @PostMapping(path= "/register" )
     public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
-        if(userService.findByUsername(username) != null)
+        if(userService.findByUsername(username).isPresent())
             return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
         UserDTO user = new UserDTO();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
+        System.out.println("ciao");
 
         userService.createUser(user);
         return new ResponseEntity<>( "registered" , HttpStatus.OK);
