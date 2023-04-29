@@ -2,7 +2,6 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
@@ -17,7 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,7 +71,7 @@ public class UserServiceImp implements UserService{
         return mapToDto(user);
     }
 
-    public UserDTO findUserByUsername(String username) {
+    public UserDTO findByUsername(String username) {
         return mapToDto(userRepository.findByUsername(username));
     }
 
@@ -86,7 +84,7 @@ public class UserServiceImp implements UserService{
 
 
     public void processOAuthPostLogin(String username, String email) {
-        UserDTO existUser = findUserByUsername(username);
+        UserDTO existUser = findByUsername(username);
 
         if (existUser == null) {
             UserDTO newUser = new UserDTO();
@@ -101,7 +99,7 @@ public class UserServiceImp implements UserService{
     @Override
     public Optional<UserDTO> findUserFromContext() {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
-        return username.map(this::findUserByUsername);
+        return username.map(this::findByUsername);
     }
 
     public void throwOnIdMismatch(String id, UserDTO userDTO){

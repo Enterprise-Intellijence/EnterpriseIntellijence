@@ -110,4 +110,9 @@ public class User implements UserDetails {
     public String getUsername() {
         return username;
     }
+
+    @Override
+    public String getPassword() {
+        return "{bcrypt}"+ password;
+    }
 }
