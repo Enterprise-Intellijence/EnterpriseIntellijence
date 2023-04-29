@@ -13,6 +13,6 @@ public interface OrderService {
     OrderDTO replaceOrder(String id, OrderDTO orderDTO) throws IllegalAccessException;
     OrderDTO updateOrder(String id, JsonPatch orderDTO) throws JsonPatchException;
     OrderDTO deleteOrder(String id);
-    OrderDTO getOrderById(String id);
+    OrderDTO getOrderById(String id) throws IllegalAccessException;
 
 }
