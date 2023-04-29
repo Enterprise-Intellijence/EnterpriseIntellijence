@@ -3,6 +3,8 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.OfferService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +25,13 @@ public class OfferController {
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public OfferDTO replaceOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) {
+    public OfferDTO replaceOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
         return offerService.replaceOffer(id, offerDTO);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @RequestBody OfferDTO offerDTO) {
-        return ResponseEntity.ok(offerService.updateOffer(id, offerDTO));
+    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) throws JsonPatchException {
+        return ResponseEntity.ok(offerService.updateOffer(id, jsonPatch));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -39,7 +41,7 @@ public class OfferController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<OfferDTO> getOffer(@PathVariable("id") String id) {
+    public ResponseEntity<OfferDTO> getOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(offerService.getOffer(id));
     }
 }

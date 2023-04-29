@@ -1,9 +1,17 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageDAO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,61 +27,84 @@ public class MessageServiceImp implements MessageService{
 
     private final MessageDAO messageRepository;
 
-    private final ModelMapper modelMapper;
+    private final UserService userService;
 
+    private final ModelMapper modelMapper;
 
     @Override
     public MessageDTO createMessage(MessageDTO messageDTO) {
-        
         Message message = mapToEntity(messageDTO);
+
+        UserDTO userDTO = userService.findUserFromContext()
+                .orElseThrow(EntityNotFoundException::new);
+
+        message.setSendUser(modelMapper.map(userDTO, User.class));
+
         message = messageRepository.save(message);
 
         return mapToDTO(message);
     }
 
     @Override
-    public MessageDTO replaceMessage(String id, MessageDTO messageDTO) {
-
+    public MessageDTO replaceMessage(String id, MessageDTO messageDTO) throws IllegalAccessException {
         throwOnIdMismatch(id, messageDTO);
+
+        Message oldMessage = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Message newMessage = mapToEntity(messageDTO);
+
         Message message = mapToEntity(messageDTO);
+
+        UserDTO requestingUser = userService.findUserFromContext()
+                .orElseThrow(EntityNotFoundException::new);
+
+        if(!requestingUser.getId().equals(oldMessage.getSendUser().getId())) {
+            throw new IllegalAccessException("User cannot change order");
+        }
+        if(!requestingUser.getId().equals(newMessage.getSendUser().getId())) {
+            throw new IllegalAccessException("User cannot change order");
+        }
+
         message = messageRepository.save(message);
 
         return mapToDTO(message);
     }
 
+
     @Override
-    public MessageDTO updateMessage(String id, MessageDTO messageDTO) {
-        //TODO: Implement this method
-        return null;
+    public MessageDTO updateMessage(String id, JsonPatch patch) throws JsonPatchException {
+        MessageDTO message = mapToDTO(messageRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        message = applyPatch(patch, mapToEntity(message));
+        messageRepository.save(mapToEntity(message));
+        return message;
     }
 
     @Override
     public MessageDTO deleteMessage(String id) {
-        Optional<Message> message = messageRepository.findById(id);
-
-        if(!message.isPresent()) {
-            throw new EntityNotFoundException("Message not found");
-        }
+        Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         messageRepository.deleteById(id);
 
-        return mapToDTO(message.get());
+        return mapToDTO(message);
     }
 
     @Override
-    public MessageDTO getMessage(String id) {
-        Optional<Message> message = messageRepository.findById(id);
+    public MessageDTO getMessage(String id) throws IllegalAccessException {
+        Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        MessageDTO messageDTO = mapToDTO(message);
 
-        if(!message.isPresent()) {
-            throw new EntityNotFoundException("Message not found");
+        UserDTO userDTO = userService.findUserFromContext()
+                .orElseThrow(EntityNotFoundException::new);
+
+        if(!userDTO.getId().equals(messageDTO.getSendUser().getId())) {
+            throw new IllegalAccessException("User cannot read other's messages");
         }
-        return mapToDTO(message.get());
+        return mapToDTO(message);
     }
 
-    // TODO: VA TESTATA ASSOLUTAMENTE
-    private Iterable<MessageDTO> mapToDTO(Iterable<Message> messages) {
-        Iterable<MessageDTO> messageDTOs = new ArrayList<>();
-        modelMapper.map(messages,messageDTOs);
-        return messageDTOs;
+    public MessageDTO applyPatch(JsonPatch patch, Message message) throws JsonPatchException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode patched = patch.apply(objectMapper.convertValue(message, JsonNode.class));
+
+        return objectMapper.convertValue(patched, MessageDTO.class);
     }
 
     private Message mapToEntity(MessageDTO messageDTO) {

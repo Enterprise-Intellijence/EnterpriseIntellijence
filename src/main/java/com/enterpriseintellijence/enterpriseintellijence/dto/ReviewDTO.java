@@ -4,13 +4,13 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @ToString
+@Builder
+@AllArgsConstructor
 public class ReviewDTO {
 
     private String id;
