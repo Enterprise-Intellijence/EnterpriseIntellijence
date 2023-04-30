@@ -20,6 +20,7 @@ public class OrderDTO {
     @NotNull
     private String id;
 
+    @NotNull
     private OrderState state;
 
     private LocalDateTime orderDate;
