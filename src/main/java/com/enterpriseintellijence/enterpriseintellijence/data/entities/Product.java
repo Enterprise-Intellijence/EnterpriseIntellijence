@@ -1,10 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductSize;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -67,6 +64,10 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", nullable = false)
     private Availability availability;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_category",nullable = false)
+    private ProductCategory productCategory;
 
     @ManyToOne
     @JoinColumn(name = "user_id"/*, nullable = false*/)
