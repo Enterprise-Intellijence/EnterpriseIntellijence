@@ -3,7 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferDAO;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -16,9 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class OfferServiceImp implements OfferService {
@@ -27,7 +24,7 @@ public class OfferServiceImp implements OfferService {
 
     private final UserService userService;
 
-    private final OfferDAO offerRepository;
+    private final OfferRepository offerRepository;
 
     @Override
     public OfferDTO createOffer(OfferDTO offerDTO) {

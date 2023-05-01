@@ -9,6 +9,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -248,16 +249,60 @@ public class OrderServiceImpTest {
         });
     }
 
-
-
     @Test
-    void whenGetOrderById_thenCorrect() throws IllegalAccessException {
+    void whenGetOrderWithSameUser_thenCorrect() throws IllegalAccessException {
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
         when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         OrderDTO foundOrder = orderServiceImp.getOrderById("1");
 
         assertThat(foundOrder).usingRecursiveComparison().isEqualTo(defaultOrderDTO);
+    }
+
+
+    @Test
+    void whenUpdatingStateFromPURCHASEDtoCANCELED_thenThrow() throws IllegalAccessException {
+        OrderDTO order = OrderDTO.builder()
+                .id("1")
+                .user(defaultUserDTO)
+                .orderDate(LocalDateTime.now(fixedClock))
+                .state(OrderState.CANCELED)
+                .build();
+
+        when(orderRepository.findById("1")).thenReturn(Optional.of(mapToEntity(order)));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+
+        Assertions.assertThrows(IllegalAccessException.class, () -> {
+            orderServiceImp.updateOrder("1", order);
+        });
+
+        assertThat(orderServiceImp.getOrderById("1")).usingRecursiveComparison().isEqualTo(order);
+    }
+
+    @Test
+    void whenUpdatingStateFromDELIVEREDtoPENDING_thenThrow() throws IllegalAccessException {
+        OrderDTO orderToReplace = OrderDTO.builder()
+                .id("1")
+                .user(defaultUserDTO)
+                .orderDate(LocalDateTime.now(fixedClock))
+                .state(OrderState.PENDING)
+                .build();
+
+        OrderDTO order = OrderDTO.builder()
+                .id("1")
+                .user(defaultUserDTO)
+                .orderDate(LocalDateTime.now(fixedClock))
+                .state(OrderState.PENDING)
+                .build();
+
+        when(orderRepository.findById("1")).thenReturn(Optional.of(mapToEntity(order)));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+
+        Assertions.assertThrows(IllegalAccessException.class, () -> {
+            orderServiceImp.updateOrder("1", orderToReplace);
+        });
+
+        assertThat(orderServiceImp.getOrderById("1")).usingRecursiveComparison().isEqualTo(order);
     }
 
 

@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,15 +21,16 @@ public class OrderDTO {
     @NotNull
     private String id;
 
+    @NotNull
     private OrderState state;
 
+    @Past
     private LocalDateTime orderDate;
 
     private ProductDTO product;
     private UserDTO user;
     private DeliveryDTO delivery;
 
-    @NotNull
     private OfferDTO offer;
 }
 

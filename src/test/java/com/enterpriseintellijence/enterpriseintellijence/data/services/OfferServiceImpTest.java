@@ -3,7 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferDAO;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
@@ -30,7 +30,7 @@ public class OfferServiceImpTest {
     private OfferServiceImp offerServiceImp;
 
     @Mock
-    private OfferDAO offerRepository;
+    private OfferRepository offerRepository;
 
     @Mock
     private UserService userService;

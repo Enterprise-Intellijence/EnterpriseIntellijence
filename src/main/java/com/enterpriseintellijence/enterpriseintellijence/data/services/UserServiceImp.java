@@ -81,7 +81,7 @@ public class UserServiceImp implements UserService{
     public Iterable<UserDTO> findAll() {
         // TODO: Da implementare quando abbiamo l'admin
         return userRepository.findAll().stream()
-                .map(s -> mapToDto(s))
+                .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
