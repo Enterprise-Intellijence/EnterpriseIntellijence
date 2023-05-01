@@ -1,12 +1,13 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Clothing;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ClothingDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -69,21 +70,17 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDTO getProductById(String id) {
-        // TODO: 27/04/2023 dovrebbe essere optional il product?
         Product product = productRepository.findById(id)
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
             ));
-
-        return mapToDTO(product);
+        ProductDTO productDTO = mapToDTO(product);
+        return  productDTO;
     }
 
     @Override
     public Iterable<ProductDTO> findAll() {
-        // TODO: 27/04/2023 dovrebbe essere una page?
-        /*Iterable<Product> products = productRepository.findAll();
-        return mapToDTO(products);*/
-        // TODO: 27/04/2023 Scalzo la fa così questa(testare il funzionamento):
+        // TODO: 01/05/2023 da sistemare ereditarietà
         return productRepository.findAll().stream()
                 .map(s -> modelMapper.map(s, ProductDTO.class))
                 .collect(Collectors.toList());
@@ -91,6 +88,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductDTO> getAllPaged(int page, int size) {
+        // TODO: 01/05/2023 da sistemare ereditarietà
         Page<Product> products = productRepository.findAll(PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
         List<ProductDTO> collect = products.stream().map(s->modelMapper.map(s,ProductDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
@@ -105,11 +103,19 @@ public class ProductServiceImp implements ProductService {
     }
 
     private Product mapToEntity(ProductDTO productDTO) {
-        return modelMapper.map(productDTO,Product.class);
+        if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING))
+            return modelMapper.map(productDTO, Clothing.class);
+        else
+            return modelMapper.map(productDTO,Product.class);
+
+
     }
 
     private ProductDTO mapToDTO(Product product) {
-        return modelMapper.map(product,ProductDTO.class);
+        if(product.getProductCategory().equals(ProductCategory.CLOTHING))
+            return modelMapper.map(product, ClothingDTO.class);
+        else
+            return modelMapper.map(product,ProductDTO.class);
     }
 
 

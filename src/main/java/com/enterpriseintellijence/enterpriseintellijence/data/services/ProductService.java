@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 public interface ProductService {
     ProductDTO createProduct(ProductDTO productDTO);
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
-    ProductDTO updateProduct(String id, ProductDTO patch);
+    ProductDTO updateProduct(String id, ProductDTO productDTO);
     void deleteProduct(String id);
     ProductDTO getProductById(String id);
 
