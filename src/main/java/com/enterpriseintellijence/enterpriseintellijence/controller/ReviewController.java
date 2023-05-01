@@ -2,17 +2,25 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ReviewService;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/reviews", produces="application/json")
 public class ReviewController {
     private final ReviewService reviewService;
+
+    private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
+    private final Bucket bucket = Bucket.builder().addLimit(limit).build();
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
