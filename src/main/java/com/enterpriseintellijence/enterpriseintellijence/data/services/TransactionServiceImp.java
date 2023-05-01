@@ -4,10 +4,6 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Transacti
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.TransactionRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,9 +28,10 @@ public class TransactionServiceImp implements TransactionService{
         return transactionDTO;
     }
 
-    public TransactionDTO updateTransaction(String id, JsonPatch patch) throws JsonPatchException {
+    public TransactionDTO updateTransaction(String id, TransactionDTO patch)  {
         TransactionDTO transaction = mapToDTO(transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        transaction = applyPatch(patch,mapToEntity(transaction));
+        transaction.setAmount(patch.getAmount());
+        transaction.setPaymentMethod(patch.getPaymentMethod());
         transactionRepository.save(mapToEntity(transaction));
         return transaction;
     }
@@ -54,11 +51,6 @@ public class TransactionServiceImp implements TransactionService{
         return transactionRepository.findAll().stream().map(s -> mapToDTO(s)).collect(Collectors.toList());
     }
 
-    public TransactionDTO applyPatch(JsonPatch patch, Transaction transaction) throws JsonPatchException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode patched = patch.apply(objectMapper.convertValue(transaction, JsonNode.class));
-        return objectMapper.convertValue(patched,TransactionDTO.class);
-    }
 
     private void throwOnIdMismatch(String id, TransactionDTO transactionDTO){
         if(transactionDTO.getId() != null && !transactionDTO.getId().equals(id))
