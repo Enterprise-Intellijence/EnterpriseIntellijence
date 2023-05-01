@@ -4,5 +4,5 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMe
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface PaymentMethodDAO extends JpaRepository<PaymentMethod, String>, JpaSpecificationExecutor<PaymentMethod> {
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, String>, JpaSpecificationExecutor<PaymentMethod> {
 }

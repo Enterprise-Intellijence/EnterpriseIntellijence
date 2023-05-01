@@ -4,6 +4,6 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Delivery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface DeliveryDAO extends JpaRepository<Delivery, Long>, JpaSpecificationExecutor<Delivery> {
+public interface DeliveryRepository extends JpaRepository<Delivery, Long>, JpaSpecificationExecutor<Delivery> {
 
 }
