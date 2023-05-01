@@ -2,7 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageDAO;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
@@ -28,7 +28,7 @@ public class MessageServiceImpTest {
     private MessageServiceImp messageServiceImp;
 
     @Mock
-    private MessageDAO messageRepository;
+    private MessageRepository messageRepository;
 
     @Mock
     private UserService userService;

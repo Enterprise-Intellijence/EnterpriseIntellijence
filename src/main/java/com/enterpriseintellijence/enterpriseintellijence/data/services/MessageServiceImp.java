@@ -1,11 +1,9 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageDAO;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,15 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImp implements MessageService{
 
 
-    private final MessageDAO messageRepository;
+    private final MessageRepository messageRepository;
 
     private final UserService userService;
 
