@@ -7,10 +7,9 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRe
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -66,9 +65,11 @@ public class OfferServiceImp implements OfferService {
     }
 
     @Override
-    public OfferDTO updateOffer(String id, JsonPatch patch) throws JsonPatchException {
+    public OfferDTO updateOffer(String id, OfferDTO patch) {
         OfferDTO offer = mapToDTO(offerRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        offer = applyPatch(patch, mapToEntity(offer));
+
+        // TODO: Implement patching here
+
         offerRepository.save(mapToEntity(offer));
         return offer;
     }

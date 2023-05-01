@@ -20,7 +20,7 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     @Override
-    public ResponseEntity<DeliveryDTO> updateDelivery(DeliveryDTO deliveryDTO) {
+    public ResponseEntity<DeliveryDTO> updateDelivery(String Id, DeliveryDTO deliveryDTO) {
         //TODO: Implement this method
         return null;
     }

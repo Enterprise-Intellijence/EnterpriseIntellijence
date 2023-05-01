@@ -1,16 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,18 +47,17 @@ public class ProductServiceImp implements ProductService {
         Product product = mapToEntity(productDTO);
 
         // TODO: 28/04/2023 add user from context and check for permission
+
         product = productRepository.save(product);
         return mapToDTO(product);
     }
 
     @Override
-    public ProductDTO updateProduct(String id, JsonPatch patch) throws JsonPatchException {
+    public ProductDTO updateProduct(String id, ProductDTO patch) {
         ProductDTO productDTO = mapToDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        productDTO=applyPatch(patch, mapToEntity(productDTO));
         Product product = mapToEntity(productDTO);
-        //throwOnIdMismatch(id, productDTO);
+
         // TODO: come implementare?
-        // https://www.baeldung.com/spring-rest-json-patch
 
         return mapToDTO(product);
     }
@@ -124,12 +118,5 @@ public class ProductServiceImp implements ProductService {
         if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
             throw new IdMismatchException();
         }
-    }
-
-    public ProductDTO applyPatch(JsonPatch patch, Product product) throws JsonPatchException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode patched = patch.apply(objectMapper.convertValue(product, JsonNode.class));
-
-        return objectMapper.convertValue(patched, ProductDTO.class);
     }
 }
