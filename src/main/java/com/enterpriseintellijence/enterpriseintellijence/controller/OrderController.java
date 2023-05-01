@@ -39,8 +39,8 @@ public class OrderController {
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) throws JsonPatchException, IllegalAccessException {
-        return ResponseEntity.ok(orderService.updateOrder(id, jsonPatch));
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
+        return ResponseEntity.ok(orderService.updateOrder(id, orderDTO));
     }
 
     @DeleteMapping(path = "/{id}")
