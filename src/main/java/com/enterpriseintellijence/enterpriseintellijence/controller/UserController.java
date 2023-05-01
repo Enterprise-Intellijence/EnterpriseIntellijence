@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
-
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -15,12 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,19 +30,17 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody UserDTO userDTO){
+    public UserDTO createUser(@Valid @RequestBody UserDTO userDTO){
         return userService.createUser(userDTO);
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @RequestBody UserDTO userDTO) throws IllegalAccessException {
+    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO userDTO) throws IllegalAccessException {
         return ResponseEntity.ok(userService.replaceUser(id,userDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO patch, BindingResult result) throws IllegalAccessException {
-            if (result.hasErrors())
-                return (ResponseEntity<UserDTO>) ResponseEntity.badRequest();
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO patch) throws IllegalAccessException {
             return ResponseEntity.ok(userService.updateUser(id,patch));
     }
 

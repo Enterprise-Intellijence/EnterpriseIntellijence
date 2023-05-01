@@ -3,9 +3,8 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.OrderService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,7 @@ public class OrderController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderCreateDTO orderDTO) {
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderCreateDTO orderDTO) {
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
 
@@ -34,12 +33,12 @@ public class OrderController {
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OrderDTO> replaceOrder(@PathVariable("id") String id, @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
+    public ResponseEntity<OrderDTO> replaceOrder(@PathVariable("id") String id, @Valid @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
         return ResponseEntity.ok(orderService.replaceOrder(id, orderDTO));
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @Valid @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
         return ResponseEntity.ok(orderService.updateOrder(id, orderDTO));
     }
 

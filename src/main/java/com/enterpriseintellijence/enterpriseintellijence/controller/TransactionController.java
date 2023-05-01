@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,19 +17,17 @@ public class TransactionController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionDTO createTransaction(@RequestBody TransactionDTO transactionDTO){
+    public TransactionDTO createTransaction(@Valid @RequestBody TransactionDTO transactionDTO){
         return transactionService.createTransaction(transactionDTO);
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<TransactionDTO> replaceTransaction(@PathVariable("id") String id, @RequestBody TransactionDTO transactionDTO){
+    public ResponseEntity<TransactionDTO> replaceTransaction(@PathVariable("id") String id, @Valid @RequestBody TransactionDTO transactionDTO){
         return ResponseEntity.ok(transactionService.replaceTransaction(id,transactionDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") String id, @Valid @RequestBody TransactionDTO patch, BindingResult result){
-        if (result.hasErrors())
-            return (ResponseEntity<TransactionDTO>) ResponseEntity.badRequest();
+    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable("id") String id, @Valid @RequestBody TransactionDTO patch){
         return ResponseEntity.ok(transactionService.updateTransaction(id,patch));
     }
 

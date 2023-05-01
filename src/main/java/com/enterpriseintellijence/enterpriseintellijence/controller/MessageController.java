@@ -2,8 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.MessageService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +18,17 @@ public class MessageController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageDTO createMessage(@RequestBody MessageDTO messageDTO) {
+    public MessageDTO createMessage(@Valid @RequestBody MessageDTO messageDTO) {
         return messageService.createMessage(messageDTO);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public MessageDTO replaceMessage(@PathVariable("id") String id, @RequestBody MessageDTO messageDTO) throws IllegalAccessException {
+    public MessageDTO replaceMessage(@PathVariable("id") String id, @Valid @RequestBody MessageDTO messageDTO) throws IllegalAccessException {
         return messageService.replaceMessage(id, messageDTO);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @RequestBody JsonPatch patch) throws JsonPatchException {
+    public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @Valid @RequestBody MessageDTO patch) {
         return ResponseEntity.ok(messageService.updateMessage(id, patch));
     }
 

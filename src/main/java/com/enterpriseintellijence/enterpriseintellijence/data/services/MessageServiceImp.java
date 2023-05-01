@@ -6,10 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Message
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -66,9 +63,11 @@ public class MessageServiceImp implements MessageService{
 
 
     @Override
-    public MessageDTO updateMessage(String id, JsonPatch patch) throws JsonPatchException {
+    public MessageDTO updateMessage(String id, MessageDTO patch) {
         MessageDTO message = mapToDTO(messageRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        message = applyPatch(patch, mapToEntity(message));
+
+        // TODO: Implement patching here
+
         messageRepository.save(mapToEntity(message));
         return message;
     }
@@ -93,13 +92,6 @@ public class MessageServiceImp implements MessageService{
             throw new IllegalAccessException("User cannot read other's messages");
         }
         return mapToDTO(message);
-    }
-
-    public MessageDTO applyPatch(JsonPatch patch, Message message) throws JsonPatchException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode patched = patch.apply(objectMapper.convertValue(message, JsonNode.class));
-
-        return objectMapper.convertValue(patched, MessageDTO.class);
     }
 
     private Message mapToEntity(MessageDTO messageDTO) {

@@ -3,21 +3,15 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Review;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReviewRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,9 +62,11 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public ReviewDTO updateReview(String id, JsonPatch patch) throws JsonPatchException {
+    public ReviewDTO updateReview(String id, ReviewDTO patch) {
         ReviewDTO review = mapToDTO(reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        review = applyPatch(patch, mapToEntity(review));
+
+        // TODO: Apply patch here
+
         reviewRepository.save(mapToEntity(review));
         return review;
     }
@@ -94,13 +90,6 @@ public class ReviewServiceImp implements ReviewService {
     public Iterable<ReviewDTO> findAll() {
         Iterable<Review> reviews = reviewRepository.findAll();
         return mapToDTO(reviews);
-    }
-
-    public ReviewDTO applyPatch(JsonPatch patch, Review review) throws JsonPatchException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode patched = patch.apply(objectMapper.convertValue(review, JsonNode.class));
-
-        return objectMapper.convertValue(patched, ReviewDTO.class);
     }
 
     // TODO: VA TESTATA ASSOLUTAMENTE

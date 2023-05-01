@@ -2,17 +2,12 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
-import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,14 +23,13 @@ public class ProductController {
         return productService.createProduct(productDTO);
     }
 
-
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @RequestBody @Valid ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO){
         return ResponseEntity.ok(productService.replaceProduct(id, productDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @RequestBody JsonPatch patch) throws JsonPatchException {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) {
         return ResponseEntity.ok(productService.updateProduct(id, patch));
     }
 
@@ -56,7 +50,7 @@ public class ProductController {
     }
 
     @GetMapping("/paged")
-    public ResponseEntity<Page<ProductDTO>> getAllPaged(@RequestParam int page,@RequestParam int size){
+    public ResponseEntity<Page<ProductDTO>> getAllPaged(@RequestParam int page, @RequestParam int size){
         return ResponseEntity.ok(productService.getAllPaged(page,size));
     }
 

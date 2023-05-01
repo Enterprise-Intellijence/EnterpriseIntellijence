@@ -1,16 +1,14 @@
 package com.enterpriseintellijence.enterpriseintellijence.handler;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import com.github.fge.jsonpatch.JsonPatchException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,21 +34,17 @@ public class GlobalExceptionHandler {
         return new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
-
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseStatusException entityNotFoundExceptionHandler(WebRequest req, EntityNotFoundException ex) {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-
-    @ExceptionHandler(JsonPatchException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseStatusException jsonPatchExceptionHandler(WebRequest req, JsonPatchException ex) {
+    public ResponseStatusException methodArgumentNotValidExceptionHandler(WebRequest req, MethodArgumentNotValidException ex) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
-
-
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
