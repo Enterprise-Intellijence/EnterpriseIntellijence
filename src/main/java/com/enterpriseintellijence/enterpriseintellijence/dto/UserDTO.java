@@ -32,10 +32,14 @@ public class UserDTO {
     private String password;
     @Email
     private String email;
+
     private byte[] photo;
+    @NotNull
     private Provider provider;
     private AddressDTO address;
+    @NotNull
     private UserRole role;
+
     private PaymentMethodDTO defaultPaymentMethod;
     private List<PaymentMethodDTO> paymentMethods;
     private List<OfferDTO> offers;

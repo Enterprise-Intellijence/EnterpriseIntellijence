@@ -6,15 +6,10 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,9 +48,24 @@ public class UserServiceImp implements UserService{
         return mapToDto(newUser);
     }
 
-    public UserDTO updateUser(String id, JsonPatch patch) throws JsonPatchException {
+    public UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException {
         UserDTO user = mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        user = applyPatch(patch,mapToEntity(user));
+        UserDTO userContext = findUserFromContext().orElseThrow(EntityNotFoundException::new);
+
+        if(userContext.getId() != patch.getId())
+            throw new IllegalAccessException("User cannot change another user");
+
+        if(userContext.getProvider() != patch.getProvider())
+            throw new IllegalAccessException("User cannot change provider");
+
+        if(patch.getUsername() != null)
+            user.setUsername(patch.getUsername());
+
+        if(patch.getEmail() != null)
+            user.setEmail(patch.getEmail());
+
+        user.setAddress(patch.getAddress());
+        user.setPhoto(patch.getPhoto());
         userRepository.save(mapToEntity(user));
         return user;
     }
@@ -63,7 +73,7 @@ public class UserServiceImp implements UserService{
     public void  deleteUser(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         userRepository.deleteById(id);
-        //todo: perchè ritornava un DTO
+
     }
 
     public UserDTO findUserById(String id) {
@@ -113,12 +123,8 @@ public class UserServiceImp implements UserService{
             throw new IdMismatchException();
     }
 
-    public UserDTO applyPatch(JsonPatch patch, User user) throws JsonPatchException{
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode patched = patch.apply(objectMapper.convertValue(user,JsonNode.class));
 
-        return objectMapper.convertValue(patched,UserDTO.class);
-    }
+
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user,UserDTO.class);}

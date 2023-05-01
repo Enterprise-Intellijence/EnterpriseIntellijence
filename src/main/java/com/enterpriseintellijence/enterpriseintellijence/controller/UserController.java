@@ -1,13 +1,13 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.ui.Model;
+
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -48,12 +45,10 @@ public class UserController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @RequestBody JsonPatch jsonPatch) throws JsonPatchException {
-        try {
-            return ResponseEntity.ok(userService.updateUser(id,jsonPatch));
-        } catch (JsonPatchException e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO patch, BindingResult result) throws IllegalAccessException {
+            if (result.hasErrors())
+                return (ResponseEntity<UserDTO>) ResponseEntity.badRequest();
+            return ResponseEntity.ok(userService.updateUser(id,patch));
     }
 
     @DeleteMapping(path="/{id}")
