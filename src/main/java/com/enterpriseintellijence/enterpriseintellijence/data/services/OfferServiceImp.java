@@ -8,8 +8,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -94,13 +92,6 @@ public class OfferServiceImp implements OfferService {
             throw new IllegalAccessException("User cannot read other's offers");
         }
         return mapToDTO(offer);
-    }
-
-    public OfferDTO applyPatch(JsonPatch patch, Offer offer) throws JsonPatchException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode patched = patch.apply(objectMapper.convertValue(offer, JsonNode.class));
-
-        return objectMapper.convertValue(patched, OfferDTO.class);
     }
 
     private Offer mapToEntity(OfferDTO offerDTO) {
