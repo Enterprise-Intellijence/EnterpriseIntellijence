@@ -3,6 +3,8 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.PaymentMethodService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +22,17 @@ public class PaymentMethodController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentMethodDTO createPaymentMethod(@RequestBody PaymentMethodDTO paymentMethodDTO) {productRepository.findAll();
+    public PaymentMethodDTO createPaymentMethod(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) {productRepository.findAll();
         return paymentMethodService.createPaymentMethod(paymentMethodDTO);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public PaymentMethodDTO replacePaymentMethod(@PathVariable("id") String id, @RequestBody PaymentMethodDTO paymentMethodDTO) {
+    public PaymentMethodDTO replacePaymentMethod(@PathVariable("id") String id, @Valid @RequestBody PaymentMethodDTO paymentMethodDTO) {
         return paymentMethodService.replacePaymentMethod(id, paymentMethodDTO).getBody();
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(@PathVariable("id") String id, @RequestBody PaymentMethodDTO paymentMethodDTO) {
+    public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(@PathVariable("id") String id, @Valid @RequestBody PaymentMethodDTO paymentMethodDTO) {
         return paymentMethodService.updatePaymentMethod(id, paymentMethodDTO);
     }
 

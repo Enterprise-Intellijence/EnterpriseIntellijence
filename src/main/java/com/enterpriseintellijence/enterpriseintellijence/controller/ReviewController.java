@@ -2,8 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ReviewService;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +16,17 @@ public class ReviewController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReviewDTO createReview(@RequestBody ReviewDTO reviewDTO){
+    public ReviewDTO createReview(@Valid @RequestBody ReviewDTO reviewDTO){
         return reviewService.createReview(reviewDTO);
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<ReviewDTO> replaceReview(@PathVariable("id") String id, @RequestBody ReviewDTO reviewDTO) throws IllegalAccessException {
+    public ResponseEntity<ReviewDTO> replaceReview(@PathVariable("id") String id, @Valid @RequestBody ReviewDTO reviewDTO) throws IllegalAccessException {
         return ResponseEntity.ok(reviewService.replaceReview(id,reviewDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable("id") String id, @RequestBody JsonPatch patch) throws JsonPatchException {
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable("id") String id, @Valid @RequestBody ReviewDTO patch) {
         return ResponseEntity.ok(reviewService.updateReview(id,patch));
     }
 
@@ -41,7 +40,6 @@ public class ReviewController {
     public ResponseEntity<ReviewDTO> reviewById(@PathVariable("id") String id){
         return ResponseEntity.ok(reviewService.reviewById(id));
     }
-
 
     // TODO: avrebbe più senso fare un metodo allReviewsByUser, che restituisce tutte le recensioni riferite ad uno stesso utente
     // forse è meglio parlarne quando si ha il frontend

@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.DeliveryService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +18,18 @@ public class DeliveryController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public DeliveryDTO createDelivery(@RequestBody DeliveryDTO deliveryDTO) {
+    public DeliveryDTO createDelivery(@Valid @RequestBody DeliveryDTO deliveryDTO) {
         return deliveryService.createDelivery(deliveryDTO);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public DeliveryDTO replaceDelivery(@PathVariable("id") String id, @RequestBody DeliveryDTO deliveryDTO) {
+    public DeliveryDTO replaceDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) {
         return deliveryService.replaceDelivery(id, deliveryDTO).getBody();
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @RequestBody DeliveryDTO deliveryDTO) {
-        return deliveryService.updateDelivery(deliveryDTO);
+    public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) {
+        return deliveryService.updateDelivery(id, deliveryDTO);
     }
 
     @DeleteMapping(path = "/{id}")
