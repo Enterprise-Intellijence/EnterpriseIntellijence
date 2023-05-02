@@ -1,8 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
+
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
+import org.joda.money.Money;
 
 @Data
 @NoArgsConstructor
@@ -10,10 +14,16 @@ import lombok.ToString;
 public class DeliveryDTO {
 
     private String Id;
+
     private OrderDTO order;
-    private Float deliveryCost;
+
+    @PositiveOrZero
+    private Money deliveryCost;
+
+    @Length(max = 50)
     private String shipper;
 
-    //TODO: da vedere indirizzo mittente e destinatario
+    private Address senderAddress;
 
+    private Address receiverAddress;
 }
