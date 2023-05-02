@@ -2,8 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
@@ -47,6 +47,8 @@ public class ProductDTO {
     private Condition condition;
     private AddressDTO address;
     private ProductSize productSize;
+
+    @PositiveOrZero
     private Integer views;
     private LocalDateTime uploadDate;
     private Visibility visibility;
