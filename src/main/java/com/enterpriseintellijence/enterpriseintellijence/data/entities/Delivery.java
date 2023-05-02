@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.joda.money.Money;
 
 @Data
 @NoArgsConstructor
@@ -21,14 +22,11 @@ public class Delivery {
     private Order order;
 
     @Column(name = "delivery_cost")
-    private Float deliveryCost;
+    private Money deliveryCost;
 
     private String shipper;
 
-    //TODO: da vedere indirizzo mittente e destinatario
-    //private Address senderAddress;
+    private Address senderAddress;
 
-    //private Address receiverAddress;
-
-
+    private Address receiverAddress;
 }

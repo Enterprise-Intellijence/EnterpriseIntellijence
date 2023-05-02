@@ -6,9 +6,8 @@ import org.springframework.http.ResponseEntity;
 public interface PaymentMethodService {
 
         PaymentMethodDTO createPaymentMethod(PaymentMethodDTO paymentMethodDTO);
-        ResponseEntity<PaymentMethodDTO> replacePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO);
-        ResponseEntity<PaymentMethodDTO> updatePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO);
-        ResponseEntity<PaymentMethodDTO> deletePaymentMethod(String id);
-        ResponseEntity<PaymentMethodDTO> getPaymentMethod(String id);
-
+        PaymentMethodDTO replacePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException;
+        PaymentMethodDTO updatePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException;
+        PaymentMethodDTO deletePaymentMethod(String id);
+        PaymentMethodDTO getPaymentMethodById(String id) throws IllegalAccessException;
 }

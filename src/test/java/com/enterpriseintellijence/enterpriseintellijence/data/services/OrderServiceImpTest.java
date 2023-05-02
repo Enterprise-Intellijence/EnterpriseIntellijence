@@ -9,7 +9,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
