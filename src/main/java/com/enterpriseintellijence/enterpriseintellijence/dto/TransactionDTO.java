@@ -2,13 +2,13 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.joda.money.Money;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class TransactionDTO {
 
@@ -17,6 +17,6 @@ public class TransactionDTO {
     @NotNull
     private Money amount;
     @NotNull
-    private PaymentMethodDTO paymentMethod;
+    private String paymentMethod;
 
 }

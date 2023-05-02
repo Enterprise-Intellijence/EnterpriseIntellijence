@@ -6,17 +6,18 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRep
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
+import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import jakarta.persistence.EntityNotFoundException;
 import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
@@ -103,6 +104,40 @@ public class UserServiceImpTest {
         UserDTO savedUser = userServiceImp.createUser(userToSave);
         assertThat(savedUser).usingRecursiveComparison().isEqualTo(mapToDTO(defaultUserEntity));
     }
+
+    @Test
+    void whenReplacingUserDTO_throwOnIdMismatch(){
+        UserDTO newUser = UserDTO.builder()
+                .id("NOT 1")
+                .username("checco")
+                .password("ciao")
+                .email("ciao@gmail.com")
+                .role(UserRole.USER)
+                .provider(Provider.LOCAL)
+                .build();
+
+        Assertions.assertThrows(IdMismatchException.class, () -> {
+            userServiceImp.replaceUser("1", newUser);
+        });
+    }
+
+    @Test
+    void whenReplacingUserDTO_throwOnOrderNotFound(){
+        UserDTO userToReplace = UserDTO.builder()
+                .id("1")
+                .username("checco")
+                .password("ciao")
+                .email("ciao@gmail.com")
+                .role(UserRole.USER)
+                .provider(Provider.LOCAL)
+                .build();
+
+        when(userRepository.findById("1")).thenReturn(Optional.empty());
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            userServiceImp.replaceUser("1", userToReplace);
+        });
+    }
+    //todo: check se sono stati inseriti tutti i test!
 
 
 
