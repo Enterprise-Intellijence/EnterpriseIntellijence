@@ -2,13 +2,15 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
-import jakarta.validation.constraints.Positive;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.joda.money.Money;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +42,7 @@ public class ProductDTO {
     private String description;
 
     // TODO: usare una classe apposita per il prezzo
-    private Float price;
+    private Money price;
 
     @Length(max = 100)
     private String brand;

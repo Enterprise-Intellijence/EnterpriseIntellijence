@@ -4,13 +4,13 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @ToString
 public class PaymentMethodDTO {
 

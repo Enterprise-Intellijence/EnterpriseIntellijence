@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "payment_methods")
 @Entity
 public class PaymentMethod {
