@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class AppSecurityConfig {
+public class AppSecurityConfig  {
 
     private final CustomUserDetailsService userDetailsService;
 
@@ -49,7 +50,7 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.
-                authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth").permitAll().and().
+                authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**").permitAll().and().
                 authorizeHttpRequests().anyRequest().authenticated().and().csrf().disable().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
                 addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
@@ -58,5 +59,10 @@ public class AppSecurityConfig {
                 .oauth2Client()
                 .and()
                 .build();
+
     }
+
+
+
+
 }
