@@ -26,33 +26,28 @@ public class DeliveryController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public DeliveryDTO createDelivery(@Valid @RequestBody DeliveryDTO deliveryDTO) {
-        return deliveryService.createDelivery(deliveryDTO);
+    public ResponseEntity<DeliveryDTO> createDelivery(@Valid @RequestBody DeliveryDTO deliveryDTO) {
+        return ResponseEntity.ok(deliveryService.createDelivery(deliveryDTO));
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public DeliveryDTO replaceDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) {
-        return deliveryService.replaceDelivery(id, deliveryDTO).getBody();
+    public ResponseEntity<DeliveryDTO> replaceDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
+        return ResponseEntity.ok(deliveryService.replaceDelivery(id, deliveryDTO));
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) {
-        return deliveryService.updateDelivery(id, deliveryDTO);
+        return ResponseEntity.ok(deliveryService.updateDelivery(id, deliveryDTO));
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<DeliveryDTO> deleteDelivery(@PathVariable("id") String id) {
-        return deliveryService.deleteDelivery(id);
+        return ResponseEntity.ok(deliveryService.deleteDelivery(id));
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<DeliveryDTO> getDelivery(@PathVariable("id") String id) {
-        return deliveryService.getDelivery(id);
-    }
-
-    @GetMapping(path = "")
-    public Iterable<DeliveryDTO> getAllDeliveries() {
-        return deliveryService.getAllDeliveries();
+        return ResponseEntity.ok(deliveryService.getDeliveryById(id));
     }
 }
