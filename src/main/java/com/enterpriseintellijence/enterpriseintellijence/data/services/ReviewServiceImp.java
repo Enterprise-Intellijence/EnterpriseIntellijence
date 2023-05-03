@@ -65,18 +65,28 @@ public class ReviewServiceImp implements ReviewService {
     public ReviewDTO updateReview(String id, ReviewDTO patch) {
         ReviewDTO review = mapToDTO(reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new));
 
-        // TODO: Apply patch here
+        if (patch.getTitle() != null) {
+            review.setTitle(patch.getTitle());
+        }
+
+        if (patch.getDescription() != null) {
+            review.setDescription(patch.getDescription());
+        }
+
+        if (patch.getVote() != null) {
+            review.setVote(patch.getVote());
+        }
 
         reviewRepository.save(mapToEntity(review));
         return review;
     }
 
     @Override
-    public ReviewDTO deleteReview(String id) {
+    public void deleteReview(String id) {
         Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         reviewRepository.deleteById(id);
 
-        return mapToDTO(review);
+        mapToDTO(review);
     }
 
     @Override
