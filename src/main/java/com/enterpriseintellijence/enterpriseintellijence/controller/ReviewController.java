@@ -40,8 +40,9 @@ public class ReviewController {
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<ReviewDTO> deleteReview(@PathVariable("id") String id){
-        return ResponseEntity.ok(reviewService.deleteReview(id));
+    public ResponseEntity<Void> deleteReview(@PathVariable("id") String id){
+        reviewService.deleteReview(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

@@ -42,8 +42,9 @@ public class MessageController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<MessageDTO> deleteMessage(@PathVariable("id") String id) {
-        return ResponseEntity.ok(messageService.deleteMessage(id));
+    public ResponseEntity<Void> deleteMessage(@PathVariable("id") String id) {
+        messageService.deleteMessage(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")

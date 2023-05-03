@@ -78,8 +78,9 @@ public class UserController {
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") String id){
         userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

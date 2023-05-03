@@ -41,8 +41,9 @@ public class TransactionController {
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTransaction(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteTransaction(@PathVariable("id") String id){
         transactionService.deleteTransaction(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
