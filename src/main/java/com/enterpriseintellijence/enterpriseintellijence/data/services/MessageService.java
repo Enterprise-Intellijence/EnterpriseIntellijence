@@ -6,7 +6,7 @@ public interface MessageService {
 
     MessageDTO createMessage(MessageDTO messageDTO);
     MessageDTO replaceMessage(String id, MessageDTO messageDTO) throws IllegalAccessException;
-    MessageDTO updateMessage (String id, MessageDTO patch);
+    MessageDTO updateMessage (String id, MessageDTO patch) throws IllegalAccessException;
     void deleteMessage(String id);
     MessageDTO getMessage(String id) throws IllegalAccessException;
 }

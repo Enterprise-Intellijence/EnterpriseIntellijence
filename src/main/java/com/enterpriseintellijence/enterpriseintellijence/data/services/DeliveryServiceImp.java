@@ -80,9 +80,7 @@ public class DeliveryServiceImp implements DeliveryService {
     @Override
     public DeliveryDTO getDeliveryById(String id) {
         Delivery delivery = deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
-        DeliveryDTO deliveryDTO = mapToDTO(delivery);
-
-        return deliveryDTO;
+        return mapToDTO(delivery);
     }
     public Delivery mapToEntity(DeliveryDTO deliveryDTO) {
         return modelMapper.map(deliveryDTO, Delivery.class);
