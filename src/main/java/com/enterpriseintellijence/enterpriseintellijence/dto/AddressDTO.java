@@ -1,11 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class AddressDTO {
 

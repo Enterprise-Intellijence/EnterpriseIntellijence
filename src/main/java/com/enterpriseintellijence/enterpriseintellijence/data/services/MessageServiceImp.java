@@ -66,18 +66,26 @@ public class MessageServiceImp implements MessageService{
     public MessageDTO updateMessage(String id, MessageDTO patch) {
         MessageDTO message = mapToDTO(messageRepository.findById(id).orElseThrow(EntityNotFoundException::new));
 
-        // TODO: Implement patching here
+        if (patch.getContext() != null) {
+            message.setContext(patch.getContext());
+        }
+
+        if (patch.getSendUser() != null) {
+            message.setSendUser(patch.getSendUser());
+        }
+
+        if (patch.getReceivedUser() != null) {
+            message.setReceivedUser(patch.getReceivedUser());
+        }
 
         messageRepository.save(mapToEntity(message));
         return message;
     }
 
     @Override
-    public MessageDTO deleteMessage(String id) {
-        Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public void deleteMessage(String id) {
+        messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         messageRepository.deleteById(id);
-
-        return mapToDTO(message);
     }
 
     @Override

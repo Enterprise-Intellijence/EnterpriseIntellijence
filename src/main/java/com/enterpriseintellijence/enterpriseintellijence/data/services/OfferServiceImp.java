@@ -73,11 +73,9 @@ public class OfferServiceImp implements OfferService {
     }
 
     @Override
-    public OfferDTO deleteOffer(String id) {
-        Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public void deleteOffer(String id) {
+        offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         offerRepository.deleteById(id);
-
-        return mapToDTO(offer);
     }
 
     @Override

@@ -20,8 +20,15 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     private final UserService userService;
 
     @Override
-    public PaymentMethodDTO createPaymentMethod(PaymentMethodDTO paymentMethodDTO) {
+    public PaymentMethodDTO createPaymentMethod(PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
         PaymentMethod paymentMethod = mapToEntity(paymentMethodDTO);
+
+        UserDTO requestingUser = userService.findUserFromContext()
+            .orElseThrow(EntityNotFoundException::new);
+
+        if (!requestingUser.getId().equals(paymentMethod.getDefaultUser().getId())) {
+            throw new IllegalAccessException("User cannot create payment method");
+        }
 
         paymentMethod.setCreditCard(paymentMethodDTO.getCreditCard());
         paymentMethod.setOwner(paymentMethod.getOwner());
@@ -85,10 +92,8 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     }
 
     @Override
-    public PaymentMethodDTO deletePaymentMethod(String id) {
-        PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        paymentMethodRepository.delete(paymentMethod);
-        return mapToDTO(paymentMethod);
+    public void deletePaymentMethod(String id) {
+        paymentMethodRepository.deleteById(id);
     }
 
     @Override

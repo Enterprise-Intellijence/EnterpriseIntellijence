@@ -30,7 +30,8 @@ public class PaymentMethodController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) {productRepository.findAll();
+    public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
+        productRepository.findAll();
         return ResponseEntity.ok(paymentMethodService.createPaymentMethod(paymentMethodDTO));
     }
 
@@ -46,8 +47,9 @@ public class PaymentMethodController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<PaymentMethodDTO> deletePaymentMethod(@PathVariable("id") String id) {
-        return ResponseEntity.ok(paymentMethodService.deletePaymentMethod(id));
+    public ResponseEntity<Void> deletePaymentMethod(@PathVariable("id") String id) throws IllegalAccessException {
+        paymentMethodService.deletePaymentMethod(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")

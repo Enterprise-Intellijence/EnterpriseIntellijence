@@ -52,8 +52,9 @@ public class OrderController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<OrderDTO> deleteOrder(@PathVariable("id") String id) throws IllegalAccessException {
-        return ResponseEntity.ok(orderService.deleteOrder(id));
+    public ResponseEntity<Void> deleteOrder(@PathVariable("id") String id) throws IllegalAccessException {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")

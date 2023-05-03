@@ -44,8 +44,9 @@ public class OfferController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<OfferDTO> deleteOffer(@PathVariable("id") String id) {
-        return ResponseEntity.ok(offerService.deleteOffer(id));
+    public ResponseEntity<Void> deleteOffer(@PathVariable("id") String id) {
+        offerService.deleteOffer(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")

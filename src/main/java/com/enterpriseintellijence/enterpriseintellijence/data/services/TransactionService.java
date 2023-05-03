@@ -10,7 +10,7 @@ public interface TransactionService {
 
     TransactionDTO updateTransaction(String id, TransactionDTO patch);
 
-    TransactionDTO deleteTransaction(String id);
+    void deleteTransaction(String id);
 
     TransactionDTO transactionById(String id);
 

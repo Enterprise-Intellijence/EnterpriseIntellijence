@@ -36,10 +36,10 @@ public class TransactionServiceImp implements TransactionService{
         return transaction;
     }
 
-    public TransactionDTO deleteTransaction(String id) {
+    public void deleteTransaction(String id) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         transactionRepository.deleteById(id);
-        return mapToDTO(transaction);
+        mapToDTO(transaction);
     }
 
     public TransactionDTO transactionById(String id) {

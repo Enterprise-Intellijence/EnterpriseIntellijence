@@ -42,8 +42,9 @@ public class DeliveryController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<DeliveryDTO> deleteDelivery(@PathVariable("id") String id) {
-        return ResponseEntity.ok(deliveryService.deleteDelivery(id));
+    public ResponseEntity<Void> deleteDelivery(@PathVariable("id") String id) {
+        deliveryService.deleteDelivery(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")

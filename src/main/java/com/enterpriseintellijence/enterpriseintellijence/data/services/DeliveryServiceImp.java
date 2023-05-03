@@ -72,18 +72,15 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     @Override
-    public DeliveryDTO deleteDelivery(String id) {
-        Delivery delivery = deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
-        deliveryRepository.delete(delivery);
-        return mapToDTO(delivery);
+    public void deleteDelivery(String id) {
+        deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
+        deliveryRepository.deleteById(Long.valueOf(id));
     }
 
     @Override
     public DeliveryDTO getDeliveryById(String id) {
         Delivery delivery = deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
-        DeliveryDTO deliveryDTO = mapToDTO(delivery);
-
-        return deliveryDTO;
+        return mapToDTO(delivery);
     }
     public Delivery mapToEntity(DeliveryDTO deliveryDTO) {
         return modelMapper.map(deliveryDTO, Delivery.class);
