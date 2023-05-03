@@ -143,7 +143,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public OrderDTO deleteOrder(String id) throws IllegalAccessException {
+    public void deleteOrder(String id) throws IllegalAccessException {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         UserDTO user = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
@@ -153,7 +153,6 @@ public class OrderServiceImp implements OrderService {
         }
 
         orderRepository.deleteById(id);
-        return mapToDTO(order);
     }
 
     @Override

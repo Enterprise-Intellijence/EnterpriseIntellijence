@@ -7,6 +7,6 @@ public interface OfferService {
     public OfferDTO createOffer(OfferDTO offerDTO);
     public OfferDTO replaceOffer(String id, OfferDTO offerDTO) throws IllegalAccessException;
     OfferDTO updateOffer(String id, OfferDTO patch);
-    OfferDTO deleteOffer(String id);
+    void deleteOffer(String id);
     OfferDTO getOffer(String id) throws IllegalAccessException;
 }

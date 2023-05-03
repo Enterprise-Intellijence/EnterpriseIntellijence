@@ -8,8 +8,10 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -18,8 +20,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
 import java.util.Optional;
-
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -119,7 +119,7 @@ public class PaymentMethodServiceImpTest {
     }
 
     @Test
-    void whenSavingPaymentMethodDTO_thenSavePaymentMethod() {
+    void whenSavingPaymentMethodDTO_thenSavePaymentMethod() throws IllegalAccessException {
        PaymentMethodDTO paymentMethodToSave = PaymentMethodDTO.builder()
                 .id("1")
                 .creditCard("123456789")

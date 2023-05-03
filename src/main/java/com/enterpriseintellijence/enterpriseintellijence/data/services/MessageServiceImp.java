@@ -73,11 +73,9 @@ public class MessageServiceImp implements MessageService{
     }
 
     @Override
-    public MessageDTO deleteMessage(String id) {
-        Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public void deleteMessage(String id) {
+        messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         messageRepository.deleteById(id);
-
-        return mapToDTO(message);
     }
 
     @Override

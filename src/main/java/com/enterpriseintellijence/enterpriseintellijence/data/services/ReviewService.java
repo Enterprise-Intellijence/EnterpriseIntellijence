@@ -9,7 +9,7 @@ public interface ReviewService {
 
     ReviewDTO updateReview(String id, ReviewDTO patch);
 
-    ReviewDTO deleteReview(String id);
+    void deleteReview(String id);
     ReviewDTO reviewById(String id);
 
     Iterable<ReviewDTO> findAll();
