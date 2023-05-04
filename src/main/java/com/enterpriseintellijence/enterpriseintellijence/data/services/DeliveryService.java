@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
-import org.springframework.http.ResponseEntity;
 
 public interface DeliveryService {
 
