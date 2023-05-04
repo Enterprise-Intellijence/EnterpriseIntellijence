@@ -33,7 +33,6 @@ public class ProductServiceImp implements ProductService {
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
 
-        //productDTO.setUploadDate(LocalDateTime.now());
         Product product = mapToEntity(productDTO);
         product.setUploadDate(LocalDateTime.now(clock));
         // todo: set seller from context

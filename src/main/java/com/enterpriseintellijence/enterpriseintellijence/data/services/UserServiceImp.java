@@ -1,7 +1,9 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
@@ -9,6 +11,8 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +24,7 @@ public class UserServiceImp implements UserService{
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final JwtContextUtils jwtContextUtils;
+    private final PaymentMethodRepository paymentMethodRepository;
 
 
     public UserDTO createUser(UserDTO userDTO) {
@@ -116,6 +121,12 @@ public class UserServiceImp implements UserService{
             return Optional.empty();
 
         return findByUsername(username.get());
+    }
+
+    @Override
+    public Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserDTO userDTO, Pageable page) {
+        return paymentMethodRepository.findAllByDefaultUser_Id(userDTO.getId(), page)
+                .map(paymentMethod -> modelMapper.map(paymentMethod, PaymentMethodDTO.class));
     }
 
     public void throwOnIdMismatch(String id, UserDTO userDTO){

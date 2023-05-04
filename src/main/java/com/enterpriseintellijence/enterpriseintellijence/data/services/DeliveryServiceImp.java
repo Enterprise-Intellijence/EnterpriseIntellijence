@@ -34,7 +34,7 @@ public class DeliveryServiceImp implements DeliveryService {
     public DeliveryDTO replaceDelivery(String id, DeliveryDTO deliveryDTO) throws IllegalAccessException {
         throwOnIdMismatch(id, deliveryDTO);
 
-        Delivery oldDelivery = deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
+        Delivery oldDelivery = deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Delivery newDelivery = mapToEntity(deliveryDTO);
 
         if (!oldDelivery.getOrder().getId().equals(newDelivery.getOrder().getId())) {
@@ -48,7 +48,7 @@ public class DeliveryServiceImp implements DeliveryService {
     @Override
     public DeliveryDTO updateDelivery(String Id, DeliveryDTO patch) {
         throwOnIdMismatch(Id, patch);
-        DeliveryDTO deliveryDTO = mapToDTO(deliveryRepository.findById(Long.valueOf(Id)).orElseThrow(EntityNotFoundException::new));
+        DeliveryDTO deliveryDTO = mapToDTO(deliveryRepository.findById(Id).orElseThrow(EntityNotFoundException::new));
 
         if (patch.getDeliveryCost() != null) {
             deliveryDTO.setDeliveryCost(patch.getDeliveryCost());
@@ -73,15 +73,16 @@ public class DeliveryServiceImp implements DeliveryService {
 
     @Override
     public void deleteDelivery(String id) {
-        deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
-        deliveryRepository.deleteById(Long.valueOf(id));
+        deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        deliveryRepository.deleteById(id);
     }
 
     @Override
     public DeliveryDTO getDeliveryById(String id) {
-        Delivery delivery = deliveryRepository.findById(Long.valueOf(id)).orElseThrow(EntityNotFoundException::new);
+        Delivery delivery = deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapToDTO(delivery);
     }
+
     public Delivery mapToEntity(DeliveryDTO deliveryDTO) {
         return modelMapper.map(deliveryDTO, Delivery.class);
     }

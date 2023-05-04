@@ -60,7 +60,12 @@ public class ProductController {
 
     @GetMapping("/paged")
     public ResponseEntity<Page<ProductDTO>> getAllPaged(@RequestParam int page, @RequestParam int size){
-        return ResponseEntity.ok(productService.getAllPaged(page,size));
+        
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getAllPaged(page,size));
+        }
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
 }

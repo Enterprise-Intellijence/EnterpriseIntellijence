@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -8,9 +9,12 @@ import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -134,5 +138,21 @@ public class UserController {
 
         userService.createUser(user);
         return new ResponseEntity<>( "registered" , HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
+        UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/me/payment_methods")
+    public ResponseEntity<Page<PaymentMethodDTO>> getPaymentMethods(@RequestParam Pageable page) throws EntityNotFoundException {
+        if (bucket.tryConsume(1)) {
+            UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
+            return ResponseEntity.ok(userService.getPaymentMethodsByUserId(userDTO, page));
+        } else {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+        }
     }
 }
