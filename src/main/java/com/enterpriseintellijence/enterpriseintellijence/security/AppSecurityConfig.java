@@ -38,6 +38,7 @@ public class AppSecurityConfig  {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /*
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -46,14 +47,17 @@ public class AppSecurityConfig  {
 
         return provider;
     }
-
+*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.
-                authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**").permitAll().and().
-                authorizeHttpRequests().anyRequest().authenticated().and().csrf().disable().
-                sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
-                addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+        return http.csrf().disable()
+                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**").permitAll()
+                .and()
+                .authorizeHttpRequests().anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
                 .and()
                 .oauth2Client()

@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/users", produces="application/json")
 @CrossOrigin(origins="*")
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -134,9 +136,9 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
-        System.out.println("ciao");
 
         userService.createUser(user);
+        log.info("User created: " + user.toString());
         return new ResponseEntity<>( "registered" , HttpStatus.OK);
     }
 

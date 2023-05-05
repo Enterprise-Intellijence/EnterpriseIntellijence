@@ -15,12 +15,11 @@ import java.util.Date;
 import java.util.Map;
 
 public class TokenStore {
-    private final String secretKey = "KEcrS2JQZVNoVm1ZcTN0Nnc5eiRDJkYpSEBNY1FmVGo=";
+    private final String secretKey = Constants.TOKEN_SECRET_KEY;
 
     private final static TokenStore instance = new TokenStore();
 
-    private TokenStore() {
-    }
+    private TokenStore() {}
 
     public static TokenStore getInstance() {
         return instance;
