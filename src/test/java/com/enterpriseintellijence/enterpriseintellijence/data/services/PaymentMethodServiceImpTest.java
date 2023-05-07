@@ -140,6 +140,7 @@ public class PaymentMethodServiceImpTest {
 
        when(paymentMethodRepository.save(paymentMethodToSaveEntity)).thenReturn(paymentMethodToSaveEntity);
        when(paymentMethodRepository.save(mapToEntity(paymentMethodToSave))).thenReturn(paymentMethodToSaveEntity);
+       when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
        PaymentMethodDTO savedPaymentMethod = paymentMethodServiceImp.createPaymentMethod(paymentMethodToSave);
        assertThat(savedPaymentMethod).usingRecursiveComparison().isEqualTo(paymentMethodToSave);
