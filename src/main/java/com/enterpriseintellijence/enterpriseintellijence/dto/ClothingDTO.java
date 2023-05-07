@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingType;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Colour;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,8 +16,8 @@ import lombok.ToString;
 public class ClothingDTO extends ProductDTO {
 
     private ProductGender productGender;
-    private String size;    // TODO: 01/05/2023 deve essere un enum 
-    private String colour; // TODO: 01/05/2023 deve essere un enum 
+    private ClothingSize size;
+    private Colour colour;
     private ClothingType clothingType;
 
 }

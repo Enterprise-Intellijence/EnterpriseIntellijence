@@ -1,8 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Entertainment;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Home;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Clothing;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.EntertainmentDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.HomeDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ClothingDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
@@ -93,6 +97,13 @@ public class ProductServiceImp implements ProductService {
         return new PageImpl<>(collect);
     }
 
+    @Override
+    public Page<ProductDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
+        Page<Product> products = productRepository.findAllByProductCategory(productCategory.toString(),PageRequest.of(page,size));
+        List<ProductDTO> collect = products.stream().map(s->modelMapper.map(s,ProductDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
+
 
     // TODO: VA TESTATA ASSOLUTAMENTE
     private Iterable<ProductDTO> mapToDTO(Iterable<Product> products) {
@@ -104,6 +115,10 @@ public class ProductServiceImp implements ProductService {
     private Product mapToEntity(ProductDTO productDTO) {
         if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING))
             return modelMapper.map(productDTO, Clothing.class);
+        else if(productDTO.getProductCategory().equals(ProductCategory.HOME))
+            return modelMapper.map(productDTO, Home.class);
+        else if(productDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+            return modelMapper.map(productDTO, Entertainment.class);
         else
             return modelMapper.map(productDTO,Product.class);
 
@@ -113,6 +128,10 @@ public class ProductServiceImp implements ProductService {
     private ProductDTO mapToDTO(Product product) {
         if(product.getProductCategory().equals(ProductCategory.CLOTHING))
             return modelMapper.map(product, ClothingDTO.class);
+        else if(product.getProductCategory().equals(ProductCategory.HOME))
+            return modelMapper.map(product, HomeDTO.class);
+        else if(product.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+            return modelMapper.map(product, EntertainmentDTO.class);
         else
             return modelMapper.map(product,ProductDTO.class);
     }
