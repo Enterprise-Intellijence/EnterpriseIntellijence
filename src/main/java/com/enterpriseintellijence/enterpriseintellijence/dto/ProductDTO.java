@@ -29,7 +29,10 @@ import java.util.List;
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ProductDTO.class, name = "OTHER"),
-        @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING")
+        @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING"),
+        @JsonSubTypes.Type(value = HomeDTO.class, name = "HOME"),
+        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT")
+
 })
 public class ProductDTO {
 

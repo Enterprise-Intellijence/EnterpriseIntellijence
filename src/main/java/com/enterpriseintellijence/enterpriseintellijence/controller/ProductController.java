@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,5 +69,61 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
+
+    // TODO: 07/05/2023 da testare 
+    @GetMapping("/filtered")
+    public ResponseEntity<Page<ProductDTO>> getProductFilteredForCategoriesPaged(@RequestParam int page, @RequestParam int size, @RequestParam ProductCategory productCategory){
+
+/*
+        if (bucket.tryConsume(1)) {
+*/
+            return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,productCategory));
+/*        }
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
+    }
+
+    //restituisce la lista di categorie
+    @GetMapping("/categories")
+    public ResponseEntity<Iterable<ProductCategory>> getCategoriesList(){
+        return ResponseEntity.ok(Arrays.asList(ProductCategory.class.getEnumConstants())) ;
+    }
+
+    //restituisce la sottolista della categoria home
+    @GetMapping("/categories/home")
+    public ResponseEntity<Iterable<HomeType>> getHomeType(){
+        return ResponseEntity.ok(Arrays.asList(HomeType.class.getEnumConstants())) ;
+    }
+
+    //restituisce la sottolista della categoria entertainment
+    @GetMapping("/categories/entertainment")
+    public ResponseEntity<Iterable<EntertainmentType>> getEntertainmentType(){
+        return ResponseEntity.ok(Arrays.asList(EntertainmentType.class.getEnumConstants())) ;
+    }
+
+    //restituisce la sottolista della categoria clothing
+    @GetMapping("/categories/clothing")
+    public ResponseEntity<Iterable<ClothingType>> getClothingType(){
+        return ResponseEntity.ok(Arrays.asList(ClothingType.class.getEnumConstants())) ;
+    }
+
+    //restituisce la lista di colori
+    @GetMapping("/colour")
+    public ResponseEntity<Iterable<Colour>> getColour(){
+        return ResponseEntity.ok(Arrays.asList(Colour.class.getEnumConstants())) ;
+    }
+
+    //restituisce la lista delle misure per la categoria clothing
+    @GetMapping("/categories/clothing/size")
+    public ResponseEntity<Iterable<ClothingSize>> getClothingSize(){
+        return ResponseEntity.ok(Arrays.asList(ClothingSize.class.getEnumConstants())) ;
+    }
+
+    //restituisce la lista dei sessi per l'abbigliamento
+    @GetMapping("/categories/clothing/gender")
+    public ResponseEntity<Iterable<ProductGender>> getProductGender(){
+        return ResponseEntity.ok(Arrays.asList(ProductGender.class.getEnumConstants())) ;
+    }
+
 
 }

@@ -89,6 +89,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: 07/05/2023 occhio ci sono due metodi che si mappano allo stesso modo, riga 93 e riga 115 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> userById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findUserById(id));

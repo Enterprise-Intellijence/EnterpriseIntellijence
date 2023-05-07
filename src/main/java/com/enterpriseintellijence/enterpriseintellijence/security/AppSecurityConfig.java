@@ -51,7 +51,7 @@ public class AppSecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**").permitAll()
+                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**","/api/v1/products/categories","/api/v1/products/categories/home","/api/v1/products/categories/entertainment","/api/v1/products/categories/clothing","/api/v1/products/colour","/api/v1/products/categories/clothing/size","/api/v1/products/categories/clothing/gender").permitAll()
                 .and()
                 .authorizeHttpRequests().anyRequest().authenticated()
                 .and()

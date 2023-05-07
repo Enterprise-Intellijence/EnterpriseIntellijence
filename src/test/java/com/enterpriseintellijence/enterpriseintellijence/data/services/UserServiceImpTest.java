@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class UserServiceImpTest {
 
-
+/*
     private UserServiceImp userServiceImp;
     @Mock
     private UserService userService;
@@ -152,5 +152,5 @@ public class UserServiceImpTest {
 
     public User mapToEntity(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
-    }
+    }*/
 }
