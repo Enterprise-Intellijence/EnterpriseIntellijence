@@ -24,8 +24,15 @@ public class TransactionServiceImp implements TransactionService{
     }
 
     public TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) {
+        throwOnIdMismatch(id, transactionDTO);
+        Transaction oldTransaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        // todo: implementare
+
+
+        Transaction newTransaction = transactionRepository.save(mapToEntity(transactionDTO));
+        return mapToDTO(newTransaction);
         //todo: da fare perchè non c'è l'allacciamento tra Transaction e User
-        return transactionDTO;
     }
 
     public TransactionDTO updateTransaction(String id, TransactionDTO patch)  {
@@ -48,7 +55,7 @@ public class TransactionServiceImp implements TransactionService{
     }
 
     public Iterable<TransactionDTO> findAll() {
-        return transactionRepository.findAll().stream().map(s -> mapToDTO(s)).collect(Collectors.toList());
+        return transactionRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
 
