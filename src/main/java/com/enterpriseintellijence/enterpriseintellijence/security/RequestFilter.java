@@ -36,6 +36,7 @@ public class RequestFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         chain.doFilter(request, response);

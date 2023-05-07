@@ -70,14 +70,17 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/paged")
+    // TODO: 07/05/2023 da testare 
+    @GetMapping("/filtered")
     public ResponseEntity<Page<ProductDTO>> getProductFilteredForCategoriesPaged(@RequestParam int page, @RequestParam int size, @RequestParam ProductCategory productCategory){
 
+/*
         if (bucket.tryConsume(1)) {
+*/
             return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,productCategory));
-        }
+/*        }
 
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     //restituisce la lista di categorie
