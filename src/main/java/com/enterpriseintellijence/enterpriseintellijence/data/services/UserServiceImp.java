@@ -128,7 +128,6 @@ public class UserServiceImp implements UserService{
         return paymentMethodRepository.findAllByDefaultUser_Id(userDTO.getId(), page)
                 .map(paymentMethod -> modelMapper.map(paymentMethod, PaymentMethodDTO.class));
     }
-
     public void throwOnIdMismatch(String id, UserDTO userDTO){
         if(userDTO.getId() != null && !userDTO.getId().equals(id))
             throw new IdMismatchException();

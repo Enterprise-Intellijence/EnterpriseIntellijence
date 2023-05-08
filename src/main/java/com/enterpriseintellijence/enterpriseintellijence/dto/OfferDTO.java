@@ -7,6 +7,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 
 import lombok.*;
+import org.joda.money.Money;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class OfferDTO {
     private String id;
 
     // TODO: usare classe specifica per i soldi
-    private Float amount;
+    private Money amount;
 
     // TODO:
     private OfferState state;
