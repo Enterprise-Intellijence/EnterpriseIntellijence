@@ -38,16 +38,6 @@ public class AppSecurityConfig  {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    /*
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-
-        return provider;
-    }
-*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()

@@ -26,12 +26,12 @@ public class RequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String token = TokenStore.getInstance().getToken(request);
         log.info("token: {}", token);
-        log.info("request: {}", request);
+        log.info("request: {}", request.getHeader("Authorization"));
         if(!"invalid".equals(token)) {
             try {
                 String username = TokenStore.getInstance().getUser(token);
                 UserDetails user = userDetailsService.loadUserByUsername(username);
-                log.info("user: {} --- roles: {}", user, user.getAuthorities());
+                log.info("user: {} --- roles: {}", user.getUsername(), user.getAuthorities());
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

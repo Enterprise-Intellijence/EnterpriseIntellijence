@@ -22,7 +22,7 @@ public class PaymentMethodDTO {
 
     @NotBlank
     @Length(min = 5, max = 5)
-    private String expiryDate;
+    private String expiryDate;   //WHY not DATE?
 
     @NotBlank
     @Length(max = 25)
