@@ -1,12 +1,14 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.joda.money.Money;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,8 +34,9 @@ public class Product {
     @Column(name = "description", length = 1000)
     private String description;
 
-    @Column(name = "price", nullable = false)
-    private Float price;
+    //@Column(name = "price", nullable = false)
+    @Embedded
+    private MyMoney myMoney;
 
     @Column(name = "brand")
     private String brand;

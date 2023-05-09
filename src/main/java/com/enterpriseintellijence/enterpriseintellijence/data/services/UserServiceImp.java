@@ -40,7 +40,7 @@ public class UserServiceImp implements UserService{
         User newUser = mapToEntity(userDTO);
 
         //todo: get user from context
-        User requestingUser = new User();
+       User requestingUser = new User();
 
         if(!requestingUser.getId().equals(oldUser.getId())) {
             throw new IllegalAccessException("same User");
@@ -48,6 +48,8 @@ public class UserServiceImp implements UserService{
         if(!requestingUser.getId().equals(newUser.getId())) {
             throw new IllegalAccessException("same user");
         }
+
+        // TODO: 09/05/2023 occhio che quando memorizza una nuova password, non passa da bcrypt e la memorizza in chiaro...fixare 
 
         newUser = userRepository.save(newUser);
         return mapToDto(newUser);

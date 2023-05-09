@@ -1,9 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
@@ -45,7 +48,8 @@ public class ProductDTO {
     private String description;
 
     // TODO: usare una classe apposita per il prezzo
-    private Money price;
+    @NotNull
+    private MyMoney myMoney;
 
     @Length(max = 100)
     private String brand;
