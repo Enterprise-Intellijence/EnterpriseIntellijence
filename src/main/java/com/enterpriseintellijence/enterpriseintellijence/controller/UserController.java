@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 
 import com.nimbusds.jose.JOSEException;
@@ -112,12 +113,12 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }*/
 
-    @GetMapping("/{username}" )
+/*    @GetMapping("/{username}" )
     @PreAuthorize( "#username.equals(authentication.name)")
     public ResponseEntity<Optional<UserDTO>> getUser(@PathVariable( "username" ) String username) {
         var user = userService.findByUsername(username);
         return ResponseEntity.ok(user);
-    }
+    }*/
 
     @PostMapping(path = "/authenticate" )
     @ResponseStatus(HttpStatus.OK)
@@ -137,6 +138,7 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
+        user.setRole(UserRole.USER);
 
         userService.createUser(user);
         log.info("User created: " + user.toString());
