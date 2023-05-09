@@ -109,7 +109,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
-        Page<Product> products = productRepository.findAllByProductCategory(productCategory.toString(),PageRequest.of(page,size));
+        Page<Product> products = productRepository.findAllByProductCategory(productCategory,PageRequest.of(page,size));
         List<ProductDTO> collect = products.stream().map(s->modelMapper.map(s,ProductDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
     }
