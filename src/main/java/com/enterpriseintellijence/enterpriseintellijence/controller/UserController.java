@@ -3,32 +3,38 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
@@ -125,9 +131,11 @@ public class UserController {
     public void authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
             response) throws JOSEException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        String token = TokenStore.getInstance().createToken(Map.of("username", username));
-        response.addHeader(HttpHeaders.AUTHORIZATION,
-                "Bearer " + token);
+        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", username, "role", "user"));
+        String refreshToken = TokenStore.getInstance().createRefreshToken(username);
+        response.addHeader(AUTHORIZATION,
+                "Bearer " + accessToken);
+        response.addHeader("RefreshToken", refreshToken);
     }
 
     @PostMapping(path= "/register" )
@@ -139,6 +147,7 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
         user.setRole(UserRole.USER);
+        user.setProvider(Provider.LOCAL);
 
         userService.createUser(user);
         log.info("User created: " + user.toString());
@@ -158,6 +167,28 @@ public class UserController {
             return ResponseEntity.ok(userService.getPaymentMethodsByUserId(userDTO, page));
         } else {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+        }
+    }
+
+    @GetMapping("/refreshToken")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                Map<String, String> tokenMap = userService.refreshToken(authorizationHeader);
+                response.addHeader("access_token", tokenMap.get("access_token"));
+                response.addHeader("refresh_token", tokenMap.get("refresh_token"));
+            }
+            catch (Exception e) {
+                log.error(String.format("Error refresh token: %s", authorizationHeader), e);
+                response.setStatus(FORBIDDEN.value());
+                Map<String, String> error = new HashMap<>();
+                error.put("errorMessage", e.getMessage());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
         }
     }
 }
