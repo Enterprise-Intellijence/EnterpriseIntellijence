@@ -25,9 +25,9 @@ public class TokenStore {
         return instance;
     }
 
-    public String createToken(Map<String, Object> claims) throws JOSEException {
+    public String createAccessToken(Map<String, Object> claims) throws JOSEException {
         Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        Instant expiration = issuedAt.plus(24, ChronoUnit.HOURS);
+        Instant expiration = issuedAt.plus(Constants.JWT_EXPIRATION_TIME, ChronoUnit.HOURS);
 
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
         for(String entry : claims.keySet())
@@ -65,4 +65,27 @@ public class TokenStore {
             return header.replace("Bearer ", "");
         return "invalid";
     }
+
+    public String createRefreshToken(String username) {
+
+        try {
+            JWTClaimsSet claims = new JWTClaimsSet.Builder()
+                    .subject(username)
+                    .expirationTime(Date.from(Instant.now().plus(Constants.JWT_REFRESH_EXPIRATION_TIME, ChronoUnit.HOURS)))
+                    .issueTime(new Date())
+                    .build();
+
+            Payload payload = new Payload(claims.toJSONObject());
+
+            JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256),
+                    payload);
+
+            jwsObject.sign(new MACSigner(Constants.TOKEN_SECRET_KEY));
+            return jwsObject.serialize();
+        }
+        catch (JOSEException e) {
+            throw new RuntimeException("Error to create JWT", e);
+        }
+    }
+
 }

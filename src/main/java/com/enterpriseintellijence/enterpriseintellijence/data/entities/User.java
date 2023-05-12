@@ -12,9 +12,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -87,6 +89,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        switch (role){
+            case USER -> {
+                return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+            }
+            case ADMIN -> {
+                return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }
+        }
         return null;
     }
 

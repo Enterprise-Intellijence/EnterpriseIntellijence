@@ -8,12 +8,17 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
+import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -122,7 +127,9 @@ public class UserServiceImp implements UserService{
         if (username.isEmpty())
             return Optional.empty();
 
-        return findByUsername(username.get());
+        Optional<UserDTO> user = findByUsername(username.get());
+        user.orElseThrow().setPassword(null);
+        return user;
     }
 
     @Override
@@ -135,6 +142,18 @@ public class UserServiceImp implements UserService{
             throw new IdMismatchException();
     }
 
+    @Override
+    public Map<String, String> refreshToken(String authorizationHeader) throws ParseException, JOSEException {
+
+        String refreshToken = authorizationHeader.substring("Bearer ".length());
+        String username = TokenStore.getInstance().getUser(refreshToken);
+        UserDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
+
+        User userDetails = mapToEntity(user);
+        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));
+        return Map.of("access_token", accessToken, "refresh_token", refreshToken);
+
+    }
 
 
 

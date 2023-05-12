@@ -2,9 +2,12 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.nimbusds.jose.JOSEException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.text.ParseException;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
@@ -21,6 +24,8 @@ public interface UserService {
     void processOAuthPostLogin(String username, String email);
 
     Optional<UserDTO> findUserFromContext();
+
+    Map<String, String> refreshToken(String authorizationHeader) throws JOSEException, ParseException;
 
     Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserDTO userDTO, Pageable page);
 }
