@@ -8,6 +8,7 @@ import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 
+import javax.xml.crypto.Data;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -70,9 +71,10 @@ public class TokenStore {
 
         try {
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                    .subject(username)
+                    .claim("username", username)
                     .expirationTime(Date.from(Instant.now().plus(Constants.JWT_REFRESH_EXPIRATION_TIME, ChronoUnit.HOURS)))
-                    .issueTime(new Date())
+                    .notBeforeTime(Date.from(Instant.now()))
+                    .issueTime(Date.from(Instant.now()))
                     .build();
 
             Payload payload = new Payload(claims.toJSONObject());
