@@ -40,7 +40,7 @@ public class UserDTO {
     @NotNull
     private UserRole role;
 
-    private PaymentMethodDTO defaultPaymentMethod;
+/*    private PaymentMethodDTO defaultPaymentMethod;
     private List<PaymentMethodDTO> paymentMethods;
     private List<OfferDTO> offers;
     private List<UserDTO> followers;
@@ -51,6 +51,6 @@ public class UserDTO {
     private List<MessageDTO> receivedMessages;
     private List<OrderDTO> orders;
     private List<ReviewDTO> receivedReviews;
-    private List<ReviewDTO> sentReviews;
+    private List<ReviewDTO> sentReviews;*/
 
 }

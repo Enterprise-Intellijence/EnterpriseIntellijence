@@ -57,11 +57,14 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Iterable<ProductDTO>> allProduct() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<Page<ProductDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getAllPaged(page, size));
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/paged")
+/*    @GetMapping("/paged")
     public ResponseEntity<Page<ProductDTO>> getAllPaged(@RequestParam int page, @RequestParam int size){
         
         if (bucket.tryConsume(1)) {
@@ -69,7 +72,7 @@ public class ProductController {
         }
 
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }
+    }*/
 
     @GetMapping("/filtered")
     public ResponseEntity<Page<ProductDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){

@@ -39,15 +39,11 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
-        System.out.println(productDTO.getMyMoney().getMoney());
-        System.out.println(productDTO.getMyMoney().getPrice());
-        System.out.println(productDTO.getMyMoney().getCurrency());
-
         Product product = new Product();
         try{
             product = mapToEntity(productDTO);
-            System.out.println(product.getMyMoney().getPrice()+ " "+product.getMyMoney().getCurrency());
             product.setUploadDate(LocalDateTime.now(clock));
+            JwtContextUtils.getUsernameFromContext();
             // todo: set seller from context
             product = productRepository.save(product);
         }catch (Exception e){
