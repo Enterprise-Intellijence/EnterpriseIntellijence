@@ -135,7 +135,7 @@ public class UserController {
         String refreshToken = TokenStore.getInstance().createRefreshToken(username);
         response.addHeader(AUTHORIZATION,
                 "Bearer " + accessToken);
-        response.addHeader("RefreshToken", "Bearer" + refreshToken);
+        response.addHeader("RefreshToken", "Bearer " + refreshToken);
     }
 
     @PostMapping(path= "/register" )
@@ -176,8 +176,8 @@ public class UserController {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 Map<String, String> tokenMap = userService.refreshToken(authorizationHeader);
-                response.addHeader(AUTHORIZATION, "Bearer" + tokenMap.get("access_token"));
-                response.addHeader("refresh_token", "Bearer" + tokenMap.get("refresh_token"));
+                response.addHeader(AUTHORIZATION, "Bearer " + tokenMap.get("access_token"));
+                response.addHeader("refresh_token", "Bearer " + tokenMap.get("refresh_token"));
             }
             catch (Exception e) {
                 log.error(String.format("Error refresh token: %s", authorizationHeader), e);
