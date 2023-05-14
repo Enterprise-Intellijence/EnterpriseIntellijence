@@ -11,7 +11,7 @@ public class JwtContextUtils {
 
     //USELESS CLASS, USE TokenStore.getUser(token) INSTEAD
 
-    public Optional<String> getUsernameFromContext() {
+    public static Optional<String> getUsernameFromContext() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         if (authentication == null) {

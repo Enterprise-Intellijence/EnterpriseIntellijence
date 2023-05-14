@@ -12,6 +12,8 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.ClothingDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,6 +25,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -152,5 +155,19 @@ public class ProductServiceImp implements ProductService {
         if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
             throw new IdMismatchException();
         }
+    }
+
+    public String getCapabilityUrl(String id) {
+
+        Optional<String> username = JwtContextUtils.getUsernameFromContext();
+        if (username.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(!product.getSeller().getUsername().equals(username.get())){
+            throw new RuntimeException("Unauthorized operation");
+        }
+        String token = TokenStore.getInstance().createCapabilityToken(id);
+        return  "https://localhost:8443/api/v1/products/capability/" + token;
     }
 }

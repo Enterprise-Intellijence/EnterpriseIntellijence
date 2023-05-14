@@ -17,4 +17,6 @@ public interface ProductService {
     Page<ProductDTO> getAllPaged(int page, int size);
 
     Page<ProductDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory);
+
+    String getCapabilityUrl(String id);
 }
