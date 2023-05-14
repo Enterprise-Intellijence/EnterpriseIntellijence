@@ -53,38 +53,38 @@ public class User implements UserDetails {
     @JoinColumn(name = "default_payment_method")
     private PaymentMethod defaultPaymentMethod;
 
-    @OneToMany(mappedBy = "ownerUser")
+    @OneToMany(mappedBy = "ownerUser",fetch = FetchType.LAZY)
     private List<PaymentMethod> paymentMethods;
 
-    @OneToMany(mappedBy = "offerer")
+    @OneToMany(mappedBy = "offerer",fetch = FetchType.LAZY)
     private List<Offer> offersMade;
 
-    @ManyToMany(mappedBy = "follows")
+    @ManyToMany(mappedBy = "follows",fetch = FetchType.LAZY)
     private List<User> followers;
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
     private List<Product> soldProducts;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<User> follows;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> likedProducts;
 
-    @OneToMany(mappedBy = "sendUser")
+    @OneToMany(mappedBy = "sendUser",fetch = FetchType.LAZY)
     private List<Message> sentMessages;
 
-    @OneToMany(mappedBy = "receivedUser")
+    @OneToMany(mappedBy = "receivedUser",fetch = FetchType.LAZY)
     private List<Message> receivedMessages;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "reviewed")
+    @OneToMany(mappedBy = "reviewed",fetch = FetchType.LAZY)
     private List<Review> receivedReviews;
 
-    @OneToMany(mappedBy = "reviewer")
+    @OneToMany(mappedBy = "reviewer",fetch = FetchType.LAZY)
     private List<Review> sentReviews;
 
     @Override

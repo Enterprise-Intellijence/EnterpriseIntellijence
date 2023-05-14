@@ -17,7 +17,7 @@ import org.joda.money.Money;
 @Data
 @NoArgsConstructor
 public class MyMoney{
-    private Float price;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     private Currency currency;
@@ -25,7 +25,7 @@ public class MyMoney{
     @Transient
     private Money money;
 
-    public MyMoney (Float price, Currency currency){
+    public MyMoney (Double price, Currency currency){
         this.price=price;
         this.currency=currency;
         money=Money.of(CurrencyUnit.of(currency.toString()),price);
