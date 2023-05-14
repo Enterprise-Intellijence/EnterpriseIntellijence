@@ -90,4 +90,37 @@ public class TokenStore {
         }
     }
 
+    public String createCapabilityToken(String capability) {
+
+        try {
+            JWTClaimsSet claims = new JWTClaimsSet.Builder()
+                    .claim("id-capability", capability)
+                    .expirationTime(Date.from(Instant.now().plus(Constants.JWT_CAPABILITY_EXPIRATION_TIME, ChronoUnit.HOURS)))
+                    .notBeforeTime(Date.from(Instant.now()))
+                    .issueTime(Date.from(Instant.now()))
+                    .build();
+
+            Payload payload = new Payload(claims.toJSONObject());
+
+            JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256),
+                    payload);
+
+            jwsObject.sign(new MACSigner(Constants.TOKEN_SECRET_KEY));
+            return jwsObject.serialize();
+        }
+        catch (JOSEException e) {
+            throw new RuntimeException("Error to create JWT", e);
+        }
+    }
+
+    public String getIdByCapability(String token) throws JOSEException, ParseException {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        JWSVerifier jwsVerifier = new MACVerifier(Constants.TOKEN_SECRET_KEY);
+        if(signedJWT.verify(jwsVerifier)) {
+            if(new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime()) && new Date().after(signedJWT.getJWTClaimsSet().getNotBeforeTime()))
+                return (String) signedJWT.getPayload().toJSONObject().get("id-capability");
+        }
+        throw new RuntimeException("Invalid token");
+    }
+
 }
