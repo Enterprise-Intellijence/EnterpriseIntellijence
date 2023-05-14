@@ -4,19 +4,17 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductSe
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
-import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
-import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.joda.money.Money;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -128,14 +126,5 @@ public class ProductController {
         return ResponseEntity.ok(Arrays.asList(ProductGender.class.getEnumConstants())) ;
     }
 
-    @GetMapping("/capabilityUrl/{id}")
-    public ResponseEntity<String> getCapabilityUrl(@PathVariable("id") String id){
-        return ResponseEntity.ok(productService.getCapabilityUrl(id));
-    }
-
-    @GetMapping("/capability/{token}")
-    public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
-        return productById(TokenStore.getInstance().getIdByCapability(token));
-    }
 
 }
