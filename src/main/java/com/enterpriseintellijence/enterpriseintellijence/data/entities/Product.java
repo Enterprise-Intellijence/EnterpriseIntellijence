@@ -1,21 +1,20 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.joda.money.Money;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @see com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO
+ * @see ProductBasicDTO
  */
 @Data
 @NoArgsConstructor
@@ -37,7 +36,7 @@ public class Product {
 
     //@Column(name = "price", nullable = false)
     @Embedded
-    private MyMoney myMoney;
+    private CustomMoney customMoney;
 
     @Column(name = "brand")
     private String brand;
@@ -72,6 +71,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(name="product_category",nullable = false)
     private ProductCategory productCategory;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id"/*, nullable = false*/)

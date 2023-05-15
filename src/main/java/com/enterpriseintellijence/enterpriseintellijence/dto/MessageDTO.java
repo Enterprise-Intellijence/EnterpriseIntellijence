@@ -1,8 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import lombok.*;
 
 @Data
@@ -14,7 +11,7 @@ public class MessageDTO {
 
     private String id;
     private String context;
-    private ProductDTO product;
+    private ProductBasicDTO product;
     private UserDTO sendUser;
     private UserDTO receivedUser;
     private OfferDTO offer;

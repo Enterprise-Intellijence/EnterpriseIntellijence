@@ -82,7 +82,7 @@ mode 000000,100644..100644
 + 
 + import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 + import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-+ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
++ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 + import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 + import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
 + import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
@@ -579,7 +579,7 @@ index 7ffbf9f,7ffbf9f..86fc906
   package com.enterpriseintellijence.enterpriseintellijence.dto;
   
 ++import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
-  import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
+  import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
   import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
   
 @@@ -68,5 -68,5 +69,6 @@@ public class ProductDTO 
@@ -767,7 +767,7 @@ mode 000000,100644..100644
 ++
 ++import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
@@ -1133,7 +1133,7 @@ index 7ffbf9f,7ffbf9f..86fc906
   package com.enterpriseintellijence.enterpriseintellijence.dto;
   
 ++import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
-  import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
+  import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
   import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
   
 @@@ -68,5 -68,5 +69,6 @@@ public class ProductDTO 

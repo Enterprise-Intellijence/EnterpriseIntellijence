@@ -32,6 +32,9 @@ public class PaymentMethod {
     @JoinColumn(name = "user_id")
     private User ownerUser;
 
+    @OneToMany(mappedBy = "paymentMethod")
+    private List<Transaction> transaction;
+
 
 
 }

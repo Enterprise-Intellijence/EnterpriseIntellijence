@@ -2,25 +2,22 @@ package com.enterpriseintellijence.enterpriseintellijence;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
-import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
@@ -223,7 +220,7 @@ public class Demo {
             product.setBrand(brand.get(random.nextInt(size)));
 
             Double priceProduct = price+random.nextInt(1,1500);
-            product.setMyMoney(new MyMoney(priceProduct, Currency.EUR ));
+            product.setCustomMoney(new CustomMoney(priceProduct, Currency.EUR ));
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             product.setAddress(user.getAddress());
             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));

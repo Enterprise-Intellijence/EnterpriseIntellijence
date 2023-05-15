@@ -1,8 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 @Data
@@ -13,5 +10,5 @@ import lombok.*;
 public class ProductImageDTO {
     private String id;
     private byte[] photo;
-    private ProductDTO productDTO;
+    private ProductBasicDTO productBasicDTO;
 }

@@ -10,6 +10,6 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class EntertainmentDTO extends ProductDTO{
+public class EntertainmentDTO extends ProductFullDTO {
     private EntertainmentType entertainmentType;
 }
