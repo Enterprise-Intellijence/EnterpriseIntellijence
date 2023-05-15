@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class Delivery {
     private Order order;
 
     @Column(name = "delivery_cost")
-    private Money deliveryCost;
+    private CustomMoney deliveryCost;
 
     private String shipper;
 
