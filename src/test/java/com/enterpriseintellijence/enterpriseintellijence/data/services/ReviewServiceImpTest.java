@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Review;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReviewRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -41,7 +41,7 @@ public class ReviewServiceImpTest {
     private ReviewDTO defaultReviewDTO;
     private Review defaultReview;
 
-    private UserFullDTO defaultUserFullDTO;
+    private UserDTO defaultUserDTO;
     private User defaultUserEntity;
 
 
@@ -50,7 +50,7 @@ public class ReviewServiceImpTest {
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT).setAmbiguityIgnored(true);
 
-        defaultUserFullDTO = UserFullDTO.builder()
+        defaultUserDTO = UserDTO.builder()
                 .id("1")
                 .username("username")
                 .password("password")
@@ -59,7 +59,7 @@ public class ReviewServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        defaultUserEntity = modelMapper.map(defaultUserFullDTO, User.class);
+        defaultUserEntity = modelMapper.map(defaultUserDTO, User.class);
 
         defaultReview = Review.builder()
                 .id("1")
@@ -81,7 +81,7 @@ public class ReviewServiceImpTest {
                 .title("title")
                 .description("descr")
                 .vote(5)
-                .reviewer(defaultUserFullDTO)
+                .reviewer(defaultUserDTO)
                 .build();
 
         Review review = mapToEntity(reviewDTO);
@@ -108,7 +108,7 @@ public class ReviewServiceImpTest {
                 .reviewer(defaultUserEntity)
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
         when(reviewRepository.save(ReviewToSaveEntity)).thenReturn(defaultReview);
 
         ReviewDTO savedReview = reviewServiceImp.createReview(defaultReviewDTO);
@@ -124,7 +124,7 @@ public class ReviewServiceImpTest {
                 .title("title")
                 .description("descr")
                 .vote(5)
-                .reviewer(defaultUserFullDTO)
+                .reviewer(defaultUserDTO)
                 .build();
 
 //        when(reviewRepository.findById("1")).thenReturn(Optional.of(defaultReview));
@@ -139,7 +139,7 @@ public class ReviewServiceImpTest {
         ReviewDTO reviewToReplace = ReviewDTO.builder()
                 .id("1")
                 .vote(3)
-                .reviewer(defaultUserFullDTO)
+                .reviewer(defaultUserDTO)
                 .build();
 
         when(reviewRepository.findById("1")).thenReturn(Optional.empty());
@@ -152,7 +152,7 @@ public class ReviewServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromNewReviewUser_thenThrow() {
-        UserFullDTO differentUserFullDTO = UserFullDTO.builder()
+        UserDTO differentUserDTO = UserDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
@@ -163,11 +163,11 @@ public class ReviewServiceImpTest {
 
         ReviewDTO newReview = ReviewDTO.builder()
                 .id("1")
-                .reviewer(differentUserFullDTO)
+                .reviewer(differentUserDTO)
                 .build();
 
         when(reviewRepository.findById("1")).thenReturn(Optional.of(defaultReview));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             reviewServiceImp.replaceReview("1", newReview);
@@ -176,7 +176,7 @@ public class ReviewServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromOldReviewUser_thenThrow() {
-        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
+        UserDTO anotherUserDTO = UserDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
@@ -185,7 +185,7 @@ public class ReviewServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
         when(reviewRepository.findById("1")).thenReturn(Optional.of(defaultReview));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -201,12 +201,12 @@ public class ReviewServiceImpTest {
                 .title("title")
                 .description("descr")
                 .vote(5)
-                .reviewer(defaultUserFullDTO)
+                .reviewer(defaultUserDTO)
                 .build();
 
         when(reviewRepository.findById("1")).thenReturn(Optional.of(defaultReview));
         when(reviewRepository.save(defaultReview)).thenReturn(defaultReview);
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         ReviewDTO replacedReview = reviewServiceImp.replaceReview("1", reviewToReplace);
     }

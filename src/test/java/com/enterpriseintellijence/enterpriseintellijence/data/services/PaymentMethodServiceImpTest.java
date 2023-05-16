@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMe
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +32,7 @@ public class PaymentMethodServiceImpTest {
     public ModelMapper modelMapper;
     private PaymentMethodDTO defaultPaymentMethodDTO;
     private PaymentMethod defaultPaymentMethodEntity;
-    private UserFullDTO defaultUserFullDTO;
+    private UserDTO defaultUserDTO;
     private User defaultUserEntity;
 
     @BeforeEach
@@ -42,7 +42,7 @@ public class PaymentMethodServiceImpTest {
 
         paymentMethodServiceImp = new PaymentMethodServiceImp(paymentMethodRepository, modelMapper, userService);
 
-        defaultUserFullDTO = UserFullDTO.builder()
+        defaultUserDTO = UserDTO.builder()
                 .id("1")
                 .username("username")
                 .password("password")
@@ -51,7 +51,7 @@ public class PaymentMethodServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        defaultUserEntity = modelMapper.map(defaultUserFullDTO, User.class);
+        defaultUserEntity = modelMapper.map(defaultUserDTO, User.class);
 
         defaultPaymentMethodEntity = PaymentMethod.builder()
                 .id("1")
@@ -72,8 +72,8 @@ public class PaymentMethodServiceImpTest {
                 .creditCard("123456789")
                 .owner("owner")
                 .expiryDate("expiryDate")
-                .ownerUser(defaultUserFullDTO)
-                .defaultUser(defaultUserFullDTO)
+                .ownerUser(defaultUserDTO)
+                .defaultUser(defaultUserDTO)
                 .build();
 
         PaymentMethod p = mapToEntity(paymentMethodDTO);
@@ -109,8 +109,8 @@ public class PaymentMethodServiceImpTest {
                 .creditCard("123456789")
                 .owner("owner")
                 .expiryDate("expiryDate")
-                .ownerUser(defaultUserFullDTO)
-                .defaultUser(defaultUserFullDTO)
+                .ownerUser(defaultUserDTO)
+                .defaultUser(defaultUserDTO)
                 .build();
 
         assertThat(p).usingRecursiveComparison().isEqualTo(expectedPayment);
@@ -124,8 +124,8 @@ public class PaymentMethodServiceImpTest {
                 .creditCard("123456789")
                 .owner("owner")
                 .expiryDate("expiryDate")
-                .ownerUser(defaultUserFullDTO)
-                .defaultUser(defaultUserFullDTO)
+                .ownerUser(defaultUserDTO)
+                .defaultUser(defaultUserDTO)
                 .build();
 
        PaymentMethod paymentMethodToSaveEntity = PaymentMethod.builder()
@@ -139,7 +139,7 @@ public class PaymentMethodServiceImpTest {
 
        when(paymentMethodRepository.save(paymentMethodToSaveEntity)).thenReturn(paymentMethodToSaveEntity);
        when(paymentMethodRepository.save(mapToEntity(paymentMethodToSave))).thenReturn(paymentMethodToSaveEntity);
-       when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+       when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
        PaymentMethodDTO savedPaymentMethod = paymentMethodServiceImp.createPaymentMethod(paymentMethodToSave);
        assertThat(savedPaymentMethod).usingRecursiveComparison().isEqualTo(paymentMethodToSave);
@@ -152,8 +152,8 @@ public class PaymentMethodServiceImpTest {
                 .creditCard("123456789")
                 .owner("owner")
                 .expiryDate("expiryDate")
-                .ownerUser(defaultUserFullDTO)
-                .defaultUser(defaultUserFullDTO)
+                .ownerUser(defaultUserDTO)
+                .defaultUser(defaultUserDTO)
                 .build();
 
         Assertions.assertThrows(IdMismatchException.class, () -> {
@@ -168,13 +168,13 @@ public class PaymentMethodServiceImpTest {
                 .creditCard("123456789")
                 .owner("owner")
                 .expiryDate("expiryDate")
-                .ownerUser(defaultUserFullDTO)
-                .defaultUser(defaultUserFullDTO)
+                .ownerUser(defaultUserDTO)
+                .defaultUser(defaultUserDTO)
                 .build();
 
         when(paymentMethodRepository.findById("1")).thenReturn(java.util.Optional.ofNullable(defaultPaymentMethodEntity));
         when(paymentMethodRepository.save(defaultPaymentMethodEntity)).thenReturn(defaultPaymentMethodEntity);
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         PaymentMethodDTO savedPaymentMethod = paymentMethodServiceImp.replacePaymentMethod("1", paymentMethodDTO);
         assertThat(savedPaymentMethod).usingRecursiveComparison().isEqualTo(paymentMethodDTO);

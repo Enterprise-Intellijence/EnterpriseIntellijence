@@ -1,7 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,21 +11,21 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
-    UserFullDTO createUser(UserFullDTO userFullDTO);
-    UserFullDTO replaceUser(String id, UserFullDTO userFullDTO) throws IllegalAccessException;
-    UserFullDTO updateUser(String id, UserFullDTO patch) throws IllegalAccessException;
+    UserDTO createUser(UserDTO userDTO);
+    UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException;
+    UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException;
     void deleteUser(String id);
-    UserFullDTO findUserById(String id);
-    Iterable<UserFullDTO> findAll();
+    UserDTO findUserById(String id);
+    Iterable<UserDTO> findAll();
 
-    Optional<UserFullDTO> findByUsername(String username);
+    Optional<UserDTO> findByUsername(String username);
 
 
     void processOAuthPostLogin(String username, String email);
 
-    Optional<UserFullDTO> findUserFromContext();
+    Optional<UserDTO> findUserFromContext();
 
     Map<String, String> refreshToken(String authorizationHeader) throws JOSEException, ParseException;
 
-    Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserFullDTO userFullDTO, Pageable page);
+    Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserDTO userDTO, Pageable page);
 }

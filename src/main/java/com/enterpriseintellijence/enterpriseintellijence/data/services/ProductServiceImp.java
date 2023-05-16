@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Clothing;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
@@ -34,10 +35,10 @@ public class ProductServiceImp implements ProductService {
     private final Clock clock;
 
     @Override
-    public ProductFullDTO createProduct(ProductFullDTO productFullDTO) {
+    public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
         try{
-            product = mapToEntity(productFullDTO);
+            product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
             JwtContextUtils.getUsernameFromContext();
             // todo: set seller from context
@@ -50,10 +51,10 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductFullDTO replaceProduct(String id, ProductFullDTO productFullDTO) {
-        throwOnIdMismatch(id, productFullDTO);
+    public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
+        throwOnIdMismatch(id, productDTO);
         Product oldProduct = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Product product = mapToEntity(productFullDTO);
+        Product product = mapToEntity(productDTO);
 
         // TODO: 28/04/2023 add user from context and check for permission
 
@@ -62,9 +63,9 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductFullDTO updateProduct(String id, ProductFullDTO patch) {
-        ProductFullDTO productFullDTODTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        Product product = mapToEntity(productFullDTODTO);
+    public ProductDTO updateProduct(String id, ProductDTO patch) {
+        ProductDTO productDTODTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        Product product = mapToEntity(productDTODTO);
 
         // TODO: come implementare?
 
@@ -77,14 +78,14 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductFullDTO getProductById(String id) {
+    public ProductDTO getProductById(String id) {
         // TODO: 15/05/2023 boolean for capability 
         Product product = productRepository.findById(id)
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
             ));
-        ProductFullDTO productFullDTO = mapToProductDetailsDTO(product);
-        return productFullDTO;
+        ProductDTO productDTO = mapToProductDetailsDTO(product);
+        return productDTO;
     }
 
     @Override
@@ -113,18 +114,18 @@ public class ProductServiceImp implements ProductService {
 
 
 
-    private Product mapToEntity(ProductFullDTO productFullDTO) {
-        if(productFullDTO.getProductCategory().equals(ProductCategory.CLOTHING))
-            return modelMapper.map(productFullDTO, Clothing.class);
-        else if(productFullDTO.getProductCategory().equals(ProductCategory.HOME))
-            return modelMapper.map(productFullDTO, Home.class);
-        else if(productFullDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
-            return modelMapper.map(productFullDTO, Entertainment.class);
+    private Product mapToEntity(ProductDTO productDTO) {
+        if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING))
+            return modelMapper.map(productDTO, Clothing.class);
+        else if(productDTO.getProductCategory().equals(ProductCategory.HOME))
+            return modelMapper.map(productDTO, Home.class);
+        else if(productDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+            return modelMapper.map(productDTO, Entertainment.class);
         else
-            return modelMapper.map(productFullDTO,Product.class);
+            return modelMapper.map(productDTO,Product.class);
     }
 
-    private ProductFullDTO mapToProductDetailsDTO(Product product) {
+    private ProductDTO mapToProductDetailsDTO(Product product) {
         if(product.getProductCategory().equals(ProductCategory.CLOTHING))
             return modelMapper.map(product, ClothingDTO.class);
         else if(product.getProductCategory().equals(ProductCategory.HOME))
@@ -132,7 +133,7 @@ public class ProductServiceImp implements ProductService {
         else if(product.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
             return modelMapper.map(product, EntertainmentDTO.class);
         else
-            return modelMapper.map(product, ProductFullDTO.class);
+            return modelMapper.map(product, ProductDTO.class);
     }
 
     private ProductBasicDTO mapToProductDTO(Product product) {
@@ -141,8 +142,8 @@ public class ProductServiceImp implements ProductService {
 
 
 
-    private void throwOnIdMismatch(String id, ProductFullDTO productFullDTO) {
-        if (productFullDTO.getId() != null && !productFullDTO.getId().equals(id)) {
+    private void throwOnIdMismatch(String id, ProductDTO productDTO) {
+        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
             throw new IdMismatchException();
         }
     }

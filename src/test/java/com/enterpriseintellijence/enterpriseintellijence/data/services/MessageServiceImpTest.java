@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -38,7 +38,7 @@ public class MessageServiceImpTest {
     private MessageDTO defaultMessageDTO;
     private Message defaultMessage;
 
-    private UserFullDTO defaultUserFullDTO;
+    private UserDTO defaultUserDTO;
     private User defaultUserEntity;
 
 
@@ -47,7 +47,7 @@ public class MessageServiceImpTest {
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT).setAmbiguityIgnored(true);
 
-        defaultUserFullDTO = UserFullDTO.builder()
+        defaultUserDTO = UserDTO.builder()
                 .id("1")
                 .username("username")
                 .password("password")
@@ -56,7 +56,7 @@ public class MessageServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        defaultUserEntity = modelMapper.map(defaultUserFullDTO, User.class);
+        defaultUserEntity = modelMapper.map(defaultUserDTO, User.class);
 
         defaultMessage = Message.builder()
                 .id("1")
@@ -75,7 +75,7 @@ public class MessageServiceImpTest {
         MessageDTO messageDTO = MessageDTO.builder()
                 .id("1")
                 .context("message")
-                .sendUser(defaultUserFullDTO)
+                .sendUser(defaultUserDTO)
                 .build();
 
         Message message = mapToEntity(messageDTO);
@@ -99,7 +99,7 @@ public class MessageServiceImpTest {
                 .sendUser(defaultUserEntity)
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
         when(messageRepository.save(messageToSaveEntity)).thenReturn(defaultMessage);
 
         MessageDTO savedMessage = messageServiceImp.createMessage(defaultMessageDTO);
@@ -113,7 +113,7 @@ public class MessageServiceImpTest {
         MessageDTO newMessage = MessageDTO.builder()
                 .id("NOT 1")
                 .context("message")
-                .sendUser(defaultUserFullDTO)
+                .sendUser(defaultUserDTO)
                 .build();
 
 
@@ -129,7 +129,7 @@ public class MessageServiceImpTest {
         MessageDTO MessageToReplace = MessageDTO.builder()
                 .id("1")
                 .context("message")
-                .sendUser(defaultUserFullDTO)
+                .sendUser(defaultUserDTO)
                 .build();
 
         when(messageRepository.findById("1")).thenReturn(Optional.empty());
@@ -142,7 +142,7 @@ public class MessageServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromNewMessageUser_thenThrow() {
-        UserFullDTO differentUserFullDTO = UserFullDTO.builder()
+        UserDTO differentUserDTO = UserDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
@@ -154,11 +154,11 @@ public class MessageServiceImpTest {
         MessageDTO newMessage = MessageDTO.builder()
                 .id("1")
                 .context("message")
-                .sendUser(differentUserFullDTO)
+                .sendUser(differentUserDTO)
                 .build();
 
         when(messageRepository.findById("1")).thenReturn(Optional.of(defaultMessage));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             messageServiceImp.replaceMessage("1", newMessage);
@@ -167,7 +167,7 @@ public class MessageServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromOldMessageUser_thenThrow() {
-        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
+        UserDTO anotherUserDTO = UserDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
@@ -176,7 +176,7 @@ public class MessageServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
         when(messageRepository.findById("1")).thenReturn(Optional.of(defaultMessage));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -189,12 +189,12 @@ public class MessageServiceImpTest {
         MessageDTO messageToReplace = MessageDTO.builder()
                 .id("1")
                 .context("message")
-                .sendUser(defaultUserFullDTO)
+                .sendUser(defaultUserDTO)
                 .build();
 
         when(messageRepository.findById("1")).thenReturn(Optional.of(defaultMessage));
         when(messageRepository.save(defaultMessage)).thenReturn(defaultMessage);
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         MessageDTO replacedMessage = messageServiceImp.replaceMessage("1", messageToReplace);
     }
@@ -202,14 +202,14 @@ public class MessageServiceImpTest {
 
     @Test
     void whenGetMessageWithDifferentUser_thenThrow() {
-        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
+        UserDTO anotherUserDTO = UserDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
                 .email("another@email.com")
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
         when(messageRepository.findById("1")).thenReturn(Optional.of(defaultMessage));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -222,7 +222,7 @@ public class MessageServiceImpTest {
     @Test
     void whenGetMessageById_thenCorrect() throws IllegalAccessException {
         when(messageRepository.findById("1")).thenReturn(Optional.of(defaultMessage));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
 
         MessageDTO foundMessage = messageServiceImp.getMessage("1");
 

@@ -2,7 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.persistence.*;

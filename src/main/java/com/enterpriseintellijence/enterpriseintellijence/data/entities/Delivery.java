@@ -18,7 +18,7 @@ import org.joda.money.Money;
 @Builder
 @AllArgsConstructor
 @Table(name = "delivery")
-public class Delivery {
+public class  Delivery {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")

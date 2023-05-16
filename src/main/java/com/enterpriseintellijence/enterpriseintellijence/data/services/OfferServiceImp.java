@@ -5,7 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -27,10 +27,10 @@ public class OfferServiceImp implements OfferService {
     public OfferDTO createOffer(OfferDTO offerDTO) {
         Offer offer = mapToEntity(offerDTO);
 
-        UserFullDTO userFullDTO = userService.findUserFromContext()
+        UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        offer.setOfferer(modelMapper.map(userFullDTO, User.class));
+        offer.setOfferer(modelMapper.map(userDTO, User.class));
 
         Offer savedOffer = offerRepository.save(offer);
 
@@ -44,7 +44,7 @@ public class OfferServiceImp implements OfferService {
         Offer oldOffer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Offer newOffer = mapToEntity(offerDTO);
 
-        UserFullDTO requestingUser = userService.findUserFromContext()
+        UserDTO requestingUser = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
         if(!requestingUser.getId().equals(oldOffer.getOfferer().getId())) {
@@ -83,10 +83,10 @@ public class OfferServiceImp implements OfferService {
         Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         OfferDTO offerDTO = mapToDTO(offer);
 
-        UserFullDTO userFullDTO = userService.findUserFromContext()
+        UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if(!userFullDTO.getId().equals(offerDTO.getOfferer().getId())) {
+        if(!userDTO.getId().equals(offerDTO.getOfferer().getId())) {
             throw new IllegalAccessException("User cannot read other's offers");
         }
         return mapToDTO(offer);
