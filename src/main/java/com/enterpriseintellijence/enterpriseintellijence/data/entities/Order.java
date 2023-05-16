@@ -46,4 +46,7 @@ public class Order {
     @JoinColumn(name = "order_offer"/*,nullable = false*/)
     private Offer offer;
 
+    @OneToOne
+    @JoinColumn(name = "order_transaction")
+    private Transaction transaction;
 }

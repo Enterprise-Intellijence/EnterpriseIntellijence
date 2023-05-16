@@ -1,11 +1,10 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductBasicDTO;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
-import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
-import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -32,17 +30,17 @@ public class ProductController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO){
-        return productService.createProduct(productDTO);
+    public ProductFullDTO createProduct(@RequestBody @Valid ProductFullDTO productFullDTO){
+        return productService.createProduct(productFullDTO);
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO){
-        return ResponseEntity.ok(productService.replaceProduct(id, productDTO));
+    public ResponseEntity<ProductFullDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductFullDTO productFullDTO){
+        return ResponseEntity.ok(productService.replaceProduct(id, productFullDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) {
+    public ResponseEntity<ProductFullDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductFullDTO patch) {
         return ResponseEntity.ok(productService.updateProduct(id, patch));
     }
 
@@ -54,27 +52,30 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> productById(@PathVariable("id") String id){
+    public ResponseEntity<ProductFullDTO> productById(@PathVariable("id") String id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping("")
-    public ResponseEntity<Iterable<ProductDTO>> allProduct() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<Page<ProductBasicDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getAllPaged(page, size));
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/paged")
-    public ResponseEntity<Page<ProductDTO>> getAllPaged(@RequestParam int page, @RequestParam int size){
+/*    @GetMapping("/paged")
+    public ResponseEntity<Page<ProductBasicDTO>> getAllPaged(@RequestParam int page, @RequestParam int size){
         
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(productService.getAllPaged(page,size));
         }
 
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }
+    }*/
 
     @GetMapping("/filtered")
-    public ResponseEntity<Page<ProductDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
+    public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
 
 /*
         if (bucket.tryConsume(1)) {
@@ -128,14 +129,5 @@ public class ProductController {
         return ResponseEntity.ok(Arrays.asList(ProductGender.class.getEnumConstants())) ;
     }
 
-    @GetMapping("/capabilityUrl/{id}")
-    public ResponseEntity<String> getCapabilityUrl(@PathVariable("id") String id){
-        return ResponseEntity.ok(productService.getCapabilityUrl(id));
-    }
-
-    @GetMapping("/capability/{token}")
-    public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
-        return productById(TokenStore.getInstance().getIdByCapability(token));
-    }
 
 }

@@ -25,12 +25,15 @@ public class PaymentMethod {
     private String creditCard;
     private String expiryDate;
     private String owner;
-    @OneToOne(mappedBy = "defaultPaymentMethod")
+    @OneToOne(mappedBy = "defaultPaymentMethod",fetch = FetchType.LAZY)
     private User defaultUser;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User ownerUser;
+
+    @OneToMany(mappedBy = "paymentMethod")
+    private List<Transaction> transaction;
 
 
 

@@ -8,7 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Deliver
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -45,7 +45,7 @@ public class DeliveryServiceImpTest {
     private Delivery defaultDeliveryEntity;
     private Order defaultOrderEntity;
     private OrderDTO defaultOrderDTO;
-    private UserDTO defaultUserDTO;
+    private UserFullDTO defaultUserFullDTO;
     private User defaultUserEntity;
     private Address defaultAddressEntity;
     private AddressDTO defaultAddressDTO;
@@ -54,7 +54,7 @@ public class DeliveryServiceImpTest {
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT).setAmbiguityIgnored(true);
 
-        defaultUserDTO = UserDTO.builder()
+        defaultUserFullDTO = UserFullDTO.builder()
                 .id("1")
                 .username("username")
                 .password("password")
@@ -63,7 +63,7 @@ public class DeliveryServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        defaultUserEntity = modelMapper.map(defaultUserDTO, User.class);
+        defaultUserEntity = modelMapper.map(defaultUserFullDTO, User.class);
 
         defaultOrderEntity = Order.builder()
                 .id("1")

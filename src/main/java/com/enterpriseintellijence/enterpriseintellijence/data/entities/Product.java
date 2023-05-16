@@ -1,20 +1,20 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.MyMoney;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.joda.money.Money;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @see com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO
+ * @see ProductBasicDTO
  */
 @Data
 @NoArgsConstructor
@@ -36,7 +36,7 @@ public class Product {
 
     //@Column(name = "price", nullable = false)
     @Embedded
-    private MyMoney myMoney;
+    private CustomMoney customMoney;
 
     @Column(name = "brand")
     private String brand;
@@ -72,21 +72,25 @@ public class Product {
     @Column(name="product_category",nullable = false)
     private ProductCategory productCategory;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id"/*, nullable = false*/)
     private User seller;
 
-    @ManyToMany(mappedBy = "likedProducts")
+    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY)
     private List<User> usersThatLiked;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<Offer> offers;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<Message> messages;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private Order order;
+
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private List<ProductImage> productImages;
 
 
 

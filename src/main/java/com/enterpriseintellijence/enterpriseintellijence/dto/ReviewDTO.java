@@ -1,7 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -19,7 +17,7 @@ public class ReviewDTO {
     @Max(5)
     @Min(1)
     private Integer vote;
-    private UserDTO reviewer;
-    private UserDTO reviewed;
+    private UserFullDTO reviewer;
+    private UserFullDTO reviewed;
 
 }

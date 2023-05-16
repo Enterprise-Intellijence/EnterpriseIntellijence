@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,14 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
-    private Money amount;
-    private String paymentMethod;
+
+    @Embedded
+    private CustomMoney amount;
+
+    @ManyToOne()
+    @JoinColumn(name = "payment_method")
+    private PaymentMethod paymentMethod;
+
+    @OneToOne(mappedBy = "transaction")
+    private Order order;
 }

@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -32,17 +32,17 @@ public class UserServiceImp implements UserService{
     private final PaymentMethodRepository paymentMethodRepository;
 
 
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = mapToEntity(userDTO);
+    public UserFullDTO createUser(UserFullDTO userFullDTO) {
+        User user = mapToEntity(userFullDTO);
         user = userRepository.save(user);
         return mapToDto(user);
     }
 
-    public UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException {
+    public UserFullDTO replaceUser(String id, UserFullDTO userFullDTO) throws IllegalAccessException {
         //TODO: serve effettivamente questo metodo?
-        throwOnIdMismatch(id,userDTO);
+        throwOnIdMismatch(id, userFullDTO);
         User oldUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        User newUser = mapToEntity(userDTO);
+        User newUser = mapToEntity(userFullDTO);
 
         //todo: get user from context
        User requestingUser = new User();
@@ -60,9 +60,9 @@ public class UserServiceImp implements UserService{
         return mapToDto(newUser);
     }
 
-    public UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException {
-        UserDTO user = mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        UserDTO userContext = findUserFromContext().orElseThrow(EntityNotFoundException::new);
+    public UserFullDTO updateUser(String id, UserFullDTO patch) throws IllegalAccessException {
+        UserFullDTO user = mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        UserFullDTO userContext = findUserFromContext().orElseThrow(EntityNotFoundException::new);
 
         if(userContext.getId() != patch.getId())
             throw new IllegalAccessException("User cannot change another user");
@@ -88,19 +88,19 @@ public class UserServiceImp implements UserService{
 
     }
 
-    public UserDTO findUserById(String id) {
+    public UserFullDTO findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapToDto(user);
     }
 
-    public Optional<UserDTO> findByUsername(String username) {
+    public Optional<UserFullDTO> findByUsername(String username) {
         User user= userRepository.findByUsername(username);
         if (user==null)
             return Optional.empty();
         return Optional.of(mapToDto(user));
     }
 
-    public Iterable<UserDTO> findAll() {
+    public Iterable<UserFullDTO> findAll() {
         // TODO: Da implementare quando abbiamo l'admin
         return userRepository.findAll().stream()
                 .map(this::mapToDto)
@@ -112,7 +112,7 @@ public class UserServiceImp implements UserService{
         var existUser = findByUsername(username);
 
         if (existUser.isEmpty()) {
-            UserDTO newUser = new UserDTO();
+            UserFullDTO newUser = new UserFullDTO();
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
             newUser.setEmail(email);
@@ -122,23 +122,23 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public Optional<UserDTO> findUserFromContext() {
+    public Optional<UserFullDTO> findUserFromContext() {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
         if (username.isEmpty())
             return Optional.empty();
 
-        Optional<UserDTO> user = findByUsername(username.get());
+        Optional<UserFullDTO> user = findByUsername(username.get());
         user.orElseThrow().setPassword(null);
         return user;
     }
 
     @Override
-    public Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserDTO userDTO, Pageable page) {
-        return paymentMethodRepository.findAllByDefaultUser_Id(userDTO.getId(), page)
+    public Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserFullDTO userFullDTO, Pageable page) {
+        return paymentMethodRepository.findAllByDefaultUser_Id(userFullDTO.getId(), page)
                 .map(paymentMethod -> modelMapper.map(paymentMethod, PaymentMethodDTO.class));
     }
-    public void throwOnIdMismatch(String id, UserDTO userDTO){
-        if(userDTO.getId() != null && !userDTO.getId().equals(id))
+    public void throwOnIdMismatch(String id, UserFullDTO userFullDTO){
+        if(userFullDTO.getId() != null && !userFullDTO.getId().equals(id))
             throw new IdMismatchException();
     }
 
@@ -147,7 +147,7 @@ public class UserServiceImp implements UserService{
 
         String refreshToken = authorizationHeader.substring("Bearer ".length());
         String username = TokenStore.getInstance().getUser(refreshToken);
-        UserDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
+        UserFullDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
 
         User userDetails = mapToEntity(user);
         String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));
@@ -157,7 +157,7 @@ public class UserServiceImp implements UserService{
 
 
 
-    public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
-    public UserDTO mapToDto(User user){return modelMapper.map(user,UserDTO.class);}
+    public User mapToEntity(UserFullDTO userFullDTO){return modelMapper.map(userFullDTO, User.class);}
+    public UserFullDTO mapToDto(User user){return modelMapper.map(user, UserFullDTO.class);}
 
 }
