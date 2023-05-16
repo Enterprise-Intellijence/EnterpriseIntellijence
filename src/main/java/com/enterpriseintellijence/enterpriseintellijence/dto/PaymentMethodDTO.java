@@ -1,8 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +21,8 @@ public class PaymentMethodDTO {
     @Length(min = 12, max = 12)
     private String creditCard;
 
-    @NotBlank
-    @Length(min = 5, max = 5)
-    private String expiryDate;   //WHY not DATE?
+    @NotBlank  //DATE MM/AAAA
+    private LocalDateTime expiryDate;
 
     @NotBlank
     @Length(max = 25)

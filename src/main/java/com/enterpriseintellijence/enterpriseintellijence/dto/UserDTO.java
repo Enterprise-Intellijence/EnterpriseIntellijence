@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
@@ -13,12 +14,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
 @Builder
-public class UserFullDTO {
+public class UserDTO {
 
     private String id;
 
@@ -38,8 +41,13 @@ public class UserFullDTO {
     @NotNull
     private UserRole role;
 
-/*
     private PaymentMethodDTO defaultPaymentMethod;
+    private int followers;
+    private int follows;
+
+    private List<ProductBasicDTO> sellingProducts;
+
+    /*
     private List<PaymentMethodDTO> paymentMethods;
     private List<OfferDTO> offers;
     private List<UserDTO> followers;

@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +22,9 @@ public class Message {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
     private String context;
+
+    @Column(name = "message_date")
+    private LocalDateTime messageDate;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

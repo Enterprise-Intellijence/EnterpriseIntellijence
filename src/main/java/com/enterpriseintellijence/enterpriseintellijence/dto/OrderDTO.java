@@ -1,5 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import java.time.LocalDateTime;
 
@@ -31,7 +34,7 @@ public class OrderDTO {
     private UserBasicDTO user;
     private DeliveryDTO delivery;
 
-    private OfferDTO offer;
+    private OfferBasicDTO offer;
     private TransactionDTO transaction;
 }
 

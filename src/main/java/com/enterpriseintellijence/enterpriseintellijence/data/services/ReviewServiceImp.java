@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Review;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReviewRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -28,10 +28,10 @@ public class ReviewServiceImp implements ReviewService {
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
         Review review = mapToEntity(reviewDTO);
 
-        UserFullDTO userFullDTO = userService.findUserFromContext()
+        UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        review.setReviewer(modelMapper.map(userFullDTO, User.class));
+        review.setReviewer(modelMapper.map(userDTO, User.class));
 
         review = reviewRepository.save(review);
 
@@ -46,7 +46,7 @@ public class ReviewServiceImp implements ReviewService {
         Review oldReview = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Review newReview = mapToEntity(reviewDTO);
 
-        UserFullDTO requestingUser = userService.findUserFromContext()
+        UserDTO requestingUser = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
         if(!requestingUser.getId().equals(oldReview.getReviewer().getId())) {

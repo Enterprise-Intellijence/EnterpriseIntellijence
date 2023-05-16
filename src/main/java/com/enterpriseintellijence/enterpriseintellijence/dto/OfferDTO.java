@@ -1,9 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 
 import lombok.*;
-import org.joda.money.Money;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +24,6 @@ public class OfferDTO {
     private UserBasicDTO offerer;
     private ProductBasicDTO product;
     private MessageDTO message;
-    private OrderDTO order;
+    private OrderBasicDTO order;
 
 }

@@ -1,37 +1,36 @@
-package com.enterpriseintellijence.enterpriseintellijence.dto;
+package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import org.hibernate.validator.constraints.Length;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.validator.constraints.Length;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Data
 @NoArgsConstructor
 @ToString
-@JsonTypeInfo(
+/*@JsonTypeInfo(
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "productCategory",
         use = JsonTypeInfo.Id.NAME,
         visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ProductFullDTO.class, name = "OTHER"),
+        @JsonSubTypes.Type(value = ProductBasicDTO.class, name = "OTHER"),
         @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING"),
         @JsonSubTypes.Type(value = HomeDTO.class, name = "HOME"),
         @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT")
 
-})
-public class ProductFullDTO {
+})*/
+public class ProductBasicDTO {
+
     private String id;
 
     @Length(max = 100)
@@ -47,9 +46,12 @@ public class ProductFullDTO {
     @Length(max = 100)
     private String brand;
     private Condition condition;
+    // TODO: 16/05/2023 mappare sul mappare
     private Integer likeNumber;
     private UserBasicDTO seller;
-
+    private ProductImageDTO cardImage;
+    private ProductCategory productCategory;
+/*
 
     private AddressDTO address;
     private ProductSize productSize;
@@ -59,11 +61,13 @@ public class ProductFullDTO {
     private LocalDateTime uploadDate;
     private Visibility visibility;
     private Availability availability;
-    private ProductCategory productCategory;
 
-    private List<UserBasicDTO> usersThatLiked;
+
+    private List<UserDTO> usersThatLiked;
     private List<OfferDTO> offers;
     private List<MessageDTO> messages;
     private OrderDTO order;
     private List<ProductImageDTO> productImages;
+*/
+
 }

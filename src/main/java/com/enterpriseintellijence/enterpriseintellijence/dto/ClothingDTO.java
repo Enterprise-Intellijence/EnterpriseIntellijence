@@ -13,7 +13,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class ClothingDTO extends ProductFullDTO {
+public class ClothingDTO extends ProductDTO {
 
     private ProductGender productGender;
     private ClothingSize size;

@@ -1,4 +1,4 @@
-package com.enterpriseintellijence.enterpriseintellijence.dto;
+package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
 
 import jakarta.validation.constraints.Email;

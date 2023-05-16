@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMe
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,7 +23,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     public PaymentMethodDTO createPaymentMethod(PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
         PaymentMethod paymentMethod = mapToEntity(paymentMethodDTO);
 
-        UserFullDTO requestingUser = userService.findUserFromContext()
+        UserDTO requestingUser = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
 
         if (!requestingUser.getId().equals(paymentMethod.getDefaultUser().getId())) {
@@ -47,7 +47,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         PaymentMethod oldPaymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         PaymentMethod newPaymentMethod = mapToEntity(paymentMethodDTO);
 
-        UserFullDTO requestingUser = userService.findUserFromContext()
+        UserDTO requestingUser = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
 
         if (!requestingUser.getId().equals(oldPaymentMethod.getDefaultUser().getId())) {
@@ -67,10 +67,10 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
 
         PaymentMethodDTO paymentMethodDTO = getPaymentMethodById(id);
 
-        UserFullDTO userFullDTO = userService.findUserFromContext()
+        UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (userFullDTO.getId().equals(paymentMethodDTO.getDefaultUser().getId())) {
+        if (userDTO.getId().equals(paymentMethodDTO.getDefaultUser().getId())) {
             throw new IllegalAccessException("User cannot update payment method");
         }
 
@@ -101,10 +101,10 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         PaymentMethodDTO paymentMethodDTO = mapToDTO(paymentMethod);
 
-        UserFullDTO userFullDTO = userService.findUserFromContext()
+        UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!userFullDTO.getId().equals(paymentMethodDTO.getDefaultUser().getId())) {
+        if (!userDTO.getId().equals(paymentMethodDTO.getDefaultUser().getId())) {
             throw new IllegalAccessException("User cannot get payment method");
         }
 
@@ -117,7 +117,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     public PaymentMethodDTO mapToDTO(PaymentMethod paymentMethod) {
         return modelMapper.map(paymentMethod, PaymentMethodDTO.class);
     }
-    public User mapToEntity(UserFullDTO userFullDTO){return modelMapper.map(userFullDTO, User.class);}
+    public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
 
     private void throwOnIdMismatch(String id, PaymentMethodDTO paymentMethodDTO) {
         if (paymentMethodDTO.getId() != null && !paymentMethodDTO.getId().equals(id))

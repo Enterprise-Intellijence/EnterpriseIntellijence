@@ -1,17 +1,17 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductFullDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import org.springframework.data.domain.Page;
 
 public interface ProductService {
-    ProductFullDTO createProduct(ProductFullDTO productFullDTO);
-    ProductFullDTO replaceProduct(String id, ProductFullDTO productFullDTO);
-    ProductFullDTO updateProduct(String id, ProductFullDTO productFullDTO);
+    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO replaceProduct(String id, ProductDTO productDTO);
+    ProductDTO updateProduct(String id, ProductDTO productDTO);
     void deleteProduct(String id);
-    ProductFullDTO getProductById(String id);
+    ProductDTO getProductById(String id);
 
     Iterable<ProductBasicDTO> findAll();
 

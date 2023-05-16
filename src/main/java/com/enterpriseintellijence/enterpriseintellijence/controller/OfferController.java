@@ -20,6 +20,7 @@ import java.time.Duration;
 @RequestMapping(value = "/api/v1/offers", produces = "application/json")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class OfferController {
+    // TODO: 16/05/23 Erne
 
     private final OfferService offerService;
 
