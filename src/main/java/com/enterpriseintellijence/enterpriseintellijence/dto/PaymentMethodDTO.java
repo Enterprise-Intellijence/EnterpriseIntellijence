@@ -1,9 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -28,8 +25,8 @@ public class PaymentMethodDTO {
     @Length(max = 25)
     private String owner;
 
-    private UserDTO defaultUser;
+    private UserFullDTO defaultUser;
 
-    private UserDTO ownerUser;
+    private UserFullDTO ownerUser;
 
 }

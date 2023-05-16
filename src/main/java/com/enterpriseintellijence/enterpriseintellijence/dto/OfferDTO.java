@@ -19,7 +19,7 @@ public class OfferDTO {
 
     // TODO:
     private OfferState state;
-    private UserDTO offerer;
+    private UserFullDTO offerer;
     private ProductBasicDTO product;
     private MessageDTO message;
     private OrderDTO order;

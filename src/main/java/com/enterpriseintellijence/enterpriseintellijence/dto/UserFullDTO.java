@@ -5,8 +5,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
 import org.hibernate.validator.constraints.Length;
 
-import java.util.List;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,7 +18,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+public class UserFullDTO {
 
     private String id;
 

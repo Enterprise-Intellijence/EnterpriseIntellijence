@@ -5,7 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -40,7 +40,7 @@ public class OfferServiceImpTest {
     private OfferDTO defaultOfferDTO;
     private Offer defaultOffer;
 
-    private UserDTO defaultUserDTO;
+    private UserFullDTO defaultUserFullDTO;
     private User defaultUserEntity;
 
 
@@ -49,7 +49,7 @@ public class OfferServiceImpTest {
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT).setAmbiguityIgnored(true);
 
-        defaultUserDTO = UserDTO.builder()
+        defaultUserFullDTO = UserFullDTO.builder()
                 .id("1")
                 .username("username")
                 .password("password")
@@ -58,7 +58,7 @@ public class OfferServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        defaultUserEntity = modelMapper.map(defaultUserDTO, User.class);
+        defaultUserEntity = modelMapper.map(defaultUserFullDTO, User.class);
 
         defaultOffer = Offer.builder()
                 .id("1")
@@ -101,7 +101,7 @@ public class OfferServiceImpTest {
                 .state(OfferState.PENDING)
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
         when(offerRepository.save(offerToSaveEntity)).thenReturn(defaultOffer);
 
         OfferDTO savedOffer = offerServiceImp.createOffer(defaultOfferDTO);
@@ -114,7 +114,7 @@ public class OfferServiceImpTest {
     void whenReplacingOfferDTO_throwOnIdMismatch() {
         OfferDTO newOffer = OfferDTO.builder()
                 .id("NOT 1")
-                .offerer(defaultUserDTO)
+                .offerer(defaultUserFullDTO)
                 .state(OfferState.PENDING)
                 .build();
 
@@ -130,7 +130,7 @@ public class OfferServiceImpTest {
     void whenReplacingOfferDTO_throwOnOfferNotFound() {
         OfferDTO offerToReplace = OfferDTO.builder()
                 .id("1")
-                .offerer(defaultUserDTO)
+                .offerer(defaultUserFullDTO)
                 .state(OfferState.PENDING)
                 .build();
 
@@ -144,7 +144,7 @@ public class OfferServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromNewOfferUser_thenThrow() {
-        UserDTO differentUserDTO = UserDTO.builder()
+        UserFullDTO differentUserFullDTO = UserFullDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
@@ -155,12 +155,12 @@ public class OfferServiceImpTest {
 
         OfferDTO newOffer = OfferDTO.builder()
                 .id("1")
-                .offerer(differentUserDTO)
+                .offerer(differentUserFullDTO)
                 .state(OfferState.PENDING)
                 .build();
 
         when(offerRepository.findById("1")).thenReturn(Optional.of(defaultOffer));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             offerServiceImp.replaceOffer("1", newOffer);
@@ -169,7 +169,7 @@ public class OfferServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromOldOfferUser_thenThrow() {
-        UserDTO anotherUserDTO = UserDTO.builder()
+        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
@@ -178,7 +178,7 @@ public class OfferServiceImpTest {
                 .provider(Provider.LOCAL)
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
         when(offerRepository.findById("1")).thenReturn(Optional.of(defaultOffer));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -190,12 +190,12 @@ public class OfferServiceImpTest {
     void whenChangingState_thenThrow() {
         OfferDTO offerToReplace = OfferDTO.builder()
                 .id("1")
-                .offerer(defaultUserDTO)
+                .offerer(defaultUserFullDTO)
                 .state(OfferState.ACCEPTED)    // CHANGED STATE
                 .build();
 
         when(offerRepository.findById("1")).thenReturn(Optional.of(defaultOffer));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             offerServiceImp.replaceOffer("1", offerToReplace);
@@ -222,14 +222,14 @@ public class OfferServiceImpTest {
 
     @Test
     void whenGetOfferWithDifferentUser_thenThrow() {
-        UserDTO anotherUserDTO = UserDTO.builder()
+        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
                 .id("2")
                 .username("anotherUsername")
                 .password("password")
                 .email("another@email.com")
                 .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
         when(offerRepository.findById("1")).thenReturn(Optional.of(defaultOffer));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -242,7 +242,7 @@ public class OfferServiceImpTest {
     @Test
     void whenGetOfferById_thenCorrect() throws IllegalAccessException {
         when(offerRepository.findById("1")).thenReturn(Optional.of(defaultOffer));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         OfferDTO foundOffer = offerServiceImp.getOffer("1");
 

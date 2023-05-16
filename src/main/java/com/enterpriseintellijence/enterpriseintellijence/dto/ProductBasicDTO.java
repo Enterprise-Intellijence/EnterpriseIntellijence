@@ -45,7 +45,7 @@ public class ProductBasicDTO {
     private String brand;
     private Condition condition;
     private Integer likeNumber;
-    private UserDTO seller;
+    private UserFullDTO seller;
     private ProductImageDTO cardImage;
     private ProductCategory productCategory;
 /*
