@@ -28,10 +28,11 @@ public class OrderDTO {
     private LocalDateTime orderDate;
 
     private ProductBasicDTO product;
-    private UserFullDTO user;
+    private UserBasicDTO user;
     private DeliveryDTO delivery;
 
     private OfferDTO offer;
+    private TransactionDTO transaction;
 }
 
 

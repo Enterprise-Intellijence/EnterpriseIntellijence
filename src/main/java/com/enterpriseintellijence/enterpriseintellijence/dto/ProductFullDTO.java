@@ -48,7 +48,7 @@ public class ProductFullDTO {
     private String brand;
     private Condition condition;
     private Integer likeNumber;
-    private UserFullDTO seller;
+    private UserBasicDTO seller;
 
 
     private AddressDTO address;
@@ -61,7 +61,7 @@ public class ProductFullDTO {
     private Availability availability;
     private ProductCategory productCategory;
 
-    private List<UserFullDTO> usersThatLiked;
+    private List<UserBasicDTO> usersThatLiked;
     private List<OfferDTO> offers;
     private List<MessageDTO> messages;
     private OrderDTO order;

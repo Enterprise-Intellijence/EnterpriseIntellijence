@@ -25,8 +25,8 @@ public class PaymentMethodDTO {
     @Length(max = 25)
     private String owner;
 
-    private UserFullDTO defaultUser;
+    private UserBasicDTO defaultUser;
 
-    private UserFullDTO ownerUser;
+    private UserBasicDTO ownerUser;
 
 }

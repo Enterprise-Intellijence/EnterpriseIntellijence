@@ -18,6 +18,6 @@ public class TransactionDTO {
     @NotNull
     private CustomMoney amount;
     @NotNull
-    private String paymentMethod;
+    private PaymentMethodDTO paymentMethod;
 
 }
