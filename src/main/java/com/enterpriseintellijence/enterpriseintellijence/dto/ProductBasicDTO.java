@@ -44,8 +44,9 @@ public class ProductBasicDTO {
     @Length(max = 100)
     private String brand;
     private Condition condition;
+    // TODO: 16/05/2023 mappare sul mappare
     private Integer likeNumber;
-    private UserFullDTO seller;
+    private UserBasicDTO seller;
     private ProductImageDTO cardImage;
     private ProductCategory productCategory;
 /*
