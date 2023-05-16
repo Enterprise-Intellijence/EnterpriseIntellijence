@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -63,14 +64,14 @@ public class User implements UserDetails {
     private List<User> followers;
 
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
-    private List<Product> soldProducts;
+    private List<Product> sellingProducts;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<User> follows;
+    private Set<User> follows;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> likedProducts;
+    private Set<Product> likedProducts;
 
     @OneToMany(mappedBy = "sendUser",fetch = FetchType.LAZY)
     private List<Message> sentMessages;

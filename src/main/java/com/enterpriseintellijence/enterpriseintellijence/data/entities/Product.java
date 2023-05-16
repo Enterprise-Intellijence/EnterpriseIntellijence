@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @see ProductBasicDTO
@@ -78,7 +79,7 @@ public class Product {
     private User seller;
 
     @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY)
-    private List<User> usersThatLiked;
+    private Set<User> usersThatLiked;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<Offer> offers;

@@ -58,6 +58,7 @@ public class UserServiceImp implements UserService{
 
         newUser = userRepository.save(newUser);
         return mapToDto(newUser);
+
     }
 
     public UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException {

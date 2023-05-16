@@ -51,7 +51,6 @@ public class UserDTO {
     private List<PaymentMethodDTO> paymentMethods;
     private List<OfferDTO> offers;
     private List<UserDTO> followers;
-    private List<ProductBasicDTO> soldProducts;
     private List<UserDTO> follows;
     private List<ProductBasicDTO> likes;
     private List<MessageDTO> sendMessages;
