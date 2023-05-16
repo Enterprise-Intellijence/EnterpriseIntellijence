@@ -17,7 +17,7 @@ public class ReviewDTO {
     @Max(5)
     @Min(1)
     private Integer vote;
-    private UserFullDTO reviewer;
-    private UserFullDTO reviewed;
+    private UserBasicDTO reviewer;
+    private UserBasicDTO reviewed;
 
 }

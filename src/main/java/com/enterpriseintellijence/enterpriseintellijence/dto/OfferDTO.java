@@ -15,11 +15,11 @@ public class OfferDTO {
     private String id;
 
     // TODO: usare classe specifica per i soldi
-    private Money amount;
+    private CustomMoneyDTO amount;
 
     // TODO:
     private OfferState state;
-    private UserFullDTO offerer;
+    private UserBasicDTO offerer;
     private ProductBasicDTO product;
     private MessageDTO message;
     private OrderDTO order;
