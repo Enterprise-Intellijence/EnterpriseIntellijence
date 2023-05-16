@@ -15,6 +15,7 @@ import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,13 +35,17 @@ public class ProductServiceImp implements ProductService {
 
     private final Clock clock;
 
+    @Bean
+    private JwtContextUtils jwtContextUtils(){
+        return new JwtContextUtils();
+    }
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
         try{
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
-            JwtContextUtils.getUsernameFromContext();
+            jwtContextUtils().getUsernameFromContext();
             // todo: set seller from context
             product = productRepository.save(product);
         }catch (Exception e){
@@ -150,7 +155,7 @@ public class ProductServiceImp implements ProductService {
 
     public String getCapabilityUrl(String id) {
 
-        Optional<String> username = JwtContextUtils.getUsernameFromContext();
+        Optional<String> username = jwtContextUtils().getUsernameFromContext();
         if (username.isEmpty()) {
             throw new RuntimeException("User not found");
         }

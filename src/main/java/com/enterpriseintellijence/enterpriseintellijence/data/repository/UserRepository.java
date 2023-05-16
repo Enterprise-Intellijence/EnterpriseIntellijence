@@ -9,7 +9,19 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User,String>, JpaSpecificationExecutor<User> , PagingAndSortingRepository<User,String> {
     User findByUsername(String username);
+
+    List<User> findAllUsersThatFollowUser(String userId);
+    List<User> findAllUsersThatUserFollows(String userId);
+
+    void addFollow(String userId, String userIdToFollow);
+    void removeFollow(String userId, String userIdToUnFollow);
+
+    void addLikeToProduct(String userId, String productId);
+    void removeLikeToProduct(String userId, String productId);
+
 }

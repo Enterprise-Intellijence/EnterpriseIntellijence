@@ -2,7 +2,9 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Delivery;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.DeliveryRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -23,7 +25,7 @@ public class DeliveryServiceImp implements DeliveryService {
         Delivery delivery = mapToEntity(deliveryDTO);
 
         delivery.setOrder(mapToEntity(deliveryDTO.getOrder()));
-        delivery.setDeliveryCost(deliveryDTO.getDeliveryCost());
+        delivery.setDeliveryCost(mapToEntity(deliveryDTO.getDeliveryCost()));
         delivery.setShipper(deliveryDTO.getShipper());
 
         deliveryRepository.save(delivery);
@@ -93,6 +95,10 @@ public class DeliveryServiceImp implements DeliveryService {
 
     public DeliveryDTO mapToDTO(Delivery delivery) {
         return modelMapper.map(delivery, DeliveryDTO.class);
+    }
+
+    public CustomMoney mapToEntity(CustomMoneyDTO customMoneyDTO) {
+        return modelMapper.map(customMoneyDTO, CustomMoney.class);
     }
 
     private void throwOnIdMismatch(String id, DeliveryDTO deliveryDTO) {
