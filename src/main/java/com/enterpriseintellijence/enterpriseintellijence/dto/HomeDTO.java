@@ -11,7 +11,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-public class HomeDTO extends ProductDTO {
+public class HomeDTO extends ProductFullDTO {
     private Colour colour;
     private HomeType homeType;
 }

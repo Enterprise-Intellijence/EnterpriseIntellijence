@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -27,10 +27,10 @@ public class MessageServiceImp implements MessageService{
     public MessageDTO createMessage(MessageDTO messageDTO) {
         Message message = mapToEntity(messageDTO);
 
-        UserDTO userDTO = userService.findUserFromContext()
+        UserFullDTO userFullDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        message.setSendUser(modelMapper.map(userDTO, User.class));
+        message.setSendUser(modelMapper.map(userFullDTO, User.class));
 
         message = messageRepository.save(message);
 
@@ -46,7 +46,7 @@ public class MessageServiceImp implements MessageService{
 
         Message message = mapToEntity(messageDTO);
 
-        UserDTO requestingUser = userService.findUserFromContext()
+        UserFullDTO requestingUser = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
         if(!requestingUser.getId().equals(oldMessage.getSendUser().getId())) {
@@ -93,10 +93,10 @@ public class MessageServiceImp implements MessageService{
         Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         MessageDTO messageDTO = mapToDTO(message);
 
-        UserDTO userDTO = userService.findUserFromContext()
+        UserFullDTO userFullDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if(!userDTO.getId().equals(messageDTO.getSendUser().getId())) {
+        if(!userFullDTO.getId().equals(messageDTO.getSendUser().getId())) {
             throw new IllegalAccessException("User cannot read other's messages");
         }
         return mapToDTO(message);

@@ -1,0 +1,1386 @@
+package com.enterpriseintellijence.enterpriseintellijence.service;public interface UserService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;
+
+public interface ReviewService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;
+
+public interface TransactionService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public enum ClothingType {
+}
+package com.enterpriseintellijence.enterpriseintellijence.config;public class Config {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;public interface ShippingService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.entities;public class Entertainment {
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.repository;public interface MyMoneyRepository {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;
+
+public enum GenderProductType {
+
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;public interface ReviewService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto;
+
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingType;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@ToString
+public class WearableDTO extends ProductDTO {
+
+    private ProductGender productGender;
+    private String size;    // TODO: 01/05/2023 deve essere un enum 
+    private String colour; // TODO: 01/05/2023 deve essere un enum 
+    private ClothingType clothingType;
+
+}
+tree 18a51c33ab54d34284c1c193dcfa125db7921d63
+
+.github/
+.gitignore
+.mvn/
+entj.p12
+mvnw
+mvnw.cmd
+pom.xml
+src/
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public enum HomeType {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public class ProductCategory {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;public interface ProductService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.repository;public interface HomeRepository {
+}
+
+commit cca9a1b7e36e757b0b9b0a27d5df89f3c4168e2b
+Merge: 6928e4e 4c7837e
+Author: Ernesto-Rapisarda <ernesto.rapisarda81@gmail.com>
+Date:   Sun May 14 18:21:52 2023 +0200
+
+    On main: !!GitHub_Desktop<main>
+
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/Demo.java
+index 0000000,60b0e90..39919f4
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/Demo.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/Demo.java
+@@@ -1,0 -1,265 +1,273 @@@
++ package com.enterpriseintellijence.enterpriseintellijence;
++ 
++ import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
++ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
++ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
++ import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
++ import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
++ import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
++ import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
++ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
++ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
++ import jakarta.persistence.*;
++ import lombok.RequiredArgsConstructor;
++ import org.springframework.security.crypto.password.PasswordEncoder;
++ import org.springframework.stereotype.Service;
++ 
++ import javax.imageio.ImageIO;
++ import java.awt.*;
++ import java.awt.image.BufferedImage;
++ import java.io.ByteArrayOutputStream;
++ import java.io.File;
++ import java.io.IOException;
+++import java.text.DecimalFormat;
++ import java.time.LocalDateTime;
++ import java.util.*;
++ import java.util.List;
++ import java.util.concurrent.ThreadLocalRandom;
++ 
++ @Service
++ @RequiredArgsConstructor
++ public class Demo {
++     private ArrayList<User> userArrays = new ArrayList<>();
++     private ArrayList<Product> productArrayList ;
++     private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" +
++             "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n" +
+ -            "\n" +
++             "Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC\n" +
+ -            "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\"\n" +
+ -            "\n" +
+ -            "1914 translation by H. Rackham\n" +
+ -            "\"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?\"\n" +
+ -            "\n" +
+ -            "Section 1.10.33 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC\n" +
+ -            "\"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\"\n" +
+ -            "\n" +
+ -            "1914 translation by H. Rackham\n" +
+ -            "\"On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.\"";
+++            "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. \n";
++     private ArrayList<String> brand =new ArrayList<>();
++     private ArrayList<byte[]> productImageArrayList = new ArrayList<>();
++ 
++     private final UserRepository userRepository;
++     private final PasswordEncoder passwordEncoder;
++     private final PaymentMethodRepository paymentMethodRepository;
++     private final ProductRepository productRepository;
++     private final ProductImageRepository productImageRepository;
++ 
++ 
++ 
++     public void initialize() throws IOException {
++         initializeProductImageList();
++         initializeBrandList();
++         createUser();
++         for(int i=0;i<35;i++){
++             createProduct(userArrays.get(i));
++         }
+++        //setLikeProduct();
++ 
++ 
++     }
++ 
+++    private void setLikeProduct(){
+++        // TODO: 13/05/2023 perchè non va????
+++        List<Product> products = productRepository.findAll();
+++
+++        for (User user: userArrays){
+++            Random random = new Random();
+++            int n= random.nextInt(3,50);
+++            List<Product> likes=new ArrayList<>();
+++            for (int i=0;i<n;i++){
+++                Product temp = products.get(random.nextInt(products.size()));
+++                if(!likes.contains(temp))
+++                    likes.add(temp);
+++            }
+++            user.setLikedProducts(likes);
+++            userRepository.save(user);
+++            user.setLikedProducts(null);
+++        }
+++    }
+++
++     public void createUser() throws IOException {
++ 
++         for (int i=1; i<101;i++){
++             User user = new User();
++             user.setUsername("username"+i);
++             user.setPassword(passwordEncoder.encode("password"+i));
++             user.setEmail("email"+i+"@gmail.com");
++             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
++             ByteArrayOutputStream bos = new ByteArrayOutputStream();
++             ImageIO.write(bufferedImage,"png",bos);
++             user.setPhoto(bos.toByteArray());
++             user.setProvider(Provider.LOCAL);
++             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
++             user.setRole(UserRole.USER);
++             //user.setDefaultPaymentMethod(createPayment(user));
++             user = userRepository.save(user);
++             userArrays.add(user);
++             createPayment(user);
++ /*            if(i<=35)
++                 createProduct(user);*/
++ 
++         }
++ 
++ 
++     }
++ 
++     private void createPayment(User user){
++         int rand = ThreadLocalRandom.current().nextInt(1, 4);
++         for (int i= 1; i<=rand;i++){
++             PaymentMethod paymentMethod = new PaymentMethod();
++             paymentMethod.setCreditCard("4000 4000 4000 400"+i);
++             paymentMethod.setExpiryDate("03/25");
++             paymentMethod.setOwner(user.getUsername()+" "+user.getUsername());
++             paymentMethod.setOwnerUser(user);
++             if(i==1)
++                 user.setDefaultPaymentMethod(paymentMethod);
++             paymentMethodRepository.save(paymentMethod);
++ 
++         }
++     }
++ 
++     private void createProduct(User user){
++         productArrayList = new ArrayList<>();
++ 
++         //for clothing enum
++         List<ProductGender> genderList = List.of(ProductGender.class.getEnumConstants());
+ -        List<ClothingSize> clothingSizeList = List.of(ClothingSize.class.getEnumConstants());
+ -        List<Colour> colourList = List.of(Colour.class.getEnumConstants());
+ -        List<ClothingType> clothingTypeList = List.of(ClothingType.class.getEnumConstants());
++         int sizeGender = genderList.size();
+ -        int sizeClothSize = clothingSizeList.size();
+++
+++        List<Colour> colourList = List.of(Colour.class.getEnumConstants());
++         int sizeColour = colourList.size();
+++
+++        List<ClothingType> clothingTypeList = List.of(ClothingType.class.getEnumConstants());
++         int sizeClothTipe = clothingTypeList.size();
++ 
+++
+++        List<ClothingSize> clothsSizeList = List.of(ClothingSize.CLOTHS_3XS,ClothingSize.CLOTHS_2XS,ClothingSize.CLOTHS_XS,ClothingSize.CLOTHS_S,ClothingSize.CLOTHS_M,ClothingSize.CLOTHS_L,ClothingSize.CLOTHS_XL,ClothingSize.CLOTHS_2XL,ClothingSize.CLOTHS_3L,ClothingSize.CLOTHS_4XL);
+++        int clothSize = clothsSizeList.size();
+++
+++        List<ClothingSize> shoesSizeList = List.of(ClothingSize.SHOES_25,ClothingSize.SHOES_26,ClothingSize.SHOES_27,ClothingSize.SHOES_28,ClothingSize.SHOES_29,ClothingSize.SHOES_30,ClothingSize.SHOES_31,
+++                ClothingSize.SHOES_32,ClothingSize.SHOES_33,ClothingSize.SHOES_34,ClothingSize.SHOES_35,ClothingSize.SHOES_36,ClothingSize.SHOES_37,ClothingSize.SHOES_38,ClothingSize.SHOES_39,
+++                ClothingSize.SHOES_40,ClothingSize.SHOES_41,ClothingSize.SHOES_42,ClothingSize.SHOES_43,ClothingSize.SHOES_44,ClothingSize.SHOES_45,ClothingSize.SHOES_46,ClothingSize.SHOES_47,
+++                ClothingSize.SHOES_48,ClothingSize.SHOES_49,ClothingSize.SHOES_50);
+++        int shoesSize = shoesSizeList.size();
+++
+++        List<ClothingSize> otherSizeList = List.of(ClothingSize.OTHER_SMALL,ClothingSize.OTHER_MEDIUM,ClothingSize.OTHER_BIG);
+++        int otherSize =otherSizeList.size();
+++
++         //for entertainment enum
++         List<EntertainmentType> entertainmentTypeList = List.of(EntertainmentType.class.getEnumConstants());
++         int sizeEnterType = entertainmentTypeList.size();
++ 
++         //for home enum
++         List<HomeType> homeTypeList = List.of(HomeType.class.getEnumConstants());
++         int sizeHomeType = homeTypeList.size();
++ 
++         Random random = new Random();
++ 
++         int rand = ThreadLocalRandom.current().nextInt(10, 31);
++         for (int i=1;i<=rand;i++){
++ 
++             int rand2=ThreadLocalRandom.current().nextInt(1, 4);
++             //setting clothing
++             if (rand2==1){
++                 Clothing clothing = new Clothing();
++                 clothing.setProductGender(genderList.get(random.nextInt(sizeGender)));
++                 clothing.setColour(colourList.get(random.nextInt(sizeColour)));
++                 clothing.setClothingType(clothingTypeList.get(random.nextInt(sizeClothTipe)));
+ -                ClothingSize clothingSize =clothingSizeList.get(random.nextInt(sizeClothTipe));
+ -                /*if(clothing.getClothingType().name().startsWith("CLOTHS") || clothing.getClothingType().name().startsWith("SHOES") ){
+ -                    while (!clothingSize.name().startsWith("CLOTHS") ||!clothingSize.name().startsWith("SHOES") ){
+ -                        clothingSize = clothingSizeList.get(random.nextInt(sizeClothSize));
+ -                        System.out.println("first while");
+ -
+ -                    }
+ -                }
+ -                else{
+ -                    while (clothingSize.name().startsWith("CLOTHS") ||clothingSize.name().startsWith("SHOES") ){
+ -                        clothingSize = clothingSizeList.get(random.nextInt(sizeClothSize));
+ -                        System.out.println("second while");
+ -                    }
+ -                }*/
+++                ClothingSize clothingSize = null;
+++                if(clothing.getClothingType().name().startsWith("CLOTHS"))
+++                    clothingSize = clothsSizeList.get(random.nextInt(clothSize));
+++                else if(clothing.getClothingType().name().startsWith("SHOES"))
+++                    clothingSize = shoesSizeList.get(random.nextInt(shoesSize));
+++                else
+++                    clothingSize = otherSizeList.get(random.nextInt(otherSize));
++                 clothing.setSize(clothingSize);
++                 clothing.setProductCategory(ProductCategory.CLOTHING);
++                 productArrayList.add(clothing);
++             }
++             //setting entertainment
++             else if(rand2==2){
++                 Entertainment entertainment = new Entertainment();
++                 entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
++                 entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
++                 productArrayList.add(entertainment);
++             }
++             //setting home
++             else if(rand2==3){
++                 Home home = new Home();
++                 home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
++                 home.setColour(colourList.get(random.nextInt(sizeColour)));
++                 home.setProductCategory(ProductCategory.HOME);
++                 productArrayList.add(home);
++             }
++             else{
++                 Product product=new Product();
++                 product.setProductCategory(ProductCategory.OTHER);
++                 productArrayList.add(product);
++             }
+ -            System.out.println("basic created");
+++
++         }
++         setBasicProduct(user);
++     }
++ 
++     private void setBasicProduct(User user){
++ 
++         int size= brand.size();
++ 
+ -        float price = 300;
+++        Double price = 1.90;
++ 
++ 
++         List<Condition> conditionList = List.of(Condition.class.getEnumConstants());
++         int sizeCondition = conditionList.size();
++ 
++         List<ProductSize> productSizeList = List.of(ProductSize.class.getEnumConstants());
++         int sizeProductSize = productSizeList.size();
++ 
++         Random random = new Random();
++ 
++         for (Product product: productArrayList){
++ 
++             int n = productArrayList.indexOf(product);
++             product.setTitle("Title product "+n);
++             product.setDescription(description);
++             product.setBrand(brand.get(random.nextInt(size)));
+ -            product.setMyMoney(new MyMoney(random.nextFloat(price), Currency.EUR ));
+ -            product.setCondition(conditionList.get(random.nextInt(random.nextInt(sizeCondition))));
+++
+++            Double priceProduct = price+random.nextInt(1,1500);
+++            product.setMyMoney(new MyMoney(priceProduct, Currency.EUR ));
+++            product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
++             product.setAddress(user.getAddress());
++             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));
+ -            product.setViews(random.nextInt(120));
+ -
+++            product.setViews(random.nextInt(0,120));
++             LocalDateTime date = LocalDateTime.now();
++             date = date.minusSeconds(ThreadLocalRandom.current().nextInt(1, 5184000));
++             product.setUploadDate(date);
++             product.setVisibility(Visibility.PUBLIC);
++             product.setAvailability(Availability.AVAILABLE);
++             product.setSeller(user);
++             String tempID= productRepository.save(product).getId();
++             product.setId(tempID);
+ -            //setImageToProduct(product);
+ -            System.out.println("product created");
+++            setImageToProduct(product);
++         }
++ 
++     }
++ 
++     private void setImageToProduct(Product product){
+ -       /* for (int i=0;i<5;i++){
+ -            ProductImage productImage
+ -        }*/
+++        Random random = new Random();
+++        for (int i=0;i<5;i++){
+++            ProductImage productImage = new ProductImage();
+++            productImage.setPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())));
+++            productImage.setProduct(product);
+++            productImageRepository.save(productImage);
+++        }
++     }
++ 
++     private void initializeProductImageList() throws IOException {
++         for(int i=1;i<23;i++){
++             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/product/"+i+".jpeg"));
++             ByteArrayOutputStream bos = new ByteArrayOutputStream();
++             ImageIO.write(bufferedImage,"jpg",bos);
++             productImageArrayList.add(bos.toByteArray());
++         }
++ 
++     }
++ 
++     private void initializeBrandList(){
++         for (int i=1;i<=13; i++){
++             brand.add("Brand "+i);
++         }
++     }
++ 
+ -/*    private String title;
+ -    private String description;
+ -    private MyMoney myMoney;
+ -    private String brand;
+ -    private Condition condition;
+ -    private Address address;
+ -    private ProductSize productSize;
+ -    private Integer views;
+ -    private LocalDateTime uploadDate;
+ -    private Visibility visibility;
+ -    private Availability availability;
+ -    private ProductCategory productCategory;
+ -    private User seller;*/
++ 
++ 
++ 
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/PaymentMethod.java
+index b2a88c4,b2a88c4..403a710
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/PaymentMethod.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/PaymentMethod.java
+@@@ -25,10 -25,10 +25,10 @@@ public class PaymentMethod 
+      private String creditCard;
+      private String expiryDate;
+      private String owner;
+--    @OneToOne(mappedBy = "defaultPaymentMethod")
+++    @OneToOne(mappedBy = "defaultPaymentMethod",fetch = FetchType.LAZY)
+      private User defaultUser;
+  
+--    @ManyToOne
+++    @ManyToOne(fetch = FetchType.LAZY)
+      @JoinColumn(name = "user_id")
+      private User ownerUser;
+  
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
+index 6350aa1,6350aa1..41a273c
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
+@@@ -10,6 -10,6 +10,7 @@@ import lombok.NoArgsConstructor
+  import org.hibernate.annotations.GenericGenerator;
+  import org.joda.money.Money;
+  
+++import java.awt.*;
+  import java.time.LocalDateTime;
+  import java.util.List;
+  
+@@@ -72,22 -72,22 +73,25 @@@ public class Product 
+      @Column(name="product_category",nullable = false)
+      private ProductCategory productCategory;
+  
+--    @ManyToOne
+++    @ManyToOne(fetch = FetchType.LAZY)
+      @JoinColumn(name = "user_id"/*, nullable = false*/)
+      private User seller;
+  
+--    @ManyToMany(mappedBy = "likedProducts")
+++    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY)
+      private List<User> usersThatLiked;
+  
+--    @OneToMany(mappedBy = "product")
+++    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+      private List<Offer> offers;
+  
+--    @OneToMany(mappedBy = "product")
+++    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+      private List<Message> messages;
+  
+--    @OneToOne(mappedBy = "product")
+++    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
+      private Order order;
+  
+++    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+++    private List<ProductImage> productImages;
+++
+  
+  
+  }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/ProductImage.java
+index 0000000,d30f005..b9c31df
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/ProductImage.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/ProductImage.java
+@@@ -1,0 -1,24 +1,24 @@@
++ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
++ 
++ import jakarta.persistence.*;
++ import lombok.Data;
++ import lombok.NoArgsConstructor;
++ import org.hibernate.annotations.GenericGenerator;
++ 
++ @Data
++ @NoArgsConstructor
++ @Entity
++ @Table(name = "products_image")
++ public class ProductImage {
++     @Id
++     @GenericGenerator(name = "uuid2", strategy = "uuid2")
++     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
++     @Column(length = 36, nullable = false, updatable = false)
++     private String id;
++ 
++     private byte[] photo;
++ 
+ -    @ManyToOne
+++    @ManyToOne(fetch = FetchType.LAZY)
++     @JoinColumn(name = "product_id")
++     private Product product;
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/User.java
+index af7331e,af7331e..9b70994
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/User.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/User.java
+@@@ -53,38 -53,38 +53,38 @@@ public class User implements UserDetail
+      @JoinColumn(name = "default_payment_method")
+      private PaymentMethod defaultPaymentMethod;
+  
+--    @OneToMany(mappedBy = "ownerUser")
+++    @OneToMany(mappedBy = "ownerUser",fetch = FetchType.LAZY)
+      private List<PaymentMethod> paymentMethods;
+  
+--    @OneToMany(mappedBy = "offerer")
+++    @OneToMany(mappedBy = "offerer",fetch = FetchType.LAZY)
+      private List<Offer> offersMade;
+  
+--    @ManyToMany(mappedBy = "follows")
+++    @ManyToMany(mappedBy = "follows",fetch = FetchType.LAZY)
+      private List<User> followers;
+  
+--    @OneToMany(mappedBy = "seller")
+++    @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
+      private List<Product> soldProducts;
+  
+--    @ManyToMany
+++    @ManyToMany(fetch = FetchType.LAZY)
+      private List<User> follows;
+  
+--    @ManyToMany
+++    @ManyToMany(fetch = FetchType.LAZY)
+      @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+      private List<Product> likedProducts;
+  
+--    @OneToMany(mappedBy = "sendUser")
+++    @OneToMany(mappedBy = "sendUser",fetch = FetchType.LAZY)
+      private List<Message> sentMessages;
+  
+--    @OneToMany(mappedBy = "receivedUser")
+++    @OneToMany(mappedBy = "receivedUser",fetch = FetchType.LAZY)
+      private List<Message> receivedMessages;
+  
+--    @OneToMany(mappedBy = "user")
+++    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+      private List<Order> orders;
+  
+--    @OneToMany(mappedBy = "reviewed")
+++    @OneToMany(mappedBy = "reviewed",fetch = FetchType.LAZY)
+      private List<Review> receivedReviews;
+  
+--    @OneToMany(mappedBy = "reviewer")
+++    @OneToMany(mappedBy = "reviewer",fetch = FetchType.LAZY)
+      private List<Review> sentReviews;
+  
+      @Override
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/embedded/MyMoney.java
+index de3351b,de3351b..b7ae3c7
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/embedded/MyMoney.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/embedded/MyMoney.java
+@@@ -17,7 -17,7 +17,7 @@@ import org.joda.money.Money
+  @Data
+  @NoArgsConstructor
+  public class MyMoney{
+--    private Float price;
+++    private Double price;
+  
+      @Enumerated(EnumType.STRING)
+      private Currency currency;
+@@@ -25,7 -25,7 +25,7 @@@
+      @Transient
+      private Money money;
+  
+--    public MyMoney (Float price, Currency currency){
+++    public MyMoney (Double price, Currency currency){
+          this.price=price;
+          this.currency=currency;
+          money=Money.of(CurrencyUnit.of(currency.toString()),price);
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductDTO.java
+index 7ffbf9f,7ffbf9f..86fc906
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductDTO.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductDTO.java
+@@@ -1,5 -1,5 +1,6 @@@
+  package com.enterpriseintellijence.enterpriseintellijence.dto;
+  
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
+  import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+  import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
+  
+@@@ -68,5 -68,5 +69,6 @@@ public class ProductDTO 
+      private List<OfferDTO> offers;
+      private List<MessageDTO> messages;
+      private OrderDTO order;
+++    private List<ProductImageDTO> productImages;
+  
+  }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/security/AppSecurityConfig.java
+index 2c4bd45,2c4bd45..d52c126
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/security/AppSecurityConfig.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/security/AppSecurityConfig.java
+@@@ -40,7 -40,7 +40,7 @@@ public class AppSecurityConfig  
+      @Bean
+      public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+          return http.csrf().disable()
+--                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**","/api/v1/products/categories","/api/v1/products/categories/home","/api/v1/products/categories/entertainment","/api/v1/products/categories/clothing","/api/v1/products/colour","/api/v1/products/categories/clothing/size","/api/v1/products/categories/clothing/gender").permitAll()
+++                .authorizeHttpRequests().requestMatchers("/demo","/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**","/api/v1/products/categories","/api/v1/products/categories/home","/api/v1/products/categories/entertainment","/api/v1/products/categories/clothing","/api/v1/products/colour","/api/v1/products/categories/clothing/size","/api/v1/products/categories/clothing/gender","/api/v1/products/categories/filtered","/api/v1/products","/api/v1/products/paged","/api/v1/products/{id}").permitAll()
+                  .and()
+                  .authorizeHttpRequests().anyRequest().authenticated()
+                  .and()
+@@@ -57,6 -57,6 +57,31 @@@
+      }
+  
+  
+++/*
+++    @Bean
+++    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+++        return http.csrf().disable()
+++                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate",
+++                        "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**",
+++                        "/api/v1/products/categories/**", "/api/v1/products/colour", "/api/v1/products/capability/**").permitAll()
+++                .and()
+++                .authorizeHttpRequests().anyRequest().authenticated()
+++                .and()
+++                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+++                .and()
+++                .addFilter(new CustomAuthenticationFilter(authenticationManager))
+++                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+++                .oauth2Login()
+++                .and()
+++                .oauth2Client()
+++                .and()
+++                .build();
+++
+++    }
+++*/
+++
+++
+++
+  
+  
+  }
+diff --cc src/main/resources/application.properties
+index 397084c,397084c..67c705b
+--- a/src/main/resources/application.properties
++++ b/src/main/resources/application.properties
+@@@ -1,7 -1,7 +1,7 @@@
+  spring.datasource.driver-class-name=org.postgresql.Driver
+--spring.datasource.url=jdbc:postgresql://localhost:5432/backend
+++spring.datasource.url=jdbc:postgresql://localhost:5432/contabile
+  spring.datasource.username=postgres
+--spring.datasource.password=postgres
+++spring.datasource.password=123456
+  
+  spring.jpa.hibernate.ddl-auto=update
+  spring.jpa.show-sql=false
+
+commit ea29e827dd2242743231f1989d9a2ceedd834754
+Merge: 045e4b9 cc6edc0
+Author: Ernesto-Rapisarda <ernesto.rapisarda81@gmail.com>
+Date:   Tue May 9 15:12:23 2023 +0200
+
+    On main: !!GitHub_Desktop<main>
+
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/EnterpriseIntellijenceApplication.java
+index 3e29d61,3e29d61..6360f7f
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/EnterpriseIntellijenceApplication.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/EnterpriseIntellijenceApplication.java
+@@@ -1,12 -1,12 +1,14 @@@
+  package com.enterpriseintellijence.enterpriseintellijence;
+  
+  import lombok.RequiredArgsConstructor;
+++import org.joda.money.CurrencyUnit;
+++import org.joda.money.Money;
+  import org.springframework.boot.SpringApplication;
+  import org.springframework.boot.autoconfigure.SpringBootApplication;
+  
+  @SpringBootApplication
+  public class EnterpriseIntellijenceApplication {
+  
+--    public static void main(String[] args) { SpringApplication.run(EnterpriseIntellijenceApplication.class, args); }
+++    public static void main(String[] args) { SpringApplication.run(EnterpriseIntellijenceApplication.class, args);}
+  
+  }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/controller/UserController.java
+index 1b547f7,1b547f7..456ffb5
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/controller/UserController.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/controller/UserController.java
+@@@ -112,12 -112,12 +112,12 @@@ public class UserController 
+          return new ResponseEntity<>(user, HttpStatus.OK);
+      }*/
+  
+--    @GetMapping("/{username}" )
+++/*    @GetMapping("/{username}" )
+      @PreAuthorize( "#username.equals(authentication.name)")
+      public ResponseEntity<Optional<UserDTO>> getUser(@PathVariable( "username" ) String username) {
+          var user = userService.findByUsername(username);
+          return ResponseEntity.ok(user);
+--    }
+++    }*/
+  
+      @PostMapping(path = "/authenticate" )
+      @ResponseStatus(HttpStatus.OK)
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
+index fa1e777,fa1e777..1644f4e
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
+@@@ -7,6 -7,6 +7,7 @@@ import jakarta.persistence.*
+  import lombok.Data;
+  import lombok.NoArgsConstructor;
+  import org.hibernate.annotations.GenericGenerator;
+++import org.joda.money.Money;
+  
+  import java.time.LocalDateTime;
+  import java.util.List;
+@@@ -33,7 -33,7 +34,7 @@@ public class Product 
+      private String description;
+  
+      @Column(name = "price", nullable = false)
+--    private Float price;
+++    private Money price;
+  
+      @Column(name = "brand")
+      private String brand;
+diff --cc src/main/resources/application.properties
+index 90d15fc,90d15fc..798fbd7
+--- a/src/main/resources/application.properties
++++ b/src/main/resources/application.properties
+@@@ -1,6 -1,6 +1,11 @@@
+--spring.datasource.url=jdbc:postgresql://enterpriseapplicationdatabase.co2fmkgqmujq.eu-central-1.rds.amazonaws.com:5432/postgres
+++spring.datasource.driver-class-name=org.postgresql.Driver
+++spring.datasource.url=jdbc:postgresql://localhost:5432/contabile
+  spring.datasource.username=postgres
+--spring.datasource.password=postgres
+++spring.datasource.password=123456
+++
+++#spring.datasource.url=jdbc:postgresql://enterpriseapplicationdatabase.co2fmkgqmujq.eu-central-1.rds.amazonaws.com:5432/postgres
+++#spring.datasource.username=postgres
+++#spring.datasource.password=postgres
+  spring.jpa.hibernate.ddl-auto=update
+  spring.jpa.show-sql=false
+  spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+package com.enterpriseintellijence.enterpriseintellijence.data.entities;public class House {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;
+
+public interface UserService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;public interface PaymentService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;public interface TransactionService {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public enum GenderProductType {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public enum ClothingSize {
+}
+
+commit d44e1be720b6c7aabc1723dd8384c69b2f552321
+Merge: 62c4bc8 4739acc
+Author: Ernesto-Rapisarda <ernesto.rapisarda81@gmail.com>
+Date:   Sat May 13 14:25:44 2023 +0200
+
+    On main: !!GitHub_Desktop<main>
+
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/Demo.java
+index 0000000,a9f6e96..60b0e90
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/Demo.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/Demo.java
+@@@ -1,0 -1,2 +1,265 @@@
+ -package com.enterpriseintellijence.enterpriseintellijence;public class Demo {
+++package com.enterpriseintellijence.enterpriseintellijence;
+++
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+++import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
+++import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
+++import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
+++import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+++import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
+++import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
+++import jakarta.persistence.*;
+++import lombok.RequiredArgsConstructor;
+++import org.springframework.security.crypto.password.PasswordEncoder;
+++import org.springframework.stereotype.Service;
+++
+++import javax.imageio.ImageIO;
+++import java.awt.*;
+++import java.awt.image.BufferedImage;
+++import java.io.ByteArrayOutputStream;
+++import java.io.File;
+++import java.io.IOException;
+++import java.time.LocalDateTime;
+++import java.util.*;
+++import java.util.List;
+++import java.util.concurrent.ThreadLocalRandom;
+++
+++@Service
+++@RequiredArgsConstructor
+++public class Demo {
+++    private ArrayList<User> userArrays = new ArrayList<>();
+++    private ArrayList<Product> productArrayList ;
+++    private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" +
+++            "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n" +
+++            "\n" +
+++            "Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC\n" +
+++            "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\"\n" +
+++            "\n" +
+++            "1914 translation by H. Rackham\n" +
+++            "\"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?\"\n" +
+++            "\n" +
+++            "Section 1.10.33 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC\n" +
+++            "\"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\"\n" +
+++            "\n" +
+++            "1914 translation by H. Rackham\n" +
+++            "\"On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.\"";
+++    private ArrayList<String> brand =new ArrayList<>();
+++    private ArrayList<byte[]> productImageArrayList = new ArrayList<>();
+++
+++    private final UserRepository userRepository;
+++    private final PasswordEncoder passwordEncoder;
+++    private final PaymentMethodRepository paymentMethodRepository;
+++    private final ProductRepository productRepository;
+++    private final ProductImageRepository productImageRepository;
+++
+++
+++
+++    public void initialize() throws IOException {
+++        initializeProductImageList();
+++        initializeBrandList();
+++        createUser();
+++        for(int i=0;i<35;i++){
+++            createProduct(userArrays.get(i));
+++        }
+++
+++
+++    }
+++
+++    public void createUser() throws IOException {
+++
+++        for (int i=1; i<101;i++){
+++            User user = new User();
+++            user.setUsername("username"+i);
+++            user.setPassword(passwordEncoder.encode("password"+i));
+++            user.setEmail("email"+i+"@gmail.com");
+++            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
+++            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+++            ImageIO.write(bufferedImage,"png",bos);
+++            user.setPhoto(bos.toByteArray());
+++            user.setProvider(Provider.LOCAL);
+++            user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
+++            user.setRole(UserRole.USER);
+++            //user.setDefaultPaymentMethod(createPayment(user));
+++            user = userRepository.save(user);
+++            userArrays.add(user);
+++            createPayment(user);
+++/*            if(i<=35)
+++                createProduct(user);*/
+++
+++        }
+++
+++
+++    }
+++
+++    private void createPayment(User user){
+++        int rand = ThreadLocalRandom.current().nextInt(1, 4);
+++        for (int i= 1; i<=rand;i++){
+++            PaymentMethod paymentMethod = new PaymentMethod();
+++            paymentMethod.setCreditCard("4000 4000 4000 400"+i);
+++            paymentMethod.setExpiryDate("03/25");
+++            paymentMethod.setOwner(user.getUsername()+" "+user.getUsername());
+++            paymentMethod.setOwnerUser(user);
+++            if(i==1)
+++                user.setDefaultPaymentMethod(paymentMethod);
+++            paymentMethodRepository.save(paymentMethod);
+++
+++        }
+++    }
+++
+++    private void createProduct(User user){
+++        productArrayList = new ArrayList<>();
+++
+++        //for clothing enum
+++        List<ProductGender> genderList = List.of(ProductGender.class.getEnumConstants());
+++        List<ClothingSize> clothingSizeList = List.of(ClothingSize.class.getEnumConstants());
+++        List<Colour> colourList = List.of(Colour.class.getEnumConstants());
+++        List<ClothingType> clothingTypeList = List.of(ClothingType.class.getEnumConstants());
+++        int sizeGender = genderList.size();
+++        int sizeClothSize = clothingSizeList.size();
+++        int sizeColour = colourList.size();
+++        int sizeClothTipe = clothingTypeList.size();
+++
+++        //for entertainment enum
+++        List<EntertainmentType> entertainmentTypeList = List.of(EntertainmentType.class.getEnumConstants());
+++        int sizeEnterType = entertainmentTypeList.size();
+++
+++        //for home enum
+++        List<HomeType> homeTypeList = List.of(HomeType.class.getEnumConstants());
+++        int sizeHomeType = homeTypeList.size();
+++
+++        Random random = new Random();
+++
+++        int rand = ThreadLocalRandom.current().nextInt(10, 31);
+++        for (int i=1;i<=rand;i++){
+++
+++            int rand2=ThreadLocalRandom.current().nextInt(1, 4);
+++            //setting clothing
+++            if (rand2==1){
+++                Clothing clothing = new Clothing();
+++                clothing.setProductGender(genderList.get(random.nextInt(sizeGender)));
+++                clothing.setColour(colourList.get(random.nextInt(sizeColour)));
+++                clothing.setClothingType(clothingTypeList.get(random.nextInt(sizeClothTipe)));
+++                ClothingSize clothingSize =clothingSizeList.get(random.nextInt(sizeClothTipe));
+++                /*if(clothing.getClothingType().name().startsWith("CLOTHS") || clothing.getClothingType().name().startsWith("SHOES") ){
+++                    while (!clothingSize.name().startsWith("CLOTHS") ||!clothingSize.name().startsWith("SHOES") ){
+++                        clothingSize = clothingSizeList.get(random.nextInt(sizeClothSize));
+++                        System.out.println("first while");
+++
+++                    }
+++                }
+++                else{
+++                    while (clothingSize.name().startsWith("CLOTHS") ||clothingSize.name().startsWith("SHOES") ){
+++                        clothingSize = clothingSizeList.get(random.nextInt(sizeClothSize));
+++                        System.out.println("second while");
+++                    }
+++                }*/
+++                clothing.setSize(clothingSize);
+++                clothing.setProductCategory(ProductCategory.CLOTHING);
+++                productArrayList.add(clothing);
+++            }
+++            //setting entertainment
+++            else if(rand2==2){
+++                Entertainment entertainment = new Entertainment();
+++                entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
+++                entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
+++                productArrayList.add(entertainment);
+++            }
+++            //setting home
+++            else if(rand2==3){
+++                Home home = new Home();
+++                home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
+++                home.setColour(colourList.get(random.nextInt(sizeColour)));
+++                home.setProductCategory(ProductCategory.HOME);
+++                productArrayList.add(home);
+++            }
+++            else{
+++                Product product=new Product();
+++                product.setProductCategory(ProductCategory.OTHER);
+++                productArrayList.add(product);
+++            }
+++            System.out.println("basic created");
+++        }
+++        setBasicProduct(user);
+++    }
+++
+++    private void setBasicProduct(User user){
+++
+++        int size= brand.size();
+++
+++        float price = 300;
+++
+++
+++        List<Condition> conditionList = List.of(Condition.class.getEnumConstants());
+++        int sizeCondition = conditionList.size();
+++
+++        List<ProductSize> productSizeList = List.of(ProductSize.class.getEnumConstants());
+++        int sizeProductSize = productSizeList.size();
+++
+++        Random random = new Random();
+++
+++        for (Product product: productArrayList){
+++
+++            int n = productArrayList.indexOf(product);
+++            product.setTitle("Title product "+n);
+++            product.setDescription(description);
+++            product.setBrand(brand.get(random.nextInt(size)));
+++            product.setMyMoney(new MyMoney(random.nextFloat(price), Currency.EUR ));
+++            product.setCondition(conditionList.get(random.nextInt(random.nextInt(sizeCondition))));
+++            product.setAddress(user.getAddress());
+++            product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));
+++            product.setViews(random.nextInt(120));
+++
+++            LocalDateTime date = LocalDateTime.now();
+++            date = date.minusSeconds(ThreadLocalRandom.current().nextInt(1, 5184000));
+++            product.setUploadDate(date);
+++            product.setVisibility(Visibility.PUBLIC);
+++            product.setAvailability(Availability.AVAILABLE);
+++            product.setSeller(user);
+++            String tempID= productRepository.save(product).getId();
+++            product.setId(tempID);
+++            //setImageToProduct(product);
+++            System.out.println("product created");
+++        }
+++
+++    }
+++
+++    private void setImageToProduct(Product product){
+++       /* for (int i=0;i<5;i++){
+++            ProductImage productImage
+++        }*/
+++    }
+++
+++    private void initializeProductImageList() throws IOException {
+++        for(int i=1;i<23;i++){
+++            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/product/"+i+".jpeg"));
+++            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+++            ImageIO.write(bufferedImage,"jpg",bos);
+++            productImageArrayList.add(bos.toByteArray());
+++        }
+++
+++    }
+++
+++    private void initializeBrandList(){
+++        for (int i=1;i<=13; i++){
+++            brand.add("Brand "+i);
+++        }
+++    }
+++
+++/*    private String title;
+++    private String description;
+++    private MyMoney myMoney;
+++    private String brand;
+++    private Condition condition;
+++    private Address address;
+++    private ProductSize productSize;
+++    private Integer views;
+++    private LocalDateTime uploadDate;
+++    private Visibility visibility;
+++    private Availability availability;
+++    private ProductCategory productCategory;
+++    private User seller;*/
+++
+++
+++
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/controller/DemoController.java
+index 0000000,76b349c..122e416
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/controller/DemoController.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/controller/DemoController.java
+@@@ -1,0 -1,2 +1,19 @@@
+ -package com.enterpriseintellijence.enterpriseintellijence.controller;public class DemoController {
+++package com.enterpriseintellijence.enterpriseintellijence.controller;
+++
+++import com.enterpriseintellijence.enterpriseintellijence.Demo;
+++import lombok.RequiredArgsConstructor;
+++import org.springframework.web.bind.annotation.RequestMapping;
+++import org.springframework.web.bind.annotation.RestController;
+++
+++import java.io.IOException;
+++
+++@RestController
+++@RequiredArgsConstructor
+++public class DemoController {
+++    private final Demo demo;
+++
+++    @RequestMapping("/demo")
+++    public void createDemoData() throws IOException {
+++        demo.initialize();
+++    }
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
+index 6350aa1,6350aa1..76297b0
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/Product.java
+@@@ -10,6 -10,6 +10,7 @@@ import lombok.NoArgsConstructor
+  import org.hibernate.annotations.GenericGenerator;
+  import org.joda.money.Money;
+  
+++import java.awt.*;
+  import java.time.LocalDateTime;
+  import java.util.List;
+  
+@@@ -88,6 -88,6 +89,9 @@@ public class Product 
+      @OneToOne(mappedBy = "product")
+      private Order order;
+  
+++    @OneToMany(mappedBy = "product")
+++    private List<ProductImage> productImages;
+++
+  
+  
+  }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/ProductImage.java
+index 0000000,5ca54f4..d30f005
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/ProductImage.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/entities/ProductImage.java
+@@@ -1,0 -1,2 +1,24 @@@
+ -package com.enterpriseintellijence.enterpriseintellijence.data.entities;public class ProductImage {
+++package com.enterpriseintellijence.enterpriseintellijence.data.entities;
+++
+++import jakarta.persistence.*;
+++import lombok.Data;
+++import lombok.NoArgsConstructor;
+++import org.hibernate.annotations.GenericGenerator;
+++
+++@Data
+++@NoArgsConstructor
+++@Entity
+++@Table(name = "products_image")
+++public class ProductImage {
+++    @Id
+++    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+++    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
+++    @Column(length = 36, nullable = false, updatable = false)
+++    private String id;
+++
+++    private byte[] photo;
+++
+++    @ManyToOne
+++    @JoinColumn(name = "product_id")
+++    private Product product;
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/repository/ProductImageRepository.java
+index 0000000,873a7a2..992d412
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/repository/ProductImageRepository.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/data/repository/ProductImageRepository.java
+@@@ -1,0 -1,2 +1,11 @@@
+ -package com.enterpriseintellijence.enterpriseintellijence.data.repository;public interface ProductImageRepository {
+++package com.enterpriseintellijence.enterpriseintellijence.data.repository;
+++
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
+++import org.springframework.data.jpa.repository.JpaRepository;
+++import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+++import org.springframework.stereotype.Repository;
+++
+++@Repository
+++public interface ProductImageRepository extends JpaRepository<ProductImage,String>, JpaSpecificationExecutor<ProductImage> {
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductDTO.java
+index 7ffbf9f,7ffbf9f..86fc906
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductDTO.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductDTO.java
+@@@ -1,5 -1,5 +1,6 @@@
+  package com.enterpriseintellijence.enterpriseintellijence.dto;
+  
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
+  import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+  import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
+  
+@@@ -68,5 -68,5 +69,6 @@@ public class ProductDTO 
+      private List<OfferDTO> offers;
+      private List<MessageDTO> messages;
+      private OrderDTO order;
+++    private List<ProductImageDTO> productImages;
+  
+  }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductImageDTO.java
+index 0000000,050a0e2..809f57e
+mode 000000,100644..100644
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductImageDTO.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/dto/ProductImageDTO.java
+@@@ -1,0 -1,2 +1,17 @@@
+ -package com.enterpriseintellijence.enterpriseintellijence.dto;public class ProductImageDTO {
+++package com.enterpriseintellijence.enterpriseintellijence.dto;
+++
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+++import jakarta.persistence.JoinColumn;
+++import jakarta.persistence.ManyToOne;
+++import lombok.*;
+++
+++@Data
+++@NoArgsConstructor
+++@AllArgsConstructor
+++@Builder
+++@ToString
+++public class ProductImageDTO {
+++    private String id;
+++    private byte[] photo;
+++    private ProductDTO productDTO;
++ }
+diff --cc src/main/java/com/enterpriseintellijence/enterpriseintellijence/security/AppSecurityConfig.java
+index 64cff56,64cff56..9245f1e
+--- a/src/main/java/com/enterpriseintellijence/enterpriseintellijence/security/AppSecurityConfig.java
++++ b/src/main/java/com/enterpriseintellijence/enterpriseintellijence/security/AppSecurityConfig.java
+@@@ -41,7 -41,7 +41,7 @@@ public class AppSecurityConfig  
+      @Bean
+      public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+          return http.csrf().disable()
+--                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**","/api/v1/products/categories","/api/v1/products/categories/home","/api/v1/products/categories/entertainment","/api/v1/products/categories/clothing","/api/v1/products/colour","/api/v1/products/categories/clothing/size","/api/v1/products/categories/clothing/gender").permitAll()
+++                .authorizeHttpRequests().requestMatchers("/demo","/api/v1/users/register", "/api/v1/users/authenticate", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**","/api/v1/products/categories","/api/v1/products/categories/home","/api/v1/products/categories/entertainment","/api/v1/products/categories/clothing","/api/v1/products/colour","/api/v1/products/categories/clothing/size","/api/v1/products/categories/clothing/gender","/api/v1/products/categories/filtered","/api/v1/products").permitAll()
+                  .and()
+                  .authorizeHttpRequests().anyRequest().authenticated()
+                  .and()
+package com.enterpriseintellijence.enterpriseintellijence.service;
+
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImp {
+
+    private  final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+
+    public UserDTO createUser(UserDTO userFullDTO) {
+        User user = modelMapper.map(userFullDTO,User.class);
+        userRepository.save(user);
+        // TODO: 21/04/2023
+        return null;
+    }
+
+    public ResponseEntity<UserDTO> replaceUser(UserDTO userFullDTO) {
+        // TODO: 21/04/2023
+        return null;
+    }
+
+    public ResponseEntity<UserDTO> updateUser(UserDTO userFullDTO) {
+        // TODO: 21/04/2023
+        return null;
+    }
+
+    public void deleteUser(String id) {
+        // TODO: 21/04/2023
+
+    }
+
+    public ResponseEntity<UserDTO> userById(String id) {
+        // TODO: 21/04/2023
+        return null;
+    }
+
+    public Iterable<UserDTO> findAll() {
+        // TODO: 21/04/2023
+        return null;
+    }
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.entities;
+
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingSize;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingType;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Colour;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@Table(name = "house")
+@Entity
+@PrimaryKeyJoinColumn(name = "product_id")
+public class House extends Product{
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_gender",nullable = false)
+    private ProductGender productGender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="size",nullable = false)
+    private ClothingSize size;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="colour",nullable = false)
+    private Colour colour;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="clothing_type",nullable = false)
+    private ClothingType clothingType;
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public enum EntertainmentType {
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.repository;public interface EntertainmentRepository {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public class Currency {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;
+
+import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ReviewServiceImp {
+    public ReviewDTO createReview(ReviewDTO reviewDTO) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public ResponseEntity<ReviewDTO> replaceReview(ReviewDTO reviewDTO) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public ResponseEntity<ReviewDTO> updateReview(ReviewDTO reviewDTO) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public void deleteReview(String id) {
+        // TODO: 21/04/2023  
+    }
+
+    public ResponseEntity<ReviewDTO> reviewById(String id) {
+        // TODO: 21/04/2023  
+        
+        return null;
+    }
+
+    public Iterable<ReviewDTO> findAll() {
+        // TODO: 21/04/2023
+        return null;
+    }
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded;public class MyMoney {
+}
+package com.enterpriseintellijence.enterpriseintellijence.service;
+
+import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TransactionServiceImp {
+    public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public ResponseEntity<TransactionDTO> replaceTransaction(String id, TransactionDTO transactionDTO) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public ResponseEntity<TransactionDTO> updateTransaction(String id, TransactionDTO transactionDTO) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public void deleteTransaction(String id) {
+        // TODO: 21/04/2023  
+    }
+
+    public ResponseEntity<TransactionDTO> transactionById(String id) {
+        // TODO: 21/04/2023  
+        return null;
+    }
+
+    public Iterable<TransactionDTO> findAll() {
+        // TODO: 21/04/2023  
+        return null;
+    }
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto.enums;public enum Colour {
+}
+package com.enterpriseintellijence.enterpriseintellijence.data.entities;
+
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingType;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@Table(name = "wearable")
+@Entity
+@PrimaryKeyJoinColumn(name = "product_id")
+public class Wearable extends Product{
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_gender",nullable = false)
+    private ProductGender productGender;
+
+    private String size;
+
+    private String colour;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="clothing_type",nullable = false)
+    private ClothingType clothingType;
+
+
+
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto;public class EntertainmentDTO {
+}
+package com.enterpriseintellijence.enterpriseintellijence.dto;public class HomeDTO {
+}

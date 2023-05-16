@@ -1,9 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 
 import lombok.*;
@@ -23,8 +19,8 @@ public class OfferDTO {
 
     // TODO:
     private OfferState state;
-    private UserDTO offerer;
-    private ProductDTO product;
+    private UserFullDTO offerer;
+    private ProductBasicDTO product;
     private MessageDTO message;
     private OrderDTO order;
 

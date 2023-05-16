@@ -17,13 +17,12 @@ public class DeliveryDTO {
 
     private OrderDTO order;
 
-    @PositiveOrZero
-    private Money deliveryCost;
+    private CustomMoneyDTO deliveryCost;
 
     @Length(max = 50)
     private String shipper;
 
-    private Address senderAddress;
+    private AddressDTO senderAddress;
 
-    private Address receiverAddress;
+    private AddressDTO receiverAddress;
 }

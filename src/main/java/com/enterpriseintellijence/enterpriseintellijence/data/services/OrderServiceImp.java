@@ -5,7 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
@@ -35,10 +35,10 @@ public class OrderServiceImp implements OrderService {
         Order order = mapToEntity(orderDTO);
         order.setOrderDate(LocalDateTime.now(clock));
 
-        UserDTO userDTO = userService.findUserFromContext()
+        UserFullDTO userFullDTO = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
 
-        order.setUser(modelMapper.map(userDTO, User.class));
+        order.setUser(modelMapper.map(userFullDTO, User.class));
         order = orderRepository.save(order);
         return mapToDTO(order);
     }
@@ -50,7 +50,7 @@ public class OrderServiceImp implements OrderService {
         Order oldOrder = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Order newOrder = mapToEntity(orderDTO);
 
-        UserDTO requestingUser = userService.findUserFromContext()
+        UserFullDTO requestingUser = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
 
         if(!requestingUser.getId().equals(oldOrder.getUser().getId())) {
@@ -74,10 +74,10 @@ public class OrderServiceImp implements OrderService {
 
         OrderDTO orderDTO = mapToDTO(orderRepository.findById(id).orElseThrow(EntityNotFoundException::new));
 
-        UserDTO userDTO = userService.findUserFromContext()
+        UserFullDTO userFullDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!userDTO.getId().equals(orderDTO.getUser().getId())) {
+        if (!userFullDTO.getId().equals(orderDTO.getUser().getId())) {
             throw new IllegalAccessException("User cannot change order");
         }
 
@@ -145,7 +145,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     public void deleteOrder(String id) throws IllegalAccessException {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        UserDTO user = userService.findUserFromContext()
+        UserFullDTO user = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
 
         if (!user.getId().equals(order.getUser().getId())) {
@@ -159,9 +159,9 @@ public class OrderServiceImp implements OrderService {
     public OrderDTO getOrderById(String id) throws IllegalAccessException {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         OrderDTO orderDTO = mapToDTO(order);
-        UserDTO userDTO = userService.findUserFromContext()
+        UserFullDTO userFullDTO = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
-        if(!userDTO.getId().equals(orderDTO.getUser().getId())) {
+        if(!userFullDTO.getId().equals(orderDTO.getUser().getId())) {
             throw new IllegalAccessException("User cannot read other's orders");
         }
         return orderDTO;
@@ -169,10 +169,10 @@ public class OrderServiceImp implements OrderService {
 
     public Page<OrderDTO> findAllByUserId(Pageable pageable) {
 
-        UserDTO userDTO = userService.findUserFromContext()
+        UserFullDTO userFullDTO = userService.findUserFromContext()
             .orElseThrow(EntityNotFoundException::new);
 
-        return orderRepository.findAllByUserId(userDTO.getId(), pageable).map(this::mapToDTO);
+        return orderRepository.findAllByUserId(userFullDTO.getId(), pageable).map(this::mapToDTO);
     }
 
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {

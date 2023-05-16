@@ -47,7 +47,7 @@ public class OrderServiceImpTest {
     private OrderDTO defaultOrderDTO;
     private Order defaultOrder;
 
-    private UserDTO defaultUserDTO;
+    private UserFullDTO defaultUserFullDTO;
     private User defaultUserEntity;
 
 
@@ -56,7 +56,7 @@ public class OrderServiceImpTest {
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT).setAmbiguityIgnored(true);
 
-        defaultUserDTO = UserDTO.builder()
+        defaultUserFullDTO = UserFullDTO.builder()
             .id("1")
             .username("username")
             .password("password")
@@ -65,7 +65,7 @@ public class OrderServiceImpTest {
             .provider(Provider.LOCAL)
             .build();
 
-        defaultUserEntity = modelMapper.map(defaultUserDTO, User.class);
+        defaultUserEntity = modelMapper.map(defaultUserFullDTO, User.class);
 
         defaultOrder = Order.builder()
             .id("1")
@@ -112,7 +112,7 @@ public class OrderServiceImpTest {
             .state(OrderState.PURCHASED)
             .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
         when(orderRepository.save(orderToSaveEntity)).thenReturn(defaultOrder);
 
         OrderDTO savedOrder = orderServiceImp.createOrder(orderToSave);
@@ -124,7 +124,7 @@ public class OrderServiceImpTest {
     void whenReplacingOrderDTO_throwOnIdMismatch() {
         OrderDTO newOrder = OrderDTO.builder()
             .id("NOT 1")
-            .user(defaultUserDTO)
+            .user(defaultUserFullDTO)
             .state(OrderState.PURCHASED)
             .build();
 
@@ -140,7 +140,7 @@ public class OrderServiceImpTest {
     void whenReplacingOrderDTO_throwOnOrderNotFound() {
         OrderDTO orderToReplace = OrderDTO.builder()
             .id("1")
-            .user(defaultUserDTO)
+            .user(defaultUserFullDTO)
             .state(OrderState.PURCHASED)
             .build();
 
@@ -154,7 +154,7 @@ public class OrderServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromNewOrderUser_thenThrow() {
-        UserDTO differentUserDTO = UserDTO.builder()
+        UserFullDTO differentUserFullDTO = UserFullDTO.builder()
             .id("2")
             .username("anotherUsername")
             .password("password")
@@ -165,12 +165,12 @@ public class OrderServiceImpTest {
 
         OrderDTO newOrder = OrderDTO.builder()
             .id("1")
-            .user(differentUserDTO)
+            .user(differentUserFullDTO)
             .state(OrderState.PURCHASED)
             .build();
 
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             orderServiceImp.replaceOrder("1", newOrder);
@@ -179,7 +179,7 @@ public class OrderServiceImpTest {
 
     @Test
     void whenRequestingUserDifferentFromOldOrderUser_thenThrow() {
-        UserDTO anotherUserDTO = UserDTO.builder()
+        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
             .id("2")
             .username("anotherUsername")
             .password("password")
@@ -188,7 +188,7 @@ public class OrderServiceImpTest {
             .provider(Provider.LOCAL)
             .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -200,13 +200,13 @@ public class OrderServiceImpTest {
     void whenChangingState_thenThrow() {
         OrderDTO orderToReplace = OrderDTO.builder()
             .id("1")
-            .user(defaultUserDTO)
+            .user(defaultUserFullDTO)
             .orderDate(LocalDateTime.now(fixedClock))
             .state(OrderState.COMPLETED)    // CHANGED STATE
             .build();
 
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             orderServiceImp.replaceOrder("1", orderToReplace);
@@ -217,7 +217,7 @@ public class OrderServiceImpTest {
     void whenReplacingOrderDTO_thenReplaceOrder() throws IllegalAccessException {
         OrderDTO orderToReplace = OrderDTO.builder()
             .id("1")
-            .user(defaultUserDTO)
+            .user(defaultUserFullDTO)
             .orderDate(LocalDateTime.now(fixedClock))
             .state(OrderState.PURCHASED)
             .build();
@@ -225,7 +225,7 @@ public class OrderServiceImpTest {
 
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
         when(orderRepository.save(defaultOrder)).thenReturn(defaultOrder);
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         OrderDTO replacedOrder = orderServiceImp.replaceOrder("1", orderToReplace);
     }
@@ -233,14 +233,14 @@ public class OrderServiceImpTest {
 
     @Test
     void whenGetOrderWithDifferentUser_thenThrow() {
-        UserDTO anotherUserDTO = UserDTO.builder()
+        UserFullDTO anotherUserFullDTO = UserFullDTO.builder()
             .id("2")
             .username("anotherUsername")
             .password("password")
             .email("another@email.com")
             .build();
 
-        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(anotherUserFullDTO));
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
@@ -251,7 +251,7 @@ public class OrderServiceImpTest {
     @Test
     void whenGetOrderWithSameUser_thenCorrect() throws IllegalAccessException {
         when(orderRepository.findById("1")).thenReturn(Optional.of(defaultOrder));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         OrderDTO foundOrder = orderServiceImp.getOrderById("1");
 
@@ -263,13 +263,13 @@ public class OrderServiceImpTest {
     void whenUpdatingStateFromPURCHASEDtoCANCELED_thenThrow() throws IllegalAccessException {
         OrderDTO order = OrderDTO.builder()
                 .id("1")
-                .user(defaultUserDTO)
+                .user(defaultUserFullDTO)
                 .orderDate(LocalDateTime.now(fixedClock))
                 .state(OrderState.CANCELED)
                 .build();
 
         when(orderRepository.findById("1")).thenReturn(Optional.of(mapToEntity(order)));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             orderServiceImp.updateOrder("1", order);
@@ -282,20 +282,20 @@ public class OrderServiceImpTest {
     void whenUpdatingStateFromDELIVEREDtoPENDING_thenThrow() throws IllegalAccessException {
         OrderDTO orderToReplace = OrderDTO.builder()
                 .id("1")
-                .user(defaultUserDTO)
+                .user(defaultUserFullDTO)
                 .orderDate(LocalDateTime.now(fixedClock))
                 .state(OrderState.PENDING)
                 .build();
 
         OrderDTO order = OrderDTO.builder()
                 .id("1")
-                .user(defaultUserDTO)
+                .user(defaultUserFullDTO)
                 .orderDate(LocalDateTime.now(fixedClock))
                 .state(OrderState.PENDING)
                 .build();
 
         when(orderRepository.findById("1")).thenReturn(Optional.of(mapToEntity(order)));
-        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserDTO));
+        when(userService.findUserFromContext()).thenReturn(Optional.of(defaultUserFullDTO));
 
         Assertions.assertThrows(IllegalAccessException.class, () -> {
             orderServiceImp.updateOrder("1", orderToReplace);

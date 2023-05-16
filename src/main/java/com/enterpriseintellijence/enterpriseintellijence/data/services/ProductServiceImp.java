@@ -5,10 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Home;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Clothing;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.EntertainmentDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.HomeDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ClothingDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
@@ -23,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,45 +34,41 @@ public class ProductServiceImp implements ProductService {
     private final Clock clock;
 
     @Override
-    public ProductDTO createProduct(ProductDTO productDTO) {
-        System.out.println(productDTO.getMyMoney().getMoney());
-        System.out.println(productDTO.getMyMoney().getPrice());
-        System.out.println(productDTO.getMyMoney().getCurrency());
-
+    public ProductFullDTO createProduct(ProductFullDTO productFullDTO) {
         Product product = new Product();
         try{
-            product = mapToEntity(productDTO);
-            System.out.println(product.getMyMoney().getPrice()+ " "+product.getMyMoney().getCurrency());
+            product = mapToEntity(productFullDTO);
             product.setUploadDate(LocalDateTime.now(clock));
+            JwtContextUtils.getUsernameFromContext();
             // todo: set seller from context
             product = productRepository.save(product);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return mapToDTO(product);
+        return mapToProductDetailsDTO(product);
     }
 
     @Override
-    public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
-        throwOnIdMismatch(id, productDTO);
+    public ProductFullDTO replaceProduct(String id, ProductFullDTO productFullDTO) {
+        throwOnIdMismatch(id, productFullDTO);
         Product oldProduct = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Product product = mapToEntity(productDTO);
+        Product product = mapToEntity(productFullDTO);
 
         // TODO: 28/04/2023 add user from context and check for permission
 
         product = productRepository.save(product);
-        return mapToDTO(product);
+        return mapToProductDetailsDTO(product);
     }
 
     @Override
-    public ProductDTO updateProduct(String id, ProductDTO patch) {
-        ProductDTO productDTO = mapToDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        Product product = mapToEntity(productDTO);
+    public ProductFullDTO updateProduct(String id, ProductFullDTO patch) {
+        ProductFullDTO productFullDTODTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        Product product = mapToEntity(productFullDTODTO);
 
         // TODO: come implementare?
 
-        return mapToDTO(product);
+        return mapToProductDetailsDTO(product);
     }
 
     @Override
@@ -85,60 +77,54 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductById(String id) {
+    public ProductFullDTO getProductById(String id) {
+        // TODO: 15/05/2023 boolean for capability 
         Product product = productRepository.findById(id)
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
             ));
-        ProductDTO productDTO = mapToDTO(product);
-        return  productDTO;
+        ProductFullDTO productFullDTO = mapToProductDetailsDTO(product);
+        return productFullDTO;
     }
 
     @Override
-    public Iterable<ProductDTO> findAll() {
+    public Iterable<ProductBasicDTO> findAll() {
         // TODO: 01/05/2023 da sistemare ereditarietà
         return productRepository.findAll().stream()
-                .map(s -> modelMapper.map(s, ProductDTO.class))
+                .map(s -> modelMapper.map(s, ProductBasicDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<ProductDTO> getAllPaged(int page, int size) {
+    public Page<ProductBasicDTO> getAllPaged(int page, int size) {
         // TODO: 01/05/2023 da sistemare ereditarietà
         Page<Product> products = productRepository.findAll(PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
-        List<ProductDTO> collect = products.stream().map(s->modelMapper.map(s,ProductDTO.class)).collect(Collectors.toList());
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
     }
 
     @Override
-    public Page<ProductDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
+    public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
         Page<Product> products = productRepository.findAllByProductCategory(productCategory,PageRequest.of(page,size));
-        List<ProductDTO> collect = products.stream().map(s->modelMapper.map(s,ProductDTO.class)).collect(Collectors.toList());
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
     }
 
 
-    // TODO: VA TESTATA ASSOLUTAMENTE
-    private Iterable<ProductDTO> mapToDTO(Iterable<Product> products) {
-        Iterable<ProductDTO> productDTOs = new ArrayList<>();
-        modelMapper.map(products,productDTOs);
-        return productDTOs;
-    }
 
-    private Product mapToEntity(ProductDTO productDTO) {
-        if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING))
-            return modelMapper.map(productDTO, Clothing.class);
-        else if(productDTO.getProductCategory().equals(ProductCategory.HOME))
-            return modelMapper.map(productDTO, Home.class);
-        else if(productDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
-            return modelMapper.map(productDTO, Entertainment.class);
+
+    private Product mapToEntity(ProductFullDTO productFullDTO) {
+        if(productFullDTO.getProductCategory().equals(ProductCategory.CLOTHING))
+            return modelMapper.map(productFullDTO, Clothing.class);
+        else if(productFullDTO.getProductCategory().equals(ProductCategory.HOME))
+            return modelMapper.map(productFullDTO, Home.class);
+        else if(productFullDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+            return modelMapper.map(productFullDTO, Entertainment.class);
         else
-            return modelMapper.map(productDTO,Product.class);
-
-
+            return modelMapper.map(productFullDTO,Product.class);
     }
 
-    private ProductDTO mapToDTO(Product product) {
+    private ProductFullDTO mapToProductDetailsDTO(Product product) {
         if(product.getProductCategory().equals(ProductCategory.CLOTHING))
             return modelMapper.map(product, ClothingDTO.class);
         else if(product.getProductCategory().equals(ProductCategory.HOME))
@@ -146,13 +132,17 @@ public class ProductServiceImp implements ProductService {
         else if(product.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
             return modelMapper.map(product, EntertainmentDTO.class);
         else
-            return modelMapper.map(product,ProductDTO.class);
+            return modelMapper.map(product, ProductFullDTO.class);
+    }
+
+    private ProductBasicDTO mapToProductDTO(Product product) {
+            return modelMapper.map(product, ProductBasicDTO.class);
     }
 
 
 
-    private void throwOnIdMismatch(String id, ProductDTO productDTO) {
-        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
+    private void throwOnIdMismatch(String id, ProductFullDTO productFullDTO) {
+        if (productFullDTO.getId() != null && !productFullDTO.getId().equals(id)) {
             throw new IdMismatchException();
         }
     }

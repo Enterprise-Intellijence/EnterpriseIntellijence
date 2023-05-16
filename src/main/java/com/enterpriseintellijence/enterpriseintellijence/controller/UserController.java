@@ -1,7 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserFullDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -65,7 +65,7 @@ public class UserController {
      Guarda il metodo sotto per un esempio pratico
      */
     @GetMapping("")
-    public ResponseEntity<Iterable<UserDTO>> allUser() {
+    public ResponseEntity<Iterable<UserFullDTO>> allUser() {
         if (bucket.tryConsume(1))
             return ResponseEntity.ok(userService.findAll());
         else
@@ -74,18 +74,18 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
-        return ResponseEntity.ok(userService.createUser(userDTO));
+    public ResponseEntity<UserFullDTO> createUser(@Valid @RequestBody UserFullDTO userFullDTO){
+        return ResponseEntity.ok(userService.createUser(userFullDTO));
 
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO userDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(userService.replaceUser(id,userDTO));
+    public ResponseEntity<UserFullDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserFullDTO userFullDTO) throws IllegalAccessException {
+        return ResponseEntity.ok(userService.replaceUser(id, userFullDTO));
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO patch) throws IllegalAccessException {
+    public ResponseEntity<UserFullDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserFullDTO patch) throws IllegalAccessException {
             return ResponseEntity.ok(userService.updateUser(id,patch));
     }
 
@@ -98,7 +98,7 @@ public class UserController {
 
     // TODO: 07/05/2023 occhio ci sono due metodi che si mappano allo stesso modo, riga 93 e riga 115 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> userById(@PathVariable("id") String id){
+    public ResponseEntity<UserFullDTO> userById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
@@ -142,7 +142,7 @@ public class UserController {
     public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
         if(userService.findByUsername(username).isPresent())
             return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
-        UserDTO user = new UserDTO();
+        UserFullDTO user = new UserFullDTO();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
@@ -155,16 +155,16 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
-        UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<UserFullDTO> me() throws EntityNotFoundException {
+        UserFullDTO userFullDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
+        return ResponseEntity.ok(userFullDTO);
     }
 
     @GetMapping("/me/payment_methods")
     public ResponseEntity<Page<PaymentMethodDTO>> getPaymentMethods(@RequestParam Pageable page) throws EntityNotFoundException {
         if (bucket.tryConsume(1)) {
-            UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
-            return ResponseEntity.ok(userService.getPaymentMethodsByUserId(userDTO, page));
+            UserFullDTO userFullDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
+            return ResponseEntity.ok(userService.getPaymentMethodsByUserId(userFullDTO, page));
         } else {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
         }

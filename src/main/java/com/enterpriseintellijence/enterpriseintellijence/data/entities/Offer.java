@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,8 @@ public class Offer {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    private Float amount;
+    @Embedded
+    private CustomMoney amount;
 
     @Enumerated(EnumType.STRING)
     private OfferState state;

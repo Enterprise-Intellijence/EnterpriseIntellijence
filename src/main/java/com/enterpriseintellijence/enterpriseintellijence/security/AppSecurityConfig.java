@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUse
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,6 +41,31 @@ public class AppSecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         return http.csrf().disable()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate",
+                        "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**"
+                        /*"/api/v1/products/categories/**", "/api/v1/products/colour", "/api/v1/products/capability/**"*/).permitAll()
+                .and()
+                .authorizeHttpRequests().anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new CustomAuthenticationFilter(authenticationManager))
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login()
+                .and()
+                .oauth2Client()
+                .and()
+                .build();
+
+    }
+
+
+/*
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        return http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate",
                         "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**",
                         "/api/v1/products/categories/**", "/api/v1/products/colour", "/api/v1/products/capability/**").permitAll()
@@ -57,6 +83,8 @@ public class AppSecurityConfig  {
                 .build();
 
     }
+*/
+
 
 
 
