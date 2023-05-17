@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -117,7 +118,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     public PaymentMethodDTO mapToDTO(PaymentMethod paymentMethod) {
         return modelMapper.map(paymentMethod, PaymentMethodDTO.class);
     }
-    public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
+    public User mapToEntity(UserBasicDTO userDTO){return modelMapper.map(userDTO, User.class);}
 
     private void throwOnIdMismatch(String id, PaymentMethodDTO paymentMethodDTO) {
         if (paymentMethodDTO.getId() != null && !paymentMethodDTO.getId().equals(id))

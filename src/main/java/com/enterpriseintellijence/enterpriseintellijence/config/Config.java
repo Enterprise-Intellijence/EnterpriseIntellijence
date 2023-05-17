@@ -8,6 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -19,6 +20,7 @@ import java.time.Clock;
 import java.util.stream.Collectors;
 
 @Configuration
+@RequiredArgsConstructor
 public class Config {
 
     @Bean
@@ -29,7 +31,7 @@ public class Config {
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setAmbiguityIgnored(true);
 
-        modelMapper.createTypeMap(User.class, UserDTO.class).addMappings(new PropertyMap<User, UserDTO>() {
+        /*modelMapper.createTypeMap(User.class, UserDTO.class).addMappings(new PropertyMap<User, UserDTO>() {
             @Override
             protected void configure() {
                 map().setUsername(source.getUsername());
@@ -44,7 +46,7 @@ public class Config {
                 map().setSellingProducts(source.getSellingProducts().stream()
                         .map(product -> modelMapper.map(product, ProductBasicDTO.class)).collect(Collectors.toList()));
             }
-        });
+        });*/
 
 
         return modelMapper;
@@ -57,9 +59,7 @@ public class Config {
         return Clock.systemDefaultZone();
     }
 
-    @Bean
-    public JwtContextUtils jwtContextUtils(){
-        return new JwtContextUtils();
-    }
+
+    private final JwtContextUtils jwtContextUtils;
 
 }

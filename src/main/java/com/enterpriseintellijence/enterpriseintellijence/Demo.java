@@ -18,7 +18,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -56,7 +58,7 @@ public class Demo {
     }
 
     private void setLikeProduct(){
-        // TODO: 13/05/2023 perchè non va????
+/*        // TODO: 13/05/2023 perchè non va????
         List<Product> products = productRepository.findAll();
 
         for (User user: userArrays){
@@ -71,7 +73,7 @@ public class Demo {
             user.setLikedProducts(likes);
             userRepository.save(user);
             user.setLikedProducts(null);
-        }
+        }*/
     }
 
     public void createUser() throws IOException {
@@ -105,7 +107,7 @@ public class Demo {
         for (int i= 1; i<=rand;i++){
             PaymentMethod paymentMethod = new PaymentMethod();
             paymentMethod.setCreditCard("4000 4000 4000 400"+i);
-            paymentMethod.setExpiryDate("03/25");
+            paymentMethod.setExpiryDate(LocalDate.parse("30-03-2025", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             paymentMethod.setOwner(user.getUsername()+" "+user.getUsername());
             paymentMethod.setOwnerUser(user);
             if(i==1)
@@ -151,7 +153,7 @@ public class Demo {
 
         Random random = new Random();
 
-        int rand = ThreadLocalRandom.current().nextInt(10, 31);
+        int rand = ThreadLocalRandom.current().nextInt(5, 15);
         for (int i=1;i<=rand;i++){
 
             int rand2=ThreadLocalRandom.current().nextInt(1, 4);
