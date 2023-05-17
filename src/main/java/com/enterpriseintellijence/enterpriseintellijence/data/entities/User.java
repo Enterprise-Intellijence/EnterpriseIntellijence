@@ -50,7 +50,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_payment_method")
     private PaymentMethod defaultPaymentMethod;
 
@@ -60,14 +60,14 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "offerer",fetch = FetchType.LAZY)
     private List<Offer> offersMade;
 
-    @ManyToMany(mappedBy = "follows",fetch = FetchType.LAZY)
-    private List<User> followers;
+    @ManyToMany(mappedBy = "following",fetch = FetchType.LAZY)
+    private Set<User> followers;
 
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
     private List<Product> sellingProducts;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<User> follows;
+    private Set<User> following;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
@@ -130,4 +130,5 @@ public class User implements UserDetails {
     public String getPassword() {
         return  password;
     }
+
 }

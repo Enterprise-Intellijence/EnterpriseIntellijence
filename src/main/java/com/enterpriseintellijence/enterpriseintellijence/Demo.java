@@ -251,7 +251,7 @@ public class Demo {
     }
 
     private void initializeProductImageList() throws IOException {
-        for(int i=1;i<23;i++){
+        for(int i=1;i<6;i++){
             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/product/"+i+".jpeg"));
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage,"jpg",bos);
