@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -42,8 +43,11 @@ public class UserDTO {
     private UserRole role;
 
     private PaymentMethodDTO defaultPaymentMethod;
-    private int followers;
-    private int follows;
+
+    private Set<UserDTO> followers;
+    private Set<UserDTO> following;
+    // private int followers;
+    // private int following;
 
     private List<ProductBasicDTO> sellingProducts;
 

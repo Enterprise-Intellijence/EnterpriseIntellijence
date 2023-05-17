@@ -35,7 +35,6 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         paymentMethod.setOwner(paymentMethod.getOwner());
         paymentMethod.setExpiryDate(paymentMethodDTO.getExpiryDate());
         paymentMethod.setOwnerUser(mapToEntity(paymentMethodDTO.getOwnerUser()));
-        paymentMethod.setDefaultUser(mapToEntity(paymentMethodDTO.getDefaultUser()));
 
         paymentMethod = paymentMethodRepository.save(paymentMethod);
         return mapToDTO(paymentMethod);
@@ -71,7 +70,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (userDTO.getId().equals(paymentMethodDTO.getDefaultUser().getId())) {
+        if (userDTO.getId().equals(paymentMethodDTO.getOwnerUser().getId())) {
             throw new IllegalAccessException("User cannot update payment method");
         }
 
@@ -105,7 +104,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!userDTO.getId().equals(paymentMethodDTO.getDefaultUser().getId())) {
+        if (!userDTO.getId().equals(paymentMethodDTO.getOwnerUser().getId())) {
             throw new IllegalAccessException("User cannot get payment method");
         }
 

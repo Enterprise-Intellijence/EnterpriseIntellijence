@@ -24,15 +24,16 @@ public class PaymentMethod {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+
     private String creditCard;
 
-    private LocalDate expiryDate;  // MM/AAAA
+    private LocalDate expiryDate;  // DD//MM/YYYY
     private String owner;
     @OneToOne(mappedBy = "defaultPaymentMethod",fetch = FetchType.LAZY)
     private User defaultUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User ownerUser;
 
     @OneToMany(mappedBy = "paymentMethod")
