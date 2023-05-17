@@ -12,7 +12,7 @@ import java.io.IOException;
 public class DemoController {
     private final Demo demo;
 
-    @RequestMapping("/demo")
+    @RequestMapping("/api/v1/demo")
     public void createDemoData() throws IOException {
         demo.initialize();
     }

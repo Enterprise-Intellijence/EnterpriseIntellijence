@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class PaymentMethod {
 
     private String creditCard;
 
-    private LocalDateTime expiryDate;  // MM/AAAA
+    private LocalDate expiryDate;  // MM/AAAA
     private String owner;
     @OneToOne(mappedBy = "defaultPaymentMethod",fetch = FetchType.LAZY)
     private User defaultUser;

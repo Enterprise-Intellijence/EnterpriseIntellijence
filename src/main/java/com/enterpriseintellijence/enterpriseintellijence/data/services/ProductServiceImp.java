@@ -35,17 +35,15 @@ public class ProductServiceImp implements ProductService {
 
     private final Clock clock;
 
-    @Bean
-    private JwtContextUtils jwtContextUtils(){
-        return new JwtContextUtils();
-    }
+
+    private final JwtContextUtils jwtContextUtils;
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
         try{
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
-            jwtContextUtils().getUsernameFromContext();
+            jwtContextUtils.getUsernameFromContext();
             // todo: set seller from context
             product = productRepository.save(product);
         }catch (Exception e){
@@ -155,7 +153,7 @@ public class ProductServiceImp implements ProductService {
 
     public String getCapabilityUrl(String id) {
 
-        Optional<String> username = jwtContextUtils().getUsernameFromContext();
+        Optional<String> username = jwtContextUtils.getUsernameFromContext();
         if (username.isEmpty()) {
             throw new RuntimeException("User not found");
         }

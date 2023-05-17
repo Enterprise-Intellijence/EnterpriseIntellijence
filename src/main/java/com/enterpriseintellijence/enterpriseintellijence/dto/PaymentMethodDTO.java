@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,7 +23,7 @@ public class PaymentMethodDTO {
     private String creditCard;
 
     @NotBlank  //DATE MM/AAAA
-    private LocalDateTime expiryDate;
+    private LocalDate expiryDate;
 
     @NotBlank
     @Length(max = 25)
