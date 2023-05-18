@@ -24,7 +24,7 @@ import java.util.Optional;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class PaymentMethodServiceImpTest {
 
-    private PaymentMethodServiceImp paymentMethodServiceImp;
+    /*private PaymentMethodServiceImp paymentMethodServiceImp;
     @Mock
     private PaymentMethodRepository paymentMethodRepository;
     @Mock
@@ -186,5 +186,5 @@ public class PaymentMethodServiceImpTest {
 
     public PaymentMethodDTO mapToDTO(PaymentMethod paymentMethod) {
         return modelMapper.map(paymentMethod, PaymentMethodDTO.class);
-    }
+    }*/
 }

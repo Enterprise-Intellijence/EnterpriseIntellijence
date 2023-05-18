@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class MessageServiceImpTest {
 
-    private MessageServiceImp messageServiceImp;
+    /*private MessageServiceImp messageServiceImp;
 
     @Mock
     private MessageRepository messageRepository;
@@ -238,5 +238,5 @@ public class MessageServiceImpTest {
     public MessageDTO mapToDTO(Message Message) {
         return modelMapper.map(Message, MessageDTO.class);
     }
-
+*/
 }

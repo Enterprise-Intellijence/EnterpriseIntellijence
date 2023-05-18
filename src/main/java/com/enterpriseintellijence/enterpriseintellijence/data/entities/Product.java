@@ -90,6 +90,10 @@ public class Product {
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private Order order;
 
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "default_image")
+    private ProductImage defaultImage;
+
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ProductImage> productImages;
 

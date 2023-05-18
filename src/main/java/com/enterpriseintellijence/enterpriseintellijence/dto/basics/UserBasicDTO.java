@@ -19,4 +19,7 @@ public class UserBasicDTO {
     private String username;
 
     private byte[] photo;
+
+    private int followers;
+    private int following;
 }

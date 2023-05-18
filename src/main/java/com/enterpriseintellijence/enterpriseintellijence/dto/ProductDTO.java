@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
@@ -66,5 +67,6 @@ public class ProductDTO {
     private List<OfferDTO> offers;
     private List<MessageDTO> messages;
     private OrderDTO order;
+    private ProductImageDTO defaultImage;
     private List<ProductImageDTO> productImages;
 }

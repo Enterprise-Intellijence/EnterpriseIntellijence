@@ -1,9 +1,15 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
+import java.util.List;
 import java.util.Set;
 
 @Configuration
@@ -31,25 +38,26 @@ public class Config {
 
         modelMapper.createTypeMap(User.class, UserDTO.class).addMappings(new PropertyMap<User, UserDTO>() {
 
-            Converter<PaymentMethod, PaymentMethodDTO> paymentMethodConverter = new AbstractConverter<PaymentMethod, PaymentMethodDTO>() {
+            Converter<PaymentMethod, PaymentMethodBasicDTO> paymentMethodConverter = new AbstractConverter<PaymentMethod, PaymentMethodBasicDTO>() {
                 @Override
-                protected PaymentMethodDTO convert(PaymentMethod paymentMethod) {
-                    return PaymentMethodDTO.builder()
+                protected PaymentMethodBasicDTO convert(PaymentMethod paymentMethod) {
+                    return PaymentMethodBasicDTO.builder()
                             .id(paymentMethod.getId())
-                            .creditCard(paymentMethod.getCreditCard())
-                            .expiryDate(paymentMethod.getExpiryDate())
-                            .owner(paymentMethod.getOwner())
+                            .creditCard("**** **** **** "+paymentMethod.getCreditCard().substring(15,19))
                             .build();
+
                 }
             };
+
             @Override
             protected void configure() {
 
-                using(collectionSizeToIntConverter).map(source.getFollowers(), destination.getFollowers());
-                using(collectionSizeToIntConverter).map(source.getFollowing(), destination.getFollowing());
+/*                using(collectionSizeToIntConverter).map(source.getFollowers(), destination.getFollowers());
+                using(collectionSizeToIntConverter).map(source.getFollowing(), destination.getFollowing());*/
                 using(paymentMethodConverter).map(source.getDefaultPaymentMethod(), destination.getDefaultPaymentMethod());
             }
         });
+
         return modelMapper;
     }
 

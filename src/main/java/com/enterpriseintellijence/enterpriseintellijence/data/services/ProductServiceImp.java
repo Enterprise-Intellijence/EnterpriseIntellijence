@@ -1,13 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Entertainment;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Home;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Clothing;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
@@ -114,6 +113,20 @@ public class ProductServiceImp implements ProductService {
         return new PageImpl<>(collect);
     }
 
+    @Override
+    public Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size) {
+        User user=modelMapper.map(userBasicDTO,User.class);
+        Page<Product> products = null;
+
+        if(jwtContextUtils.getUsernameFromContext().isPresent() && jwtContextUtils.getUsernameFromContext().get().equals(user.getUsername()))
+            products= productRepository.findAllBySeller(user,PageRequest.of(page,size));
+        else
+            products = productRepository.findAllBySellerAndVisibilityEquals(user, Visibility.PUBLIC,PageRequest.of(page, size));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
+    }
+
 
 
 
@@ -164,4 +177,6 @@ public class ProductServiceImp implements ProductService {
         String token = TokenStore.getInstance().createCapabilityToken(id);
         return  "https://localhost:8443/api/v1/products/capability/" + token;
     }
+
+
 }
