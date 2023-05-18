@@ -14,7 +14,6 @@ import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -178,5 +177,13 @@ public class ProductServiceImp implements ProductService {
         return  "https://localhost:8443/api/v1/products/capability/" + token;
     }
 
+    @Override
+    public Page<UserBasicDTO> getUsersThatLikesProduct(String id, int page, int size) {
+        if (productRepository.findById(id).isEmpty()) {
+            throw new EntityNotFoundException("Product not found");
+        }
+        return productRepository.findAllUsersThatLikedProduct(id, PageRequest.of(page, size))
+                .map(user -> modelMapper.map(user, UserBasicDTO.class));
+    }
 
 }

@@ -44,12 +44,12 @@ public class ProductDTO {
 
     // TODO: usare una classe apposita per il prezzo
     @NotNull
-    private CustomMoney customMoney;
+    private CustomMoneyDTO customMoney;
 
     @Length(max = 100)
     private String brand;
     private Condition condition;
-    private Integer likeNumber;
+    private Integer likesNumber;
     private UserBasicDTO seller;
 
 

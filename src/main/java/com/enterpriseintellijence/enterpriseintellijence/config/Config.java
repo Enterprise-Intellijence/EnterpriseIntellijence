@@ -51,9 +51,6 @@ public class Config {
 
             @Override
             protected void configure() {
-
-/*                using(collectionSizeToIntConverter).map(source.getFollowers(), destination.getFollowers());
-                using(collectionSizeToIntConverter).map(source.getFollowing(), destination.getFollowing());*/
                 using(paymentMethodConverter).map(source.getDefaultPaymentMethod(), destination.getDefaultPaymentMethod());
             }
         });

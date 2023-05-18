@@ -23,4 +23,7 @@ public interface ProductService {
     String getCapabilityUrl(String id);
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
+
+
+    Page<UserBasicDTO> getUsersThatLikesProduct(String id, int page, int size);
 }

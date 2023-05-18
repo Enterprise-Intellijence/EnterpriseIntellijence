@@ -69,7 +69,8 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> following;
 
-
+    private int followers_number;
+    private int following_number;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
