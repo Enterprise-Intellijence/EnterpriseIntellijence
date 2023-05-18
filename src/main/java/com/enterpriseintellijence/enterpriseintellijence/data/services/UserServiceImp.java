@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Payment
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -89,9 +90,10 @@ public class UserServiceImp implements UserService{
 
     }
 
-    public UserDTO findUserById(String id) {
+    public UserBasicDTO findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        return mapToDto(user);
+
+        return mapToBasicDto(user);
     }
 
     public Optional<UserDTO> findByUsername(String username) {
@@ -160,5 +162,6 @@ public class UserServiceImp implements UserService{
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user, UserDTO.class);}
+    public UserBasicDTO mapToBasicDto(User user){return modelMapper.map(user,UserBasicDTO.class);}
 
 }

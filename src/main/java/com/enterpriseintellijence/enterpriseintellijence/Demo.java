@@ -52,10 +52,27 @@ public class Demo {
         for(int i=0;i<35;i++){
             createProduct(userArrays.get(i));
         }
+        //setFollower();
         //setLikeProduct();
 
 
     }
+
+/*    private void setFollower() {
+        for (User user: userArrays){
+            Random random = new Random();
+            int n= random.nextInt(3,30);
+            if(user.getFollowers()==null)
+                user.setFollowers(new HashSet<>());
+
+            for (int i=0;i<n;i++){
+                User temp = userArrays.get(random.nextInt(userArrays.size()));
+                if(!user.getFollowers().contains(temp))
+                    user.getFollowers().add(temp);
+            }
+            userRepository.save(user);
+        }
+    }*/
 
     private void setLikeProduct(){
 /*        // TODO: 13/05/2023 perchè non va????
@@ -153,7 +170,7 @@ public class Demo {
 
         Random random = new Random();
 
-        int rand = ThreadLocalRandom.current().nextInt(5, 15);
+        int rand = ThreadLocalRandom.current().nextInt(5, 10);
         for (int i=1;i<=rand;i++){
 
             int rand2=ThreadLocalRandom.current().nextInt(1, 4);
@@ -214,6 +231,8 @@ public class Demo {
 
         Random random = new Random();
 
+        List<Visibility> visibilities = List.of(Visibility.class.getEnumConstants());
+
         for (Product product: productArrayList){
 
             int n = productArrayList.indexOf(product);
@@ -230,7 +249,7 @@ public class Demo {
             LocalDateTime date = LocalDateTime.now();
             date = date.minusSeconds(ThreadLocalRandom.current().nextInt(1, 5184000));
             product.setUploadDate(date);
-            product.setVisibility(Visibility.PUBLIC);
+            product.setVisibility(visibilities.get(random.nextInt(visibilities.size())));
             product.setAvailability(Availability.AVAILABLE);
             product.setSeller(user);
             String tempID= productRepository.save(product).getId();
@@ -246,6 +265,8 @@ public class Demo {
             ProductImage productImage = new ProductImage();
             productImage.setPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())));
             productImage.setProduct(product);
+            if(i==0)
+                product.setDefaultImage(productImage);
             productImageRepository.save(productImage);
         }
     }

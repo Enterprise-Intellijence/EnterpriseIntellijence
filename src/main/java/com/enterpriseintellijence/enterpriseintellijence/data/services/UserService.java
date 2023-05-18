@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ public interface UserService {
     UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException;
     UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException;
     void deleteUser(String id);
-    UserDTO findUserById(String id);
+    UserBasicDTO findUserById(String id);
     Iterable<UserDTO> findAll();
 
     Optional<UserDTO> findByUsername(String username);

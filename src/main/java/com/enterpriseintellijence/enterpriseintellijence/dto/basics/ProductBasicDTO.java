@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
@@ -49,7 +50,7 @@ public class ProductBasicDTO {
     // TODO: 16/05/2023 mappare sul mappare
     private Integer likeNumber;
     private UserBasicDTO seller;
-    private ProductImageDTO cardImage;
+    private ProductImageDTO defaultImage;
     private ProductCategory productCategory;
 /*
 

@@ -19,7 +19,7 @@ public class PaymentMethodDTO {
     private String id;
 
     @NotBlank
-    @Length(min = 12, max = 12)
+    @Length(min = 19, max = 19)
     private String creditCard;
 
     @NotBlank  //DATE MM/AAAA

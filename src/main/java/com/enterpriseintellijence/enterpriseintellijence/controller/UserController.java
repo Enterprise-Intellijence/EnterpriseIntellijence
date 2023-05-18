@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -99,7 +100,7 @@ public class UserController {
 
     // TODO: 07/05/2023 occhio ci sono due metodi che si mappano allo stesso modo, riga 93 e riga 115 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> userById(@PathVariable("id") String id){
+    public ResponseEntity<UserBasicDTO> userById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findUserById(id));
     }
 

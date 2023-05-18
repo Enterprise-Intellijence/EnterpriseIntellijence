@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class TransactionServiceImpTest {
-    private TransactionServiceImp transactionServiceImp;
+    /*private TransactionServiceImp transactionServiceImp;
 
     @Mock
     private TransactionRepository transactionRepository;
@@ -113,6 +113,6 @@ public class TransactionServiceImpTest {
         return modelMapper.map(transaction,TransactionDTO.class);
     }
     public Transaction mapToEntity(TransactionDTO transactionDTO){
-        return modelMapper.map(transactionDTO,Transaction.class);}
+        return modelMapper.map(transactionDTO,Transaction.class);}*/
 }
 

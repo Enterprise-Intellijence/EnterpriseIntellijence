@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductSe
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
@@ -65,20 +66,20 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-/*    @GetMapping("/paged")
-    public ResponseEntity<Page<ProductBasicDTO>> getAllPaged(@RequestParam int page, @RequestParam int size){
+    @GetMapping("/selling")
+    public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
         
         if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getAllPaged(page,size));
+            return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
         }
 
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }*/
+    }
 
     @GetMapping("/filtered")
     public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
 
-/*
+        /*
         if (bucket.tryConsume(1)) {
 */
 
@@ -87,6 +88,8 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
+
+
 
     //restituisce la lista di categorie
     @GetMapping("/categories")

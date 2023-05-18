@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -42,14 +43,16 @@ public class UserDTO {
     @NotNull
     private UserRole role;
 
-    private PaymentMethodDTO defaultPaymentMethod;
+    private PaymentMethodBasicDTO defaultPaymentMethod;
 
-    private Set<UserDTO> followers;
-    private Set<UserDTO> following;
-    // private int followers;
-    // private int following;
+    //private Set<UserDTO> followers;
+    //private Set<UserDTO> following;
 
-    private List<ProductBasicDTO> sellingProducts;
+    private int followers;
+    private int following;
+
+    /*esiste il metodo per fare la get su questo
+    private List<ProductBasicDTO> sellingProducts;*/
 
     /*
     private List<PaymentMethodDTO> paymentMethods;

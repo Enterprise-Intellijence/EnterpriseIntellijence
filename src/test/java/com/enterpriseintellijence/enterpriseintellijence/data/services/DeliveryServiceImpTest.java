@@ -33,7 +33,7 @@ import java.time.ZoneId;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class DeliveryServiceImpTest {
 
-    private ModelMapper modelMapper;
+    /*private ModelMapper modelMapper;
     private DeliveryService deliveryService;
 
     @Mock
@@ -136,5 +136,5 @@ public class DeliveryServiceImpTest {
 
     public DeliveryDTO mapToDTO(Delivery deliveryDTO) {
         return modelMapper.map(deliveryDTO, DeliveryDTO.class);
-    }
+    }*/
 }

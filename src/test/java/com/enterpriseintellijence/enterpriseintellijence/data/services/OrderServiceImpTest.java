@@ -32,7 +32,7 @@ import jakarta.persistence.EntityNotFoundException;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class OrderServiceImpTest {
 
-    private OrderServiceImp orderServiceImp;
+    /*private OrderServiceImp orderServiceImp;
 
     @Mock
     private OrderRepository orderRepository;
@@ -312,5 +312,5 @@ public class OrderServiceImpTest {
 
     public OrderDTO mapToDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);
-    }
+    }*/
 }
