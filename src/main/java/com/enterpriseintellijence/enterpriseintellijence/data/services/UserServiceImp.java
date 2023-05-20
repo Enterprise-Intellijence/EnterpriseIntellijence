@@ -193,10 +193,17 @@ public class UserServiceImp implements UserService{
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         String userId = userRepository.findByUsername(username).getId();
 
-        userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
+        User actualUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
 
-        userRepository.addFollow(userId, userIdToFollow);
-/*
+        //userRepository.addFollow(userId, userIdToFollow);
+
+        User userToFollow = userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
+        userToFollow.getFollowers().add(actualUser);
+        actualUser.getFollowing().add(userToFollow);
+        userRepository.save(actualUser);
+        userRepository.save(userToFollow);
+
+        /*
         userRepository.increaseFollowersNumber(userIdToFollow);
         userRepository.increaseFollowingNumber(userId);
         */

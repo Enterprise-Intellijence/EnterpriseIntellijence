@@ -32,7 +32,6 @@ public class Config {
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setAmbiguityIgnored(true);
 
-
         //modelMapper.createTypeMap(PaymentMethod.class, PaymentMethodBasicDTO.class).setConverter(paymentMethodConverter);
         modelMapper.createTypeMap(User.class, UserDTO.class).setConverter(new AbstractConverter<User, UserDTO>() {
             @Override
@@ -40,16 +39,14 @@ public class Config {
                 int followers_number = 0;
                 int following_number = 0;
                 if(user.getFollowers() != null) {
+                    System.out.println("follower_number = " + user.getFollowers().size());
                     followers_number = user.getFollowers().size();
                 }
 
                 if(user.getFollowing() != null) {
-
-                    System.out.println("following_number = " + user.getFollowing());
+                    System.out.println("following_number = " + user.getFollowing().size());
                     following_number = user.getFollowing().size();
-
                 }
-
 
                 return UserDTO.builder()
                         .id(user.getId())
@@ -66,7 +63,6 @@ public class Config {
                         .provider(user.getProvider())
                         .followers_number(followers_number)
                         .following_number(following_number)
-
                         .build();
             }
         });
