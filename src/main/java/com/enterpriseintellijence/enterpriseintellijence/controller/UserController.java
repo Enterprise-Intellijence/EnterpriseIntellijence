@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -144,15 +145,8 @@ public class UserController {
     public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
         if(userService.findByUsername(username).isPresent())
             return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
-        UserDTO user = new UserDTO();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setEmail(email);
-        user.setRole(UserRole.USER);
-        user.setProvider(Provider.LOCAL);
-
-        userService.createUser(user);
-        log.info("User created: " + user.toString());
+        userService.createUser(username, passwordEncoder.encode(password), email);
+        log.info("User created: "+ username);
         return new ResponseEntity<>( "registered" , HttpStatus.OK);
     }
 
@@ -192,5 +186,50 @@ public class UserController {
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
+    }
+
+    @GetMapping("/followers/{id}")
+    public ResponseEntity<Page<UserBasicDTO>> getFollowers(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        if (userService.findUserById(id) == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(userService.getFollowersByUserId(id, page, size));
+    }
+
+    @GetMapping("/following/{id}")
+    public ResponseEntity<Page<UserBasicDTO>> getFollowing(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size){
+        if (userService.findUserById(id) == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(userService.getFollowingByUserId(id, page, size));
+    }
+
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<Void> follow(@PathVariable("id") String id) throws EntityNotFoundException {
+        userService.followUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/unfollow/{id}")
+    public ResponseEntity<Void> unfollow(@PathVariable("id") String id) throws EntityNotFoundException {
+        userService.unfollowUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/like/{id}")
+    public ResponseEntity<Void> like(@PathVariable("id") String id) throws EntityNotFoundException {
+        userService.addLikeToProduct(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/unlike/{id}")
+    public ResponseEntity<Void> unlike(@PathVariable("id") String id) throws EntityNotFoundException {
+        userService.removeLikeFromProduct(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/liked/")
+    public ResponseEntity<Page<ProductBasicDTO>> getLikedProducts(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        return ResponseEntity.ok(userService.getProducLikedByUser(page, size));
     }
 }

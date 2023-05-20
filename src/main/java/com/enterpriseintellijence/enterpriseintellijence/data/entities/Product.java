@@ -76,6 +76,8 @@ public class Product {
     @Column(name="product_category",nullable = false)
     private ProductCategory productCategory;
 
+    @Column(name = "like_number", nullable = false)
+    private Integer likesNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id"/*, nullable = false*/)

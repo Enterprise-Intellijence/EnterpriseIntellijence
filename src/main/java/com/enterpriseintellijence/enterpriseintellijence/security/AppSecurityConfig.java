@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,8 @@ public class AppSecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/api/v1/products/capability/url/**").authenticated()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/v1/demo","/api/v1/users/register", "/api/v1/users/authenticate","/api/v1/users/**",
                         "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**"

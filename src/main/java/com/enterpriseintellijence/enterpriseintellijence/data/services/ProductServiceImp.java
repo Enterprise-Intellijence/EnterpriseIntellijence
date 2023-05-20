@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Clothin
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.EntertainmentRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.HomeRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
@@ -17,7 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +40,7 @@ public class ProductServiceImp implements ProductService {
     private final EntertainmentRepository entertainmentRepository;
     private final HomeRepository homeRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
     private final Clock clock;
 
@@ -51,6 +52,7 @@ public class ProductServiceImp implements ProductService {
         try{
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
+            product.setLikesNumber(0);
             jwtContextUtils.getUsernameFromContext();
             // todo: set seller from context
             product = productRepository.save(product);
@@ -241,5 +243,14 @@ public class ProductServiceImp implements ProductService {
         return  "https://localhost:8443/api/v1/products/capability/" + token;
     }
 
+    @Override
+    public Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size) {
+        Optional<User> u = userRepository.findById(id);
+        if (u.isEmpty()) {
+            throw new EntityNotFoundException("Product not found");
+        }
+        return userRepository.findAllByLikedProducts(id, PageRequest.of(page, size))
+                .map(user -> modelMapper.map(user, UserBasicDTO.class));
+    }
 
 }

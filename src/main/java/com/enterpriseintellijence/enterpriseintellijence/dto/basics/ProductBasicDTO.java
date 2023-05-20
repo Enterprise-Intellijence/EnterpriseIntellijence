@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
@@ -42,7 +43,7 @@ public class ProductBasicDTO {
 
     // TODO: usare una classe apposita per il prezzo
     @NotNull
-    private CustomMoney customMoney;
+    private CustomMoneyDTO customMoney;
 
     @Length(max = 100)
     private String brand;

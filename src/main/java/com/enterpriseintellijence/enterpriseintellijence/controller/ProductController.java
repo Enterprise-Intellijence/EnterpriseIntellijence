@@ -34,6 +34,8 @@ public class ProductController {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO){
+        productDTO.setLikesNumber(0);
+        productDTO.setViews(0);
         return productService.createProduct(productDTO);
     }
 
@@ -196,9 +198,14 @@ public class ProductController {
         return ResponseEntity.ok(Arrays.asList(ProductGender.class.getEnumConstants())) ;
     }
 
-    @GetMapping("/capabilityUrl/{id}")
+    @GetMapping("/capability/url/{id}")
     public ResponseEntity<String> getCapabilityUrl(@PathVariable("id") String id){
         return ResponseEntity.ok(productService.getCapabilityUrl(id));
+    }
+
+    @GetMapping("/likes/users/{id}")
+    public ResponseEntity<Iterable<UserBasicDTO>> getProductLikedByUser(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size){
+        return ResponseEntity.ok(productService.getUserThatLikedProduct(id, page, size));
     }
 
     /*

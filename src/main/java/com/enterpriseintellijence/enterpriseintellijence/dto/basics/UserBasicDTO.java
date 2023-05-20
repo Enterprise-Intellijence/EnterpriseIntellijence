@@ -20,5 +20,7 @@ public class UserBasicDTO {
 
     private byte[] photo;
 
+    private int followers_number;
+    private int following_number;
 
 }

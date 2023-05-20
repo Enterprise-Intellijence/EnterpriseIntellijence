@@ -2,11 +2,14 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -15,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,7 @@ public class UserServiceImp implements UserService{
     private final ModelMapper modelMapper;
     private final JwtContextUtils jwtContextUtils;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final ProductRepository productRepository;
 
 
     public UserDTO createUser(UserDTO userDTO) {
@@ -158,7 +163,89 @@ public class UserServiceImp implements UserService{
 
     }
 
+    @Override
+    public void createUser(String username, String password, String email) {
+        UserDTO user = new UserDTO();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setRole(UserRole.USER);
+        user.setProvider(Provider.LOCAL);
+        user.setFollowers_number(0);
+        user.setFollowing_number(0);
 
+        createUser(user);
+    }
+
+    @Override
+    public Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size) {
+        return userRepository.findAllByFollowingId(userId, PageRequest.of(page, size))
+                .map(user -> modelMapper.map(user, UserBasicDTO.class));
+    }
+
+    @Override
+    public Page<UserBasicDTO> getFollowingByUserId(String userId, int page, int size) {
+        return userRepository.findAllByFollowersId(userId, PageRequest.of(page, size))
+                .map(user -> modelMapper.map(user, UserBasicDTO.class));
+    }
+
+    @Override
+    public void followUser(String userIdToFollow) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        String userId = userRepository.findByUsername(username).getId();
+
+        userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
+
+        userRepository.addFollow(userId, userIdToFollow);
+        userRepository.increaseFollowersNumber(userIdToFollow);
+        userRepository.increaseFollowingNumber(userId);
+    }
+
+    @Override
+    public void unfollowUser(String userIdToUnfollow) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        String userId = userRepository.findByUsername(username).getId();
+
+        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
+
+        userRepository.removeFollow(userId, userIdToUnfollow);
+        userRepository.decreaseFollowingNumbers(userId);
+        userRepository.decreaseFollowersNumbers(userIdToUnfollow);
+    }
+
+    @Override
+    public void addLikeToProduct(String productId) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        String userId = userRepository.findByUsername(username).getId();
+
+        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
+
+        userRepository.addLikeToProduct(userId, productId);
+        productRepository.increaseLikesNumber(productId);
+    }
+
+    @Override
+    public void removeLikeFromProduct(String productId) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        String userId = userRepository.findByUsername(username).getId();
+
+        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
+
+        userRepository.removeLikeToProduct(userId, productId);
+        productRepository.decreaseLikesNumber(productId);
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getProducLikedByUser(int page, int size) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(username);
+
+        return productRepository.findAllByUsersThatLiked(user, PageRequest.of(page, size))
+                .map(product -> modelMapper.map(product, ProductBasicDTO.class));
+    }
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user, UserDTO.class);}

@@ -20,8 +20,6 @@ public interface ProductRepository extends JpaRepository<Product,String>, JpaSpe
     Page<Product> findAllBySellerAndVisibilityEquals(User user, Visibility visibility,Pageable pageable);
     Page<Product> findAllBySeller(User user,Pageable pageable);
 
-
-
     Page<Product> findAllByTitleContainingOrDescriptionContainingAndVisibility(String title, String description,Visibility visibility,Pageable pageable);
 
     @Query("select p from Product p where p.customMoney.price between :start and :end and p.visibility=:visibility" )
@@ -29,9 +27,15 @@ public interface ProductRepository extends JpaRepository<Product,String>, JpaSpe
 
     Page<Product> findAllByVisibility(Visibility visibility, Pageable pageable);
     
+  
+    @Query("update Product p set p.likesNumber = p.likesNumber + 1 where p.id = ?1")
+    void increaseLikesNumber(String productId);
 
+    @Query("update Product p set p.likesNumber = p.likesNumber - 1 where p.id = ?1")
+    void decreaseLikesNumber(String productId);
 
-/*
-    Page<User> findAllUsersThatLikedProduct(Product product, Pageable pageable);*/
+    Page<Product> findAllByUsersThatLiked(User user, Pageable pageable);
+    //@Query(value = "select u from users u, user_likes ulp where ulp.product_id = ?1 and ulp.user_id = u.id", nativeQuery = true)
+    //Page<User> findAllUsersThatLikedProduct(String productId, Pageable pageable);
 
 }

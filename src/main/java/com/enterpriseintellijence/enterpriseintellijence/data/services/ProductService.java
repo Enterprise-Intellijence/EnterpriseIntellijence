@@ -42,4 +42,7 @@ public interface ProductService {
     Page<ProductBasicDTO> getMostLikedProducts(int page, int size);
 
     Page<ProductBasicDTO> getMostViewedProducts(int page, int size);
+
+    Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
+
 }
