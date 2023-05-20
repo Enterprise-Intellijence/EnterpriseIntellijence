@@ -9,6 +9,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import jakarta.persistence.EnumType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,7 +69,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/selling")
+    @GetMapping("/wardrobe")
     public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
         
         if (bucket.tryConsume(1)) {
@@ -78,7 +79,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/filtered")
+    @GetMapping("/category")
     public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
 
         /*
@@ -91,7 +92,69 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
+    @GetMapping("/category/clothing")
+    public ResponseEntity<Page<ProductBasicDTO>> getClothingByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("clothingType")ClothingType clothingType){
 
+        /*
+        if (bucket.tryConsume(1)) {
+*/
+
+        return ResponseEntity.ok(productService.getClothingByTypePaged(page,size,clothingType));
+/*        }
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
+    }
+    @GetMapping("/category/entertainment")
+    public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentType entertainmentType){
+
+        /*
+        if (bucket.tryConsume(1)) {
+*/
+
+        return ResponseEntity.ok(productService.getEntertainmentByTypePaged(page,size,entertainmentType));
+/*        }
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
+    }
+
+    @GetMapping("/category/home")
+    public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeType homeType){
+
+        /*
+        if (bucket.tryConsume(1)) {
+*/
+
+        return ResponseEntity.ok(productService.getHomeByTypePaged(page,size,homeType));
+/*        }
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductBasicDTO>> searchProductByTitleOrDescription(@RequestParam("keystring") String keystring,@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.searchProduct(keystring,page,size));
+    }
+
+    @GetMapping("/search-by-price")
+    public ResponseEntity<Page<ProductBasicDTO>> searchProductByPrice(@RequestParam("startPrice") Double startPrice,@RequestParam("endPrice") Double endPrice,@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.searchProductByPrice(startPrice,endPrice,page,size));
+    }
+
+    @GetMapping("/most-liked")
+    public ResponseEntity<Page<ProductBasicDTO>> mostLikedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.getMostLikedProducts(page,size));
+    }
+
+    @GetMapping("/most-viewed")
+    public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
+    }
+
+
+
+
+
+/*
 
     //restituisce la lista di categorie
     @GetMapping("/categories")
@@ -127,7 +190,7 @@ public class ProductController {
     @GetMapping("/categories/clothing/size")
     public ResponseEntity<Iterable<ClothingSize>> getClothingSize(){
         return ResponseEntity.ok(Arrays.asList(ClothingSize.class.getEnumConstants())) ;
-    }
+    }*/
 
     //restituisce la lista dei sessi per l'abbigliamento
     @GetMapping("/categories/clothing/gender")
