@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,23 +54,18 @@ public class ProductServiceImp implements ProductService {
             product.setUploadDate(LocalDateTime.now(clock));
             product.setLikesNumber(0);
             product.setSeller(userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get()));
+
             product.getDefaultImage().setDefaultProduct(product);
-            product.setProductImages(new ArrayList<>());
-            ProductImage productImage = new ProductImage();
-            for(ProductImageDTO productImageDTO: productDTO.getProductImages()){
-                productImage= modelMapper.map(productImageDTO,ProductImage.class);
-                productImage.setProduct(product);
-                product.getProductImages().add(productImage);
+            if (product.getProductImages()!=null){
+                for(ProductImage productImage: product.getProductImages())
+                    productImage.setProduct(product);
             }
 
 
-            // todo: set seller from context
             product = productRepository.save(product);
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        product= productRepository.findById(product.getId()).get();
 
         return mapToProductDetailsDTO(product);
     }

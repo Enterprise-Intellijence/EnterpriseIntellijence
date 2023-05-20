@@ -80,23 +80,23 @@ public class Product {
     @JoinColumn(name = "user_id"/*, nullable = false*/)
     private User seller;
 
-    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<User> usersThatLiked;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Offer> offers;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Message> messages;
 
-    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Order order;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_image")
     private ProductImage defaultImage;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
 
