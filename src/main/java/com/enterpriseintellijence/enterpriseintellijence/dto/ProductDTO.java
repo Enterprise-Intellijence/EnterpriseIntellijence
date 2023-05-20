@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -64,9 +66,9 @@ public class ProductDTO {
     private ProductCategory productCategory;
 
     private List<UserBasicDTO> usersThatLiked;
-    private List<OfferDTO> offers;
+    private List<OfferBasicDTO> offers;
     private List<MessageDTO> messages;
-    private OrderDTO order;
+    private OrderBasicDTO order;
     private ProductImageDTO defaultImage;
     private List<ProductImageDTO> productImages;
 }

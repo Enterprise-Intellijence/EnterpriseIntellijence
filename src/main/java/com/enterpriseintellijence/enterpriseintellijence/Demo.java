@@ -245,7 +245,7 @@ public class Demo {
 
             Double priceProduct = price+random.nextInt(1,1500);
             product.setCustomMoney(new CustomMoney(priceProduct, Currency.EUR ));
-            product.setLNumber(random.nextInt(150));
+            product.setLikesNumber(random.nextInt(150));
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             product.setAddress(user.getAddress());
             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));

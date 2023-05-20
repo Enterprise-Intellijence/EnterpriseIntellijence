@@ -57,9 +57,6 @@ public class Product {
     @Column(name = "views", nullable = false)
     private Integer views;
 
-    @Column(name = "number_like")
-    private Integer likesNumber;
-
     @JoinColumn(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
 

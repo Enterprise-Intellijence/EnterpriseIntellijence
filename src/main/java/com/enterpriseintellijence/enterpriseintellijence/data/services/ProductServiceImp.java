@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,12 +54,24 @@ public class ProductServiceImp implements ProductService {
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
             product.setLikesNumber(0);
-            jwtContextUtils.getUsernameFromContext();
+            product.setSeller(userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get()));
+            product.getDefaultImage().setDefaultProduct(product);
+            product.setProductImages(new ArrayList<>());
+            ProductImage productImage = new ProductImage();
+            for(ProductImageDTO productImageDTO: productDTO.getProductImages()){
+                productImage= modelMapper.map(productImageDTO,ProductImage.class);
+                productImage.setProduct(product);
+                product.getProductImages().add(productImage);
+            }
+
+
             // todo: set seller from context
             product = productRepository.save(product);
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        product= productRepository.findById(product.getId()).get();
 
         return mapToProductDetailsDTO(product);
     }
@@ -116,8 +129,8 @@ public class ProductServiceImp implements ProductService {
     public Page<ProductBasicDTO> getAllPaged(int page, int size) {
         // TODO: 01/05/2023 da sistemare ereditarietà
         Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC, PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
+        //List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(mapToProductBasicDTOList(products));
     }
 
     @Override
@@ -217,8 +230,8 @@ public class ProductServiceImp implements ProductService {
             return modelMapper.map(product, ProductDTO.class);
     }
 
-    private ProductBasicDTO mapToProductDTO(Product product) {
-            return modelMapper.map(product, ProductBasicDTO.class);
+    private List<ProductBasicDTO> mapToProductBasicDTOList(Page<Product> products) {
+        return products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
     }
 
 
