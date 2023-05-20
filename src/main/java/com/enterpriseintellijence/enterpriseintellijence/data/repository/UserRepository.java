@@ -1,16 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.repository;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,String>, JpaSpecificationExecutor<User> {
@@ -21,20 +17,22 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
     Page<User> findAllByFollowingId(String userId, Pageable pageable);
 
     Page<User> findAllByFollowersId(String userId, Pageable pageable);
+/*
 
-    @Query("update User u set u.followers_number = u.following_number + 1 where u.id = ?1")
+    @Query("update User u set u.followers_number = u.followers_number + 1 where u.id = ?1")
     void increaseFollowersNumber(String userId);
 
     @Query("update User u set u.following_number = u.following_number + 1 where u.id = ?1")
     void increaseFollowingNumber(String userId);
 
-    @Query("update User u set u.followers_number = u.following_number - 1 where u.id = ?1")
+    @Query("update User u set u.followers_number = u.followers_number - 1 where u.id = ?1")
     void decreaseFollowersNumbers(String userId);
 
     @Query("update User u set u.following_number = u.following_number - 1 where u.id = ?1")
     void decreaseFollowingNumbers(String userId);
+*/
 
-    @Query(value = "insert into users_following (user_id, following_id) values (?1, ?2)", nativeQuery = true)
+    @Query(value = "insert into user_follows (user_id, following_id) values (?1, ?2)", nativeQuery = true)
     void addFollow(String userId, String userIdToFollow);
 
 

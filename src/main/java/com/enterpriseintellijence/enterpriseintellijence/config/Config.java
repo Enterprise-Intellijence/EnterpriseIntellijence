@@ -1,26 +1,20 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.*;
+import org.modelmapper.builder.ConfigurableConditionExpression;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
-import java.util.List;
 import java.util.Set;
 
 @Configuration
@@ -28,6 +22,8 @@ import java.util.Set;
 public class Config {
 
     private final CollectionSizeToIntConverter collectionSizeToIntConverter;
+    private final PaymentMethodConverter paymentMethodConverter;
+
     @Bean
     public ModelMapper getModelMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -36,24 +32,45 @@ public class Config {
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setAmbiguityIgnored(true);
 
-        modelMapper.createTypeMap(User.class, UserDTO.class).addMappings(new PropertyMap<User, UserDTO>() {
 
-            Converter<PaymentMethod, PaymentMethodBasicDTO> paymentMethodConverter = new AbstractConverter<PaymentMethod, PaymentMethodBasicDTO>() {
-                @Override
-                protected PaymentMethodBasicDTO convert(PaymentMethod paymentMethod) {
-                    return PaymentMethodBasicDTO.builder()
-                            .id(paymentMethod.getId())
-                            .creditCard("**** **** **** "+paymentMethod.getCreditCard().substring(15,19))
-                            .build();
+        //modelMapper.createTypeMap(PaymentMethod.class, PaymentMethodBasicDTO.class).setConverter(paymentMethodConverter);
+        modelMapper.createTypeMap(User.class, UserDTO.class).setConverter(new AbstractConverter<User, UserDTO>() {
+            @Override
+            protected UserDTO convert(User user) {
+                int followers_number = 0;
+                int following_number = 0;
+                if(user.getFollowers() != null) {
+                    followers_number = user.getFollowers().size();
+                }
+
+                if(user.getFollowing() != null) {
+
+                    System.out.println("following_number = " + user.getFollowing());
+                    following_number = user.getFollowing().size();
 
                 }
-            };
 
-            @Override
-            protected void configure() {
-                using(paymentMethodConverter).map(source.getDefaultPaymentMethod(), destination.getDefaultPaymentMethod());
+
+                return UserDTO.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .defaultPaymentMethod(null)
+                        .address(AddressDTO.builder().city(user.getAddress().getCity())
+                                .country(user.getAddress().getCountry())
+                                .street(user.getAddress().getStreet())
+                                .postalCode(user.getAddress().getPostalCode())
+                                .build())
+                        .role(user.getRole())
+                        .photo(user.getPhoto())
+                        .provider(user.getProvider())
+                        .followers_number(followers_number)
+                        .following_number(following_number)
+
+                        .build();
             }
         });
+
 
         return modelMapper;
     }

@@ -107,8 +107,10 @@ public class Demo {
             user.setProvider(Provider.LOCAL);
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
+            /*
             user.setFollowers_number(0);
             user.setFollowing_number(0);
+            */
             //user.setDefaultPaymentMethod(createPayment(user));
             user = userRepository.save(user);
             userArrays.add(user);
