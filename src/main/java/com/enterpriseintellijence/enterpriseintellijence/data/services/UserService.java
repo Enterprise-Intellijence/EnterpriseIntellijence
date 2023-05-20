@@ -35,7 +35,6 @@ public interface UserService {
 
     void createUser(String username, String password, String email);
 
-
     Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size);
 
     Page<UserBasicDTO> getFollowingByUserId(String userId, int page, int size);
@@ -48,5 +47,5 @@ public interface UserService {
 
     void removeLikeFromProduct(String productId);
 
-    Page<ProductBasicDTO> getLikesByUserId(int page, int size);
+    Page<ProductBasicDTO> getProducLikedByUser(int page, int size);
 }

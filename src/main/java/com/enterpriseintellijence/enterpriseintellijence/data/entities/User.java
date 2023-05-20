@@ -60,13 +60,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "offerer",fetch = FetchType.LAZY)
     private List<Offer> offersMade;
 
-    @ManyToMany(mappedBy = "following",fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_follows", joinColumns = @JoinColumn(name = "following_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> followers;
 
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
     private List<Product> sellingProducts;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_follows", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
     private Set<User> following;
 
     private int followers_number;

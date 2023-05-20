@@ -177,16 +177,15 @@ public class UserServiceImp implements UserService{
         createUser(user);
     }
 
-
     @Override
     public Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size) {
-        return userRepository.findAllFollowers(userId, PageRequest.of(page, size))
+        return userRepository.findAllByFollowingId(userId, PageRequest.of(page, size))
                 .map(user -> modelMapper.map(user, UserBasicDTO.class));
     }
 
     @Override
     public Page<UserBasicDTO> getFollowingByUserId(String userId, int page, int size) {
-        return userRepository.findAllFollowing(userId, PageRequest.of(page, size))
+        return userRepository.findAllByFollowersId(userId, PageRequest.of(page, size))
                 .map(user -> modelMapper.map(user, UserBasicDTO.class));
     }
 
@@ -240,11 +239,11 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public Page<ProductBasicDTO> getLikesByUserId(int page, int size) {
+    public Page<ProductBasicDTO> getProducLikedByUser(int page, int size) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        String userId = userRepository.findByUsername(username).getId();
+        User user = userRepository.findByUsername(username);
 
-        return userRepository.findAllLikedProducts(userId, PageRequest.of(page, size))
+        return productRepository.findAllByUsersThatLiked(user, PageRequest.of(page, size))
                 .map(product -> modelMapper.map(product, ProductBasicDTO.class));
     }
 

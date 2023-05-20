@@ -24,6 +24,5 @@ public interface ProductService {
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
 
-
-    Page<UserBasicDTO> getUsersThatLikesProduct(String id, int page, int size);
+    Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
 }

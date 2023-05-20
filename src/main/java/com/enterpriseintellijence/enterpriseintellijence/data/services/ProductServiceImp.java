@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
@@ -30,6 +31,7 @@ public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
     private final Clock clock;
 
@@ -41,6 +43,7 @@ public class ProductServiceImp implements ProductService {
         try{
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
+            product.setLikesNumber(0);
             jwtContextUtils.getUsernameFromContext();
             // todo: set seller from context
             product = productRepository.save(product);
@@ -178,11 +181,12 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public Page<UserBasicDTO> getUsersThatLikesProduct(String id, int page, int size) {
-        if (productRepository.findById(id).isEmpty()) {
+    public Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size) {
+        Optional<User> u = userRepository.findById(id);
+        if (u.isEmpty()) {
             throw new EntityNotFoundException("Product not found");
         }
-        return productRepository.findAllUsersThatLikedProduct(id, PageRequest.of(page, size))
+        return userRepository.findAllByLikedProducts(id, PageRequest.of(page, size))
                 .map(user -> modelMapper.map(user, UserBasicDTO.class));
     }
 

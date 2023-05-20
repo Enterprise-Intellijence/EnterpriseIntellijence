@@ -230,6 +230,6 @@ public class UserController {
 
     @GetMapping("/liked/")
     public ResponseEntity<Page<ProductBasicDTO>> getLikedProducts(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        return ResponseEntity.ok(userService.getLikesByUserId(page, size));
+        return ResponseEntity.ok(userService.getProducLikedByUser(page, size));
     }
 }

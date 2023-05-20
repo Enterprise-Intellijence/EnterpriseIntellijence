@@ -49,7 +49,7 @@ public class Demo {
         initializeProductImageList();
         initializeBrandList();
         createUser();
-        for(int i=0;i<35;i++){
+        for(int i=0;i<15;i++){
             createProduct(userArrays.get(i));
         }
         //setFollower();
@@ -95,7 +95,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=1; i<101;i++){
+        for (int i=1; i<20;i++){
             User user = new User();
             user.setUsername("username"+i);
             user.setPassword(passwordEncoder.encode("password"+i));
@@ -107,6 +107,8 @@ public class Demo {
             user.setProvider(Provider.LOCAL);
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
+            user.setFollowers_number(0);
+            user.setFollowing_number(0);
             //user.setDefaultPaymentMethod(createPayment(user));
             user = userRepository.save(user);
             userArrays.add(user);
@@ -167,6 +169,7 @@ public class Demo {
         //for home enum
         List<HomeType> homeTypeList = List.of(HomeType.class.getEnumConstants());
         int sizeHomeType = homeTypeList.size();
+
 
         Random random = new Random();
 
@@ -252,11 +255,11 @@ public class Demo {
             product.setVisibility(visibilities.get(random.nextInt(visibilities.size())));
             product.setAvailability(Availability.AVAILABLE);
             product.setSeller(user);
+            product.setLikesNumber(0);
             String tempID= productRepository.save(product).getId();
             product.setId(tempID);
             setImageToProduct(product);
         }
-
     }
 
     private void setImageToProduct(Product product){

@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

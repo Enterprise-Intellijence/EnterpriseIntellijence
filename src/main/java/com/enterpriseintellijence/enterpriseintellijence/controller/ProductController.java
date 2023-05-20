@@ -141,8 +141,8 @@ public class ProductController {
     }
 
     @GetMapping("/likes/users/{id}")
-    public ResponseEntity<Iterable<UserBasicDTO>> getUsersThatLiked(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size){
-        return ResponseEntity.ok(productService.getUsersThatLikesProduct(id, page, size));
+    public ResponseEntity<Iterable<UserBasicDTO>> getProductLikedByUser(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size){
+        return ResponseEntity.ok(productService.getUserThatLikedProduct(id, page, size));
     }
 
     /*
