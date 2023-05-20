@@ -48,8 +48,8 @@ public class UserDTO {
     //private Set<UserDTO> followers;
     //private Set<UserDTO> following;
 
-    private int followers_number;
-    private int following_number;
+    private Integer followers_number;
+    private Integer following_number;
 
     /*esiste il metodo per fare la get su questo
     private List<ProductBasicDTO> sellingProducts;*/

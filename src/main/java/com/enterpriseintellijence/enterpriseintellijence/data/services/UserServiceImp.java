@@ -92,7 +92,6 @@ public class UserServiceImp implements UserService{
     public void  deleteUser(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         userRepository.deleteById(id);
-
     }
 
     public UserBasicDTO findUserById(String id) {
@@ -197,8 +196,10 @@ public class UserServiceImp implements UserService{
         userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
 
         userRepository.addFollow(userId, userIdToFollow);
+/*
         userRepository.increaseFollowersNumber(userIdToFollow);
         userRepository.increaseFollowingNumber(userId);
+        */
     }
 
     @Override
@@ -210,8 +211,10 @@ public class UserServiceImp implements UserService{
         userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
 
         userRepository.removeFollow(userId, userIdToUnfollow);
+/*
         userRepository.decreaseFollowingNumbers(userId);
         userRepository.decreaseFollowersNumbers(userIdToUnfollow);
+        */
     }
 
     @Override
