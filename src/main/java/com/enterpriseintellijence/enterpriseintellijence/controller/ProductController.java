@@ -129,8 +129,23 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ProductBasicDTO>> searchProduct(@RequestParam("keystring") String keystring,@RequestParam("page") int page, @RequestParam("size") int size){
+    public ResponseEntity<Page<ProductBasicDTO>> searchProductByTitleOrDescription(@RequestParam("keystring") String keystring,@RequestParam("page") int page, @RequestParam("size") int size){
         return ResponseEntity.ok(productService.searchProduct(keystring,page,size));
+    }
+
+    @GetMapping("/search-by-price")
+    public ResponseEntity<Page<ProductBasicDTO>> searchProductByPrice(@RequestParam("startPrice") Double startPrice,@RequestParam("endPrice") Double endPrice,@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.searchProductByPrice(startPrice,endPrice,page,size));
+    }
+
+    @GetMapping("/most-liked")
+    public ResponseEntity<Page<ProductBasicDTO>> mostLikedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.getMostLikedProducts(page,size));
+    }
+
+    @GetMapping("/most-viewed")
+    public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
     }
 
 

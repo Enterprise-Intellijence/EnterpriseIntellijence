@@ -48,7 +48,7 @@ public class ProductBasicDTO {
     private String brand;
     private Condition condition;
     // TODO: 16/05/2023 mappare sul mappare
-    private Integer likeNumber;
+    private Integer likesNumber;
     private UserBasicDTO seller;
     private ProductImageDTO defaultImage;
     private ProductCategory productCategory;
