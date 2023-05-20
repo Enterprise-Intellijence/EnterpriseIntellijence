@@ -22,4 +22,5 @@ public class UserBasicDTO {
 
     private int followers_number;
     private int following_number;
+
 }

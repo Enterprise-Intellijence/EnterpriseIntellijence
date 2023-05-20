@@ -178,7 +178,7 @@ public class Demo {
         int rand = ThreadLocalRandom.current().nextInt(5, 10);
         for (int i=1;i<=rand;i++){
 
-            int rand2=ThreadLocalRandom.current().nextInt(1, 4);
+            int rand2=ThreadLocalRandom.current().nextInt(0, 4);
             //setting clothing
             if (rand2==1){
                 Clothing clothing = new Clothing();
@@ -247,6 +247,7 @@ public class Demo {
 
             Double priceProduct = price+random.nextInt(1,1500);
             product.setCustomMoney(new CustomMoney(priceProduct, Currency.EUR ));
+            product.setLNumber(random.nextInt(150));
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             product.setAddress(user.getAddress());
             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));

@@ -1,24 +1,30 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.ClothingRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.EntertainmentRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.HomeRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +36,9 @@ import java.util.stream.Collectors;
 public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ClothingRepository clothingRepository;
+    private final EntertainmentRepository entertainmentRepository;
+    private final HomeRepository homeRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
@@ -88,6 +97,9 @@ public class ProductServiceImp implements ProductService {
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
             ));
+
+        product.setViews(product.getViews()+1);
+        productRepository.save(product);
         ProductDTO productDTO = mapToProductDetailsDTO(product);
         return productDTO;
     }
@@ -103,14 +115,14 @@ public class ProductServiceImp implements ProductService {
     @Override
     public Page<ProductBasicDTO> getAllPaged(int page, int size) {
         // TODO: 01/05/2023 da sistemare ereditarietà
-        Page<Product> products = productRepository.findAll(PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
+        Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC, PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
     }
 
     @Override
     public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
-        Page<Product> products = productRepository.findAllByProductCategory(productCategory,PageRequest.of(page,size));
+        Page<Product> products = productRepository.findAllByProductCategoryAndVisibility(productCategory,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
     }
@@ -129,7 +141,58 @@ public class ProductServiceImp implements ProductService {
         return new PageImpl<>(collect);
     }
 
+    @Override
+    public Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType) {
+        Page<Product> products = clothingRepository.findAllByClothingTypeAndVisibility(clothingType,Visibility.PUBLIC,PageRequest.of(page,size));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
 
+    @Override
+    public Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentType entertainmentType) {
+        Page<Product> products = entertainmentRepository.findAllByEntertainmentTypeAndVisibility(entertainmentType,Visibility.PUBLIC,PageRequest.of(page,size));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeType homeType) {
+        Page<Product> products = homeRepository.findAllByHomeTypeAndVisibility(homeType,Visibility.PUBLIC,PageRequest.of(page,size));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<ProductBasicDTO> searchProduct(String keystring, int page, int size) {
+
+//        List<Product> products = productRepository.search(keystring,PageRequest.of(page,size));
+        Page<Product> products = productRepository.findAllByTitleContainingOrDescriptionContainingAndVisibility(keystring,keystring,Visibility.PUBLIC,PageRequest.of(page,size));
+
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+
+    }
+
+    @Override
+    public Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size) {
+        Page<Product> products = productRepository.getByProductByPrice(startPrice,endPrice,Visibility.PUBLIC,PageRequest.of(page,size));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getMostLikedProducts(int page, int size) {
+        Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC,PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"likesNumber")));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getMostViewedProducts(int page, int size) {
+        Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC,PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"views")));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
+    }
 
 
     private Product mapToEntity(ProductDTO productDTO) {
