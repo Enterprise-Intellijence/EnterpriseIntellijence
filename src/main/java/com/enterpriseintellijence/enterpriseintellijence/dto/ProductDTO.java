@@ -49,7 +49,7 @@ public class ProductDTO {
     @Length(max = 100)
     private String brand;
     private Condition condition;
-    private Integer likeNumber;
+    private Integer likesNumber;
     private UserBasicDTO seller;
 
 

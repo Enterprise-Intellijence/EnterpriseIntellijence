@@ -36,4 +36,10 @@ public interface ProductService {
 
 
     Page<ProductBasicDTO> searchProduct(String keystring,int page, int size);
+
+    Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size);
+
+    Page<ProductBasicDTO> getMostLikedProducts(int page, int size);
+
+    Page<ProductBasicDTO> getMostViewedProducts(int page, int size);
 }
