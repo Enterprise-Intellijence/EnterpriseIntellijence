@@ -6,7 +6,6 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Payment
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
@@ -19,25 +18,37 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.*;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImp implements UserService{
 
     private final UserRepository userRepository;
@@ -46,6 +57,7 @@ public class UserServiceImp implements UserService{
     private final PaymentMethodRepository paymentMethodRepository;
     private final ProductRepository productRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
 
 
@@ -149,6 +161,48 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    public Map<String, String> authenticateUser(String username, String password) throws JOSEException {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", username, "role", "user"));
+        String refreshToken = TokenStore.getInstance().createRefreshToken(username);
+        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+    }
+
+    @Override
+    public ResponseEntity<String> registerUser(String username, String email, String password) {
+        if(findByUsername(username).isPresent())
+            return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
+        createUser(username, passwordEncoder.encode(password), email);
+        log.info("User created: " + username);
+        return new ResponseEntity<>( "user created" , HttpStatus.CREATED);
+    }
+
+    @Override
+    public void refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException {
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                String refreshToken = authorizationHeader.substring("Bearer ".length());
+                String username = TokenStore.getInstance().getUser(refreshToken);
+                UserDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
+
+                User userDetails = mapToEntity(user);
+                String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));;
+                response.addHeader(AUTHORIZATION, "Bearer " + accessToken);
+                response.addHeader("refresh_token", "Bearer " + refreshToken);
+            }
+            catch (Exception e) {
+                log.error(String.format("Error refresh token: %s", authorizationHeader), e);
+                response.setStatus(FORBIDDEN.value());
+                Map<String, String> error = new HashMap<>();
+                error.put("errorMessage", e.getMessage());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
+        }
+    }
+    @Override
     public Optional<UserDTO> findUserFromContext() {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
         if (username.isEmpty())
@@ -162,19 +216,6 @@ public class UserServiceImp implements UserService{
     public void throwOnIdMismatch(String id, UserDTO userDTO){
         if(userDTO.getId() != null && !userDTO.getId().equals(id))
             throw new IdMismatchException();
-    }
-
-    @Override
-    public Map<String, String> refreshToken(String authorizationHeader) throws ParseException, JOSEException {
-
-        String refreshToken = authorizationHeader.substring("Bearer ".length());
-        String username = TokenStore.getInstance().getUser(refreshToken);
-        UserDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
-
-        User userDetails = mapToEntity(user);
-        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));
-        return Map.of("access_token", accessToken, "refresh_token", refreshToken);
-
     }
 
     @Override
