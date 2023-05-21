@@ -1,14 +1,15 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
@@ -19,13 +20,14 @@ import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtil
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.nimbusds.jose.JOSEException;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -43,6 +45,8 @@ public class UserServiceImp implements UserService{
     private final JwtContextUtils jwtContextUtils;
     private final PaymentMethodRepository paymentMethodRepository;
     private final ProductRepository productRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
 
     public UserDTO createUser(UserDTO userDTO) {
@@ -53,12 +57,16 @@ public class UserServiceImp implements UserService{
     }
 
     public UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException {
-        //TODO: serve effettivamente questo metodo?
-        throwOnIdMismatch(id, userDTO);
+        /*//throwOnIdMismatch(id, userDTO);
+        User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
+
+        if(!id.equals(userDTO.getId()) || !id.equals(loggedUser.getId()) || !userDTO.getId().equals(loggedUser.getId()))
+            throw new IllegalAccessException("User cannot change another user");
+
         User oldUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User newUser = mapToEntity(userDTO);
 
-        //todo: get user from context
        User requestingUser = new User();
 
         if(!requestingUser.getId().equals(oldUser.getId())) {
@@ -68,33 +76,37 @@ public class UserServiceImp implements UserService{
             throw new IllegalAccessException("same user");
         }
 
-        // TODO: 09/05/2023 occhio che quando memorizza una nuova password, non passa da bcrypt e la memorizza in chiaro...fixare 
 
         newUser = userRepository.save(newUser);
-        return mapToDto(newUser);
-
+        return mapToDto(newUser);*/
+        return updateUser(id,userDTO);
     }
 
-    public UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException {
-        UserDTO user = mapToDto(userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        UserDTO userContext = findUserFromContext().orElseThrow(EntityNotFoundException::new);
+    public UserDTO updateUser(String id, UserDTO userDTO) throws IllegalAccessException {
+        User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
+        User oldUser = userRepository.findById(id).orElseThrow();
 
-        if(userContext.getId() != patch.getId())
+        if(!id.equals(userDTO.getId()))
             throw new IllegalAccessException("User cannot change another user");
 
-        if(userContext.getProvider() != patch.getProvider())
-            throw new IllegalAccessException("User cannot change provider");
+        if(!id.equals(loggedUser.getId()) && (!loggedUser.getRole().equals(UserRole.ADMIN)) )
+            throw new IllegalAccessException("User cannot change another user");
 
-        if(patch.getUsername() != null)
-            user.setUsername(patch.getUsername());
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        if(patch.getEmail() != null)
-            user.setEmail(patch.getEmail());
+        // TODO: 21/05/2023 testare se controlla da solo se username/email sono disponibili e se restituisce errore
+        if(userDTO.getUsername()!=null && !oldUser.getUsername().equals(userDTO.getUsername()))
+            oldUser.setUsername(userDTO.getUsername());
+        if(userDTO.getPassword()!=null && !oldUser.getPassword().equals(userDTO.getPassword()))
+            oldUser.setPassword(userDTO.getPassword());
+        if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
+            oldUser.setEmail(userDTO.getEmail());
+        if(userDTO.getPhoto()!=null && !oldUser.getPhoto().equals(userDTO.getPhoto()))
+            oldUser.setPhoto(userDTO.getPhoto());
+        oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
 
-        user.setAddress(patch.getAddress());
-        user.setPhoto(patch.getPhoto());
-        userRepository.save(mapToEntity(user));
-        return user;
+        userRepository.save(oldUser);
+        return mapToDto(oldUser);
     }
 
     public void  deleteUser(String id) {
@@ -147,11 +159,6 @@ public class UserServiceImp implements UserService{
         return user;
     }
 
-    @Override
-    public Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserDTO userDTO, Pageable page) {
-        return paymentMethodRepository.findAllByDefaultUser_Id(userDTO.getId(), page)
-                .map(paymentMethod -> modelMapper.map(paymentMethod, PaymentMethodDTO.class));
-    }
     public void throwOnIdMismatch(String id, UserDTO userDTO){
         if(userDTO.getId() != null && !userDTO.getId().equals(id))
             throw new IdMismatchException();
@@ -335,6 +342,34 @@ public class UserServiceImp implements UserService{
 
         user.setStatus(UserStatus.ACTIVE);
         return mapToDto(userRepository.save(user));
+
+    public Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(username);
+        Page<PaymentMethod> paymentMethods = new PageImpl<PaymentMethod>(user.getPaymentMethods(),PageRequest.of(page,size),user.getPaymentMethods().size());
+        List<PaymentMethodBasicDTO> collect = paymentMethods.stream().map(s->modelMapper.map(s, PaymentMethodBasicDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<MessageDTO> getMyInBoxMessage(int page, int size) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(username);
+        Page<Message> messages = new PageImpl<Message>(user.getReceivedMessages(),PageRequest.of(page,size),user.getReceivedMessages().size());
+        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<MessageDTO> getMyOutBoxMessage(int page, int size) {
+        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(username);
+        Page<Message> messages = new PageImpl<Message>(user.getSentMessages(),PageRequest.of(page,size),user.getSentMessages().size());
+        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
     }
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}

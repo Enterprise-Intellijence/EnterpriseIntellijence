@@ -1,9 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -66,13 +68,35 @@ public class UserController {
 
      Guarda il metodo sotto per un esempio pratico
      */
+  
+    @PostMapping(path = "/authenticate" )
+    @ResponseStatus(HttpStatus.OK)
+    public void authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
+            response) throws JOSEException {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", username, "role", "user"));
+        String refreshToken = TokenStore.getInstance().createRefreshToken(username);
+        response.addHeader(AUTHORIZATION,
+                "Bearer " + accessToken);
+        response.addHeader("RefreshToken", "Bearer " + refreshToken);
+    }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(path= "/register" )
+    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
+        if(userService.findByUsername(username).isPresent())
+            return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
+        userService.createUser(username, passwordEncoder.encode(password), email);
+        log.info("User created: "+ username);
+        return new ResponseEntity<>( "registered" , HttpStatus.OK);
+    }
+
+
+/*    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.createUser(userDTO));
 
-    }
+    }*/
 
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO userDTO) throws IllegalAccessException {
@@ -91,7 +115,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO: 07/05/2023 occhio ci sono due metodi che si mappano allo stesso modo, riga 93 e riga 115 
     @GetMapping("/{id}")
     public ResponseEntity<UserBasicDTO> userById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findUserById(id));
@@ -121,45 +144,15 @@ public class UserController {
         return ResponseEntity.ok(user);
     }*/
 
-    @PostMapping(path = "/authenticate" )
-    @ResponseStatus(HttpStatus.OK)
-    public void authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
-            response) throws JOSEException {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", username, "role", "user"));
-        String refreshToken = TokenStore.getInstance().createRefreshToken(username);
-        response.addHeader(AUTHORIZATION,
-                "Bearer " + accessToken);
-        response.addHeader("RefreshToken", "Bearer " + refreshToken);
-    }
-
-    @PostMapping(path= "/register" )
-    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
-        if(userService.findByUsername(username).isPresent())
-            return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
-        userService.createUser(username, passwordEncoder.encode(password), email);
-        log.info("User created: "+ username);
-        return new ResponseEntity<>( "registered" , HttpStatus.OK);
-    }
-
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
         UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/me/payment_methods")
-    public ResponseEntity<Page<PaymentMethodDTO>> getPaymentMethods(@RequestParam Pageable page) throws EntityNotFoundException {
-        if (bucket.tryConsume(1)) {
-            UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
-            return ResponseEntity.ok(userService.getPaymentMethodsByUserId(userDTO, page));
-        } else {
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
-        }
-    }
-
     @GetMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
@@ -229,4 +222,21 @@ public class UserController {
     public ResponseEntity<Page<OrderBasicDTO>> getMyOrders(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOrders(page, size));
     }
+
+    @GetMapping("/my/payment-methods")
+    public ResponseEntity<Page<PaymentMethodBasicDTO>> getMyPaymentMethods(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        return ResponseEntity.ok(userService.getMyPaymentMethods(page, size));
+    }
+
+    @GetMapping("/my/inbox")
+    public ResponseEntity<Page<MessageDTO>> getMyInBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        return ResponseEntity.ok(userService.getMyInBoxMessage(page, size));
+    }
+
+    @GetMapping("/my/outbox")
+    public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));
+    }
+
+
 }

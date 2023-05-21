@@ -48,20 +48,22 @@ public class UserDTO {
     private Integer followers_number;
     private Integer following_number;
 
-    /*esiste il metodo per fare la get su questo
-    private List<ProductBasicDTO> sellingProducts;*/
-
-    /*
-    private List<PaymentMethodDTO> paymentMethods;
-    private List<OfferDTO> offers;
-    private List<UserDTO> followers;
-    private List<UserDTO> follows;
-    private List<ProductBasicDTO> likes; FATTO
-    private List<MessageDTO> sendMessages;
-    private List<MessageDTO> receivedMessages;
-    private List<OrderDTO> orders; FATTO
     private List<ReviewDTO> receivedReviews;
     private List<ReviewDTO> sentReviews;
+
+    /*esiste il metodo per fare la get su questo
+    private List<ProductBasicDTO> sellingProducts; FATTO */
+
+    /*
+    private List<PaymentMethodBasicDTO> paymentMethods FATTO;
+    //private List<OfferDTO> offers;
+    private List<UserDTO> followers FATTO;
+    private List<UserDTO> follows FATTO;
+    private List<ProductBasicDTO> likes; FATTO
+    private List<MessageDTO> sendMessages FATTO;
+    private List<MessageDTO> receivedMessages FATTO;
+    private List<OrderDTO> orders; FATTO
+
 */
 
 }

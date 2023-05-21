@@ -1,8 +1,10 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -31,8 +33,6 @@ public interface UserService {
 
     Map<String, String> refreshToken(String authorizationHeader) throws JOSEException, ParseException;
 
-    Page<PaymentMethodDTO> getPaymentMethodsByUserId(UserDTO userDTO, Pageable page);
-
     void createUser(String username, String password, String email);
 
     Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size);
@@ -51,9 +51,17 @@ public interface UserService {
 
     Page<OrderBasicDTO> getMyOrders(int page, int size);
 
+
     UserDTO changeRole(String userId, UserRole role);
 
     UserDTO banUser(String userId);
 
     UserDTO unBanUser(String userId);
+
+    Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size);
+
+    Page<MessageDTO> getMyInBoxMessage(int page, int size);
+
+    Page<MessageDTO> getMyOutBoxMessage(int page, int size);
+
 }
