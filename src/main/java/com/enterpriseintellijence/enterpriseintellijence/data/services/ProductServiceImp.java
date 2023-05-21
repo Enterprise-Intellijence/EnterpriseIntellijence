@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class ProductServiceImp implements ProductService {
             product.setLikesNumber(0);
             product.setSeller(userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get()));
 
-            product.getDefaultImage().setDefaultProduct(product);
+            //product.getDefaultImage().setDefaultProduct(product);
             if (product.getProductImages()!=null){
                 for(ProductImage productImage: product.getProductImages())
                     productImage.setProduct(product);
@@ -123,8 +124,8 @@ public class ProductServiceImp implements ProductService {
     public Page<ProductBasicDTO> getAllPaged(int page, int size) {
         // TODO: 01/05/2023 da sistemare ereditarietà
         Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC, PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
-        //List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(mapToProductBasicDTOList(products));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
     }
 
     @Override

@@ -271,8 +271,8 @@ public class Demo {
             ProductImage productImage = new ProductImage();
             productImage.setPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())));
             productImage.setProduct(product);
-            if(i==0)
-                product.setDefaultImage(productImage);
+           /* if(i==0)
+                product.setDefaultImage(productImage);*/
             productImageRepository.save(productImage);
         }
     }

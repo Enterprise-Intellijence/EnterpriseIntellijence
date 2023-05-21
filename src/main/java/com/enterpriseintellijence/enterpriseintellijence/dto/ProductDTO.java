@@ -69,6 +69,6 @@ public class ProductDTO {
     private List<OfferBasicDTO> offers;
     private List<MessageDTO> messages;
     private OrderBasicDTO order;
-    private ProductImageDTO defaultImage;
+    //private ProductImageDTO defaultImage;
     private List<ProductImageDTO> productImages;
 }

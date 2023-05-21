@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
@@ -10,6 +11,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -18,11 +20,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -198,10 +202,14 @@ public class UserServiceImp implements UserService{
         //userRepository.addFollow(userId, userIdToFollow);
 
         User userToFollow = userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
+
         userToFollow.getFollowers().add(actualUser);
+        userToFollow.setFollowers_number(userToFollow.getFollowers_number()+1);
+
         actualUser.getFollowing().add(userToFollow);
+        actualUser.setFollowing_number(actualUser.getFollowing_number()+1);
         userRepository.save(actualUser);
-        userRepository.save(userToFollow);
+        //userRepository.save(userToFollow);
 
         /*
         userRepository.increaseFollowersNumber(userIdToFollow);
@@ -212,12 +220,29 @@ public class UserServiceImp implements UserService{
     @Override
     public void unfollowUser(String userIdToUnfollow) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        String userId = userRepository.findByUsername(username).getId();
+        User actualUser = userRepository.findByUsername(username);
 
+        User userToUnfollow = userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
+
+        if(userToUnfollow.getFollowers().contains(actualUser)){
+            userToUnfollow.getFollowers().remove(actualUser);
+            userToUnfollow.setFollowers_number(userToUnfollow.getFollowers_number()-1);
+        }
+
+        if(actualUser.getFollowing().contains(userToUnfollow)){
+            actualUser.getFollowing().remove(userToUnfollow);
+            actualUser.setFollowing_number(actualUser.getFollowing_number()-1);
+        }
+
+
+        //userRepository.save(userToUnfollow);
+        userRepository.save(actualUser);
+
+        /*
         userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
 
-        userRepository.removeFollow(userId, userIdToUnfollow);
+        userRepository.removeFollow(userId, userIdToUnfollow);*/
 /*
         userRepository.decreaseFollowingNumbers(userId);
         userRepository.decreaseFollowersNumbers(userIdToUnfollow);
@@ -227,34 +252,50 @@ public class UserServiceImp implements UserService{
     @Override
     public void addLikeToProduct(String productId) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        String userId = userRepository.findByUsername(username).getId();
+        //String userId = userRepository.findByUsername(username).getId();
 
-        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(username);
+        Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
 
-        userRepository.addLikeToProduct(userId, productId);
-        productRepository.increaseLikesNumber(productId);
+        product.setLikesNumber(product.getLikesNumber()+1);
+        user.getLikedProducts().add(product);
+        //product.getUsersThatLiked(user);
+        //userRepository.addLikeToProduct(userId, productId);
+        //productRepository.increaseLikesNumber(productId);
+        userRepository.save(user);
     }
 
     @Override
     public void removeLikeFromProduct(String productId) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        String userId = userRepository.findByUsername(username).getId();
+        //String userId = userRepository.findByUsername(username).getId();
 
-        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(username);
+        Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
+
+        if(user.getLikedProducts().contains(product)){
+            product.setLikesNumber(product.getLikesNumber()-1);
+            user.getLikedProducts().remove(product);
+            userRepository.save(user);
+        }
+
+/*        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
 
         userRepository.removeLikeToProduct(userId, productId);
-        productRepository.decreaseLikesNumber(productId);
+        productRepository.decreaseLikesNumber(productId);*/
     }
 
     @Override
-    public Page<ProductBasicDTO> getProducLikedByUser(int page, int size) {
+    public Page<ProductBasicDTO> getProductLikedByUser(int page, int size) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUsername(username);
 
-        return productRepository.findAllByUsersThatLiked(user, PageRequest.of(page, size))
-                .map(product -> modelMapper.map(product, ProductBasicDTO.class));
+        /*return productRepository.findAllByUsersThatLiked(user, PageRequest.of(page, size))
+                .map(product -> modelMapper.map(product, ProductBasicDTO.class));*/
+        Page<Product> products =productRepository.findAllByVisibilityAndUsersThatLiked(Visibility.PUBLIC,user,PageRequest.of(page,size));
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect);
     }
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}

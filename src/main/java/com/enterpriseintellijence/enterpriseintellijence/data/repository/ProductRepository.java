@@ -26,6 +26,7 @@ public interface ProductRepository extends JpaRepository<Product,String>, JpaSpe
     Page<Product> getByProductByPrice(@Param("start") Double startPrice,@Param("end") Double endPrice,@Param("visibility")Visibility visibility, Pageable pageable);
 
     Page<Product> findAllByVisibility(Visibility visibility, Pageable pageable);
+    Page<Product> findAllByVisibilityAndUsersThatLiked(Visibility visibility,User user,Pageable pageable);
     
   
     @Query("update Product p set p.likesNumber = p.likesNumber + 1 where p.id = ?1")

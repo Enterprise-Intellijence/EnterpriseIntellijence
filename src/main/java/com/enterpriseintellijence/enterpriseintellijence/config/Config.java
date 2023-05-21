@@ -1,21 +1,30 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.modelmapper.*;
-import org.modelmapper.builder.ConfigurableConditionExpression;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
-import java.util.Set;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,8 +41,8 @@ public class Config {
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setAmbiguityIgnored(true);
 
-        //modelMapper.createTypeMap(PaymentMethod.class, PaymentMethodBasicDTO.class).setConverter(paymentMethodConverter);
-        modelMapper.createTypeMap(User.class, UserDTO.class).setConverter(new AbstractConverter<User, UserDTO>() {
+        modelMapper.createTypeMap(PaymentMethod.class, PaymentMethodBasicDTO.class).setConverter(paymentMethodConverter);
+/*        modelMapper.createTypeMap(User.class, UserDTO.class).setConverter(new AbstractConverter<User, UserDTO>() {
             @Override
             protected UserDTO convert(User user) {
                 int followers_number = 0;
@@ -66,6 +75,66 @@ public class Config {
                         .build();
             }
         });
+
+        modelMapper.createTypeMap(User.class, UserBasicDTO.class).setConverter(new AbstractConverter<User, UserBasicDTO>() {
+            @Override
+            protected UserBasicDTO convert(User user) {
+
+                return UserBasicDTO.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .photo(user.getPhoto())
+                        .followers_number(user.getFollowers().size())
+                        .following_number(user.getFollowing().size())
+                        .build();
+            }
+        });*/
+
+        Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
+            @Override
+            protected ProductImageDTO convert(List<ProductImage> productImages) {
+                return ProductImageDTO.builder()
+                        .id(productImages.get(0).getId())
+                        .photo(productImages.get(0).getPhoto())
+                        .build();
+            }
+        };
+
+        modelMapper.addConverter(defaultImageConverter);
+
+        /*modelMapper.createTypeMap(Product.class, ProductBasicDTO.class) .setConverter(new AbstractConverter<Product, ProductBasicDTO>() {
+            @Override
+            protected ProductBasicDTO convert(Product product) {
+                System.out.println("convertendo");
+                return ProductBasicDTO.builder()
+                        .id(product.getId())
+                        .title(product.getTitle())
+                        .description(product.getDescription())
+                        .customMoney(CustomMoneyDTO.builder()
+                                .price(product.getCustomMoney().getPrice())
+                                .currency(product.getCustomMoney().getCurrency())
+                                .build())
+                        .condition(product.getCondition())
+                        .likesNumber(product.getLikesNumber())
+                        .seller(UserBasicDTO.builder()
+                                .id(product.getSeller().getId())
+                                .username(product.getSeller().getUsername())
+                                .photo(product.getSeller().getPhoto())
+                                .followers_number(product.getSeller().getFollowers_number())
+                                .following_number(product.getSeller().getFollowing_number())
+                                .build()
+                            )
+                        .defaultImage(ProductImageDTO.builder()
+                                .id(product.getProductImages().get(0).getId())
+                                .photo(product.getProductImages().get(0).getPhoto())
+                                .build()
+                        )
+                        .productCategory(product.getProductCategory())
+                        .build();
+            }
+        });*/
+
+
 
 
         return modelMapper;

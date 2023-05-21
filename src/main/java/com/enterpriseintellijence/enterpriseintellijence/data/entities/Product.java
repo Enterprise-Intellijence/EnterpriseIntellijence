@@ -81,7 +81,7 @@ public class Product {
     private User seller;
 
     @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Set<User> usersThatLiked;
+    private List<User> usersThatLiked;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Offer> offers;
@@ -92,11 +92,11 @@ public class Product {
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Order order;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+/*    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_image")
-    private ProductImage defaultImage;
+    private ProductImage defaultImage;*/
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
 

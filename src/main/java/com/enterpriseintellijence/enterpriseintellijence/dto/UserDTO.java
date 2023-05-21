@@ -45,9 +45,6 @@ public class UserDTO {
 
     private PaymentMethodBasicDTO defaultPaymentMethod;
 
-    //private Set<UserDTO> followers;
-    //private Set<UserDTO> following;
-
     private Integer followers_number;
     private Integer following_number;
 
@@ -59,10 +56,10 @@ public class UserDTO {
     private List<OfferDTO> offers;
     private List<UserDTO> followers;
     private List<UserDTO> follows;
-    private List<ProductBasicDTO> likes;
+    private List<ProductBasicDTO> likes; FATTO
     private List<MessageDTO> sendMessages;
     private List<MessageDTO> receivedMessages;
-    private List<OrderDTO> orders;
+    private List<OrderDTO> orders; 
     private List<ReviewDTO> receivedReviews;
     private List<ReviewDTO> sentReviews;
 */

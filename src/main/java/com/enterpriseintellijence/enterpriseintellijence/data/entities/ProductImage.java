@@ -22,8 +22,8 @@ public class ProductImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToOne(mappedBy = "defaultImage",fetch = FetchType.LAZY)
-    private Product defaultProduct;
+/*    @OneToOne(mappedBy = "defaultImage",fetch = FetchType.LAZY)
+    private Product defaultProduct;*/
 
 
 }
