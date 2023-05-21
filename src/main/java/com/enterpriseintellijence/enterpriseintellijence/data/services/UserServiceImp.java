@@ -13,6 +13,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -46,6 +47,7 @@ public class UserServiceImp implements UserService{
 
     public UserDTO createUser(UserDTO userDTO) {
         User user = mapToEntity(userDTO);
+        user.setStatus(UserStatus.ACTIVE);
         user = userRepository.save(user);
         return mapToDto(user);
     }
@@ -102,22 +104,22 @@ public class UserServiceImp implements UserService{
 
     public UserBasicDTO findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
+        if (!user.getStatus().equals(UserStatus.ACTIVE))
+            throw new EntityNotFoundException();
         return mapToBasicDto(user);
     }
 
     public Optional<UserDTO> findByUsername(String username) {
         User user= userRepository.findByUsername(username);
-        if (user==null)
+        if (user==null || !user.getStatus().equals(UserStatus.ACTIVE))
             return Optional.empty();
         return Optional.of(mapToDto(user));
     }
 
-    public Iterable<UserDTO> findAll() {
+    public Page<UserDTO> findAll(int page, int size) {
         // TODO: Da implementare quando abbiamo l'admin
-        return userRepository.findAll().stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+        return userRepository.findAll(PageRequest.of(page, size))
+                .map(this::mapToDto);
     }
 
 
@@ -308,6 +310,31 @@ public class UserServiceImp implements UserService{
         List<OrderBasicDTO> collect = orders.stream().map(s->modelMapper.map(s, OrderBasicDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect);
+    }
+
+    @Override
+    public UserDTO changeRole(String userId, UserRole role) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        user.setRole(role);
+        return mapToDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDTO banUser(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        if(user.getRole().equals(UserRole.ADMIN)){
+            throw new IllegalArgumentException("Admins cannot be banned");
+        }
+        user.setStatus(UserStatus.BANNED);
+        return mapToDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDTO unBanUser(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+
+        user.setStatus(UserStatus.ACTIVE);
+        return mapToDto(userRepository.save(user));
     }
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}

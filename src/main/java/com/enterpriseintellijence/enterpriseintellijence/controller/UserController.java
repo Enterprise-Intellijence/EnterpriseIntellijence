@@ -66,13 +66,6 @@ public class UserController {
 
      Guarda il metodo sotto per un esempio pratico
      */
-    @GetMapping("")
-    public ResponseEntity<Iterable<UserDTO>> allUser() {
-        if (bucket.tryConsume(1))
-            return ResponseEntity.ok(userService.findAll());
-        else
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
-    }
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)

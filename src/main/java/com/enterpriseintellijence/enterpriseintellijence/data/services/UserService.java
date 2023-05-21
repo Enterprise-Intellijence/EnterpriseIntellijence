@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public interface UserService {
     UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException;
     void deleteUser(String id);
     UserBasicDTO findUserById(String id);
-    Iterable<UserDTO> findAll();
+    Page<UserDTO> findAll(int page, int size);
 
     Optional<UserDTO> findByUsername(String username);
 
@@ -49,4 +50,10 @@ public interface UserService {
     Page<ProductBasicDTO> getProductLikedByUser(int page, int size);
 
     Page<OrderBasicDTO> getMyOrders(int page, int size);
+
+    UserDTO changeRole(String userId, UserRole role);
+
+    UserDTO banUser(String userId);
+
+    UserDTO unBanUser(String userId);
 }
