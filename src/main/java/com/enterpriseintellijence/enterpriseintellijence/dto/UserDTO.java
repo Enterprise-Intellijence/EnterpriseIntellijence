@@ -59,7 +59,7 @@ public class UserDTO {
     private List<ProductBasicDTO> likes; FATTO
     private List<MessageDTO> sendMessages;
     private List<MessageDTO> receivedMessages;
-    private List<OrderDTO> orders; 
+    private List<OrderDTO> orders; FATTO
     private List<ReviewDTO> receivedReviews;
     private List<ReviewDTO> sentReviews;
 */

@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.nimbusds.jose.JOSEException;
@@ -46,4 +47,6 @@ public interface UserService {
     void removeLikeFromProduct(String productId);
 
     Page<ProductBasicDTO> getProductLikedByUser(int page, int size);
+
+    Page<OrderBasicDTO> getMyOrders(int page, int size);
 }
