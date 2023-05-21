@@ -39,6 +39,7 @@ public class ProductServiceImp implements ProductService {
     private final HomeRepository homeRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private final TokenStore tokenStore;
 
     private final Clock clock;
 
@@ -252,7 +253,7 @@ public class ProductServiceImp implements ProductService {
         if(!product.getSeller().getUsername().equals(username.get())){
             throw new RuntimeException("Unauthorized operation");
         }
-        String token = TokenStore.getInstance().createCapabilityToken(id);
+        String token = tokenStore.createCapabilityToken(id);
         return  "https://localhost:8443/api/v1/products/capability/" + token;
     }
 

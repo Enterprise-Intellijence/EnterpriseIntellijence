@@ -29,6 +29,7 @@ import java.util.Arrays;
 @RequestMapping(path="/api/v1/products", produces="application/json")
 public class ProductController {
     private final ProductService productService;
+    private final TokenStore tokenStore;
     // TODO: 16/05/23 Erne
 
     private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
@@ -213,6 +214,6 @@ public class ProductController {
 
     @GetMapping("/capability/{token}")
     public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
-        return ResponseEntity.ok(productService.getProductById(TokenStore.getInstance().getIdByCapability(token), true));
+        return ResponseEntity.ok(productService.getProductById(tokenStore.getIdByCapability(token), true));
     }
 }

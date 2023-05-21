@@ -1,5 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
+import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 @Component
 @RequiredArgsConstructor
@@ -21,13 +24,18 @@ import java.io.IOException;
 public class RequestFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService userDetailsService;
+    private final TokenStore tokenStore;
+    private final InvalidTokensRepository invalidTokensRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String token = TokenStore.getInstance().getToken(request);
+        String token = tokenStore.getToken(request);
+        if(invalidTokensRepository.findByToken(token) != null) {
+            token = "invalid";
+        }
         if(!"invalid".equals(token)) {
             try {
-                String username = TokenStore.getInstance().getUser(token);
+                String username = tokenStore.getUser(token);
                 UserDetails user = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

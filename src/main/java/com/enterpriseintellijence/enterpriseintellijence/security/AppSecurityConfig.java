@@ -34,6 +34,7 @@ public class AppSecurityConfig  {
     }
 
     private final RequestFilter requestFilter;
+    private final TokenStore tokenStore;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -59,11 +60,9 @@ public class AppSecurityConfig  {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new CustomAuthenticationFilter(authenticationManager))
+                .addFilter(new CustomAuthenticationFilter(authenticationManager, tokenStore))
                 .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
-                .and()
-                .oauth2Client()
                 .and()
                 .build();
 

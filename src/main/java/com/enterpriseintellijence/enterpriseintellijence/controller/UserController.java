@@ -31,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
@@ -147,6 +148,12 @@ public class UserController {
     @GetMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         userService.refreshToken(request.getHeader(AUTHORIZATION), response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException, JOSEException {
+        userService.logout(request.getHeader(AUTHORIZATION));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/followers/{id}")

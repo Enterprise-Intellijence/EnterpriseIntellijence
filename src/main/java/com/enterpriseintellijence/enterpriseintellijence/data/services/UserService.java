@@ -39,6 +39,8 @@ public interface UserService {
 
     void refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException;
 
+    void logout(String authorizationHeader) throws ParseException, JOSEException;
+
     Optional<UserDTO> findUserFromContext();
 
 
