@@ -107,6 +107,7 @@ public class Demo {
             user.setProvider(Provider.LOCAL);
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
+            user.setStatus(UserStatus.ACTIVE);
             /*
             user.setFollowers_number(0);
             user.setFollowing_number(0);
@@ -258,7 +259,6 @@ public class Demo {
             product.setVisibility(visibilities.get(random.nextInt(visibilities.size())));
             product.setAvailability(Availability.AVAILABLE);
             product.setSeller(user);
-            product.setLikesNumber(0);
             String tempID= productRepository.save(product).getId();
             product.setId(tempID);
             setImageToProduct(product);

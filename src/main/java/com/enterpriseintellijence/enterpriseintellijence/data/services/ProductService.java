@@ -16,7 +16,8 @@ public interface ProductService {
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
     ProductDTO updateProduct(String id, ProductDTO productDTO);
     void deleteProduct(String id);
-    ProductDTO getProductById(String id);
+
+    ProductDTO getProductById(String id, boolean capability);
 
     Iterable<ProductBasicDTO> findAll();
 

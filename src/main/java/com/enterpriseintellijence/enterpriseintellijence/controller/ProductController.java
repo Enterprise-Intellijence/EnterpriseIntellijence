@@ -6,6 +6,8 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
+import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
+import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -58,7 +61,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> productById(@PathVariable("id") String id){
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.getProductById(id, false));
     }
 
     @GetMapping("")
@@ -208,10 +211,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.getUserThatLikedProduct(id, page, size));
     }
 
-    /*
     @GetMapping("/capability/{token}")
     public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
-        return productById(TokenStore.getInstance().getIdByCapability(token));
+        return ResponseEntity.ok(productService.getProductById(TokenStore.getInstance().getIdByCapability(token), true));
     }
-*/
 }

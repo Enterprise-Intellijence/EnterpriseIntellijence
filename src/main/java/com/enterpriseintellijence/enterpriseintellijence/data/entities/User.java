@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -99,6 +100,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "reviewer",fetch = FetchType.LAZY)
     private List<Review> sentReviews;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private UserStatus status;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         switch (role){
@@ -107,6 +112,9 @@ public class User implements UserDetails {
             }
             case ADMIN -> {
                 return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }
+            case SUPER_ADMIN -> {
+                return Collections.singleton(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"));
             }
         }
         return null;
@@ -119,7 +127,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !status.equals(UserStatus.BANNED);
     }
 
     @Override

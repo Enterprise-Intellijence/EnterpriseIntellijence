@@ -68,7 +68,7 @@ public class UserController {
 
      Guarda il metodo sotto per un esempio pratico
      */
-
+  
     @PostMapping(path = "/authenticate" )
     @ResponseStatus(HttpStatus.OK)
     public void authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
@@ -90,13 +90,6 @@ public class UserController {
         return new ResponseEntity<>( "registered" , HttpStatus.OK);
     }
 
-    @GetMapping("")
-    public ResponseEntity<Iterable<UserDTO>> allUser() {
-        if (bucket.tryConsume(1))
-            return ResponseEntity.ok(userService.findAll());
-        else
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
-    }
 
 /*    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)

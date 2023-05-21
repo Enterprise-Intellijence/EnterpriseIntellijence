@@ -15,7 +15,6 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -23,11 +22,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,7 +74,10 @@ public class ProductServiceImp implements ProductService {
         Product oldProduct = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Product product = mapToEntity(productDTO);
 
-        // TODO: 28/04/2023 add user from context and check for permission
+        User userRequesting = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
+        if (!oldProduct.getSeller().getUsername().equals(userRequesting.getUsername())
+                && userRequesting.getRole().equals(UserRole.USER))
+            throw new EntityNotFoundException("Product not found");
 
         product = productRepository.save(product);
         return mapToProductDetailsDTO(product);
@@ -85,12 +85,11 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDTO updateProduct(String id, ProductDTO patch) {
-        ProductDTO productDTODTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        Product product = mapToEntity(productDTODTO);
+        ProductDTO productDTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
 
         // TODO: come implementare?
 
-        return mapToProductDetailsDTO(product);
+        return productDTO;
     }
 
     @Override
@@ -99,17 +98,23 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductById(String id) {
-        // TODO: 15/05/2023 boolean for capability 
+    public ProductDTO getProductById(String id, boolean capability) {
         Product product = productRepository.findById(id)
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
             ));
+        Optional<String> username = jwtContextUtils.getUsernameFromContext();
+        if(!username.isEmpty()) {
+            User userRequesting = userRepository.findByUsername(username.get());
+            if (product.getSeller().getUsername().equals(userRequesting.getUsername()) || capability)
+                return mapToProductDetailsDTO(product);
+        }
 
+        if (product.getVisibility().equals(Visibility.PRIVATE) && !capability)
+            throw new EntityNotFoundException("Product not found");
         product.setViews(product.getViews()+1);
         productRepository.save(product);
-        ProductDTO productDTO = mapToProductDetailsDTO(product);
-        return productDTO;
+        return mapToProductDetailsDTO(product);
     }
 
     @Override

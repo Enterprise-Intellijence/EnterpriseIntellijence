@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
 
 
+    Page<User> findAll(Pageable pageable);
 
     Page<User> findAllByFollowingId(String userId, Pageable pageable);
 
