@@ -57,9 +57,6 @@ public class Product {
     @Column(name = "views", nullable = false)
     private Integer views;
 
-    @Column(name = "number_like")
-    private Integer likesNumber;
-
     @JoinColumn(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
 
@@ -83,23 +80,23 @@ public class Product {
     @JoinColumn(name = "user_id"/*, nullable = false*/)
     private User seller;
 
-    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY)
-    private Set<User> usersThatLiked;
+    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<User> usersThatLiked;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Offer> offers;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Message> messages;
 
-    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Order order;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+/*    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_image")
-    private ProductImage defaultImage;
+    private ProductImage defaultImage;*/
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
 

@@ -60,29 +60,29 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "offerer",fetch = FetchType.LAZY)
     private List<Offer> offersMade;
 
-    @ManyToMany(mappedBy = "following",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JoinTable(name = "user_follows", joinColumns = @JoinColumn(name = "following_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> followers;
-
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
     private List<Product> sellingProducts;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_follows", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
+    @ManyToMany()
+    @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "followers_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> followers;
+
+    @ManyToMany()
+    @JoinTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
     private List<User> following;
 
 
-/*
+
     @Column(name = "followers_number", nullable = false)
     private int followers_number;
 
     @Column(name = "following_number", nullable = false)
     private int following_number;
-*/
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> likedProducts;
+    private List<Product> likedProducts;
 
     @OneToMany(mappedBy = "sendUser",fetch = FetchType.LAZY)
     private List<Message> sentMessages;

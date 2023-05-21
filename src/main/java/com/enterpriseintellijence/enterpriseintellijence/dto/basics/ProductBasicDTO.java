@@ -8,16 +8,15 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 
 @Data
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
+@Builder
 /*@JsonTypeInfo(
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "productCategory",
@@ -51,7 +50,7 @@ public class ProductBasicDTO {
     // TODO: 16/05/2023 mappare sul mappare
     private Integer likesNumber;
     private UserBasicDTO seller;
-    private ProductImageDTO defaultImage;
+    private ProductImageDTO productImages;
     private ProductCategory productCategory;
 /*
 

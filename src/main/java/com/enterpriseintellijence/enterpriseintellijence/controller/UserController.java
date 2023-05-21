@@ -5,8 +5,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -230,6 +228,6 @@ public class UserController {
 
     @GetMapping("/liked/")
     public ResponseEntity<Page<ProductBasicDTO>> getLikedProducts(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        return ResponseEntity.ok(userService.getProducLikedByUser(page, size));
+        return ResponseEntity.ok(userService.getProductLikedByUser(page, size));
     }
 }

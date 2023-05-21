@@ -247,7 +247,7 @@ public class Demo {
 
             Double priceProduct = price+random.nextInt(1,1500);
             product.setCustomMoney(new CustomMoney(priceProduct, Currency.EUR ));
-            product.setLNumber(random.nextInt(150));
+            product.setLikesNumber(random.nextInt(150));
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             product.setAddress(user.getAddress());
             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));
@@ -271,8 +271,8 @@ public class Demo {
             ProductImage productImage = new ProductImage();
             productImage.setPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())));
             productImage.setProduct(product);
-            if(i==0)
-                product.setDefaultImage(productImage);
+           /* if(i==0)
+                product.setDefaultImage(productImage);*/
             productImageRepository.save(productImage);
         }
     }
