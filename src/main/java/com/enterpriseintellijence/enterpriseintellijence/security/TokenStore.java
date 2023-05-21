@@ -1,34 +1,39 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.InvalidToken;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+@Service
+@RequiredArgsConstructor
 public class TokenStore {
+
+    private final InvalidTokensRepository invalidTokensRepository;
+    private final JwtContextUtils jwtContextUtils;
     private final String secretKey = Constants.TOKEN_SECRET_KEY;
-
-    private final static TokenStore instance = new TokenStore();
-
-    private TokenStore() {}
-
-    public static TokenStore getInstance() {
-        return instance;
-    }
 
     public String createAccessToken(Map<String, Object> claims) throws JOSEException {
         Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        Instant expiration = issuedAt.plus(Constants.JWT_EXPIRATION_TIME, ChronoUnit.HOURS);
+        Instant expiration = issuedAt.plus(Constants.JWT_EXPIRATION_TIME, ChronoUnit.MINUTES);
+
 
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
         for(String entry : claims.keySet())
@@ -43,7 +48,16 @@ public class TokenStore {
 
     public boolean verifyToken(String token) throws JOSEException, ParseException {
         try {
-            getUser(token);
+            jwtContextUtils.getUsernameFromContext().ifPresentOrElse(username -> {
+                try {
+                    if(!username.equals(getUser(token)) || invalidTokensRepository.findByToken(token) != null)
+                        throw new RuntimeException("Invalid token");
+                } catch (JOSEException | ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }, () -> {
+                throw new RuntimeException("Invalid token");
+            });
             return true;
         } catch (RuntimeException e) {
             return false;
@@ -68,7 +82,7 @@ public class TokenStore {
     }
 
     public String createRefreshToken(String username) {
-
+        flushInvalidTokens();
         try {
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .claim("username", username)
@@ -123,4 +137,18 @@ public class TokenStore {
         throw new RuntimeException("Invalid token");
     }
 
+    public void logout(String accessToken) throws ParseException, JOSEException {
+        verifyToken(accessToken);
+        InvalidToken invalidToken = new InvalidToken();
+        invalidToken.setToken(accessToken);
+        SignedJWT signedJWT = SignedJWT.parse(accessToken);
+        invalidToken.setExpirationDate(signedJWT.getJWTClaimsSet().getExpirationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().truncatedTo(ChronoUnit.SECONDS));
+        invalidTokensRepository.save(invalidToken);
+    }
+
+    public void flushInvalidTokens() {
+        LocalDateTime now = LocalDateTime.now();
+        List<InvalidToken> invalidTokens = invalidTokensRepository.findAllByExpirationDateBefore(now);
+        invalidTokensRepository.deleteAll(invalidTokens);
+    }
 }

@@ -36,6 +36,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ public class UserServiceImp implements UserService{
     private final ProductRepository productRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final TokenStore tokenStore;
 
 
 
@@ -163,8 +165,8 @@ public class UserServiceImp implements UserService{
     @Override
     public Map<String, String> authenticateUser(String username, String password) throws JOSEException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", username, "role", "user"));
-        String refreshToken = TokenStore.getInstance().createRefreshToken(username);
+        String accessToken = tokenStore.createAccessToken(Map.of("username", username, "role", "user"));
+        String refreshToken = tokenStore.createRefreshToken(username);
         return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
     }
 
@@ -182,11 +184,11 @@ public class UserServiceImp implements UserService{
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
-                String username = TokenStore.getInstance().getUser(refreshToken);
+                String username = tokenStore.getUser(refreshToken);
                 UserDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
 
                 User userDetails = mapToEntity(user);
-                String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));;
+                String accessToken = tokenStore.createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));;
                 response.addHeader(AUTHORIZATION, "Bearer " + accessToken);
                 response.addHeader("refresh_token", "Bearer " + refreshToken);
             }
@@ -202,6 +204,17 @@ public class UserServiceImp implements UserService{
             throw new RuntimeException("Refresh token is missing");
         }
     }
+
+    @Override
+    public void logout(String authorizationHeader) throws ParseException, JOSEException {
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+            tokenStore.logout(accessToken);
+        } else {
+            throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
     @Override
     public Optional<UserDTO> findUserFromContext() {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();

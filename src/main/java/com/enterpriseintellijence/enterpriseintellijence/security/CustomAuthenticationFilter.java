@@ -18,6 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final TokenStore tokenStore;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -31,11 +32,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         UserDetails user = (UserDetails)authentication.getPrincipal();
         String accessToken = null;
         try {
-            accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", user.getUsername(), "role", user.getAuthorities().toString()));
+            accessToken = tokenStore.createAccessToken(Map.of("username", user.getUsername(), "role", user.getAuthorities().toString()));
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
-        String refreshToken = TokenStore.getInstance().createRefreshToken(user.getUsername());
+        String refreshToken = tokenStore.createRefreshToken(user.getUsername());
         response.addHeader("access_token", accessToken);
         response.addHeader("refresh_token", refreshToken);
     }
