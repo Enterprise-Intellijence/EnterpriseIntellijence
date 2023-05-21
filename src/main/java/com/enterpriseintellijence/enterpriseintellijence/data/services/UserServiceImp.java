@@ -342,7 +342,7 @@ public class UserServiceImp implements UserService{
 
         user.setStatus(UserStatus.ACTIVE);
         return mapToDto(userRepository.save(user));
-
+    }
     public Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUsername(username);
