@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -73,21 +74,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
             response) throws JOSEException {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        String accessToken = TokenStore.getInstance().createAccessToken(Map.of("username", username, "role", "user"));
-        String refreshToken = TokenStore.getInstance().createRefreshToken(username);
-        response.addHeader(AUTHORIZATION,
-                "Bearer " + accessToken);
-        response.addHeader("RefreshToken", "Bearer " + refreshToken);
+        Map<String, String> tokens = userService.authenticateUser(username, password);
+        response.addHeader(AUTHORIZATION, "Bearer " + tokens.get("accessToken"));
+        response.addHeader("RefreshToken", "Bearer " + tokens.get("refreshToken"));
     }
 
     @PostMapping(path= "/register" )
     public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
-        if(userService.findByUsername(username).isPresent())
-            return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
-        userService.createUser(username, passwordEncoder.encode(password), email);
-        log.info("User created: "+ username);
-        return new ResponseEntity<>( "registered" , HttpStatus.OK);
+        return userService.registerUser(username, email, password);
     }
 
 
@@ -152,25 +146,7 @@ public class UserController {
 
     @GetMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            try {
-                Map<String, String> tokenMap = userService.refreshToken(authorizationHeader);
-                response.addHeader(AUTHORIZATION, "Bearer " + tokenMap.get("access_token"));
-                response.addHeader("refresh_token", "Bearer " + tokenMap.get("refresh_token"));
-            }
-            catch (Exception e) {
-                log.error(String.format("Error refresh token: %s", authorizationHeader), e);
-                response.setStatus(FORBIDDEN.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("errorMessage", e.getMessage());
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), error);
-            }
-        } else {
-            throw new RuntimeException("Refresh token is missing");
-        }
+        userService.refreshToken(request.getHeader(AUTHORIZATION), response);
     }
 
     @GetMapping("/followers/{id}")

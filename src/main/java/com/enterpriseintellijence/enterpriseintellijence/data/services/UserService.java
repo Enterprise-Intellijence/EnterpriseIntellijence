@@ -9,10 +9,14 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.nimbusds.jose.JOSEException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,9 +33,14 @@ public interface UserService {
 
     void processOAuthPostLogin(String username, String email);
 
+    Map<String, String> authenticateUser(String username, String password) throws JOSEException;
+
+    ResponseEntity<String> registerUser(String username, String email, String password);
+
+    void refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException;
+
     Optional<UserDTO> findUserFromContext();
 
-    Map<String, String> refreshToken(String authorizationHeader) throws JOSEException, ParseException;
 
     void createUser(String username, String password, String email);
 
