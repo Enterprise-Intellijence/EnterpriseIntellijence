@@ -167,6 +167,12 @@ public class OrderServiceImp implements OrderService {
         return orderDTO;
     }
 
+    @Override
+    public Iterable<OrderDTO> findAllByUserId(String userId, Pageable pageable) {
+        // TODO: 22/05/2023  
+        return null;
+    }
+
     public Page<OrderDTO> findAllByUserId(Pageable pageable) {
 
         UserDTO userDTO = userService.findUserFromContext()

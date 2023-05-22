@@ -24,7 +24,7 @@ public class ReviewController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReviewDTO createReview(@Valid @RequestBody ReviewDTO reviewDTO){
+    public ReviewDTO createReview(@Valid @RequestBody ReviewDTO reviewDTO) throws IllegalAccessException {
         return reviewService.createReview(reviewDTO);
     }
 
@@ -34,13 +34,13 @@ public class ReviewController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable("id") String id, @Valid @RequestBody ReviewDTO patch) {
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable("id") String id, @Valid @RequestBody ReviewDTO patch) throws IllegalAccessException {
         return ResponseEntity.ok(reviewService.updateReview(id,patch));
     }
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteReview(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteReview(@PathVariable("id") String id) throws IllegalAccessException {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
     }
