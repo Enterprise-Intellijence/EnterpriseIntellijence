@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ClothingRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.EntertainmentRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.HomeRepository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -87,39 +90,71 @@ public class ProductServiceImp implements ProductService {
     @Override
     public ProductDTO updateProduct(String id, ProductDTO patch) {
         throwOnIdMismatch(id, patch);
-        ProductDTO productDTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        if (!jwtContextUtils.getUserLoggedFromContext().getId().equals(productDTO.getSeller().getId()))
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
+            // TODO: 22/05/2023 forse l'errore più corretto sarebbe illegalexception
             throw new EntityNotFoundException("Product not found");
 
-        if(patch.getTitle()!=null)
-            productDTO.setTitle(patch.getTitle());
-        if(patch.getDescription()!=null)
-            productDTO.setDescription(patch.getDescription());
-        if(patch.getVisibility()!=null)
-            productDTO.setVisibility(patch.getVisibility());
-        if(patch.getCondition()!=null)
-            productDTO.setCondition(patch.getCondition());
-        if(patch.getCustomMoney().getPrice()!= null)
-            productDTO.setCustomMoney(patch.getCustomMoney());
-        if(patch.getProductCategory()!=null)
-            productDTO.setProductCategory(patch.getProductCategory());
-        if(patch.getProductImages()!=null)
-            productDTO.setProductImages(patch.getProductImages());
-        if(patch.getAddress()!=null)
-            productDTO.setAddress(patch.getAddress());
-        if(patch.getBrand()!=null)
-            productDTO.setBrand(patch.getBrand());
-        if(patch.getProductSize()!=null)
-            productDTO.setProductSize(patch.getProductSize());
+        if(patch.getTitle()!=null && !product.getTitle().equals(patch.getTitle()))
+            product.setTitle(patch.getTitle());
+        if(patch.getDescription()!=null && !product.getDescription().equals(patch.getDescription()) )
+            product.setDescription(patch.getDescription());
+        if(patch.getVisibility()!=null && !product.getVisibility().equals(patch.getVisibility()))
+            product.setVisibility(patch.getVisibility());
+        if(patch.getCondition()!=null && !product.getCondition().equals(patch.getCondition()))
+            product.setCondition(patch.getCondition());
+        if(patch.getCustomMoney().getPrice()!= null &&
+                (!product.getCustomMoney().getPrice().equals(patch.getCustomMoney().getPrice()) || !product.getCustomMoney().getCurrency().equals(patch.getCustomMoney().getCurrency())))
+            product.setCustomMoney(modelMapper.map(patch.getCustomMoney(), CustomMoney.class));
+        if(patch.getProductCategory()!=null && !product.getProductCategory().equals(patch.getProductCategory()))
+            product.setProductCategory(patch.getProductCategory());
+        if(patch.getProductImages()!=null ){
+            for(ProductImageDTO productImageDTO: patch.getProductImages()){
+                if(productImageDTO.getId()==null){
+                    ProductImage productImage = modelMapper.map(productImageDTO,ProductImage.class);
+                    productImage.setProduct(product);
+                    product.getProductImages().add(productImage);
+                }
+                else{
+                    for (ProductImage productImage: product.getProductImages()){
+                        if(productImage.getId().equals(productImageDTO.getId()) && !Arrays.equals(productImage.getPhoto(), productImageDTO.getPhoto()))
+                            productImage.setPhoto(productImageDTO.getPhoto());
+                    }
+                }
+            }
 
-        productRepository.save(mapToEntity(productDTO));
-        return productDTO;
+        }
+        if(patch.getAddress()!=null )
+            product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );
+        if(patch.getBrand()!=null && !product.getBrand().equals(patch.getBrand()))
+            product.setBrand(patch.getBrand());
+        if(patch.getProductSize()!=null && !product.getProductSize().equals(patch.getProductSize()))
+            product.setProductSize(patch.getProductSize());
+
+        if(patch.getProductCategory().equals(ProductCategory.CLOTHING)){
+            // TODO: 22/05/2023  
+
+        }
+        else if(patch.getProductImages().equals(ProductCategory.ENTERTAINMENT)){
+            // TODO: 22/05/2023  
+        }
+        else if(patch.getProductCategory().equals(ProductCategory.HOME)){
+            // TODO: 22/05/2023  
+        }
+
+
+
+        productRepository.save(product);
+        return mapToProductDetailsDTO(product);
     }
 
     @Override
     public void deleteProduct(String id) {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if(!product.getSeller().getId().equals(jwtContextUtils.getUserLoggedFromContext().getId()))
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new EntityNotFoundException("Product not found");
 
         productRepository.deleteById(id);
@@ -147,7 +182,6 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Iterable<ProductBasicDTO> findAll() {
-        // TODO: 01/05/2023 da sistemare ereditarietà
         return productRepository.findAll().stream()
                 .map(s -> modelMapper.map(s, ProductBasicDTO.class))
                 .collect(Collectors.toList());
@@ -155,7 +189,6 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductBasicDTO> getAllPaged(int page, int size) {
-        // TODO: 01/05/2023 da sistemare ereditarietà
         Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC, PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);

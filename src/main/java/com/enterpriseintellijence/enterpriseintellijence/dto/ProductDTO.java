@@ -63,6 +63,7 @@ public class ProductDTO {
     private LocalDateTime uploadDate;
     private Visibility visibility;
     private Availability availability;
+    @NotNull
     private ProductCategory productCategory;
 
     private List<UserBasicDTO> usersThatLiked;
