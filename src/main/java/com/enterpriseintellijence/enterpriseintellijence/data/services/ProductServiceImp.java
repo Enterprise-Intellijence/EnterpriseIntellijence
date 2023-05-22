@@ -52,7 +52,7 @@ public class ProductServiceImp implements ProductService {
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
             product.setLikesNumber(0);
-            product.setSeller(userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get()));
+            product.setSeller(userRepository.findByUsername(jwtContextUtils.getUserLoggedFromContext().getUsername()));
 
             //product.getDefaultImage().setDefaultProduct(product);
             if (product.getProductImages()!=null){
@@ -75,7 +75,7 @@ public class ProductServiceImp implements ProductService {
         Product oldProduct = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Product product = mapToEntity(productDTO);
 
-        User userRequesting = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
+        User userRequesting = jwtContextUtils.getUserLoggedFromContext();
         if (!oldProduct.getSeller().getUsername().equals(userRequesting.getUsername())
                 && userRequesting.getRole().equals(UserRole.USER))
             throw new EntityNotFoundException("Product not found");
@@ -86,15 +86,42 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDTO updateProduct(String id, ProductDTO patch) {
+        throwOnIdMismatch(id, patch);
         ProductDTO productDTO = mapToProductDetailsDTO(productRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if (!jwtContextUtils.getUserLoggedFromContext().getId().equals(productDTO.getSeller().getId()))
+            throw new EntityNotFoundException("Product not found");
 
-        // TODO: come implementare?
+        if(patch.getTitle()!=null)
+            productDTO.setTitle(patch.getTitle());
+        if(patch.getDescription()!=null)
+            productDTO.setDescription(patch.getDescription());
+        if(patch.getVisibility()!=null)
+            productDTO.setVisibility(patch.getVisibility());
+        if(patch.getCondition()!=null)
+            productDTO.setCondition(patch.getCondition());
+        if(patch.getCustomMoney().getPrice()!= null)
+            productDTO.setCustomMoney(patch.getCustomMoney());
+        if(patch.getProductCategory()!=null)
+            productDTO.setProductCategory(patch.getProductCategory());
+        if(patch.getProductImages()!=null)
+            productDTO.setProductImages(patch.getProductImages());
+        if(patch.getAddress()!=null)
+            productDTO.setAddress(patch.getAddress());
+        if(patch.getBrand()!=null)
+            productDTO.setBrand(patch.getBrand());
+        if(patch.getProductSize()!=null)
+            productDTO.setProductSize(patch.getProductSize());
 
+        productRepository.save(mapToEntity(productDTO));
         return productDTO;
     }
 
     @Override
     public void deleteProduct(String id) {
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(!product.getSeller().getId().equals(jwtContextUtils.getUserLoggedFromContext().getId()))
+            throw new EntityNotFoundException("Product not found");
+
         productRepository.deleteById(id);
     }
 
@@ -105,7 +132,7 @@ public class ProductServiceImp implements ProductService {
                 new EntityNotFoundException("Product not found")
             ));
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
-        if(!username.isEmpty()) {
+        if(username.isPresent()) {
             User userRequesting = userRepository.findByUsername(username.get());
             if (product.getSeller().getUsername().equals(userRequesting.getUsername()) || capability)
                 return mapToProductDetailsDTO(product);
