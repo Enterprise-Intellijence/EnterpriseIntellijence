@@ -5,19 +5,27 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReviewRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImp implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final OrderService orderService;
+    private final JwtContextUtils jwtContextUtils;
 
     private final ModelMapper modelMapper;
 
@@ -25,13 +33,18 @@ public class ReviewServiceImp implements ReviewService {
 
 
     @Override
-    public ReviewDTO createReview(ReviewDTO reviewDTO) {
+    public ReviewDTO createReview(ReviewDTO reviewDTO) throws IllegalAccessException {
+
+        if (!checkOwnership(reviewDTO)) {
+            throw new IllegalAccessException("User cannot review himself");
+        }
         Review review = mapToEntity(reviewDTO);
 
         UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
 
         review.setReviewer(modelMapper.map(userDTO, User.class));
+        review.setDate(LocalDateTime.now());
 
         review = reviewRepository.save(review);
 
@@ -62,8 +75,12 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public ReviewDTO updateReview(String id, ReviewDTO patch) {
+    public ReviewDTO updateReview(String id, ReviewDTO patch) throws IllegalAccessException {
+        throwOnIdMismatch(id, patch);
         ReviewDTO review = mapToDTO(reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if(!review.getReviewer().getId().equals(jwtContextUtils.getUserLoggedFromContext().getId())) {
+            throw new IllegalAccessException("User cannot change review");
+        }
 
         if (patch.getTitle() != null) {
             review.setTitle(patch.getTitle());
@@ -82,8 +99,11 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public void deleteReview(String id) {
+    public void deleteReview(String id) throws IllegalAccessException {
         Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(!review.getReviewer().getId().equals(jwtContextUtils.getUserLoggedFromContext().getId())) {
+            throw new IllegalAccessException("User cannot delete review");
+        }
         reviewRepository.deleteById(id);
 
         mapToDTO(review);
@@ -107,6 +127,19 @@ public class ReviewServiceImp implements ReviewService {
         Iterable<ReviewDTO> reviewDTOs = new ArrayList<>();
         modelMapper.map(reviews,reviewDTOs);
         return reviewDTOs;
+    }
+
+    private boolean checkOwnership(ReviewDTO review){
+        AtomicBoolean result = new AtomicBoolean(false);
+        UserDTO userDTO = userService.findUserFromContext()
+                .orElseThrow(EntityNotFoundException::new);
+        orderService.findAllByUserId(userDTO.getId(), Pageable.unpaged()).forEach(orderDTO -> {
+            if(orderDTO.getUser().getId().equals(review.getReviewer().getId())
+                    && orderDTO.getState().equals(OrderState.COMPLETED)){
+                result.set(true);
+            }
+        });
+        return result.get();
     }
 
     private Review mapToEntity(ReviewDTO reviewDTO) {

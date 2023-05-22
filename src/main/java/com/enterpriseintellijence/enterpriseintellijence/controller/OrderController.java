@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -25,6 +26,7 @@ import java.time.Duration;
 public class OrderController {
     // TODO: 16/05/23 Erne 
     private final OrderService orderService;
+    private final JwtContextUtils jwtContextUtils;
 
     private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
     private final Bucket bucket = Bucket.builder().addLimit(limit).build();
@@ -38,7 +40,7 @@ public class OrderController {
     @GetMapping(path = "/me", params = {"page", "size"}, consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Page<OrderDTO>> getAllOrdersOfUser(@RequestBody Pageable pageable) {
-        return ResponseEntity.ok((Page<OrderDTO>) orderService.findAllByUserId(pageable));
+        return ResponseEntity.ok((Page<OrderDTO>) orderService.findAllByUserId(jwtContextUtils.getUserLoggedFromContext().getId(), pageable));
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")

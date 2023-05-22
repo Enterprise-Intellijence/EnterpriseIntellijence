@@ -12,6 +12,6 @@ public interface OrderService {
     OrderDTO updateOrder(String id, OrderDTO orderDTO) throws IllegalAccessException;
     void deleteOrder(String id) throws IllegalAccessException;
     OrderDTO getOrderById(String id) throws IllegalAccessException;
-    public Iterable<OrderDTO> findAllByUserId(Pageable pageable);
+    public Iterable<OrderDTO> findAllByUserId(String userId, Pageable pageable);
 
 }
