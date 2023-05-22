@@ -77,7 +77,7 @@ public class ReviewServiceImp implements ReviewService {
     @Override
     public ReviewDTO updateReview(String id, ReviewDTO patch) throws IllegalAccessException {
         throwOnIdMismatch(id, patch);
-        ReviewDTO review = mapToDTO(reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         if(!review.getReviewer().getId().equals(jwtContextUtils.getUserLoggedFromContext().getId())) {
             throw new IllegalAccessException("User cannot change review");
         }
@@ -94,8 +94,8 @@ public class ReviewServiceImp implements ReviewService {
             review.setVote(patch.getVote());
         }
 
-        reviewRepository.save(mapToEntity(review));
-        return review;
+        reviewRepository.save(review);
+        return mapToDTO(review);
     }
 
     @Override

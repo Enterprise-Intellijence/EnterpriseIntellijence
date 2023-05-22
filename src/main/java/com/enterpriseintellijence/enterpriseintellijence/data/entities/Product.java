@@ -99,6 +99,9 @@ public class Product {
     @OneToMany(mappedBy = "product",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
+    @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Report> reports;
+
 
 
 }

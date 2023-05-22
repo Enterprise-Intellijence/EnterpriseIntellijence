@@ -104,6 +104,12 @@ public class User implements UserDetails {
     @Column(name = "status", nullable = false)
     private UserStatus status;
 
+    @OneToMany(mappedBy = "reporterUser",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Report> reports;
+
+    @OneToMany(mappedBy = "reportedUser",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Report> reported;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         switch (role){
