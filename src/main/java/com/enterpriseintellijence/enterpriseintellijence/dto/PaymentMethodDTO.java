@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -22,7 +23,8 @@ public class PaymentMethodDTO {
     @Length(min = 19, max = 19)
     private String creditCard;
 
-    @NotBlank  //DATE MM/AAAA
+    @NotBlank
+    @JsonFormat(pattern="dd-MM-yyyy") //DATE MM/AAAA
     private LocalDate expiryDate;
 
     @NotBlank

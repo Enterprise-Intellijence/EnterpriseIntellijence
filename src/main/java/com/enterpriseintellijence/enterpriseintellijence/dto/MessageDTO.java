@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.MessageStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class MessageDTO {
     private String context;
 
     private LocalDateTime messageDate;
+    private MessageStatus messageStatus;
 
     private ProductBasicDTO product;
 
