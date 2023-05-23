@@ -5,7 +5,10 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 
+import jakarta.persistence.Column;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,14 +19,14 @@ public class OfferDTO {
 
     private String id;
 
-    // TODO: usare classe specifica per i soldi
     private CustomMoneyDTO amount;
+
+    private LocalDateTime creationTime;
 
     // TODO:
     private OfferState state;
     private UserBasicDTO offerer;
     private ProductBasicDTO product;
-    private MessageDTO message;
     private OrderBasicDTO order;
 
 }

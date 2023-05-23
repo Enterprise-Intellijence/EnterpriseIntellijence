@@ -29,7 +29,7 @@ public class OfferController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OfferDTO createOffer(@Valid @RequestBody OfferDTO offerDTO) {
+    public OfferDTO createOffer(@Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
         return offerService.createOffer(offerDTO);
     }
 
@@ -39,13 +39,18 @@ public class OfferController {
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO patch) {
-        return ResponseEntity.ok(offerService.updateOffer(id, patch));
+    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO patch) throws IllegalAccessException {
+        return ResponseEntity.ok(offerService.updateOffer(id, patch,true,false));
+    }
+
+    @PatchMapping(path = "/accept/{id}", consumes = "application/json")
+    public ResponseEntity<OfferDTO> acceptOffer(@PathVariable("id") String id,@RequestParam("accepted")boolean accepted ,@Valid @RequestBody OfferDTO patch) throws IllegalAccessException {
+        return ResponseEntity.ok(offerService.updateOffer(id, patch,false,accepted));
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteOffer(@PathVariable("id") String id) {
+    public ResponseEntity<Void> deleteOffer(@PathVariable("id") String id) throws IllegalAccessException {
         offerService.deleteOffer(id);
         return ResponseEntity.noContent().build();
     }

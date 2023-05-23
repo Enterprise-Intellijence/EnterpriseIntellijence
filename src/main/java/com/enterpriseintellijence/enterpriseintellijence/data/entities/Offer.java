@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +28,9 @@ public class Offer {
     @Embedded
     private CustomMoney amount;
 
+    @Column(name = "creation_date")
+    private LocalDateTime creationTime;
+
     @Enumerated(EnumType.STRING)
     private OfferState state;
 
@@ -37,8 +42,7 @@ public class Offer {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToOne
-    @JoinColumn(name = "message_id")
+    @OneToOne (mappedBy = "offer")
     private Message message;
 
     @OneToOne(mappedBy = "offer")

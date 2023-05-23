@@ -1,17 +1,30 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 
+import com.enterpriseintellijence.enterpriseintellijence.core.services.NotificationSystem;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.MessageStatus;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.time.Clock;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +35,29 @@ public class OfferServiceImp implements OfferService {
     private final UserService userService;
 
     private final OfferRepository offerRepository;
+    private final JwtContextUtils jwtContextUtils;
+    private final ProductRepository productRepository;
+    private final Clock clock;
+    private final NotificationSystem notificationSystem;
+
 
     @Override
-    public OfferDTO createOffer(OfferDTO offerDTO) {
-        Offer offer = mapToEntity(offerDTO);
+    public OfferDTO createOffer(OfferDTO offerDTO) throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        Product product = productRepository.findById(offerDTO.getProduct().getId()).orElseThrow();
+        User seller = product.getSeller();
 
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
+        if(!seller.getId().equals(offerDTO.getProduct().getSeller().getId()) || !loggedUser.getId().equals(offerDTO.getOfferer().getId()))
+            throw new IllegalAccessException("Cannot create an offer");
 
-        offer.setOfferer(modelMapper.map(userDTO, User.class));
+        Offer offer = new Offer();
+        offer.setAmount(modelMapper.map(offerDTO.getAmount(), CustomMoney.class));
+        offer.setCreationTime(LocalDateTime.now(clock));
+        offer.setState(OfferState.PENDING);
+        offer.setOfferer(loggedUser);
+        offer.setProduct(product);
+
+        offer.setMessage(notificationSystem.offerCreatedNotification(loggedUser,seller,product));
 
         Offer savedOffer = offerRepository.save(offer);
 
@@ -63,33 +90,63 @@ public class OfferServiceImp implements OfferService {
     }
 
     @Override
-    public OfferDTO updateOffer(String id, OfferDTO patch) {
-        OfferDTO offer = mapToDTO(offerRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+    public OfferDTO updateOffer(String id, OfferDTO patch,boolean isOffer, boolean isAccepted) throws IllegalAccessException {
+        throwOnIdMismatch(id,patch);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Product product = offer.getProduct();
 
-        // TODO: Implement patching here
+        if(loggedUser.getRole().equals(UserRole.USER) && isOffer && !loggedUser.getId().equals(patch.getOfferer().getId()))
+            throw new IllegalAccessException("Cannot modify offer");
 
-        offerRepository.save(mapToEntity(offer));
-        return offer;
+        if(loggedUser.getRole().equals(UserRole.USER) && !isOffer && !loggedUser.getId().equals(patch.getProduct().getSeller().getId()))
+            throw new IllegalAccessException("Cannot modify offer");
+
+        if(isOffer && product.getAvailability().equals(Availability.AVAILABLE)){
+            if(patch.getAmount()!= null && (!patch.getAmount().getPrice().equals(offer.getAmount().getPrice()) || !patch.getAmount().getCurrency().equals(offer.getAmount().getCurrency()) )){
+                offer.setAmount(modelMapper.map(patch.getAmount(),CustomMoney.class));
+                offer.setState(OfferState.PENDING);
+                offer.setMessage(notificationSystem.offerCreatedNotification(loggedUser,product.getSeller(),product));
+            }
+        }
+        else if(!isOffer){
+            if(isAccepted){
+                offer.setState(OfferState.ACCEPTED);
+                product.setAvailability(Availability.PENDING);
+                offer.setProduct(product);
+            }
+            else
+                offer.setState(OfferState.REJECTED);
+            offer.setMessage(notificationSystem.offerAcceptedOrRejectedNotification(offer,isAccepted));
+        }
+
+        offerRepository.save(offer);
+        return mapToDTO(offer);
     }
 
+
+
     @Override
-    public void deleteOffer(String id) {
-        offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        offerRepository.deleteById(id);
+    public void deleteOffer(String id) throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(offer.getOfferer().getId()))
+            throw new IllegalAccessException("Cannot delete offer");
+
+        if(offer.getState().equals(OfferState.ACCEPTED))
+            throw new IllegalAccessException("Cannot delete offer accepted");
+
+        offerRepository.delete(offer);
     }
 
     @Override
     public OfferDTO getOffer(String id) throws IllegalAccessException {
         Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        OfferDTO offerDTO = mapToDTO(offer);
-
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
-
-        if(!userDTO.getId().equals(offerDTO.getOfferer().getId())) {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(!loggedUser.getRole().equals(UserRole.USER) || loggedUser.getId().equals(offer.getOfferer().getId()) || loggedUser.getId().equals(offer.getProduct().getSeller().getId()) )
+            return mapToDTO(offer);
+        else
             throw new IllegalAccessException("User cannot read other's offers");
-        }
-        return mapToDTO(offer);
     }
 
     private Offer mapToEntity(OfferDTO offerDTO) {
@@ -99,6 +156,9 @@ public class OfferServiceImp implements OfferService {
     private OfferDTO mapToDTO(Offer offer) {
         return modelMapper.map(offer,OfferDTO.class);
     }
+
+
+
 
     private void throwOnIdMismatch(String id, OfferDTO offerDTO) {
         if (offerDTO.getId() != null && !offerDTO.getId().equals(id)) {
