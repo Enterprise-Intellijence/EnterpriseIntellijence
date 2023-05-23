@@ -201,22 +201,22 @@ public class UserController {
         return ResponseEntity.ok(userService.getProductLikedByUser(page, size));
     }
 
-    @GetMapping("/my/orders")
+    @GetMapping("/me/orders")
     public ResponseEntity<Page<OrderBasicDTO>> getMyOrders(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOrders(page, size));
     }
 
-    @GetMapping("/my/payment-methods")
+    @GetMapping("/me/payment-methods")
     public ResponseEntity<Page<PaymentMethodBasicDTO>> getMyPaymentMethods(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyPaymentMethods(page, size));
     }
 
-    @GetMapping("/my/inbox")
+    @GetMapping("/me/inbox")
     public ResponseEntity<Page<MessageDTO>> getMyInBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyInBoxMessage(page, size));
     }
 
-    @GetMapping("/my/outbox")
+    @GetMapping("/me/outbox")
     public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));
     }

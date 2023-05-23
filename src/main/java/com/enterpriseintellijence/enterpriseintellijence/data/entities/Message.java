@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.MessageStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,9 @@ public class Message {
 
     @Column(name = "message_date")
     private LocalDateTime messageDate;
+
+    @Column(name = "message_status")
+    private MessageStatus messageStatus;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
