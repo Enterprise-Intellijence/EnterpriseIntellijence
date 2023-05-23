@@ -1,13 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
@@ -24,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -95,12 +90,48 @@ public class Config {
             protected ProductImageDTO convert(List<ProductImage> productImages) {
                 return ProductImageDTO.builder()
                         .id(productImages.get(0).getId())
-                        .photo(productImages.get(0).getPhoto())
+                        .description(productImages.get(0).getDescription())
+                        .photo(null)
                         .build();
             }
         };
 
         modelMapper.addConverter(defaultImageConverter);
+
+        Converter<List<ProductImage>,List<ProductImageDTO>> imageListConverter = new AbstractConverter<List<ProductImage>, List<ProductImageDTO>>() {
+            @Override
+            protected List<ProductImageDTO> convert(List<ProductImage> productImages) {
+                List<ProductImageDTO> productImageDTOS = new ArrayList<>();
+                for(ProductImage productImage: productImages){
+                    productImageDTOS.add(
+                            ProductImageDTO.builder()
+                                    .id(productImage.getId())
+                                    .description(productImage.getDescription())
+                                    .photo(null)
+                                    .build()
+                    );
+                }
+                return  productImageDTOS;
+            }
+        };
+
+        modelMapper.addConverter(imageListConverter);
+
+
+
+
+        Converter<UserImage, UserImageDTO> defaultPhotoProfileConverter = new AbstractConverter<UserImage, UserImageDTO>() {
+            @Override
+            protected UserImageDTO convert(UserImage userImage) {
+                return UserImageDTO.builder()
+                        .id(userImage.getId())
+                        .description(userImage.getDescription())
+                        .photo(null)
+                        .build();
+            }
+        };
+
+        modelMapper.addConverter(defaultPhotoProfileConverter);
 
         /*modelMapper.createTypeMap(Product.class, ProductBasicDTO.class) .setConverter(new AbstractConverter<Product, ProductBasicDTO>() {
             @Override

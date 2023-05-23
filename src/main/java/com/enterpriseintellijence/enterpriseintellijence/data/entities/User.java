@@ -41,7 +41,10 @@ public class User implements UserDetails {
 
     @Column(unique = true, nullable = false, length = 100)
     private String email;
-    private byte[] photo;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo_profile")
+    private UserImage photoProfile;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;

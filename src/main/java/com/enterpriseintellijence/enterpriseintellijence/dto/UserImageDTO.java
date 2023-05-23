@@ -1,16 +1,17 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @NoArgsConstructor
+@ToString
 @AllArgsConstructor
 @Builder
-@ToString
-public class ProductImageDTO {
+public class UserImageDTO {
     private String id;
     private String description;
     private byte[] photo;
-
 }
