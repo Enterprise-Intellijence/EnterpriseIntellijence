@@ -7,6 +7,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +20,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final JwtContextUtils jwtContextUtils;
 
     @Override
     public PaymentMethodDTO createPaymentMethod(PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
