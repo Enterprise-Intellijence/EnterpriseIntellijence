@@ -119,9 +119,11 @@ public class UserServiceImp implements UserService{
         if(userDTO.getPhoto()!=null && !oldUser.getPhoto().equals(userDTO.getPhoto()))
             oldUser.setPhoto(userDTO.getPhoto());
         oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
-        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId()))
-            oldUser.setDefaultPaymentMethod(paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId()));
-
+        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
+            PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());
+            paymentMethod.setDefaultUser(oldUser);
+            oldUser.setDefaultPaymentMethod(paymentMethod);
+        }
         userRepository.save(oldUser);
         return mapToDto(oldUser);
     }
