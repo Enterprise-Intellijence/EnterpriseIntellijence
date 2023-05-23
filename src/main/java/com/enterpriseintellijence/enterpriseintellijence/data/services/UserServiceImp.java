@@ -117,9 +117,9 @@ public class UserServiceImp implements UserService{
             UserImage userImage = new UserImage();
             if(oldUser.getPhotoProfile().getId()!=null)
                 userImage.setId(oldUser.getId());
-            if(!oldUser.getPhotoProfile().getDescription().equals(userDTO.getPhotoProfile().getDescription()))
+            if(userDTO.getPhotoProfile().getDescription()!=null && !oldUser.getPhotoProfile().getDescription().equals(userDTO.getPhotoProfile().getDescription()))
                 userImage.setDescription(userDTO.getPhotoProfile().getDescription());
-            if(!Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
+            if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
                 userImage.setPhoto(userDTO.getPhotoProfile().getPhoto());
             userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
