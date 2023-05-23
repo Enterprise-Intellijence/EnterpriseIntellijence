@@ -16,14 +16,15 @@ import java.time.LocalDateTime;
 public class NotificationSystem {
     private final Clock clock;
 
-    public Message offerCreatedNotification(User buyer, User seller, Product product){
+    public Message offerCreatedNotification(Offer offer , Product product){
         return Message.builder()
                 .context("A new Offer is available for product: "+product.getTitle())
                 .messageDate(LocalDateTime.now(clock))
                 .messageStatus(MessageStatus.UNREAD)
                 .product(product)
-                .sendUser(buyer)
-                .receivedUser(seller)
+                .sendUser(offer.getOfferer())
+                .receivedUser(product.getSeller())
+                .offer(offer)
                 .build();
 
     }
@@ -43,6 +44,7 @@ public class NotificationSystem {
                 .product(offer.getProduct())
                 .sendUser(offer.getOfferer())
                 .receivedUser(offer.getProduct().getSeller())
+                .offer(offer)
                 .build();
 
     }

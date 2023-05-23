@@ -57,7 +57,7 @@ public class OfferServiceImp implements OfferService {
         offer.setOfferer(loggedUser);
         offer.setProduct(product);
 
-        offer.setMessage(notificationSystem.offerCreatedNotification(loggedUser,seller,product));
+        offer.setMessage(notificationSystem.offerCreatedNotification(offer,product));
 
         Offer savedOffer = offerRepository.save(offer);
 
@@ -66,6 +66,7 @@ public class OfferServiceImp implements OfferService {
 
     @Override
     public OfferDTO replaceOffer(String id, OfferDTO offerDTO) throws IllegalAccessException {
+        // TODO: 23/05/2023 per me non ha senso di esistere
         throwOnIdMismatch(id, offerDTO);
 
         Offer oldOffer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -106,7 +107,7 @@ public class OfferServiceImp implements OfferService {
             if(patch.getAmount()!= null && (!patch.getAmount().getPrice().equals(offer.getAmount().getPrice()) || !patch.getAmount().getCurrency().equals(offer.getAmount().getCurrency()) )){
                 offer.setAmount(modelMapper.map(patch.getAmount(),CustomMoney.class));
                 offer.setState(OfferState.PENDING);
-                offer.setMessage(notificationSystem.offerCreatedNotification(loggedUser,product.getSeller(),product));
+                offer.setMessage(notificationSystem.offerCreatedNotification(offer,product));
             }
         }
         else if(!isOffer){

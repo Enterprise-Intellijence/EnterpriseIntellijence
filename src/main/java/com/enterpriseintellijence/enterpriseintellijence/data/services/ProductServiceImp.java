@@ -17,6 +17,7 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -48,23 +49,29 @@ public class ProductServiceImp implements ProductService {
 
 
     private final JwtContextUtils jwtContextUtils;
+
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
+        System.out.println(productDTO.getProductCategory());
         try{
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
             product.setLikesNumber(0);
-            product.setSeller(userRepository.findByUsername(jwtContextUtils.getUserLoggedFromContext().getUsername()));
+            product.setSeller(jwtContextUtils.getUserLoggedFromContext());
 
             //product.getDefaultImage().setDefaultProduct(product);
             if (product.getProductImages()!=null){
-                for(ProductImage productImage: product.getProductImages())
+                for(ProductImage productImage: product.getProductImages()) {
                     productImage.setProduct(product);
+                }
             }
+            product.setProductCategory(product.getProductCategory());
 
 
-            product = productRepository.save(product);
+            Product product1 = productRepository.save(product);
+            System.out.println(product1.getId());
+            System.out.println(product.getId());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -270,14 +277,23 @@ public class ProductServiceImp implements ProductService {
 
 
     private Product mapToEntity(ProductDTO productDTO) {
-        if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING))
+        if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING)) {
+            System.out.println("ma pure qui 1");
             return modelMapper.map(productDTO, Clothing.class);
-        else if(productDTO.getProductCategory().equals(ProductCategory.HOME))
+        }
+        else if(productDTO.getProductCategory().equals(ProductCategory.HOME)) {
+            System.out.println("ma pure qui 2");
+
             return modelMapper.map(productDTO, Home.class);
-        else if(productDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+        }
+        else if(productDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT)) {
+            System.out.println("ma pure qui 3");
             return modelMapper.map(productDTO, Entertainment.class);
-        else
-            return modelMapper.map(productDTO,Product.class);
+        }
+        else {
+            System.out.println("ma pure qui 4");
+            return modelMapper.map(productDTO, Product.class);
+        }
     }
 
     private ProductDTO mapToProductDetailsDTO(Product product) {
