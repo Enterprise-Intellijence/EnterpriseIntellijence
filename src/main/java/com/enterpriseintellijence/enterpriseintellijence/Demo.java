@@ -103,7 +103,11 @@ public class Demo {
             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage,"png",bos);
-            user.setPhoto(bos.toByteArray());
+            UserImage userImage = new UserImage();
+            userImage.setPhoto(bos.toByteArray());
+            userImage.setDescription("No description avalaible");
+            userImage.setUser(user);
+            user.setPhotoProfile(userImage);
             user.setProvider(Provider.LOCAL);
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);

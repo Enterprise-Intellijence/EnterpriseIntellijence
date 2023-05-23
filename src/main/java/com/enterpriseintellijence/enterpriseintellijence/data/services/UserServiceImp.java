@@ -37,10 +37,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -116,8 +113,17 @@ public class UserServiceImp implements UserService{
             oldUser.setPassword(userDTO.getPassword());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
             oldUser.setEmail(userDTO.getEmail());
-        if(userDTO.getPhoto()!=null && !oldUser.getPhoto().equals(userDTO.getPhoto()))
-            oldUser.setPhoto(userDTO.getPhoto());
+        if(userDTO.getPhotoProfile()!=null ){
+            UserImage userImage = new UserImage();
+            if(oldUser.getPhotoProfile().getId()!=null)
+                userImage.setId(oldUser.getId());
+            if(userDTO.getPhotoProfile().getDescription()!=null && !oldUser.getPhotoProfile().getDescription().equals(userDTO.getPhotoProfile().getDescription()))
+                userImage.setDescription(userDTO.getPhotoProfile().getDescription());
+            if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
+                userImage.setPhoto(userDTO.getPhotoProfile().getPhoto());
+            userImage.setUser(oldUser);
+            oldUser.setPhotoProfile(userImage);
+        }
         oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
         if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
             PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());

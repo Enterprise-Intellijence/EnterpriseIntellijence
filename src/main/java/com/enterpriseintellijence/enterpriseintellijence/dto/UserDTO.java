@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
@@ -36,7 +37,7 @@ public class UserDTO {
     @Email
     private String email;
 
-    private byte[] photo;
+    private UserImageDTO photoProfile;
     @NotNull
     private Provider provider;
     private AddressDTO address;

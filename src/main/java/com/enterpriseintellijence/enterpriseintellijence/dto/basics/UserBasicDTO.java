@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -18,7 +20,7 @@ public class UserBasicDTO {
     @NotNull
     private String username;
 
-    private byte[] photo;
+    private UserImageDTO photoProfile;
 
     private int followers_number;
     private int following_number;
