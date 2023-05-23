@@ -85,7 +85,7 @@ public class Config {
             }
         });*/
 
-        Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
+       /* Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
             @Override
             protected ProductImageDTO convert(List<ProductImage> productImages) {
                 return ProductImageDTO.builder()
@@ -102,20 +102,52 @@ public class Config {
             @Override
             protected List<ProductImageDTO> convert(List<ProductImage> productImages) {
                 List<ProductImageDTO> productImageDTOS = new ArrayList<>();
-                for(ProductImage productImage: productImages){
-                    productImageDTOS.add(
-                            ProductImageDTO.builder()
-                                    .id(productImage.getId())
-                                    .description(productImage.getDescription())
-                                    .photo(null)
-                                    .build()
-                    );
+                System.out.println("ma perchè ci entro");
+                if(productImages!=null && !productImages.isEmpty()) {
+                    System.out.println("vai oltre il null");
+                    for (ProductImage productImage : productImages) {
+                        productImageDTOS.add(
+                                ProductImageDTO.builder()
+                                        .id(productImage.getId())
+                                        .description(productImage.getDescription())
+                                        .photo(null)
+                                        .build()
+                        );
+                    }
                 }
                 return  productImageDTOS;
             }
+
         };
 
         modelMapper.addConverter(imageListConverter);
+
+
+        Converter<List<ProductImageDTO>,List<ProductImage>> imageBisListConverter = new AbstractConverter<List<ProductImageDTO>, List<ProductImage>>() {
+            @Override
+            protected List<ProductImage> convert(List<ProductImageDTO> productImagesDto) {
+                List<ProductImage> productImages = new ArrayList<>();
+                System.out.println("ma perchè ci entro");
+                if(productImagesDto!=null && !productImagesDto.isEmpty()) {
+                    System.out.println("vai oltre il null");
+                    for (ProductImageDTO productImage : productImagesDto) {
+                        productImages.add(
+                                ProductImage.builder()
+                                        .id(productImage.getId())
+                                        .description(productImage.getDescription())
+                                        .photo(productImage.getPhoto())
+                                        .build()
+                        );
+                    }
+                }
+                return  productImages;
+            }
+
+        };
+
+        modelMapper.addConverter(imageBisListConverter);
+*/
+
 
 
 

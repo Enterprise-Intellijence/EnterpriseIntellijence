@@ -42,7 +42,8 @@ public class Message {
     @JoinColumn(name = "received_user")
     private User receivedUser;
 
-    @OneToOne(mappedBy = "message")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="offer_id")
     private Offer offer;
 
 }

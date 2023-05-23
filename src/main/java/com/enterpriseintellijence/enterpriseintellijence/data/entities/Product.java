@@ -96,7 +96,7 @@ public class Product {
     @JoinColumn(name = "default_image")
     private ProductImage defaultImage;*/
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     private List<ProductImage> productImages;
 
     @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY,cascade = CascadeType.ALL)

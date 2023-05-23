@@ -43,7 +43,7 @@ public class MessageController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteMessage(@PathVariable("id") String id) {
+    public ResponseEntity<Void> deleteMessage(@PathVariable("id") String id) throws IllegalAccessException {
         messageService.deleteMessage(id);
         return ResponseEntity.noContent().build();
     }
