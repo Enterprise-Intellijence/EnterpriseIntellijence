@@ -119,9 +119,9 @@ public class UserServiceImp implements UserService{
                 userImage.setId(oldUser.getId());
             if(userDTO.getPhotoProfile().getDescription()!=null && !oldUser.getPhotoProfile().getDescription().equals(userDTO.getPhotoProfile().getDescription()))
                 userImage.setDescription(userDTO.getPhotoProfile().getDescription());
-            if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
+            /*if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
                 userImage.setPhoto(userDTO.getPhotoProfile().getPhoto());
-            userImage.setUser(oldUser);
+*/          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
         oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
@@ -440,5 +440,7 @@ public class UserServiceImp implements UserService{
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user, UserDTO.class);}
     public UserBasicDTO mapToBasicDto(User user){return modelMapper.map(user,UserBasicDTO.class);}
+
+
 
 }

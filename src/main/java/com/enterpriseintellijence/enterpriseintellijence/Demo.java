@@ -103,11 +103,11 @@ public class Demo {
             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage,"png",bos);
-            UserImage userImage = new UserImage();
-            userImage.setPhoto(bos.toByteArray());
-            userImage.setDescription("No description avalaible");
-            userImage.setUser(user);
-            user.setPhotoProfile(userImage);
+            //UserImage userImage = new UserImage();
+            ///userImage.setPhoto(bos.toByteArray());
+            //userImage.setDescription("No description avalaible");
+            //userImage.setUser(user);
+            //user.setPhotoProfile(userImage);
             user.setProvider(Provider.LOCAL);
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
@@ -270,15 +270,15 @@ public class Demo {
     }
 
     private void setImageToProduct(Product product){
-        Random random = new Random();
+        /*Random random = new Random();
         for (int i=0;i<5;i++){
             ProductImage productImage = new ProductImage();
             productImage.setPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())));
             productImage.setProduct(product);
-           /* if(i==0)
-                product.setDefaultImage(productImage);*/
+           *//* if(i==0)
+                product.setDefaultImage(productImage);*//*
             productImageRepository.save(productImage);
-        }
+        }*/
     }
 
     private void initializeProductImageList() throws IOException {

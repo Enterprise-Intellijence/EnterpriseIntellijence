@@ -16,7 +16,11 @@ import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +89,7 @@ public class Config {
             }
         });*/
 
-        Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
+        /*Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
             @Override
             protected ProductImageDTO convert(List<ProductImage> productImages) {
                 return ProductImageDTO.builder()
@@ -164,7 +168,7 @@ public class Config {
         };
 
         modelMapper.addConverter(defaultPhotoProfileConverter);
-
+*/
         /*modelMapper.createTypeMap(Product.class, ProductBasicDTO.class) .setConverter(new AbstractConverter<Product, ProductBasicDTO>() {
             @Override
             protected ProductBasicDTO convert(Product product) {
@@ -208,6 +212,7 @@ public class Config {
     public Clock clock() {
         return Clock.systemDefaultZone();
     }
+
 
 
     private final JwtContextUtils jwtContextUtils;

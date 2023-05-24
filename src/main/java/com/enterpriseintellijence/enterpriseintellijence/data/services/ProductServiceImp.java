@@ -61,11 +61,11 @@ public class ProductServiceImp implements ProductService {
             product.setSeller(jwtContextUtils.getUserLoggedFromContext());
 
             //product.getDefaultImage().setDefaultProduct(product);
-            if (product.getProductImages()!=null){
+/*            if (product.getProductImages()!=null){
                 for(ProductImage productImage: product.getProductImages()) {
                     productImage.setProduct(product);
                 }
-            }
+            }*/
             product.setProductCategory(product.getProductCategory());
 
 
@@ -117,7 +117,7 @@ public class ProductServiceImp implements ProductService {
             product.setCustomMoney(modelMapper.map(patch.getCustomMoney(), CustomMoney.class));
         if(patch.getProductCategory()!=null && !product.getProductCategory().equals(patch.getProductCategory()))
             product.setProductCategory(patch.getProductCategory());
-        if(patch.getProductImages()!=null ){
+        /*if(patch.getProductImages()!=null ){
             for(ProductImageDTO productImageDTO: patch.getProductImages()){
                 if(productImageDTO.getId()==null){
                     ProductImage productImage = modelMapper.map(productImageDTO,ProductImage.class);
@@ -132,7 +132,7 @@ public class ProductServiceImp implements ProductService {
                 }
             }
 
-        }
+        }*/
         if(patch.getAddress()!=null )
             product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );
         if(patch.getBrand()!=null && !product.getBrand().equals(patch.getBrand()))
