@@ -85,7 +85,7 @@ public class Config {
             }
         });*/
 
-       /* Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
+        Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
             @Override
             protected ProductImageDTO convert(List<ProductImage> productImages) {
                 return ProductImageDTO.builder()
@@ -146,7 +146,7 @@ public class Config {
         };
 
         modelMapper.addConverter(imageBisListConverter);
-*/
+
 
 
 
