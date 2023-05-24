@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ReportStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,4 +37,7 @@ public class Report {
 
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
+
+    @Column(name = "status", nullable = false)
+    private ReportStatus status;
 }
