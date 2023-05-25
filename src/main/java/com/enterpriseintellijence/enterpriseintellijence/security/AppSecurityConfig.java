@@ -44,7 +44,9 @@ public class AppSecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+                .authorizeHttpRequests().requestMatchers("/api/v1/admin/**", "/api/v1/reports/close/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+                .and()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/api/v1/reports").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/v1/superAdmin/**").hasAuthority("ROLE_SUPER_ADMIN")
                 .and()
