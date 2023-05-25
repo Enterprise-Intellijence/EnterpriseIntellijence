@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +36,7 @@ public class ImageController {
         imageService.deletePhotoUser(id);
     }
 
-    @GetMapping(path = "/users/photo-profile/{id}")
+    @GetMapping(path = "/users/photo-profile/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getUserProfilePhoto(@PathVariable("id") String id) throws IOException {
         return ResponseEntity.ok(imageService.getUserProfilePhoto(id));
     }
@@ -58,7 +59,7 @@ public class ImageController {
         imageService.deleteImageProduct(id);
     }
 
-    @GetMapping("/product/image/{id}")
+    @GetMapping(value = "/product/image/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImageProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(imageService.getImageProduct(id));
     }

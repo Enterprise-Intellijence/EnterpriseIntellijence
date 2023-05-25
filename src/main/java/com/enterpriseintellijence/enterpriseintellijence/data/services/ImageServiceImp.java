@@ -34,6 +34,8 @@ public class ImageServiceImp implements ImageService{
     private final ProductRepository productRepository;
     private final JwtContextUtils jwtContextUtils;
 
+    // TODO: 25/05/2023 gestire massimo 5 immagini
+
     @Override
     public String savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
@@ -104,6 +106,9 @@ public class ImageServiceImp implements ImageService{
 
     @Override
     public String saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {
+        // TODO: 25/05/2023 gestire massimo 5 immagini
+
+
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(product_id).orElseThrow(EntityNotFoundException::new);
         if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))

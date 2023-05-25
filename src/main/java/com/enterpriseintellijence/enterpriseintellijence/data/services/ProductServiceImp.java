@@ -112,9 +112,11 @@ public class ProductServiceImp implements ProductService {
             product.setVisibility(patch.getVisibility());
         if(patch.getCondition()!=null && !product.getCondition().equals(patch.getCondition()))
             product.setCondition(patch.getCondition());
-        if(patch.getCustomMoney().getPrice()!= null &&
+
+        // TODO: 25/05/2023 cambio prezzi
+        /*if(patch.getCustomMoney().getPrice()!= null &&
                 (!product.getCustomMoney().getPrice().equals(patch.getCustomMoney().getPrice()) || !product.getCustomMoney().getCurrency().equals(patch.getCustomMoney().getCurrency())))
-            product.setCustomMoney(modelMapper.map(patch.getCustomMoney(), CustomMoney.class));
+            product.setCustomMoney(modelMapper.map(patch.getCustomMoney(), CustomMoney.class));*/
         if(patch.getProductCategory()!=null && !product.getProductCategory().equals(patch.getProductCategory()))
             product.setProductCategory(patch.getProductCategory());
         /*if(patch.getProductImages()!=null ){
@@ -141,7 +143,7 @@ public class ProductServiceImp implements ProductService {
             product.setProductSize(patch.getProductSize());
 
         if(patch.getProductCategory().equals(ProductCategory.CLOTHING)){
-            // TODO: 22/05/2023  
+            // TODO: 22/05/2023
 
         }
         else if(patch.getProductImages().equals(ProductCategory.ENTERTAINMENT)){
@@ -158,13 +160,17 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public void deleteProduct(String id) {
+    public void deleteProduct(String id) throws IllegalAccessException {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
+            // TODO: 25/05/2023 eccezione giusta?
             throw new EntityNotFoundException("Product not found");
+        if(product.getOrder()!=null && !product.getOrder().getState().equals(OrderState.PENDING))
+            throw new IllegalAccessException("Cannot delete purchased product");
 
-        productRepository.deleteById(id);
+        // TODO: 25/05/2023 controllare che cosa cancella
+        productRepository.delete(product);
     }
 
     @Override

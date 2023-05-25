@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
 
-    OrderDTO createOrder(OrderCreateDTO orderDTO);
+    OrderDTO createOrder(OrderCreateDTO orderDTO) throws IllegalAccessException;
     OrderDTO replaceOrder(String id, OrderDTO orderDTO) throws IllegalAccessException;
     OrderDTO updateOrder(String id, OrderDTO orderDTO) throws IllegalAccessException;
     void deleteOrder(String id) throws IllegalAccessException;

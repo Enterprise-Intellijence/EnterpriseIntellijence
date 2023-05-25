@@ -28,4 +28,8 @@ public class CustomMoney {
         this.currency=currency;
         money=Money.of(CurrencyUnit.of(currency.toString()),price);
     }
+    public CustomMoney(Money money){
+        this.price = Double.valueOf(String.valueOf(money.getAmount())) ;
+        this.currency = Currency.valueOf(String.valueOf(money.getCurrencyUnit()));
+    }
 }

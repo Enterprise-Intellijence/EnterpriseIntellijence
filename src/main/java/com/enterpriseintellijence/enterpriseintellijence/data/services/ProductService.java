@@ -15,7 +15,7 @@ public interface ProductService {
     ProductDTO createProduct(ProductDTO productDTO);
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
     ProductDTO updateProduct(String id, ProductDTO productDTO);
-    void deleteProduct(String id);
+    void deleteProduct(String id) throws IllegalAccessException;
 
     ProductDTO getProductById(String id, boolean capability);
 

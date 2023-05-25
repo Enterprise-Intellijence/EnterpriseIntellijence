@@ -44,9 +44,11 @@ public class ProductDTO {
     @Length(max = 1000)
     private String description;
 
-    // TODO: usare una classe apposita per il prezzo
     @NotNull
-    private CustomMoneyDTO customMoney;
+    private CustomMoneyDTO productCost;
+
+    @NotNull
+    private CustomMoneyDTO deliveryCost;
 
     @Length(max = 100)
     private String brand;

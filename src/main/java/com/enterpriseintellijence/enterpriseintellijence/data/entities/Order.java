@@ -23,13 +23,16 @@ public class Order {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @Column(name = "order_date")
+    @Column(name = "order_create_date")
     private LocalDateTime orderDate;
+
+    @Column(name = "order_update_date")
+    private LocalDateTime orderUpdateDate;
 
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_product")
     private Product product;
 

@@ -27,6 +27,7 @@ public class Message {
     @Column(name = "message_date")
     private LocalDateTime messageDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "message_status")
     private MessageStatus messageStatus;
 

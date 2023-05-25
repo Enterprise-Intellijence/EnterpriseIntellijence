@@ -42,7 +42,10 @@ public class MessageServiceImp implements MessageService{
         message.setId(null);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         // TODO: 23/05/2023 l'utente che invia lo prendo dal jwtcontext...dovrei confrontarlo con l'id del messaggioDTO.getSendUser?
-        User receivedUser = userRepository.findById(messageDTO.getReceivedUser().getId()).orElseThrow(EntityNotFoundException::new);
+
+        // TODO: 25/05/2023 e se l'username non esiste? gestire eccezione 
+        User receivedUser = userRepository.findByUsername(messageDTO.getReceivedUser().getUsername());
+//        User receivedUser = userRepository.findById(messageDTO.getReceivedUser().getId()).orElseThrow(EntityNotFoundException::new);
 
         message.setSendUser(loggedUser);
         message.setReceivedUser(receivedUser);
@@ -119,23 +122,16 @@ public class MessageServiceImp implements MessageService{
         if(message.getMessageStatus().equals(MessageStatus.READ) && message.getOffer()!=null)
             throw new IllegalAccessException("Cannot delete message with offers read");
 
-        //if(message.ge)
-
-        messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         messageRepository.deleteById(id);
     }
 
     @Override
     public MessageDTO getMessage(String id) throws IllegalAccessException {
         Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        MessageDTO messageDTO = mapToDTO(message);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(!loggedUser.getRole().equals(UserRole.USER) && (loggedUser.getId().equals(message.getSendUser().getId()) || loggedUser.getId().equals(message.getReceivedUser().getId())))
+            throw new IllegalAccessException("Cannot read others message");
 
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
-
-        if(!userDTO.getId().equals(messageDTO.getSendUser().getId())) {
-            throw new IllegalAccessException("User cannot read other's messages");
-        }
         return mapToDTO(message);
     }
 

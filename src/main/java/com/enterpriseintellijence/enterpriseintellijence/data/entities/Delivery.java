@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.joda.money.Money;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -25,13 +28,20 @@ public class  Delivery {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne(mappedBy = "delivery",cascade = CascadeType.ALL)
     private Order order;
+
+    private LocalDateTime sendTime;
+
+    private LocalDateTime deliveredTime;
 
     @Column(name = "delivery_cost")
     private CustomMoney deliveryCost;
 
     private String shipper;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus deliveryStatus;
 
     @Embedded
     @AttributeOverrides({

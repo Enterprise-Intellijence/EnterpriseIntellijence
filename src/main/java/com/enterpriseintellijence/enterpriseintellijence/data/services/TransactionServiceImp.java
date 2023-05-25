@@ -1,9 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Transaction;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.TransactionRepository;
@@ -42,9 +40,17 @@ public class TransactionServiceImp implements TransactionService{
             throw new IllegalAccessException("Cannot create transaction");
         checkCardOwnership(loggedUser,transaction.getPaymentMethod());
 
+
         Order order = orderRepository.getReferenceById(transaction.getOrder().getId());
         order.setState(OrderState.PURCHASED);
         order.getProduct().setAvailability(Availability.UNAVAILABLE);
+
+        // TODO: 25/05/2023 verificare conversione
+        Double productPrice = order.getProduct().getProductCost().getPrice();
+        if(order.getOffer()!=null)
+            productPrice = order.getOffer().getAmount().getPrice();
+        Double amount = productPrice+order.getProduct().getDeliveryCost().getPrice();
+        transaction.setAmount(new CustomMoney(amount,order.getProduct().getProductCost().getCurrency()));
         transaction.setOrder(order);
         transaction.setCreationTime(LocalDateTime.now(clock));
         transaction = transactionRepository.save(transaction);

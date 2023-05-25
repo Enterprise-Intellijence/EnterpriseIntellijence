@@ -43,7 +43,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/products/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable String productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable String productId) throws IllegalAccessException {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }

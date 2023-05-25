@@ -55,7 +55,7 @@ public class ProductController {
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") String id) throws IllegalAccessException {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

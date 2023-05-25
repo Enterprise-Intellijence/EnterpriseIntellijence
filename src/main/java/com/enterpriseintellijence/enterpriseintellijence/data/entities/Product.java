@@ -37,7 +37,19 @@ public class Product {
 
     //@Column(name = "price", nullable = false)
     @Embedded
-    private CustomMoney customMoney;
+    @AttributeOverrides({
+            @AttributeOverride(name="price",column=@Column(name="product_price")),
+            @AttributeOverride(name="currency",column=@Column(name="product_currency"))
+    })
+    private CustomMoney productCost;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="price",column=@Column(name="delivery_price")),
+            @AttributeOverride(name="currency",column=@Column(name="delivery_currency"))
+    })
+    private CustomMoney deliveryCost;
+
 
     @Column(name = "brand")
     private String brand;
