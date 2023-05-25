@@ -63,6 +63,8 @@ public class ProductDTO {
     @PositiveOrZero
     private Integer views;
     private LocalDateTime uploadDate;
+    private LocalDateTime lastUpdateDate;
+
     private Visibility visibility;
     private Availability availability;
     @NotNull

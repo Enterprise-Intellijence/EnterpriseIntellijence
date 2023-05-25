@@ -69,8 +69,11 @@ public class Product {
     @Column(name = "views", nullable = false)
     private Integer views;
 
-    @JoinColumn(name = "upload_date", nullable = false)
+    @Column(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
+
+    @Column(name = "last_update_date", nullable = false)
+    private LocalDateTime lastUpdateDate;
 
 
     @Enumerated(EnumType.STRING)
