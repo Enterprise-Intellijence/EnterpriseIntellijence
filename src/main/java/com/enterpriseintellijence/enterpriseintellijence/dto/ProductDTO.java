@@ -69,9 +69,11 @@ public class ProductDTO {
     private ProductCategory productCategory;
 
     private List<UserBasicDTO> usersThatLiked;
-    private List<OfferBasicDTO> offers;
-    private List<MessageDTO> messages;
-    private OrderBasicDTO order;
-    //private ProductImageDTO defaultImage;
+
+
+    //private List<OfferBasicDTO> offers FATTO;
+    // TODO: 25/05/2023  sono sempre privati i messaggi?
+    //private List<MessageDTO> messages FATTO;
+    //private OrderBasicDTO order FATTO;
     private List<ProductImageDTO> productImages;
 }

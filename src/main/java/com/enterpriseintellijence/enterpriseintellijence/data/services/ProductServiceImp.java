@@ -9,6 +9,8 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.HomeRep
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
@@ -347,6 +349,42 @@ public class ProductServiceImp implements ProductService {
         }
         return userRepository.findAllByLikedProducts(id, PageRequest.of(page, size))
                 .map(user -> modelMapper.map(user, UserBasicDTO.class));
+    }
+
+    @Override
+    public Page<OfferBasicDTO> getProductOffers(String id, int page, int size) throws IllegalAccessException {
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if (!loggedUser.getId().equals(product.getSeller().getId()))
+            throw new IllegalAccessException("Cannot see offers of others product");
+        Page<Offer> offers = new PageImpl<Offer>(product.getOffers(),PageRequest.of(page,size),product.getOffers().size());
+        List<OfferBasicDTO> collect = offers.stream().map(s->modelMapper.map(s, OfferBasicDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<MessageDTO> getProductMessages(String id, int page, int size) throws IllegalAccessException {
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if (!loggedUser.getId().equals(product.getSeller().getId()))
+            throw new IllegalAccessException("Cannot see messages of others product");
+        Page<Message> messages = new PageImpl<Message>(product.getMessages(),PageRequest.of(page,size),product.getMessages().size());
+        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public OrderBasicDTO getProductOrder(String id) throws IllegalAccessException {
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if (!loggedUser.getId().equals(product.getSeller().getId()))
+            throw new IllegalAccessException("Cannot see orders of others product");
+        if(product.getOrder()!=null)
+            return modelMapper.map(product.getOrder(),OrderBasicDTO.class);
+        else
+            throw new EntityNotFoundException("Order not exists");
     }
 
 }

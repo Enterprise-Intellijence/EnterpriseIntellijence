@@ -1,6 +1,9 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
@@ -152,6 +155,20 @@ public class ProductController {
     @GetMapping("/most-viewed")
     public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
         return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
+    }
+
+    @GetMapping("/{id}/offers")
+    public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@RequestParam("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.getProductOffers(id,page,size));
+    }
+
+    @GetMapping("/{id}/messages")
+    public ResponseEntity<Page<MessageDTO>> getProductMessages(@RequestParam("id") String id, @RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.getProductMessages(id,page,size));
+    }
+    @GetMapping("/{id}/order")
+    public ResponseEntity<OrderBasicDTO> getProductOrder(@RequestParam("id") String id) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.getProductOrder(id));
     }
 
 

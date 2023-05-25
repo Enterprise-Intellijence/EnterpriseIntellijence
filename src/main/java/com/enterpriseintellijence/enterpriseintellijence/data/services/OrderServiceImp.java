@@ -225,13 +225,12 @@ public class OrderServiceImp implements OrderService {
     @Override
     public OrderDTO getOrderById(String id) throws IllegalAccessException {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        OrderDTO orderDTO = mapToDTO(order);
-        UserDTO userDTO = userService.findUserFromContext()
-            .orElseThrow(EntityNotFoundException::new);
-        if(!userDTO.getId().equals(orderDTO.getUser().getId())) {
-            throw new IllegalAccessException("User cannot read other's orders");
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getId().equals(order.getUser().getId()) || loggedUser.getId().equals(order.getProduct().getSeller().getId())) {
+            return mapToDTO(order);
         }
-        return orderDTO;
+        else
+            throw new IllegalAccessException("User cannot read other's orders");
     }
 
     @Override

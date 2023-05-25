@@ -3,10 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -75,4 +72,5 @@ public interface UserService {
 
     Page<MessageDTO> getMyOutBoxMessage(int page, int size);
 
+    Page<OfferBasicDTO> getMyOffers(int page, int size);
 }

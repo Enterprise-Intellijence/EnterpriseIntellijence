@@ -1,5 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
@@ -46,4 +49,9 @@ public interface ProductService {
 
     Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
 
+    Page<OfferBasicDTO> getProductOffers(String id, int page, int size) throws IllegalAccessException;
+
+    Page<MessageDTO> getProductMessages(String id, int page, int size) throws IllegalAccessException;
+
+    OrderBasicDTO getProductOrder(String id) throws IllegalAccessException;
 }

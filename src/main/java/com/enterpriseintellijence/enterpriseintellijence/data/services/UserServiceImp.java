@@ -7,10 +7,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Product
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
@@ -40,6 +37,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Map.of;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.ALL;
@@ -433,6 +431,15 @@ public class UserServiceImp implements UserService{
         User user = userRepository.findByUsername(username);
         Page<Message> messages = new PageImpl<Message>(user.getSentMessages(),PageRequest.of(page,size),user.getSentMessages().size());
         List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
+    }
+
+    @Override
+    public Page<OfferBasicDTO> getMyOffers(int page, int size) {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        Page<Offer> offers = new PageImpl<Offer>(loggedUser.getOffersMade(),PageRequest.of(page,size),loggedUser.getOffersMade().size());
+        List<OfferBasicDTO> collect = offers.stream().map(s->modelMapper.map(s, OfferBasicDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect);
     }
