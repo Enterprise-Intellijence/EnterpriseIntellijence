@@ -12,7 +12,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @see ProductBasicDTO
@@ -63,6 +62,7 @@ public class Product {
     @Embedded
     private Address address;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "delivery_type")
     private ProductSize productSize;
 
@@ -85,8 +85,17 @@ public class Product {
     private Availability availability;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="product_category",nullable = false)
+    @Column(name="main_category"/*,nullable = false*/)
     private ProductCategory productCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_category",nullable = false)
+    private ProductCategoryParent productCategoryParent;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_category_child",nullable = false)
+    private ProductCategoryChild productCategoryChild;
+
 
     @Column(name = "like_number", nullable = false)
     private Integer likesNumber;

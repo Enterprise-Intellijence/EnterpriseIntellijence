@@ -14,7 +14,6 @@ import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
-import jakarta.persistence.EnumType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

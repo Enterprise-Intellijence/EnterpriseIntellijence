@@ -1,8 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ClothingRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.EntertainmentRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.HomeRepository;
@@ -14,26 +12,16 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDT
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
-import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,11 +42,14 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
+        System.out.println(productDTO.getClass().getName());
+
         Product product = new Product();
-        System.out.println(productDTO.getProductCategory());
+        //System.out.println(productDTO.getProductCategory());
         try{
             product = mapToEntity(productDTO);
             product.setUploadDate(LocalDateTime.now(clock));
+            product.setLastUpdateDate(LocalDateTime.now(clock));
             product.setLikesNumber(0);
             product.setSeller(jwtContextUtils.getUserLoggedFromContext());
 
@@ -68,7 +59,7 @@ public class ProductServiceImp implements ProductService {
                     productImage.setProduct(product);
                 }
             }*/
-            product.setProductCategory(product.getProductCategory());
+            //product.setProductCategoryChild(productDTO.getProductCategoryChild());egory());
 
 
             Product product1 = productRepository.save(product);
@@ -82,6 +73,106 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
+        return null;
+    }
+
+    @Override
+    public ProductDTO updateProduct(String id, ProductDTO productDTO) {
+        return null;
+    }
+
+    @Override
+    public void deleteProduct(String id) throws IllegalAccessException {
+
+    }
+
+    @Override
+    public ProductDTO getProductById(String id, boolean capability) {
+        return null;
+    }
+
+    @Override
+    public Iterable<ProductBasicDTO> findAll() {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getAllPaged(int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
+        return null;
+    }
+
+    @Override
+    public String getCapabilityUrl(String id) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentType entertainmentType) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeType homeType) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> searchProduct(String keystring, int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getMostLikedProducts(int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getMostViewedProducts(int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size) {
+        return null;
+    }
+
+    @Override
+    public Page<OfferBasicDTO> getProductOffers(String id, int page, int size) throws IllegalAccessException {
+        return null;
+    }
+
+    @Override
+    public Page<MessageDTO> getProductMessages(String id, int page, int size) throws IllegalAccessException {
+        return null;
+    }
+
+    @Override
+    public OrderBasicDTO getProductOrder(String id) throws IllegalAccessException {
+        return null;
+    }
+
+    /*@Override
     public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
         throwOnIdMismatch(id, productDTO);
         Product oldProduct = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -116,12 +207,12 @@ public class ProductServiceImp implements ProductService {
             product.setCondition(patch.getCondition());
 
         // TODO: 25/05/2023 cambio prezzi
-        /*if(patch.getCustomMoney().getPrice()!= null &&
+        if(patch.getCustomMoney().getPrice()!= null &&
                 (!product.getCustomMoney().getPrice().equals(patch.getCustomMoney().getPrice()) || !product.getCustomMoney().getCurrency().equals(patch.getCustomMoney().getCurrency())))
-            product.setCustomMoney(modelMapper.map(patch.getCustomMoney(), CustomMoney.class));*/
+            product.setCustomMoney(modelMapper.map(patch.getCustomMoney(), CustomMoney.class));
         if(patch.getProductCategory()!=null && !product.getProductCategory().equals(patch.getProductCategory()))
             product.setProductCategory(patch.getProductCategory());
-        /*if(patch.getProductImages()!=null ){
+        if(patch.getProductImages()!=null ){
             for(ProductImageDTO productImageDTO: patch.getProductImages()){
                 if(productImageDTO.getId()==null){
                     ProductImage productImage = modelMapper.map(productImageDTO,ProductImage.class);
@@ -136,7 +227,7 @@ public class ProductServiceImp implements ProductService {
                 }
             }
 
-        }*/
+        }
         if(patch.getAddress()!=null )
             product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );
         if(patch.getBrand()!=null && !product.getBrand().equals(patch.getBrand()))
@@ -385,6 +476,38 @@ public class ProductServiceImp implements ProductService {
             return modelMapper.map(product.getOrder(),OrderBasicDTO.class);
         else
             throw new EntityNotFoundException("Order not exists");
+    }*/
+
+    private Product mapToEntity(ProductDTO productDTO) {
+        if(productDTO.getProductCategoryChild().getSubCategoryType().getProductCategory().equals(ProductCategory.CLOTHING)) {
+            System.out.println("ma pure qui 1");
+            return modelMapper.map(productDTO, Clothing.class);
+        }
+        else if(productDTO.getProductCategoryChild().getSubCategoryType().getProductCategory().equals(ProductCategory.HOME)) {
+            System.out.println("ma pure qui 2");
+
+            return modelMapper.map(productDTO, Home.class);
+        }
+        else if(productDTO.getProductCategoryChild().getSubCategoryType().getProductCategory().equals(ProductCategory.ENTERTAINMENT)) {
+            System.out.println("ma pure qui 3");
+            return modelMapper.map(productDTO, Entertainment.class);
+        }
+        else {
+            System.out.println("ma pure qui 4");
+            return modelMapper.map(productDTO, Product.class);
+        }
     }
+
+    private ProductDTO mapToProductDetailsDTO(Product product) {
+        if(product.getProductCategoryChild().getSubCategoryType().getProductCategory().equals(ProductCategory.CLOTHING))
+            return modelMapper.map(product, ClothingDTO.class);
+        else if(product.getProductCategoryChild().getSubCategoryType().getProductCategory().equals(ProductCategory.HOME))
+            return modelMapper.map(product, HomeDTO.class);
+        else if(product.getProductCategoryChild().getSubCategoryType().getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+            return modelMapper.map(product, EntertainmentDTO.class);
+        else
+            return modelMapper.map(product, ProductDTO.class);
+    }
+
 
 }

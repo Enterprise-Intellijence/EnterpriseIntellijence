@@ -49,9 +49,9 @@ public class Demo {
         initializeProductImageList();
         initializeBrandList();
         createUser();
-        for(int i=0;i<15;i++){
+        /*for(int i=0;i<15;i++){
             createProduct(userArrays.get(i));
-        }
+        }*/
         //setFollower();
         //setLikeProduct();
 
@@ -144,7 +144,7 @@ public class Demo {
     }
 
     private void createProduct(User user){
-        productArrayList = new ArrayList<>();
+/*        productArrayList = new ArrayList<>();
 
         //for clothing enum
         List<ProductGender> genderList = List.of(ProductGender.class.getEnumConstants());
@@ -198,14 +198,14 @@ public class Demo {
                 else
                     clothingSize = otherSizeList.get(random.nextInt(otherSize));
                 clothing.setSize(clothingSize);
-                clothing.setProductCategory(ProductCategory.CLOTHING);
+                //clothing.setProductCategory(ProductCategory.CLOTHING);
                 productArrayList.add(clothing);
             }
             //setting entertainment
             else if(rand2==2){
                 Entertainment entertainment = new Entertainment();
                 entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
-                entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
+                //entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
                 productArrayList.add(entertainment);
             }
             //setting home
@@ -213,17 +213,17 @@ public class Demo {
                 Home home = new Home();
                 home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
                 home.setColour(colourList.get(random.nextInt(sizeColour)));
-                home.setProductCategory(ProductCategory.HOME);
+                //home.setProductCategory(ProductCategory.HOME);
                 productArrayList.add(home);
             }
             else{
                 Product product=new Product();
-                product.setProductCategory(ProductCategory.OTHER);
+                //product.setProductCategory(ProductCategory.OTHER);
                 productArrayList.add(product);
             }
 
         }
-        setBasicProduct(user);
+        setBasicProduct(user);*/
     }
 
     private void setBasicProduct(User user){
