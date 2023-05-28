@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
@@ -40,41 +41,20 @@ public class OrderServiceImp implements OrderService {
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
     private final Clock clock;
+    private final ProcessSaleServiceImp processSaleServiceImp;
 
     @Override
     public OrderDTO createOrder(OrderCreateDTO orderDTO) throws IllegalAccessException {
-        Order order = new Order();
+        // TODO: 28/05/2023 potrei farmi mandare direttamente l'id del prodotto e amen
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(orderDTO.getProduct().getId()).orElseThrow(EntityNotFoundException::new);
 
-
-        // TODO: 25/05/2023 all check
         if(!product.getAvailability().equals(Availability.AVAILABLE))
             throw new IllegalArgumentException("cannot buy product not available");
 
-        if(orderDTO.getOffer()!=null && orderDTO.getOffer().getId()!=null){
-            Offer offer = offerRepository.findById(orderDTO.getOffer().getId()).orElseThrow(EntityNotFoundException::new);
-            //controllo che l'offerta sia per il prodotto che si sta acquistando e controllo che sia accettata
-            if(!offer.getProduct().getId().equals(product.getId()) || !offer.getState().equals(OfferState.ACCEPTED))
-                throw new IllegalArgumentException("cannot apply offer not accepted");
-            //controllo che l'utente loggato sia quello che ha fatto l'offerta
-            if(!offer.getOfferer().getId().equals(loggedUser.getId()))
-                throw new IllegalAccessException("cannot use offer made from others");
-            order.setOffer(offer);
-            offer.setOrder(order);
-        }
+        Order order = processSaleServiceImp.buyProduct(product,loggedUser);
 
-        LocalDateTime now = LocalDateTime.now(clock);
-        order.setOrderDate(now);
-        order.setOrderUpdateDate(now);
 
-        order.setState(OrderState.PENDING);
-
-        product.setAvailability(Availability.PENDING);
-        product.setOrder(order);
-        order.setProduct(product);
-
-        order.setUser(loggedUser);
 
         order = orderRepository.save(order);
         return mapToDTO(order);
@@ -204,10 +184,7 @@ public class OrderServiceImp implements OrderService {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
         if (loggedUser.getId().equals(order.getUser().getId()) && order.getState().equals(OrderState.PENDING)) {
-            order.setState(OrderState.CANCELED);
-            order.setUser(null);
-            orderRepository.save(order);
-            // TODO: 25/05/2023 send notification
+            processSaleServiceImp.cancelOrder(order,loggedUser);
         }
         else if(loggedUser.getId().equals(order.getProduct().getSeller().getId()) || order.getState().equals(OrderState.CANCELED)){
             Product product = order.getProduct();

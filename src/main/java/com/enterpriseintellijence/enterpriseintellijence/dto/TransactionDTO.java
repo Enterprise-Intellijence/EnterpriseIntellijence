@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.TransactionState;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -23,6 +24,8 @@ public class TransactionDTO {
     @Min(0)
     @NotNull
     private CustomMoneyDTO amount;
+    private TransactionState transactionState;
+
     @NotNull
     private PaymentMethodBasicDTO paymentMethod;
 

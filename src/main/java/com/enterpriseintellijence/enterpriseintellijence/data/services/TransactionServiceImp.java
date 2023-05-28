@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
@@ -28,31 +29,29 @@ public class TransactionServiceImp implements TransactionService{
     private final TransactionRepository transactionRepository;
     private final OrderRepository orderRepository;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final ProcessSaleServiceImp processSaleServiceImp;
     private final ModelMapper modelMapper;
     private final JwtContextUtils jwtContextUtils;
     private final Clock clock;
 
     public TransactionDTO createTransaction(TransactionDTO transactionDTO) throws IllegalAccessException {
-        Transaction transaction = mapToEntity(transactionDTO);
+        // TODO: 28/05/2023 forse più opportuno ricevere come parametri id order e id paymentmethod
+        Order order = orderRepository.findById(transactionDTO.getOrder().getId()).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(transactionDTO.getPaymentMethod().getId()).orElseThrow(EntityNotFoundException::new);
 
-        if(loggedUser!=null && !transaction.getOrder().getUser().getId().equals(loggedUser.getId()))
+
+        if(!order.getUser().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot create transaction");
-        checkCardOwnership(loggedUser,transaction.getPaymentMethod());
+
+        checkCardOwnership(loggedUser,paymentMethod);
+
+        Transaction transaction = processSaleServiceImp.payProduct(order,loggedUser,paymentMethod);
+
+        // TODO: 28/05/2023 check cosa salva
 
 
-        Order order = orderRepository.getReferenceById(transaction.getOrder().getId());
-        order.setState(OrderState.PURCHASED);
-        order.getProduct().setAvailability(Availability.UNAVAILABLE);
 
-        // TODO: 25/05/2023 verificare conversione
-        Double productPrice = order.getProduct().getProductCost().getPrice();
-        if(order.getOffer()!=null)
-            productPrice = order.getOffer().getAmount().getPrice();
-        Double amount = productPrice+order.getProduct().getDeliveryCost().getPrice();
-        transaction.setAmount(new CustomMoney(amount,order.getProduct().getProductCost().getCurrency()));
-        transaction.setOrder(order);
-        transaction.setCreationTime(LocalDateTime.now(clock));
         transaction = transactionRepository.save(transaction);
         return mapToDTO(transaction);
     }

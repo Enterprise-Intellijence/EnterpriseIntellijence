@@ -1,9 +1,9 @@
 package com.enterpriseintellijence.enterpriseintellijence.core.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,4 +12,17 @@ public interface ProcessSaleService {
 
     Offer madeAnOffer(OfferDTO offerDTO, Product product, User loggedUser);
     Offer acceptOrRejectAnOffer(Offer offer, OfferDTO offerDTO, Product product, User loggedUser,boolean isAccepted);
+
+    Order buyProduct(Product product,User loggedUser);
+    Order cancelOrder(Order order,User loggedUser);
+
+    Transaction payProduct(Order order, User loggedUser, PaymentMethod paymentMethod);
+
+    Delivery sendProduct(Order order, User loggedUser, DeliveryDTO deliveryDTO);
+
+    Delivery productDelivered(Order order,User loggedUser,Delivery delivery);
+
+    Order completeOrder(Order order,User loggedUser);//invocato dal compratore per settare l'ordine su completed e sbloccare la recensione
+
+
 }
