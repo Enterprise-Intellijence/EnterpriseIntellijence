@@ -70,13 +70,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
 
-    @GetMapping("")
+/*    @GetMapping("")
     public ResponseEntity<Page<ProductBasicDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(productService.getAllPaged(page, size));
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }
+    }*/
 
     @GetMapping("/filter")
     public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
@@ -131,55 +131,24 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/category")
+/*    @GetMapping("/category")
     public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
 
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
             return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,category));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     @GetMapping("/category/clothing")
     public ResponseEntity<Page<ProductBasicDTO>> getClothingByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("clothingType")ClothingType clothingType){
-
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
         return ResponseEntity.ok(productService.getClothingByTypePaged(page,size,clothingType));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
     @GetMapping("/category/entertainment")
     public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentType entertainmentType){
-
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
         return ResponseEntity.ok(productService.getEntertainmentByTypePaged(page,size,entertainmentType));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     @GetMapping("/category/home")
     public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeType homeType){
-
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
         return ResponseEntity.ok(productService.getHomeByTypePaged(page,size,homeType));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     @GetMapping("/search")
@@ -200,7 +169,7 @@ public class ProductController {
     @GetMapping("/most-viewed")
     public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
         return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
-    }
+    }*/
 
     @GetMapping("/{id}/offers")
     public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@RequestParam("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
@@ -215,48 +184,6 @@ public class ProductController {
     public ResponseEntity<OrderBasicDTO> getProductOrder(@RequestParam("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(productService.getProductOrder(id));
     }
-
-
-
-
-
-/*
-
-    //restituisce la lista di categorie
-    @GetMapping("/categories")
-    public ResponseEntity<Iterable<ProductCategory>> getCategoriesList(){
-        return ResponseEntity.ok(Arrays.asList(ProductCategory.class.getEnumConstants())) ;
-    }
-
-    //restituisce la sottolista della categoria home
-    @GetMapping("/categories/home")
-    public ResponseEntity<Iterable<HomeType>> getHomeType(){
-        return ResponseEntity.ok(Arrays.asList(HomeType.class.getEnumConstants())) ;
-    }
-
-    //restituisce la sottolista della categoria entertainment
-    @GetMapping("/categories/entertainment")
-    public ResponseEntity<Iterable<EntertainmentType>> getEntertainmentType(){
-        return ResponseEntity.ok(Arrays.asList(EntertainmentType.class.getEnumConstants())) ;
-    }
-
-    //restituisce la sottolista della categoria clothing
-    @GetMapping("/categories/clothing")
-    public ResponseEntity<Iterable<ClothingType>> getClothingType(){
-        return ResponseEntity.ok(Arrays.asList(ClothingType.class.getEnumConstants())) ;
-    }
-
-    //restituisce la lista di colori
-    @GetMapping("/colour")
-    public ResponseEntity<Iterable<Colour>> getColour(){
-        return ResponseEntity.ok(Arrays.asList(Colour.class.getEnumConstants())) ;
-    }
-
-    //restituisce la lista delle misure per la categoria clothing
-    @GetMapping("/categories/clothing/size")
-    public ResponseEntity<Iterable<ClothingSize>> getClothingSize(){
-        return ResponseEntity.ok(Arrays.asList(ClothingSize.class.getEnumConstants())) ;
-    }*/
 
     //restituisce la lista dei sessi per l'abbigliamento
     @GetMapping("/categories/clothing/gender")

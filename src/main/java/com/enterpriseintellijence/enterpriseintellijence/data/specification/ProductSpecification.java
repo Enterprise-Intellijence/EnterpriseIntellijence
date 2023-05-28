@@ -69,7 +69,7 @@ public class ProductSpecification {
                 }
 
                 if (filter.getAvailability() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("availability"), filter.getAvailability()));
+                    predicates.add(criteriaBuilder.equal(root.get("availability"), Availability.AVAILABLE));
                 }
 
                 if (filter.getProductCategory() != null) {
