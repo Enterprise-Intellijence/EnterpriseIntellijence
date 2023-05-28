@@ -95,7 +95,7 @@ public class ProductController {
             @RequestParam(required = false) Integer likesNumber,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection
     ) {
         ProductSpecification.Filter filter = new ProductSpecification.Filter();

@@ -83,6 +83,13 @@ public class UserController {
         return userService.registerUser(username, email, password);
     }
 
+    @PostMapping("/activate")
+    @ResponseStatus(HttpStatus.OK)
+    public void activate(@RequestParam("unique_code") String unique_code){
+        // TODO: 28/05/2023
+
+    }
+
 
 /*    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
@@ -111,6 +118,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserBasicDTO> userById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findUserById(id));
+    }
+
+    @GetMapping("/find-by-username")
+    public ResponseEntity<UserBasicDTO> findByUsername(@RequestParam("username") String username){
+        // TODO: 28/05/2023
+        return null;
     }
 
 /*
