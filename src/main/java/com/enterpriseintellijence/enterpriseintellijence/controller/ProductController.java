@@ -39,9 +39,8 @@ public class ProductController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO){
-        productDTO.setLikesNumber(0);
-        productDTO.setViews(0);
+    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws IllegalAccessException {
+
         return productService.createProduct(productDTO);
     }
 
@@ -51,7 +50,7 @@ public class ProductController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) throws IllegalAccessException {
         return ResponseEntity.ok(productService.updateProduct(id, patch));
     }
 

@@ -15,9 +15,9 @@ import jakarta.persistence.EnumType;
 import org.springframework.data.domain.Page;
 
 public interface ProductService {
-    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO createProduct(ProductDTO productDTO) throws IllegalAccessException;
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
-    ProductDTO updateProduct(String id, ProductDTO productDTO);
+    ProductDTO updateProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     void deleteProduct(String id) throws IllegalAccessException;
 
     ProductDTO getProductById(String id, boolean capability);
