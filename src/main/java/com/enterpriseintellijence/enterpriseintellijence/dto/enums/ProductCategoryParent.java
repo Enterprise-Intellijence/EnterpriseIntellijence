@@ -10,7 +10,8 @@ public enum ProductCategoryParent {
     BOOKS("BOOKS",ProductCategory.ENTERTAINMENT),
     TEXTILES("TEXTILES",ProductCategory.HOME),
     HOME("HOME",ProductCategory.HOME),
-    TABLEWARE("TABLEWARE",ProductCategory.HOME);
+    TABLEWARE("TABLEWARE",ProductCategory.HOME),
+    OTHER("OTHER",ProductCategory.OTHER );
 
     public String parentProductCategory;
     public ProductCategory productCategory;

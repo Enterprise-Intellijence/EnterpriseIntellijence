@@ -29,7 +29,23 @@ public enum ProductCategoryChild {
     NON_FICTION("NON_FICTION", ProductCategoryParent.BOOKS),
     KIDS("NON_FICTION", ProductCategoryParent.BOOKS),
     LITERATURE("NON_FICTION", ProductCategoryParent.BOOKS),
-    FICTION("NON_FICTION", ProductCategoryParent.BOOKS);
+    FICTION("NON_FICTION", ProductCategoryParent.BOOKS),
+    BLANKETS("BLANKETS",ProductCategoryParent.TEXTILES),
+    CUSHIONS("CUSHIONS",ProductCategoryParent.TEXTILES),
+    TABLE_LINEN("TABLE_LINEN",ProductCategoryParent.TEXTILES),
+    TOWEL("TOWEL",ProductCategoryParent.TEXTILES),
+    BEDDING("BEDDING",ProductCategoryParent.TEXTILES),
+    ACCESSORIES_COOKS("ACCESSORIES_COOKS",ProductCategoryParent.HOME),
+    ACCESSORIES_PICTURE("ACCESSORIES_PICTURE",ProductCategoryParent.HOME),
+    ACCESSORIES_PHOTO_FRAMES("ACCESSORIES_PHOTO_FRAMES",ProductCategoryParent.HOME),
+    ACCESSORIES_STORAGE("ACCESSORIES_STORAGE",ProductCategoryParent.HOME),
+    ACCESSORIES_MIRRORS("ACCESSORIES_MIRRORS",ProductCategoryParent.HOME),
+    ACCESSORIES_VASES("ACCESSORIES_VASES",ProductCategoryParent.HOME),
+    DINNERWARE("DINNERWARE",ProductCategoryParent.TABLEWARE),
+    CUTLERY("CUTLERY",ProductCategoryParent.TABLEWARE),
+    DRINKWARE("DRINKWARE",ProductCategoryParent.TABLEWARE),
+
+    OTHER("OTHER",ProductCategoryParent.OTHER);
 
     public String childProductCategory;
     public ProductCategoryParent productCategoryParent;

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-@Table(name = "wearable")
+@Table(name = "clothing")
 @Entity
 @PrimaryKeyJoinColumn(name = "product_id")
 public class Clothing extends Product{

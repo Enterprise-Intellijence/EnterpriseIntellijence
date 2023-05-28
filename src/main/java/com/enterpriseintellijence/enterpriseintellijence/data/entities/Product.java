@@ -13,9 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * @see ProductBasicDTO
- */
+
 @Data
 @NoArgsConstructor
 @Entity

@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
+import com.enterpriseintellijence.enterpriseintellijence.data.specification.ProductSpecification;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
@@ -17,12 +19,14 @@ import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @RestController
@@ -70,6 +74,49 @@ public class ProductController {
     public ResponseEntity<Page<ProductBasicDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(productService.getAllPaged(page, size));
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double minProductCost,
+            @RequestParam(required = false) Double maxProductCost,
+            @RequestParam(required = false) String[] brands,
+            @RequestParam(required = false) Condition condition,
+            @RequestParam(required = false) Integer views,
+            @RequestParam(required = false) LocalDateTime uploadDate,
+            @RequestParam(required = false) Availability availability,
+            @RequestParam(required = false) ProductCategory productCategory,
+            @RequestParam(required = false) ProductCategoryParent productCategoryParent,
+            @RequestParam(required = false) ProductCategoryChild productCategoryChild,
+            @RequestParam(required = false) Integer likesNumber,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "DESC") String sortDirection
+    ) {
+        ProductSpecification.Filter filter = new ProductSpecification.Filter();
+        filter.setTitle(title);
+        filter.setDescription(description);
+        filter.setMinProductCost(minProductCost);
+        filter.setMaxProductCost(maxProductCost);
+        filter.setBrands(brands != null ? Arrays.asList(brands) : null);
+        filter.setCondition(condition);
+        filter.setViews(views);
+        filter.setUploadDate(uploadDate);
+        filter.setAvailability(availability);
+        filter.setProductCategory(productCategory);
+        filter.setProductCategoryParent(productCategoryParent);
+        filter.setProductCategoryChild(productCategoryChild);
+        filter.setLikesNumber(likesNumber);
+
+        //Specification<Product> specification = ProductSpecification.withFilters(filter);
+
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, size,sortBy,sortDirection));
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
@@ -231,4 +278,5 @@ public class ProductController {
     public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
         return ResponseEntity.ok(productService.getProductById(tokenStore.getIdByCapability(token), true));
     }
+
 }

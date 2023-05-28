@@ -21,10 +21,8 @@ import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -184,26 +182,26 @@ public class ProductServiceImp implements ProductService {
         return mapToProductDetailsDTO(product);
     }
 
-    @Override
+/*    @Override
     public Iterable<ProductBasicDTO> findAll() {
         return productRepository.findAll().stream()
                 .map(s -> modelMapper.map(s, ProductBasicDTO.class))
                 .collect(Collectors.toList());
-    }
+    }*/
 
-    @Override
+/*    @Override
     public Page<ProductBasicDTO> getAllPaged(int page, int size) {
         Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC, PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
-    }
+    }*/
 
-    @Override
+/*    @Override
     public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
         Page<Product> products = productRepository.findAllByProductCategoryAndVisibility(productCategory,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
-    }
+    }*/
 
     @Override
     public Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size) {
@@ -219,7 +217,7 @@ public class ProductServiceImp implements ProductService {
         return new PageImpl<>(collect);
     }
 
-    @Override
+/*    @Override
     public Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType) {
         Page<Product> products = clothingRepository.findAllByClothingTypeAndVisibility(clothingType,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
@@ -238,9 +236,9 @@ public class ProductServiceImp implements ProductService {
         Page<Product> products = homeRepository.findAllByHomeTypeAndVisibility(homeType,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Page<ProductBasicDTO> searchProduct(String keystring, int page, int size) {
 
 //        List<Product> products = productRepository.search(keystring,PageRequest.of(page,size));
@@ -270,7 +268,7 @@ public class ProductServiceImp implements ProductService {
         Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC,PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"views")));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
-    }
+    }*/
 
 
     private Product mapToEntity(ProductDTO productDTO) {
@@ -368,12 +366,33 @@ public class ProductServiceImp implements ProductService {
     public OrderBasicDTO getProductOrder(String id) throws IllegalAccessException {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        // TODO: 28/05/2023 metodo riservato da mettere sotto al prodotto nella pagina del seller
+
         if (!loggedUser.getId().equals(product.getSeller().getId()))
             throw new IllegalAccessException("Cannot see orders of others product");
         if(product.getOrder()!=null)
             return modelMapper.map(product.getOrder(),OrderBasicDTO.class);
         else
             throw new EntityNotFoundException("Order not exists");
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection) {
+        Sort sort = null;
+        Sort.Direction direction = null;
+        if(sortBy!=null && !sortBy.isEmpty()){
+            if(sortDirection.equals("DESC") || sortDirection.equals("ASC"))
+                direction= Sort.Direction.fromString(sortDirection);
+            else
+                direction = Sort.Direction.DESC;
+            sort = Sort.by(direction,sortBy);
+        }
+        Pageable pageable=PageRequest.of(page,size,sort);
+
+        Page<Product> products = productRepository.findAll(withFilters,pageable);
+        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
     }
 
     private LocalDateTime getTimeNow(){
