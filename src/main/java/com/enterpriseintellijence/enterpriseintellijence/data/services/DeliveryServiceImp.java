@@ -71,7 +71,7 @@ public class DeliveryServiceImp implements DeliveryService {
         }
 
         newDelivery = deliveryRepository.save(newDelivery);
-        return mapToDTO(newDelivery);
+        return updateDelivery(id,deliveryDTO);
     }
 
     @Override

@@ -87,6 +87,8 @@ public class ProductController {
             @RequestParam(required = false) String[] brands,
             @RequestParam(required = false) Condition condition,
             @RequestParam(required = false) Integer views,
+            @RequestParam(required = false) ProductGender productGender,
+            @RequestParam(required = false) String userId,
             @RequestParam(required = false) LocalDateTime uploadDate,
             @RequestParam(required = false) Availability availability,
             @RequestParam(required = false) ProductCategory productCategory,

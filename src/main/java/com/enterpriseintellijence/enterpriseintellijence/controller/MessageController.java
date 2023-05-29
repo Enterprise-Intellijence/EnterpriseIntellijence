@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,5 +52,11 @@ public class MessageController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<MessageDTO> getMessage(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(messageService.getMessage(id));
+    }
+
+    @PostMapping(path="/read")
+    @ResponseStatus(HttpStatus.OK)
+    public void setReadMessages(@RequestBody List<String> idList){
+        // TODO: 29/05/2023
     }
 }

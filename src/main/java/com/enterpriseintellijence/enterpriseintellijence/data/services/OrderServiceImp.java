@@ -41,7 +41,6 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderCreateDTO orderDTO) throws IllegalAccessException {
-        // TODO: 28/05/2023 potrei farmi mandare direttamente l'id del prodotto e amen
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(orderDTO.getProduct().getId()).orElseThrow(EntityNotFoundException::new);
 
