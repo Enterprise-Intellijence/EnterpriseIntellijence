@@ -1,10 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.TransactionCreateDTO;
 
 
 public interface TransactionService {
-    TransactionDTO createTransaction(TransactionDTO transactionDTO) throws IllegalAccessException;
+    TransactionDTO createTransaction(TransactionCreateDTO transactionDTO) throws IllegalAccessException;
 
     TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) throws IllegalAccessException;
 

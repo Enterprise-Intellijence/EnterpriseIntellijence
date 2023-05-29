@@ -1,20 +1,17 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.OrderCreateDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
@@ -28,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -90,21 +86,20 @@ public class OrderServiceImp implements OrderService {
     @Override
     public OrderDTO updateOrder(String id, OrderDTO patch) throws IllegalAccessException {
 
-        // TODO: 25/05/2023 non serve nemmeno l'orderDTO probabilmente
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         throwOnIdMismatch(id,patch);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
 
-        if (!loggedUser.getId().equals(order.getUser().getId())) {
-            throw new IllegalAccessException("User cannot change order");
+        if (loggedUser.getId().equals(order.getUser().getId()) && patch.getState().equals(OrderState.DELIVERED)) {
+            processSaleServiceImp.completeOrder(order,loggedUser);
         }
+        else
+            throw new IllegalAccessException("User cannot change order");
+
 
         //per fare una recensione, chi compra, deve fare l'update dell'ordine e settarlo su completato
-        if (order.getState().equals(OrderState.DELIVERED)){
-            order.setState(OrderState.COMPLETED);
-            order.setOrderUpdateDate(LocalDateTime.now(clock));
-        }
+        orderRepository.save(order);
         return mapToDTO(order);
 
         /*

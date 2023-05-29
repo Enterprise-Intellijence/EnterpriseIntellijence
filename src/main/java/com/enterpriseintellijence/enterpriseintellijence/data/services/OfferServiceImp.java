@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 
 import com.enterpriseintellijence.enterpriseintellijence.core.services.NotificationSystem;
+import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
@@ -11,6 +12,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRe
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OfferCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.MessageStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
@@ -39,25 +41,19 @@ public class OfferServiceImp implements OfferService {
     private final ProductRepository productRepository;
     private final Clock clock;
     private final NotificationSystem notificationSystem;
+    private final ProcessSaleServiceImp processSaleServiceImp;
 
 
     @Override
-    public OfferDTO createOffer(OfferDTO offerDTO) throws IllegalAccessException {
+    public OfferDTO createOffer(OfferCreateDTO offerCreateDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        Product product = productRepository.findById(offerDTO.getProduct().getId()).orElseThrow();
+        Product product = productRepository.findById(offerCreateDTO.getProduct().getId()).orElseThrow();
         User seller = product.getSeller();
 
-        if(!seller.getId().equals(offerDTO.getProduct().getSeller().getId()) || !loggedUser.getId().equals(offerDTO.getOfferer().getId()))
+        if(!product.getAvailability().equals(Availability.AVAILABLE) )
             throw new IllegalAccessException("Cannot create an offer");
 
-        Offer offer = new Offer();
-        offer.setAmount(modelMapper.map(offerDTO.getAmount(), CustomMoney.class));
-        offer.setCreationTime(LocalDateTime.now(clock));
-        offer.setState(OfferState.PENDING);
-        offer.setOfferer(loggedUser);
-        offer.setProduct(product);
-
-        offer.setMessage(notificationSystem.offerCreatedNotification(offer,product));
+        Offer offer = processSaleServiceImp.madeAnOffer(offerCreateDTO,product,loggedUser);
 
         Offer savedOffer = offerRepository.save(offer);
 
@@ -111,14 +107,7 @@ public class OfferServiceImp implements OfferService {
             }
         }
         else if(!isOffer){
-            if(isAccepted){
-                offer.setState(OfferState.ACCEPTED);
-                product.setAvailability(Availability.PENDING);
-                offer.setProduct(product);
-            }
-            else
-                offer.setState(OfferState.REJECTED);
-            offer.setMessage(notificationSystem.offerAcceptedOrRejectedNotification(offer,isAccepted));
+            processSaleServiceImp.acceptOrRejectAnOffer(offer,patch,product,loggedUser,isAccepted);
         }
 
         offerRepository.save(offer);

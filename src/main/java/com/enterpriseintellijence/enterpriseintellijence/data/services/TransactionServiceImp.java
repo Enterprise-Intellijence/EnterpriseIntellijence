@@ -7,6 +7,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRe
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.TransactionRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.TransactionCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -34,7 +35,7 @@ public class TransactionServiceImp implements TransactionService{
     private final JwtContextUtils jwtContextUtils;
     private final Clock clock;
 
-    public TransactionDTO createTransaction(TransactionDTO transactionDTO) throws IllegalAccessException {
+    public TransactionDTO createTransaction(TransactionCreateDTO transactionDTO) throws IllegalAccessException {
         // TODO: 28/05/2023 forse più opportuno ricevere come parametri id order e id paymentmethod
         Order order = orderRepository.findById(transactionDTO.getOrder().getId()).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();

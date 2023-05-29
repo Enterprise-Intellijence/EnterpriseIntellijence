@@ -1,4 +1,4 @@
-package com.enterpriseintellijence.enterpriseintellijence.dto;
+package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;

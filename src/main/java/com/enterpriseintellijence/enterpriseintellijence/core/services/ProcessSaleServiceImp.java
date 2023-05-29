@@ -5,10 +5,8 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.TransactionState;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OfferCreateDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,9 +25,9 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     private final NotificationSystem notificationSystem;
 
     @Override
-    public Offer madeAnOffer(OfferDTO offerDTO, Product product, User loggedUser) {
+    public Offer madeAnOffer(OfferCreateDTO offerCreateDTO, Product product, User loggedUser) {
         Offer offer = new Offer();
-        offer.setAmount(modelMapper.map(offerDTO.getAmount(), CustomMoney.class));
+        offer.setAmount(modelMapper.map(offerCreateDTO.getAmount(), CustomMoney.class));
         offer.setCreationTime(timeNow());
         offer.setState(OfferState.PENDING);
         loggedUser.getOffersMade().add(offer);
@@ -71,7 +69,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
             }
         }
 
-        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDateTime now = timeNow();
         order.setOrderDate(now);
         order.setOrderUpdateDate(now);
 
@@ -89,7 +87,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
 
     @Override
     public Order cancelOrder(Order order, User loggedUser) {
-        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDateTime now = timeNow();
         order.getProduct().setAvailability(Availability.AVAILABLE);
         order.getProduct().setLastUpdateDate(now);
         order.setState(OrderState.CANCELED);
@@ -108,7 +106,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     public Transaction payProduct(Order order, User loggedUser, PaymentMethod paymentMethod) {
         Transaction transaction = new Transaction();
 
-        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDateTime now = timeNow();
 
         Double productPrice = order.getProduct().getProductCost().getPrice();
         if(order.getOffer()!=null)
@@ -133,18 +131,44 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     }
 
     @Override
-    public Delivery sendProduct(Order order, User loggedUser, DeliveryDTO deliveryDTO) {
-        return null;
+    public Delivery sendProduct(Order order, User loggedUser, String shipper) {
+        Delivery delivery = new Delivery();
+        LocalDateTime now = timeNow();
+
+        delivery.setSendTime(now);
+        order.setState(OrderState.SHIPPED);
+        order.setOrderUpdateDate(now);
+        delivery.setOrder(order);
+        order.setDelivery(delivery);
+
+        delivery.setDeliveryStatus(DeliveryStatus.SHIPPED);
+        delivery.setDeliveryCost(order.getProduct().getDeliveryCost());
+
+        delivery.setShipper(shipper);
+        delivery.setSenderAddress(loggedUser.getAddress());
+        delivery.setReceiverAddress(order.getUser().getAddress());
+
+        return delivery;
     }
 
     @Override
     public Delivery productDelivered(Order order, User loggedUser, Delivery delivery) {
-        return null;
+        delivery.setDeliveryStatus(DeliveryStatus.DELIVERED);
+        order.setState(OrderState.DELIVERED);
+        order.setOrderUpdateDate(timeNow());
+        order.getProduct().setLastUpdateDate(timeNow());
+        delivery.setOrder(order);
+        delivery.setDeliveredTime(timeNow());
+
+        return delivery;
     }
 
     @Override
     public Order completeOrder(Order order, User loggedUser) {
-        return null;
+        order.setState(OrderState.COMPLETED);
+        order.setOrderUpdateDate(timeNow());
+        order.getProduct().setLastUpdateDate(timeNow());
+        return order;
     }
 
     private LocalDateTime timeNow(){

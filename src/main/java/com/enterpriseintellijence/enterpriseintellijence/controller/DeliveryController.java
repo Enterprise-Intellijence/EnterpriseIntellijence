@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.DeliveryService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -26,7 +27,7 @@ public class DeliveryController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<DeliveryDTO> createDelivery(@Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
+    public ResponseEntity<DeliveryDTO> createDelivery(@Valid @RequestBody DeliveryCreateDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.createDelivery(deliveryDTO));
     }
 

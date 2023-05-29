@@ -4,6 +4,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.OfferService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OfferCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -29,8 +30,8 @@ public class OfferController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OfferDTO createOffer(@Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
-        return offerService.createOffer(offerDTO);
+    public OfferDTO createOffer(@Valid @RequestBody OfferCreateDTO offerCreateDTO) throws IllegalAccessException {
+        return offerService.createOffer(offerCreateDTO);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")

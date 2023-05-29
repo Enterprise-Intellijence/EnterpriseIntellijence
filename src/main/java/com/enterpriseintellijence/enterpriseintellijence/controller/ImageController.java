@@ -41,25 +41,25 @@ public class ImageController {
         return ResponseEntity.ok(imageService.getUserProfilePhoto(id));
     }
 
-    @PostMapping("/product/image")
+    @PostMapping("/product")
     @ResponseStatus(HttpStatus.CREATED)
     public String saveImageProduct(@RequestBody MultipartFile multipartFile,@RequestParam("product_id")String product_id,@RequestParam("description") String description) throws IOException, IllegalAccessException {
         return imageService.saveImageProduct(multipartFile,product_id,description);
     }
 
-    @PutMapping("/product/image/{id}")
+    @PutMapping("/product/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void replaceImageProduct(@PathVariable("id")String id,@RequestBody MultipartFile multipartFile) throws IOException {
         imageService.replaceImageProduct(id,multipartFile);
     }
 
-    @DeleteMapping("/product/image/{id}")
+    @DeleteMapping("/product/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImageProduct(@PathVariable("id") String id) throws IllegalAccessException {
         imageService.deleteImageProduct(id);
     }
 
-    @GetMapping(value = "/product/image/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/product/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImageProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(imageService.getImageProduct(id));
     }
