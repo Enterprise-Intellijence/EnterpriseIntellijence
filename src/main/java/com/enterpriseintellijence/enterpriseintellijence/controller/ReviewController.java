@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ReviewService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ReviewCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -24,7 +25,7 @@ public class ReviewController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReviewDTO createReview(@Valid @RequestBody ReviewDTO reviewDTO) throws IllegalAccessException {
+    public ReviewDTO createReview(@Valid @RequestBody ReviewCreateDTO reviewDTO) throws IllegalAccessException {
         return reviewService.createReview(reviewDTO);
     }
 

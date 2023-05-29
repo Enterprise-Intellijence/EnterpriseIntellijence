@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.TransactionService;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.TransactionCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -25,7 +26,7 @@ public class TransactionController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionDTO createTransaction(@Valid @RequestBody TransactionDTO transactionDTO) throws IllegalAccessException {
+    public TransactionDTO createTransaction(@Valid @RequestBody TransactionCreateDTO transactionDTO) throws IllegalAccessException {
         return transactionService.createTransaction(transactionDTO);
     }
 

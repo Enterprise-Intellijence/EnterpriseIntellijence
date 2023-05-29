@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -39,10 +41,13 @@ public class ProductBasicDTO {
 
     @Length(max = 1000)
     private String description;
+    private LocalDateTime uploadDate;
 
-    // TODO: usare una classe apposita per il prezzo
     @NotNull
-    private CustomMoneyDTO customMoney;
+    private CustomMoneyDTO productCost;
+
+    @NotNull
+    private CustomMoneyDTO deliveryCost;
 
     @Length(max = 100)
     private String brand;

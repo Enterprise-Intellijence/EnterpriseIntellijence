@@ -1,12 +1,13 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCreateDTO;
 
 public interface DeliveryService {
 
-    public DeliveryDTO createDelivery(DeliveryDTO deliveryDTO);
+    public DeliveryDTO createDelivery(DeliveryCreateDTO deliveryDTO) throws IllegalAccessException;
     public DeliveryDTO replaceDelivery(String id, DeliveryDTO deliveryDTO) throws IllegalAccessException;
-    public DeliveryDTO updateDelivery(String id, DeliveryDTO deliveryDTO);
-    public void deleteDelivery(String id);
-    public DeliveryDTO getDeliveryById(String id);
+    public DeliveryDTO updateDelivery(String id, DeliveryDTO deliveryDTO) throws IllegalAccessException;
+    public void deleteDelivery(String id) throws IllegalAccessException;
+    public DeliveryDTO getDeliveryById(String id) throws IllegalAccessException;
 }

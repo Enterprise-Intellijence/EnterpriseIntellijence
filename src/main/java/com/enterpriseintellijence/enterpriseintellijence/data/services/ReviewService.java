@@ -1,9 +1,10 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ReviewCreateDTO;
 
 public interface ReviewService {
-    ReviewDTO createReview(ReviewDTO reviewDTO) throws IllegalAccessException;
+    ReviewDTO createReview(ReviewCreateDTO reviewDTO) throws IllegalAccessException;
 
     ReviewDTO replaceReview(String id, ReviewDTO reviewDTO) throws IllegalAccessException;
 

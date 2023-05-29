@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.DeliveryService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -26,7 +27,7 @@ public class DeliveryController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<DeliveryDTO> createDelivery(@Valid @RequestBody DeliveryDTO deliveryDTO) {
+    public ResponseEntity<DeliveryDTO> createDelivery(@Valid @RequestBody DeliveryCreateDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.createDelivery(deliveryDTO));
     }
 
@@ -36,19 +37,19 @@ public class DeliveryController {
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) {
+    public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.updateDelivery(id, deliveryDTO));
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteDelivery(@PathVariable("id") String id) {
+    public ResponseEntity<Void> deleteDelivery(@PathVariable("id") String id) throws IllegalAccessException {
         deliveryService.deleteDelivery(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<DeliveryDTO> getDelivery(@PathVariable("id") String id) {
+    public ResponseEntity<DeliveryDTO> getDelivery(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.getDeliveryById(id));
     }
 }

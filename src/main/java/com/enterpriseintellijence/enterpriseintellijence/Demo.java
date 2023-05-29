@@ -103,11 +103,11 @@ public class Demo {
             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage,"png",bos);
-            UserImage userImage = new UserImage();
-            userImage.setPhoto(bos.toByteArray());
-            userImage.setDescription("No description avalaible");
-            userImage.setUser(user);
-            user.setPhotoProfile(userImage);
+            //UserImage userImage = new UserImage();
+            ///userImage.setPhoto(bos.toByteArray());
+            //userImage.setDescription("No description avalaible");
+            //userImage.setUser(user);
+            //user.setPhotoProfile(userImage);
             user.setProvider(Provider.LOCAL);
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
@@ -146,6 +146,9 @@ public class Demo {
     private void createProduct(User user){
         productArrayList = new ArrayList<>();
 
+        List<ProductCategoryChild> type = List.of(ProductCategoryChild.class.getEnumConstants());
+        int sizeType = type.size();
+
         //for clothing enum
         List<ProductGender> genderList = List.of(ProductGender.class.getEnumConstants());
         int sizeGender = genderList.size();
@@ -157,17 +160,9 @@ public class Demo {
         int sizeClothTipe = clothingTypeList.size();
 
 
-        List<ClothingSize> clothsSizeList = List.of(ClothingSize.CLOTHS_3XS,ClothingSize.CLOTHS_2XS,ClothingSize.CLOTHS_XS,ClothingSize.CLOTHS_S,ClothingSize.CLOTHS_M,ClothingSize.CLOTHS_L,ClothingSize.CLOTHS_XL,ClothingSize.CLOTHS_2XL,ClothingSize.CLOTHS_3L,ClothingSize.CLOTHS_4XL);
+        List<ClothingSize> clothsSizeList = List.of(ClothingSize.class.getEnumConstants());
         int clothSize = clothsSizeList.size();
 
-        List<ClothingSize> shoesSizeList = List.of(ClothingSize.SHOES_25,ClothingSize.SHOES_26,ClothingSize.SHOES_27,ClothingSize.SHOES_28,ClothingSize.SHOES_29,ClothingSize.SHOES_30,ClothingSize.SHOES_31,
-                ClothingSize.SHOES_32,ClothingSize.SHOES_33,ClothingSize.SHOES_34,ClothingSize.SHOES_35,ClothingSize.SHOES_36,ClothingSize.SHOES_37,ClothingSize.SHOES_38,ClothingSize.SHOES_39,
-                ClothingSize.SHOES_40,ClothingSize.SHOES_41,ClothingSize.SHOES_42,ClothingSize.SHOES_43,ClothingSize.SHOES_44,ClothingSize.SHOES_45,ClothingSize.SHOES_46,ClothingSize.SHOES_47,
-                ClothingSize.SHOES_48,ClothingSize.SHOES_49,ClothingSize.SHOES_50);
-        int shoesSize = shoesSizeList.size();
-
-        List<ClothingSize> otherSizeList = List.of(ClothingSize.OTHER_SMALL,ClothingSize.OTHER_MEDIUM,ClothingSize.OTHER_BIG);
-        int otherSize =otherSizeList.size();
 
         //for entertainment enum
         List<EntertainmentType> entertainmentTypeList = List.of(EntertainmentType.class.getEnumConstants());
@@ -189,36 +184,59 @@ public class Demo {
                 Clothing clothing = new Clothing();
                 clothing.setProductGender(genderList.get(random.nextInt(sizeGender)));
                 clothing.setColour(colourList.get(random.nextInt(sizeColour)));
+                ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
+                while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.CLOTHING)) {
+                    productCategoryChild = type.get(random.nextInt(sizeType));
+                }
+                clothing.setProductCategoryChild(productCategoryChild);
+                clothing.setProductCategoryParent(productCategoryChild.productCategoryParent);
+                clothing.setProductCategory(clothing.getProductCategoryParent().productCategory);
                 clothing.setClothingType(clothingTypeList.get(random.nextInt(sizeClothTipe)));
-                ClothingSize clothingSize = null;
-                if(clothing.getClothingType().name().startsWith("CLOTHS"))
+
+                ClothingSize clothingSize = clothsSizeList.get(random.nextInt(clothSize));
+                while(clothingSize.productCategoryParent.equals(clothing.getProductCategoryParent())) {
                     clothingSize = clothsSizeList.get(random.nextInt(clothSize));
-                else if(clothing.getClothingType().name().startsWith("SHOES"))
-                    clothingSize = shoesSizeList.get(random.nextInt(shoesSize));
-                else
-                    clothingSize = otherSizeList.get(random.nextInt(otherSize));
+                }
+
                 clothing.setSize(clothingSize);
-                clothing.setProductCategory(ProductCategory.CLOTHING);
+                //clothing.setProductCategory(ProductCategory.CLOTHING);
                 productArrayList.add(clothing);
             }
             //setting entertainment
             else if(rand2==2){
                 Entertainment entertainment = new Entertainment();
+                ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
+                while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.ENTERTAINMENT)) {
+                    productCategoryChild = type.get(random.nextInt(sizeType));
+                }
+                entertainment.setProductCategoryChild(productCategoryChild);
+                entertainment.setProductCategoryParent(productCategoryChild.productCategoryParent);
+                entertainment.setProductCategory(entertainment.getProductCategoryParent().productCategory);
                 entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
-                entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
+                //entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
                 productArrayList.add(entertainment);
             }
             //setting home
             else if(rand2==3){
                 Home home = new Home();
                 home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
+                ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
+                while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.HOME)) {
+                    productCategoryChild = type.get(random.nextInt(sizeType));
+                }
+                home.setProductCategoryChild(productCategoryChild);
+                home.setProductCategoryParent(productCategoryChild.productCategoryParent);
+                home.setProductCategory(home.getProductCategoryParent().productCategory);
                 home.setColour(colourList.get(random.nextInt(sizeColour)));
-                home.setProductCategory(ProductCategory.HOME);
+                //home.setProductCategory(ProductCategory.HOME);
                 productArrayList.add(home);
             }
             else{
                 Product product=new Product();
                 product.setProductCategory(ProductCategory.OTHER);
+                product.setProductCategoryParent(ProductCategoryParent.OTHER);
+                product.setProductCategoryChild(ProductCategoryChild.OTHER);
+                //product.setProductCategory(ProductCategory.OTHER);
                 productArrayList.add(product);
             }
 
@@ -251,8 +269,11 @@ public class Demo {
             product.setBrand(brand.get(random.nextInt(size)));
 
             Double priceProduct = price+random.nextInt(1,1500);
-            product.setCustomMoney(new CustomMoney(priceProduct, Currency.EUR ));
+            product.setProductCost(new CustomMoney(priceProduct, Currency.EUR ));
+            product.setDeliveryCost(new CustomMoney(5.00,Currency.EUR));
+
             product.setLikesNumber(random.nextInt(150));
+
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             product.setAddress(user.getAddress());
             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));
@@ -260,28 +281,34 @@ public class Demo {
             LocalDateTime date = LocalDateTime.now();
             date = date.minusSeconds(ThreadLocalRandom.current().nextInt(1, 5184000));
             product.setUploadDate(date);
-            product.setVisibility(visibilities.get(random.nextInt(visibilities.size())));
+            product.setLastUpdateDate(date);
+            if(random.nextInt(100)>=90)
+                product.setVisibility(Visibility.PRIVATE);
+            else
+                product.setVisibility(Visibility.PUBLIC);
             product.setAvailability(Availability.AVAILABLE);
             product.setSeller(user);
             String tempID= productRepository.save(product).getId();
             product.setId(tempID);
-            setImageToProduct(product);
+            //setImageToProduct(product);
         }
     }
 
     private void setImageToProduct(Product product){
         Random random = new Random();
-        for (int i=0;i<5;i++){
+        int n = random.nextInt(1,6);
+        for (int i=1;i<=n;i++){
             ProductImage productImage = new ProductImage();
-            productImage.setPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())));
+            productImage.setDescription("Random description bla bla");
+            //productImage.setUrlPhoto(productImageArrayList.get(random.nextInt(productImageArrayList.size())).getClass().);
+            //productImage.setPhoto();
             productImage.setProduct(product);
-           /* if(i==0)
-                product.setDefaultImage(productImage);*/
             productImageRepository.save(productImage);
         }
     }
 
     private void initializeProductImageList() throws IOException {
+
         for(int i=1;i<6;i++){
             BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/product/"+i+".jpeg"));
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

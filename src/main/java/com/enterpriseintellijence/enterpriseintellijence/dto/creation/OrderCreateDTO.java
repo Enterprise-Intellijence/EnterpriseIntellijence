@@ -1,5 +1,6 @@
-package com.enterpriseintellijence.enterpriseintellijence.dto;
+package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 
@@ -16,9 +17,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 public class OrderCreateDTO {
-    private OrderState state;
     private ProductBasicDTO product;
-    private DeliveryDTO delivery;
     @NotNull
-    private OfferDTO offer;
+    private OfferBasicDTO offer;
 }

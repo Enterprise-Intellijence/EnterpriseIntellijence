@@ -19,9 +19,8 @@ public class UserImage {
     private String id;
     private String description;
 
+    private String urlPhoto;
 
-    private byte[] photo;
-
-    @OneToOne(mappedBy = "photoProfile",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "photoProfile",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private User user;
 }

@@ -1,6 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
+import com.enterpriseintellijence.enterpriseintellijence.data.specification.ProductSpecification;
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
@@ -11,16 +16,17 @@ import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
-import jakarta.persistence.EnumType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @RestController
@@ -37,9 +43,8 @@ public class ProductController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO){
-        productDTO.setLikesNumber(0);
-        productDTO.setViews(0);
+    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws IllegalAccessException {
+
         return productService.createProduct(productDTO);
     }
 
@@ -49,13 +54,13 @@ public class ProductController {
     }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) throws IllegalAccessException {
         return ResponseEntity.ok(productService.updateProduct(id, patch));
     }
 
     @DeleteMapping(path="/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") String id) throws IllegalAccessException {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
@@ -65,10 +70,55 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
 
-    @GetMapping("")
+/*    @GetMapping("")
     public ResponseEntity<Page<ProductBasicDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(productService.getAllPaged(page, size));
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }*/
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double minProductCost,
+            @RequestParam(required = false) Double maxProductCost,
+            @RequestParam(required = false) String[] brands,
+            @RequestParam(required = false) Condition condition,
+            @RequestParam(required = false) Integer views,
+            @RequestParam(required = false) ProductGender productGender,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) LocalDateTime uploadDate,
+            @RequestParam(required = false) Availability availability,
+            @RequestParam(required = false) ProductCategory productCategory,
+            @RequestParam(required = false) ProductCategoryParent productCategoryParent,
+            @RequestParam(required = false) ProductCategoryChild productCategoryChild,
+            @RequestParam(required = false) Integer likesNumber,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "DESC") String sortDirection
+    ) {
+        ProductSpecification.Filter filter = new ProductSpecification.Filter();
+        filter.setTitle(title);
+        filter.setDescription(description);
+        filter.setMinProductCost(minProductCost);
+        filter.setMaxProductCost(maxProductCost);
+        filter.setBrands(brands != null ? Arrays.asList(brands) : null);
+        filter.setCondition(condition);
+        filter.setViews(views);
+        filter.setUploadDate(uploadDate);
+        filter.setAvailability(availability);
+        filter.setProductCategory(productCategory);
+        filter.setProductCategoryParent(productCategoryParent);
+        filter.setProductCategoryChild(productCategoryChild);
+        filter.setLikesNumber(likesNumber);
+
+        //Specification<Product> specification = ProductSpecification.withFilters(filter);
+
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, size,sortBy,sortDirection));
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
@@ -83,55 +133,24 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @GetMapping("/category")
+/*    @GetMapping("/category")
     public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
 
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
             return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,category));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     @GetMapping("/category/clothing")
     public ResponseEntity<Page<ProductBasicDTO>> getClothingByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("clothingType")ClothingType clothingType){
-
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
         return ResponseEntity.ok(productService.getClothingByTypePaged(page,size,clothingType));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
     @GetMapping("/category/entertainment")
     public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentType entertainmentType){
-
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
         return ResponseEntity.ok(productService.getEntertainmentByTypePaged(page,size,entertainmentType));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     @GetMapping("/category/home")
     public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeType homeType){
-
-        /*
-        if (bucket.tryConsume(1)) {
-*/
-
         return ResponseEntity.ok(productService.getHomeByTypePaged(page,size,homeType));
-/*        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();*/
     }
 
     @GetMapping("/search")
@@ -152,49 +171,21 @@ public class ProductController {
     @GetMapping("/most-viewed")
     public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
         return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
-    }
-
-
-
-
-
-/*
-
-    //restituisce la lista di categorie
-    @GetMapping("/categories")
-    public ResponseEntity<Iterable<ProductCategory>> getCategoriesList(){
-        return ResponseEntity.ok(Arrays.asList(ProductCategory.class.getEnumConstants())) ;
-    }
-
-    //restituisce la sottolista della categoria home
-    @GetMapping("/categories/home")
-    public ResponseEntity<Iterable<HomeType>> getHomeType(){
-        return ResponseEntity.ok(Arrays.asList(HomeType.class.getEnumConstants())) ;
-    }
-
-    //restituisce la sottolista della categoria entertainment
-    @GetMapping("/categories/entertainment")
-    public ResponseEntity<Iterable<EntertainmentType>> getEntertainmentType(){
-        return ResponseEntity.ok(Arrays.asList(EntertainmentType.class.getEnumConstants())) ;
-    }
-
-    //restituisce la sottolista della categoria clothing
-    @GetMapping("/categories/clothing")
-    public ResponseEntity<Iterable<ClothingType>> getClothingType(){
-        return ResponseEntity.ok(Arrays.asList(ClothingType.class.getEnumConstants())) ;
-    }
-
-    //restituisce la lista di colori
-    @GetMapping("/colour")
-    public ResponseEntity<Iterable<Colour>> getColour(){
-        return ResponseEntity.ok(Arrays.asList(Colour.class.getEnumConstants())) ;
-    }
-
-    //restituisce la lista delle misure per la categoria clothing
-    @GetMapping("/categories/clothing/size")
-    public ResponseEntity<Iterable<ClothingSize>> getClothingSize(){
-        return ResponseEntity.ok(Arrays.asList(ClothingSize.class.getEnumConstants())) ;
     }*/
+
+    @GetMapping("/{id}/offers")
+    public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@RequestParam("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.getProductOffers(id,page,size));
+    }
+
+    @GetMapping("/{id}/messages")
+    public ResponseEntity<Page<MessageDTO>> getProductMessages(@RequestParam("id") String id, @RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.getProductMessages(id,page,size));
+    }
+    @GetMapping("/{id}/order")
+    public ResponseEntity<OrderBasicDTO> getProductOrder(@RequestParam("id") String id) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.getProductOrder(id));
+    }
 
     //restituisce la lista dei sessi per l'abbigliamento
     @GetMapping("/categories/clothing/gender")
@@ -216,4 +207,5 @@ public class ProductController {
     public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
         return ResponseEntity.ok(productService.getProductById(tokenStore.getIdByCapability(token), true));
     }
+
 }

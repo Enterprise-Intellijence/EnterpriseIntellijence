@@ -1,5 +1,9 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
@@ -10,40 +14,48 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.HomeType;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import jakarta.persistence.EnumType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface ProductService {
-    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO createProduct(ProductDTO productDTO) throws IllegalAccessException;
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
-    ProductDTO updateProduct(String id, ProductDTO productDTO);
-    void deleteProduct(String id);
+    ProductDTO updateProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
+    void deleteProduct(String id) throws IllegalAccessException;
 
     ProductDTO getProductById(String id, boolean capability);
 
-    Iterable<ProductBasicDTO> findAll();
+    //Iterable<ProductBasicDTO> findAll();
 
-    Page<ProductBasicDTO> getAllPaged(int page, int size);
+    //Page<ProductBasicDTO> getAllPaged(int page, int size);
 
-    Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory);
+    //Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory);
 
     String getCapabilityUrl(String id);
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
 
-    Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType);
+    //Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType);
 
-    Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentType entertainmentType);
+    //Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentType entertainmentType);
 
-    Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeType homeType);
+    //Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeType homeType);
 
 
-    Page<ProductBasicDTO> searchProduct(String keystring,int page, int size);
+    //Page<ProductBasicDTO> searchProduct(String keystring,int page, int size);
 
-    Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size);
+    //Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size);
 
-    Page<ProductBasicDTO> getMostLikedProducts(int page, int size);
+    //Page<ProductBasicDTO> getMostLikedProducts(int page, int size);
 
-    Page<ProductBasicDTO> getMostViewedProducts(int page, int size);
+    //Page<ProductBasicDTO> getMostViewedProducts(int page, int size);
 
     Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
 
+    Page<OfferBasicDTO> getProductOffers(String id, int page, int size) throws IllegalAccessException;
+
+    Page<MessageDTO> getProductMessages(String id, int page, int size) throws IllegalAccessException;
+
+    OrderBasicDTO getProductOrder(String id) throws IllegalAccessException;
+
+    Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
 }

@@ -12,11 +12,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-/**
- * @see ProductBasicDTO
- */
+
 @Data
 @NoArgsConstructor
 @Entity
@@ -37,7 +34,19 @@ public class Product {
 
     //@Column(name = "price", nullable = false)
     @Embedded
-    private CustomMoney customMoney;
+    @AttributeOverrides({
+            @AttributeOverride(name="price",column=@Column(name="product_price")),
+            @AttributeOverride(name="currency",column=@Column(name="product_currency"))
+    })
+    private CustomMoney productCost;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="price",column=@Column(name="delivery_price")),
+            @AttributeOverride(name="currency",column=@Column(name="delivery_currency"))
+    })
+    private CustomMoney deliveryCost;
+
 
     @Column(name = "brand")
     private String brand;
@@ -51,14 +60,18 @@ public class Product {
     @Embedded
     private Address address;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "delivery_type")
     private ProductSize productSize;
 
     @Column(name = "views", nullable = false)
     private Integer views;
 
-    @JoinColumn(name = "upload_date", nullable = false)
+    @Column(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
+
+    @Column(name = "last_update_date", nullable = false)
+    private LocalDateTime lastUpdateDate;
 
 
     @Enumerated(EnumType.STRING)
@@ -70,8 +83,17 @@ public class Product {
     private Availability availability;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="product_category",nullable = false)
+    @Column(name="main_category"/*,nullable = false*/)
     private ProductCategory productCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_category",nullable = false)
+    private ProductCategoryParent productCategoryParent;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="product_category_child",nullable = false)
+    private ProductCategoryChild productCategoryChild;
+
 
     @Column(name = "like_number", nullable = false)
     private Integer likesNumber;
@@ -96,7 +118,7 @@ public class Product {
     @JoinColumn(name = "default_image")
     private ProductImage defaultImage;*/
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
     @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY,cascade = CascadeType.ALL)

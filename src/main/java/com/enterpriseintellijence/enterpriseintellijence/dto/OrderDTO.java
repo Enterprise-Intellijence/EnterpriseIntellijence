@@ -29,6 +29,8 @@ public class OrderDTO {
 
     @Past
     private LocalDateTime orderDate;
+    private LocalDateTime orderUpdateDate;
+
 
     private ProductBasicDTO product;
     private UserBasicDTO user;

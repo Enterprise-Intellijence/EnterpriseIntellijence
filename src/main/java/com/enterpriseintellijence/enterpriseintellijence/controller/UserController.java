@@ -4,10 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,6 +83,13 @@ public class UserController {
         return userService.registerUser(username, email, password);
     }
 
+    @PostMapping("/activate")
+    @ResponseStatus(HttpStatus.OK)
+    public void activate(@RequestParam("unique_code") String unique_code){
+        // TODO: 28/05/2023
+
+    }
+
 
 /*    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
@@ -113,6 +118,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserBasicDTO> userById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findUserById(id));
+    }
+
+    @GetMapping("/find-by-username")
+    public ResponseEntity<UserBasicDTO> findByUsername(@RequestParam("username") String username){
+        // TODO: 28/05/2023
+        return null;
     }
 
 /*
@@ -219,6 +230,11 @@ public class UserController {
     @GetMapping("/me/outbox")
     public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));
+    }
+
+    @GetMapping("/me/offers")
+    public ResponseEntity<Page<OfferBasicDTO>> getMyOffers(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        return ResponseEntity.ok(userService.getMyOffers(page, size));
     }
 
 

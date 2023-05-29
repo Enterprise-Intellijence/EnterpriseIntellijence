@@ -42,7 +42,8 @@ public class MessageServiceImp implements MessageService{
         message.setId(null);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         // TODO: 23/05/2023 l'utente che invia lo prendo dal jwtcontext...dovrei confrontarlo con l'id del messaggioDTO.getSendUser?
-        User receivedUser = userRepository.findById(messageDTO.getReceivedUser().getId()).orElseThrow(EntityNotFoundException::new);
+
+        User receivedUser = userRepository.findById(messageDTO.getId()).orElseThrow(EntityNotFoundException::new) ;
 
         message.setSendUser(loggedUser);
         message.setReceivedUser(receivedUser);
@@ -54,9 +55,9 @@ public class MessageServiceImp implements MessageService{
             message.setProduct(product);
         }
         message.setMessageStatus(MessageStatus.UNREAD);
+        message.setOffer(null);
 
         message = messageRepository.save(message);
-        System.out.println("a chi?");
 
         return mapToDTO(message);
     }
@@ -64,48 +65,33 @@ public class MessageServiceImp implements MessageService{
     @Override
     public MessageDTO replaceMessage(String id, MessageDTO messageDTO) throws IllegalAccessException {
         // TODO: 23/05/2023 ha senso che ci sia?
-        throwOnIdMismatch(id, messageDTO);
 
-        Message oldMessage = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Message newMessage = mapToEntity(messageDTO);
-
-        Message message = mapToEntity(messageDTO);
-
-        UserDTO requestingUser = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
-
-        if(!requestingUser.getId().equals(oldMessage.getSendUser().getId())) {
-            throw new IllegalAccessException("User cannot change order");
-        }
-        if(!requestingUser.getId().equals(newMessage.getSendUser().getId())) {
-            throw new IllegalAccessException("User cannot change order");
-        }
-
-        message = messageRepository.save(message);
-
-        return mapToDTO(message);
+        return updateMessage(id,messageDTO);
     }
 
 
     @Override
-    public MessageDTO updateMessage(String id, MessageDTO patch) {
-        // TODO: 23/05/2023 ha senso che ci sia?
-        MessageDTO message = mapToDTO(messageRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+    public MessageDTO updateMessage(String id, MessageDTO patch) throws IllegalAccessException {
+        Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        throwOnIdMismatch(id,patch);
+        User loggedUser =jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getId().equals(message.getSendUser().getId()))
+            throw new IllegalAccessException("Cannot modify message of others");
+
+        if(message.getMessageStatus().equals(MessageStatus.READ))
+            throw new IllegalAccessException("Cannot modify message readed");
 
         if (patch.getContext() != null) {
             message.setContext(patch.getContext());
         }
 
-        if (patch.getSendUser() != null) {
-            message.setSendUser(patch.getSendUser());
-        }
-
         if (patch.getReceivedUser() != null) {
-            message.setReceivedUser(patch.getReceivedUser());
+            User receiver = userRepository.findById(patch.getId()).orElseThrow(EntityNotFoundException::new);
+            message.setReceivedUser(receiver);
         }
 
-        messageRepository.save(mapToEntity(message));
-        return message;
+        messageRepository.save(message);
+        return mapToDTO(message);
     }
 
     @Override
@@ -116,26 +102,19 @@ public class MessageServiceImp implements MessageService{
         if(!loggedUser.getRole().equals(UserRole.USER) && (loggedUser.getId().equals(message.getSendUser().getId()) || loggedUser.getId().equals(message.getReceivedUser().getId())))
             throw new IllegalAccessException("Cannot delete others message");
 
-        if(message.getMessageStatus().equals(MessageStatus.READ) && message.getOffer()!=null)
-            throw new IllegalAccessException("Cannot delete message with offers read");
+        if(message.getMessageStatus().equals(MessageStatus.READ) || message.getOffer()!=null)
+            throw new IllegalAccessException("Cannot delete this message ");
 
-        //if(message.ge)
-
-        messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         messageRepository.deleteById(id);
     }
 
     @Override
     public MessageDTO getMessage(String id) throws IllegalAccessException {
         Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        MessageDTO messageDTO = mapToDTO(message);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(!loggedUser.getRole().equals(UserRole.USER) && (loggedUser.getId().equals(message.getSendUser().getId()) || loggedUser.getId().equals(message.getReceivedUser().getId())))
+            throw new IllegalAccessException("Cannot read others message");
 
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
-
-        if(!userDTO.getId().equals(messageDTO.getSendUser().getId())) {
-            throw new IllegalAccessException("User cannot read other's messages");
-        }
         return mapToDTO(message);
     }
 

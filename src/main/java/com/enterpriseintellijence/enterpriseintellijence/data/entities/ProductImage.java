@@ -21,8 +21,8 @@ public class ProductImage {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
     private String description;
-
-    private byte[] photo;
+    private String urlPhoto;
+    //private byte[] photo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

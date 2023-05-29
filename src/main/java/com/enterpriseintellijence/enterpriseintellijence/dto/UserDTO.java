@@ -57,7 +57,7 @@ public class UserDTO {
 
     /*
     private List<PaymentMethodBasicDTO> paymentMethods FATTO;
-    //private List<OfferDTO> offers;
+    //private List<OfferDTO> offers; FATTO
     private List<UserDTO> followers FATTO;
     private List<UserDTO> follows FATTO;
     private List<ProductBasicDTO> likes; FATTO

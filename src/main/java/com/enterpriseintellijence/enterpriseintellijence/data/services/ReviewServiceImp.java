@@ -1,10 +1,16 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
+import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Review;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReviewRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ReviewCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
@@ -24,8 +30,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ReviewServiceImp implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final OrderService orderService;
+    private final OrderRepository orderRepository;
     private final JwtContextUtils jwtContextUtils;
+    private final ProcessSaleServiceImp processSaleServiceImp;
+
 
     private final ModelMapper modelMapper;
 
@@ -33,18 +41,28 @@ public class ReviewServiceImp implements ReviewService {
 
 
     @Override
-    public ReviewDTO createReview(ReviewDTO reviewDTO) throws IllegalAccessException {
-
-        if (!checkOwnership(reviewDTO)) {
+    public ReviewDTO createReview(ReviewCreateDTO reviewDTO) throws IllegalAccessException {
+        // TODO: 29/05/2023 rivedere con calma
+       /* if (!checkOwnership(reviewDTO)) {
             throw new IllegalAccessException("User cannot review himself");
-        }
-        Review review = mapToEntity(reviewDTO);
+        }*/
+        Order order = orderRepository.findById(reviewDTO.getOrderBasicDTO().getId()).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
+        if(order.getProduct().getSeller().getId().equals(loggedUser.getId()))
+            throw new IllegalAccessException("User cannot review himself");
 
-        review.setReviewer(modelMapper.map(userDTO, User.class));
+        if(!order.getState().equals(OrderState.COMPLETED))
+            throw new IllegalAccessException("Cannot review if order isn't completed");
+
+
+        Review review = modelMapper.map(reviewDTO,Review.class);
+
+
+        review.setReviewer(order.getProduct().getSeller());
         review.setDate(LocalDateTime.now());
+        review.setReviewer(loggedUser);
+        // TODO: 29/05/2023 controllare la relazione con gli user
 
         review = reviewRepository.save(review);
 
@@ -129,7 +147,7 @@ public class ReviewServiceImp implements ReviewService {
         return reviewDTOs;
     }
 
-    private boolean checkOwnership(ReviewDTO review){
+/*    private boolean checkOwnership(ReviewDTO review){
         AtomicBoolean result = new AtomicBoolean(false);
         UserDTO userDTO = userService.findUserFromContext()
                 .orElseThrow(EntityNotFoundException::new);
@@ -140,7 +158,7 @@ public class ReviewServiceImp implements ReviewService {
             }
         });
         return result.get();
-    }
+    }*/
 
     private Review mapToEntity(ReviewDTO reviewDTO) {
         return modelMapper.map(reviewDTO,Review.class);

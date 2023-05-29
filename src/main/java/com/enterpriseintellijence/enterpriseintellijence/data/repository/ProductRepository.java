@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product,String>, JpaSpe
 
     Page<Product> findAllByTitleContainingOrDescriptionContainingAndVisibility(String title, String description,Visibility visibility,Pageable pageable);
 
-    @Query("select p from Product p where p.customMoney.price between :start and :end and p.visibility=:visibility" )
+    @Query("select p from Product p where p.productCost.price between :start and :end and p.visibility=:visibility" )
     Page<Product> getByProductByPrice(@Param("start") Double startPrice,@Param("end") Double endPrice,@Param("visibility")Visibility visibility, Pageable pageable);
 
     Page<Product> findAllByVisibility(Visibility visibility, Pageable pageable);

@@ -1,13 +1,13 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Transaction;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.TransactionRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.TransactionCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
@@ -30,23 +30,29 @@ public class TransactionServiceImp implements TransactionService{
     private final TransactionRepository transactionRepository;
     private final OrderRepository orderRepository;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final ProcessSaleServiceImp processSaleServiceImp;
     private final ModelMapper modelMapper;
     private final JwtContextUtils jwtContextUtils;
     private final Clock clock;
 
-    public TransactionDTO createTransaction(TransactionDTO transactionDTO) throws IllegalAccessException {
-        Transaction transaction = mapToEntity(transactionDTO);
+    public TransactionDTO createTransaction(TransactionCreateDTO transactionDTO) throws IllegalAccessException {
+        // TODO: 28/05/2023 forse più opportuno ricevere come parametri id order e id paymentmethod
+        Order order = orderRepository.findById(transactionDTO.getOrder().getId()).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(transactionDTO.getPaymentMethod().getId()).orElseThrow(EntityNotFoundException::new);
 
-        if(loggedUser!=null && !transaction.getOrder().getUser().getId().equals(loggedUser.getId()))
+
+        if(!order.getUser().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot create transaction");
-        checkCardOwnership(loggedUser,transaction.getPaymentMethod());
 
-        Order order = orderRepository.getReferenceById(transaction.getOrder().getId());
-        order.setState(OrderState.PURCHASED);
-        order.getProduct().setAvailability(Availability.UNAVAILABLE);
-        transaction.setOrder(order);
-        transaction.setCreationTime(LocalDateTime.now(clock));
+        checkCardOwnership(loggedUser,paymentMethod);
+
+        Transaction transaction = processSaleServiceImp.payProduct(order,loggedUser,paymentMethod);
+
+        // TODO: 28/05/2023 check cosa salva
+
+
+
         transaction = transactionRepository.save(transaction);
         return mapToDTO(transaction);
     }

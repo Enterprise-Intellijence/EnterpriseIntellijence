@@ -1,11 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
@@ -22,19 +19,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-@JsonTypeInfo(
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "productCategory",
-        use = JsonTypeInfo.Id.NAME,
-        visible = true
-)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "productCategory", visible = true, defaultImpl = ProductDTO.class)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ProductDTO.class, name = "OTHER"),
         @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING"),
+        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT"),
         @JsonSubTypes.Type(value = HomeDTO.class, name = "HOME"),
-        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT")
-
+        @JsonSubTypes.Type(value = ProductDTO.class, name = "OTHER")
 })
+
 public class ProductDTO {
     private String id;
 
@@ -44,9 +36,11 @@ public class ProductDTO {
     @Length(max = 1000)
     private String description;
 
-    // TODO: usare una classe apposita per il prezzo
     @NotNull
-    private CustomMoneyDTO customMoney;
+    private CustomMoneyDTO productCost;
+
+    @NotNull
+    private CustomMoneyDTO deliveryCost;
 
     @Length(max = 100)
     private String brand;
@@ -61,15 +55,31 @@ public class ProductDTO {
     @PositiveOrZero
     private Integer views;
     private LocalDateTime uploadDate;
+    private LocalDateTime lastUpdateDate;
+
     private Visibility visibility;
     private Availability availability;
+
+    @NotNull
+    private ProductCategoryChild productCategoryChild;
+
+    private ProductCategoryParent productCategoryParent;
+
     @NotNull
     private ProductCategory productCategory;
 
     private List<UserBasicDTO> usersThatLiked;
-    private List<OfferBasicDTO> offers;
-    private List<MessageDTO> messages;
-    private OrderBasicDTO order;
-    //private ProductImageDTO defaultImage;
+
+
     private List<ProductImageDTO> productImages;
+
+    @JsonSetter("productCategoryChild")
+    public void setProductCategoryChild(ProductCategoryChild productCategoryChild) {
+        this.productCategoryChild = productCategoryChild;
+        this.productCategoryParent = productCategoryChild.getSubCategoryType();
+        ProductCategory temp = productCategoryChild.getSubCategoryType().getProductCategory();
+        if (!temp.equals(productCategory))
+            throw new IllegalArgumentException("Error of main category and sub category");
+        this.productCategory = temp;
+    }
 }
