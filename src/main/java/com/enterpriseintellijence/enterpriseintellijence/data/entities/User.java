@@ -54,6 +54,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified;
+
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_payment_method")
     private PaymentMethod defaultPaymentMethod;
@@ -146,7 +149,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return emailVerified;
     }
 
     @Override

@@ -12,9 +12,9 @@ import org.joda.money.Money;
 
 
 @Embeddable
-@Data
 @NoArgsConstructor
 public class CustomMoney {
+
     private Double price;
 
     @Enumerated(EnumType.STRING)
@@ -31,5 +31,27 @@ public class CustomMoney {
     public CustomMoney(Money money){
         this.price = Double.valueOf(String.valueOf(money.getAmount())) ;
         this.currency = Currency.valueOf(String.valueOf(money.getCurrencyUnit()));
+    }
+
+    public Money getMoney() {
+        return money;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+        this.money=Money.of(CurrencyUnit.of(currency.toString()),price);
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+        this.money=Money.of(CurrencyUnit.of(currency.toString()),price);
     }
 }

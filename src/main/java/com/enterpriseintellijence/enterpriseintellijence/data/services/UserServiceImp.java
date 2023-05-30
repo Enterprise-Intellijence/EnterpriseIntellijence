@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 import static java.util.Map.of;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.util.MimeTypeUtils.ALL;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Service
@@ -59,8 +58,7 @@ public class UserServiceImp implements UserService{
 
 
 
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = mapToEntity(userDTO);
+    public UserDTO createUser(User user) {
         user.setStatus(UserStatus.ACTIVE);
         user = userRepository.save(user);
         return mapToDto(user);
@@ -162,7 +160,7 @@ public class UserServiceImp implements UserService{
         var existUser = findByUsername(username);
 
         if (existUser.isEmpty()) {
-            UserDTO newUser = new UserDTO();
+            User newUser = new User();
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
             newUser.setEmail(email);
@@ -186,6 +184,19 @@ public class UserServiceImp implements UserService{
         createUser(username, passwordEncoder.encode(password), email);
         log.info("User created: " + username);
         return new ResponseEntity<>( "user created" , HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<String> sendVerificationEmail(String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null)
+            return new ResponseEntity<>( "user not found" , HttpStatus.NOT_FOUND);
+        if(user.isEmailVerified())
+            return new ResponseEntity<>( "user already verified" , HttpStatus.CONFLICT);
+        String token = tokenStore.createEmailToken(username);
+        //TODO: send email
+        // emailService.sendVerificationEmail(user.getEmail(), token);
+        return new ResponseEntity<>( "verification email sent" , HttpStatus.OK);
     }
 
     @Override
@@ -242,7 +253,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void createUser(String username, String password, String email) {
-        UserDTO user = new UserDTO();
+        User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
@@ -250,8 +261,19 @@ public class UserServiceImp implements UserService{
         user.setProvider(Provider.LOCAL);
         user.setFollowers_number(0);
         user.setFollowing_number(0);
-
+        user.setEmailVerified(false);
         createUser(user);
+    }
+
+    @Override
+    public ResponseEntity<String> activateUser(String token) throws ParseException, JOSEException {
+        String username = tokenStore.getUser(token);
+
+        User user = userRepository.findByUsername(username);
+        user.setEmailVerified(true);
+        userRepository.save(user);
+
+        return new ResponseEntity<>("user activated", HttpStatus.OK);
     }
 
     @Override
