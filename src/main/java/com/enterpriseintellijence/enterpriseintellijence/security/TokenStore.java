@@ -104,6 +104,29 @@ public class TokenStore {
         }
     }
 
+    public String createEmailToken(String username) {
+        flushInvalidTokens();
+        try {
+            JWTClaimsSet claims = new JWTClaimsSet.Builder()
+                    .claim("username", username)
+                    .expirationTime(Date.from(Instant.now().plus(Constants.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME, ChronoUnit.HOURS)))
+                    .notBeforeTime(Date.from(Instant.now()))
+                    .issueTime(Date.from(Instant.now()))
+                    .build();
+
+            Payload payload = new Payload(claims.toJSONObject());
+
+            JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256),
+                    payload);
+
+            jwsObject.sign(new MACSigner(Constants.TOKEN_SECRET_KEY));
+            return jwsObject.serialize();
+        }
+        catch (JOSEException e) {
+            throw new RuntimeException("Error to create JWT", e);
+        }
+    }
+
     public String createCapabilityToken(String capability) {
 
         try {
