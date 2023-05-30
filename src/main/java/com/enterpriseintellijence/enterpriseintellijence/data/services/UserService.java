@@ -2,19 +2,16 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,7 +43,7 @@ public interface UserService {
 
     void createUser(String username, String password, String email);
 
-    ResponseEntity<String> activateUser(String token) throws ParseException, JOSEException;
+    void activateUser(String token) throws ParseException, JOSEException;
 
     Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size);
 

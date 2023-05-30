@@ -80,14 +80,15 @@ public class UserController {
 
     @PostMapping(path= "/register" )
     public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
-        return userService.registerUser(username, email, password);
+        userService.registerUser(username, email, password);
+        userService.sendVerificationEmail(username);
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
-    public void activate(@RequestParam("unique_code") String unique_code){
-        // TODO: 28/05/2023
-
+    public void activate(@RequestParam("token") String unique_code) throws ParseException, JOSEException {
+        userService.activateUser(unique_code);
     }
 
 
