@@ -12,6 +12,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
+import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
@@ -55,6 +56,7 @@ public class UserServiceImp implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenStore tokenStore;
+    private final EmailService emailService;
 
 
 
@@ -194,8 +196,8 @@ public class UserServiceImp implements UserService{
         if(user.isEmailVerified())
             return new ResponseEntity<>( "user already verified" , HttpStatus.CONFLICT);
         String token = tokenStore.createEmailToken(username);
-        //TODO: send email
-        // emailService.sendVerificationEmail(user.getEmail(), token);
+        String url = "https://localhost:8443/api/v1/users/activate?token=" + token;
+        emailService.sendEmail(user.getEmail(), Constants.VERIFICATION_EMAIL_SUBJECT,Constants.VERIFICATION_EMAIL_TEXT + url);
         return new ResponseEntity<>( "verification email sent" , HttpStatus.OK);
     }
 
@@ -266,14 +268,14 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<String> activateUser(String token) throws ParseException, JOSEException {
+    public void activateUser(String token) throws ParseException, JOSEException {
         String username = tokenStore.getUser(token);
 
         User user = userRepository.findByUsername(username);
         user.setEmailVerified(true);
         userRepository.save(user);
 
-        return new ResponseEntity<>("user activated", HttpStatus.OK);
+        new ResponseEntity<>("user activated", HttpStatus.OK);
     }
 
     @Override
