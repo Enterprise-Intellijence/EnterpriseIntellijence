@@ -40,7 +40,6 @@ public class ProductController {
     private final ProductService productService;
     private final TokenStore tokenStore;
     private final UserRepository userRepository;
-    // TODO: 16/05/23 Erne
 
     private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
     private final Bucket bucket = Bucket.builder().addLimit(limit).build();
@@ -91,7 +90,6 @@ public class ProductController {
             @RequestParam(required = false) String[] brands,
             @RequestParam(required = false) Condition condition,
             @RequestParam(required = false) Integer views,
-            @RequestParam(required = false) ProductGender productGender,
             @RequestParam(required = false) String userId,
             @RequestParam(required = false) LocalDateTime uploadDate,
             @RequestParam(required = false) Availability availability,
@@ -99,8 +97,14 @@ public class ProductController {
             @RequestParam(required = false) ProductCategoryParent productCategoryParent,
             @RequestParam(required = false) ProductCategoryChild productCategoryChild,
             @RequestParam(required = false) Integer likesNumber,
+            @RequestParam(required = false) ProductGender productGender,
+            @RequestParam(required = false) ClothingSize size,
+            @RequestParam(required = false) Colour colour,
+            @RequestParam(required = false) EntertainmentLanguage entertainmentLanguage,
+            @RequestParam(required = false) HomeSize homeSize,
+            @RequestParam(required = false) HomeMaterial homeMaterial,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "10") int sizePage,
             @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection
     ) {
@@ -120,11 +124,16 @@ public class ProductController {
         filter.setProductCategoryParent(productCategoryParent);
         filter.setProductCategoryChild(productCategoryChild);
         filter.setLikesNumber(likesNumber);
+        filter.setSize(size);
+        filter.setColour(colour);
+        filter.setEntertainmentLanguage(entertainmentLanguage);
+        filter.setHomeSize(homeSize);
+        filter.setHomeMaterial(homeMaterial);
 
         //Specification<Product> specification = ProductSpecification.withFilters(filter);
 
         if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, size,sortBy,sortDirection));
+            return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }

@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class ProductSpecification {
         private Integer likesNumber;
         private User seller;
         private ProductGender productGender;
+        private ClothingSize size;
+        private Colour colour;
+        private EntertainmentLanguage entertainmentLanguage;
+        private HomeSize homeSize;
+        private HomeMaterial homeMaterial;
 
         public void setSeller(String userID) {
             Optional<User> user = userRepository.findById(userID);
@@ -107,6 +113,21 @@ public class ProductSpecification {
 
                 if (filter.getSeller() != null) {
                     predicates.add(criteriaBuilder.equal(root.get("seller"), filter.getSeller()));
+                }
+                if(filter.getSize()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("size"),filter.getSize()));
+                }
+                if(filter.getColour()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("colour"),filter.getColour()));
+                }
+                if(filter.getEntertainmentLanguage()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("entertainmentLanguage"),filter.getEntertainmentLanguage()));
+                }
+                if(filter.getHomeSize()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("homeSize"),filter.getHomeSize()));
+                }
+                if(filter.getHomeMaterial()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("homeMaterial"),filter.getHomeMaterial()));
                 }
 
                 predicates.add(criteriaBuilder.equal(root.get("visibility"), Visibility.PUBLIC));
