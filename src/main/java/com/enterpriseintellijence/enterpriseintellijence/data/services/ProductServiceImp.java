@@ -225,14 +225,14 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentType entertainmentType) {
+    public Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentLanguage entertainmentType) {
         Page<Product> products = entertainmentRepository.findAllByEntertainmentTypeAndVisibility(entertainmentType,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
     }
 
     @Override
-    public Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeType homeType) {
+    public Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeSize homeType) {
         Page<Product> products = homeRepository.findAllByHomeTypeAndVisibility(homeType,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);

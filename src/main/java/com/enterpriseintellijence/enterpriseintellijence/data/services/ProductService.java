@@ -8,11 +8,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingType;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.EntertainmentType;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.HomeType;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
-import jakarta.persistence.EnumType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -36,9 +31,9 @@ public interface ProductService {
 
     //Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType);
 
-    //Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentType entertainmentType);
+    //Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentLanguage entertainmentType);
 
-    //Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeType homeType);
+    //Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeSize homeType);
 
 
     //Page<ProductBasicDTO> searchProduct(String keystring,int page, int size);

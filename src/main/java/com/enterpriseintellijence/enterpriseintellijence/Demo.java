@@ -156,21 +156,20 @@ public class Demo {
         List<Colour> colourList = List.of(Colour.class.getEnumConstants());
         int sizeColour = colourList.size();
 
-        List<ClothingType> clothingTypeList = List.of(ClothingType.class.getEnumConstants());
-        int sizeClothTipe = clothingTypeList.size();
-
-
         List<ClothingSize> clothsSizeList = List.of(ClothingSize.class.getEnumConstants());
         int clothSize = clothsSizeList.size();
 
 
         //for entertainment enum
-        List<EntertainmentType> entertainmentTypeList = List.of(EntertainmentType.class.getEnumConstants());
-        int sizeEnterType = entertainmentTypeList.size();
+        List<EntertainmentLanguage> entertainmentLanguageList = List.of(EntertainmentLanguage.class.getEnumConstants());
+        int sizeLanguage = entertainmentLanguageList.size();
 
         //for home enum
-        List<HomeType> homeTypeList = List.of(HomeType.class.getEnumConstants());
-        int sizeHomeType = homeTypeList.size();
+        List<HomeSize> homeSizeList = List.of(HomeSize.class.getEnumConstants());
+        int sizeHomeSize = homeSizeList.size();
+
+        List<HomeMaterial> homeMaterials = List.of(HomeMaterial.class.getEnumConstants());
+        int sizeHomeMaterial = homeMaterials.size();
 
 
         Random random = new Random();
@@ -191,7 +190,6 @@ public class Demo {
                 clothing.setProductCategoryChild(productCategoryChild);
                 clothing.setProductCategoryParent(productCategoryChild.productCategoryParent);
                 clothing.setProductCategory(clothing.getProductCategoryParent().productCategory);
-                clothing.setClothingType(clothingTypeList.get(random.nextInt(sizeClothTipe)));
 
                 ClothingSize clothingSize = clothsSizeList.get(random.nextInt(clothSize));
                 while(clothingSize.productCategoryParent.equals(clothing.getProductCategoryParent())) {
@@ -212,14 +210,14 @@ public class Demo {
                 entertainment.setProductCategoryChild(productCategoryChild);
                 entertainment.setProductCategoryParent(productCategoryChild.productCategoryParent);
                 entertainment.setProductCategory(entertainment.getProductCategoryParent().productCategory);
-                entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
+                entertainment.setEntertainmentLanguage(entertainmentLanguageList.get(random.nextInt(sizeLanguage)));
                 //entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
                 productArrayList.add(entertainment);
             }
             //setting home
             else if(rand2==3){
                 Home home = new Home();
-                home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
+                home.setHomeSize(homeSizeList.get(random.nextInt(sizeHomeSize)));
                 ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
                 while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.HOME)) {
                     productCategoryChild = type.get(random.nextInt(sizeType));
@@ -228,6 +226,7 @@ public class Demo {
                 home.setProductCategoryParent(productCategoryChild.productCategoryParent);
                 home.setProductCategory(home.getProductCategoryParent().productCategory);
                 home.setColour(colourList.get(random.nextInt(sizeColour)));
+                home.setHomeMaterial(homeMaterials.get(random.nextInt(sizeHomeMaterial)));
                 //home.setProductCategory(ProductCategory.HOME);
                 productArrayList.add(home);
             }

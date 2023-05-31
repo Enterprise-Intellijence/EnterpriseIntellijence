@@ -2,22 +2,29 @@ package com.enterpriseintellijence.enterpriseintellijence.data.specification;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 public class ProductSpecification {
 
     @Data
     public static class Filter {
+        private final UserRepository userRepository;
+
         private String title;
         private String description;
         private Double minProductCost;
@@ -32,6 +39,18 @@ public class ProductSpecification {
         private ProductCategoryChild productCategoryChild;
         private Integer likesNumber;
         private User seller;
+        private ProductGender productGender;
+        private ClothingSize size;
+        private Colour colour;
+        private EntertainmentLanguage entertainmentLanguage;
+        private HomeSize homeSize;
+        private HomeMaterial homeMaterial;
+
+        public void setSeller(String userID) {
+            Optional<User> user = userRepository.findById(userID);
+            if(user.isPresent())
+                this.seller = user.get();
+        }
     }
 
     public static Specification<Product> withFilters(Filter filter) {
@@ -84,12 +103,31 @@ public class ProductSpecification {
                     predicates.add(criteriaBuilder.equal(root.get("productCategoryChild"), filter.getProductCategoryChild()));
                 }
 
+                if(filter.getProductGender()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("productGender"),filter.getProductGender()));
+                }
+
                 if (filter.getLikesNumber() != null) {
                     predicates.add(criteriaBuilder.equal(root.get("likesNumber"), filter.getLikesNumber()));
                 }
 
                 if (filter.getSeller() != null) {
                     predicates.add(criteriaBuilder.equal(root.get("seller"), filter.getSeller()));
+                }
+                if(filter.getSize()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("size"),filter.getSize()));
+                }
+                if(filter.getColour()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("colour"),filter.getColour()));
+                }
+                if(filter.getEntertainmentLanguage()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("entertainmentLanguage"),filter.getEntertainmentLanguage()));
+                }
+                if(filter.getHomeSize()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("homeSize"),filter.getHomeSize()));
+                }
+                if(filter.getHomeMaterial()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("homeMaterial"),filter.getHomeMaterial()));
                 }
 
                 predicates.add(criteriaBuilder.equal(root.get("visibility"), Visibility.PUBLIC));

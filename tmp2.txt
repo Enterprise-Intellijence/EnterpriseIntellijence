@@ -240,12 +240,12 @@ mode 000000,100644..100644
 ++        int otherSize =otherSizeList.size();
 ++
 +         //for entertainment enum
-+         List<EntertainmentType> entertainmentTypeList = List.of(EntertainmentType.class.getEnumConstants());
-+         int sizeEnterType = entertainmentTypeList.size();
++         List<EntertainmentType> entertainmentLanguageList = List.of(EntertainmentType.class.getEnumConstants());
++         int sizeEnterType = entertainmentLanguageList.size();
 + 
 +         //for home enum
-+         List<HomeType> homeTypeList = List.of(HomeType.class.getEnumConstants());
-+         int sizeHomeType = homeTypeList.size();
++         List<HomeType> homeSizeList = List.of(HomeType.class.getEnumConstants());
++         int sizeHomeType = homeSizeList.size();
 + 
 +         Random random = new Random();
 + 
@@ -287,14 +287,14 @@ mode 000000,100644..100644
 +             //setting entertainment
 +             else if(rand2==2){
 +                 Entertainment entertainment = new Entertainment();
-+                 entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
++                 entertainment.setEntertainmentType(entertainmentLanguageList.get(random.nextInt(sizeEnterType)));
 +                 entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
 +                 productArrayList.add(entertainment);
 +             }
 +             //setting home
 +             else if(rand2==3){
 +                 Home home = new Home();
-+                 home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
++                 home.setHomeType(homeSizeList.get(random.nextInt(sizeHomeType)));
 +                 home.setColour(colourList.get(random.nextInt(sizeColour)));
 +                 home.setProductCategory(ProductCategory.HOME);
 +                 productArrayList.add(home);
@@ -886,12 +886,12 @@ mode 000000,100644..100644
 ++        int sizeClothTipe = clothingTypeList.size();
 ++
 ++        //for entertainment enum
-++        List<EntertainmentType> entertainmentTypeList = List.of(EntertainmentType.class.getEnumConstants());
-++        int sizeEnterType = entertainmentTypeList.size();
+++        List<EntertainmentType> entertainmentLanguageList = List.of(EntertainmentType.class.getEnumConstants());
+++        int sizeEnterType = entertainmentLanguageList.size();
 ++
 ++        //for home enum
-++        List<HomeType> homeTypeList = List.of(HomeType.class.getEnumConstants());
-++        int sizeHomeType = homeTypeList.size();
+++        List<HomeType> homeSizeList = List.of(HomeType.class.getEnumConstants());
+++        int sizeHomeType = homeSizeList.size();
 ++
 ++        Random random = new Random();
 ++
@@ -926,14 +926,14 @@ mode 000000,100644..100644
 ++            //setting entertainment
 ++            else if(rand2==2){
 ++                Entertainment entertainment = new Entertainment();
-++                entertainment.setEntertainmentType(entertainmentTypeList.get(random.nextInt(sizeEnterType)));
+++                entertainment.setEntertainmentType(entertainmentLanguageList.get(random.nextInt(sizeEnterType)));
 ++                entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
 ++                productArrayList.add(entertainment);
 ++            }
 ++            //setting home
 ++            else if(rand2==3){
 ++                Home home = new Home();
-++                home.setHomeType(homeTypeList.get(random.nextInt(sizeHomeType)));
+++                home.setHomeType(homeSizeList.get(random.nextInt(sizeHomeType)));
 ++                home.setColour(colourList.get(random.nextInt(sizeColour)));
 ++                home.setProductCategory(ProductCategory.HOME);
 ++                productArrayList.add(home);

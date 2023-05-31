@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingSize;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingType;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Colour;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender;
 import jakarta.persistence.*;
@@ -27,11 +26,5 @@ public class Clothing extends Product{
     @Enumerated(EnumType.STRING)
     @Column(name="colour",nullable = false)
     private Colour colour;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="clothing_type",nullable = false)
-    private ClothingType clothingType;
-
-
 
 }

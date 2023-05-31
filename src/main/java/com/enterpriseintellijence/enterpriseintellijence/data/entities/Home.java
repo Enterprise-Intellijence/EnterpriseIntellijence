@@ -19,6 +19,10 @@ public class Home extends Product{
     private Colour colour;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="home_type",nullable = false)
-    private HomeType homeType;
+    @Column(name="home_size",nullable = false)
+    private HomeSize homeSize;
+    @Enumerated(EnumType.STRING)
+    @Column(name="home_material",nullable = false)
+    private HomeMaterial homeMaterial;
+
 }
