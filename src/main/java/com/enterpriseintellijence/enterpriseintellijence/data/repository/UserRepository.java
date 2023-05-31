@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User,String>, JpaSpecificationExecutor<User> {
     User findByUsername(String username);
 
-
+    User findByEmail(String email);
 
     Page<User> findAll(Pageable pageable);
 

@@ -46,11 +46,13 @@ public class TokenStore {
         return jwsObject.serialize();
     }
 
-    public boolean verifyToken(String token) throws JOSEException, ParseException {
+    public boolean verifyToken(String token, String claim) throws JOSEException, ParseException {
         try {
             jwtContextUtils.getUsernameFromContext().ifPresentOrElse(username -> {
                 try {
                     if(!username.equals(getUser(token)) || invalidTokensRepository.findByToken(token) != null)
+                        throw new RuntimeException("Invalid token");
+                    if(claim != null && !claim.equals(getClaim(token)))
                         throw new RuntimeException("Invalid token");
                 } catch (JOSEException | ParseException e) {
                     throw new RuntimeException(e);
@@ -61,6 +63,14 @@ public class TokenStore {
             return true;
         } catch (RuntimeException e) {
             return false;
+        }
+    }
+
+    public String getClaim(String token) {
+        try {
+            return SignedJWT.parse(token).getJWTClaimsSet().getClaim("claim").toString();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -104,11 +114,12 @@ public class TokenStore {
         }
     }
 
-    public String createEmailToken(String username) {
+    public String createEmailToken(String username, String claim) {
         flushInvalidTokens();
         try {
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .claim("username", username)
+                    .claim("claim", claim)
                     .expirationTime(Date.from(Instant.now().plus(Constants.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME, ChronoUnit.HOURS)))
                     .notBeforeTime(Date.from(Instant.now()))
                     .issueTime(Date.from(Instant.now()))
@@ -161,7 +172,7 @@ public class TokenStore {
     }
 
     public void logout(String accessToken) throws ParseException, JOSEException {
-        verifyToken(accessToken);
+        verifyToken(accessToken, null);
         InvalidToken invalidToken = new InvalidToken();
         invalidToken.setToken(accessToken);
         SignedJWT signedJWT = SignedJWT.parse(accessToken);

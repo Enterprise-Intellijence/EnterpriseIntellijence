@@ -75,4 +75,10 @@ public interface UserService {
     Page<MessageDTO> getMyOutBoxMessage(int page, int size);
 
     Page<OfferBasicDTO> getMyOffers(int page, int size);
+
+    void changePassword(String oldPassword, String newPassword);
+
+    void changePassword(String token) throws ParseException, JOSEException;
+
+    void resetPassword(String email);
 }
