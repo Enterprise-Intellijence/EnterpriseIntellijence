@@ -46,6 +46,9 @@ public class UserDTO {
 
     private PaymentMethodBasicDTO defaultPaymentMethod;
 
+    private int reviews_total_sum;
+    private int reviews_number;
+
     private Integer followers_number;
     private Integer following_number;
 

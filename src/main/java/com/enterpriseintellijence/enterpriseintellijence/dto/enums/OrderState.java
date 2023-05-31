@@ -8,5 +8,6 @@ public enum OrderState {
     SHIPPED, // for the whole shipment duration
     DELIVERED, // once the shipment is done
     COMPLETED, // once the product is received
+    REVIEWED, // once the review is done
 
 }
