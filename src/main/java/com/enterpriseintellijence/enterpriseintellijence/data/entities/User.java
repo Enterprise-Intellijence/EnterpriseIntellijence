@@ -42,6 +42,9 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false, length = 100)
     private String email;
 
+    @Column(name = "bio", length = 500)
+    private String bio;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "photo_profile")
     private UserImage photoProfile;

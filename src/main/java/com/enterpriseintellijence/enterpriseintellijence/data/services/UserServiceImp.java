@@ -22,6 +22,7 @@ import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -102,13 +103,9 @@ public class UserServiceImp implements UserService{
         if(!id.equals(loggedUser.getId()) && (!loggedUser.getRole().equals(UserRole.ADMIN)) )
             throw new IllegalAccessException("User cannot change another user");
 
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
         // TODO: 21/05/2023 testare se controlla da solo se username/email sono disponibili e se restituisce errore
-        if(userDTO.getUsername()!=null && !oldUser.getUsername().equals(userDTO.getUsername()))
+        if(!oldUser.getUsername().equals(userDTO.getUsername()))
             oldUser.setUsername(userDTO.getUsername());
-        if(userDTO.getPassword()!=null && !oldUser.getPassword().equals(userDTO.getPassword()))
-            oldUser.setPassword(userDTO.getPassword());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
             oldUser.setEmail(userDTO.getEmail());
         if(userDTO.getPhotoProfile()!=null ){
@@ -195,7 +192,7 @@ public class UserServiceImp implements UserService{
             return new ResponseEntity<>( "user not found" , HttpStatus.NOT_FOUND);
         if(user.isEmailVerified())
             return new ResponseEntity<>( "user already verified" , HttpStatus.CONFLICT);
-        String token = tokenStore.createEmailToken(username);
+        String token = tokenStore.createEmailToken(username, Constants.EMAIL_VERIFICATION_CLAIM);
         String url = "https://localhost:8443/api/v1/users/activate?token=" + token;
         emailService.sendEmail(user.getEmail(), Constants.VERIFICATION_EMAIL_SUBJECT,Constants.VERIFICATION_EMAIL_TEXT + url);
         return new ResponseEntity<>( "verification email sent" , HttpStatus.OK);
@@ -238,14 +235,46 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    public void changePassword(String oldPassword, String newPassword) {
+        User user = jwtContextUtils.getUserLoggedFromContext();
+        if(!passwordEncoder.matches(oldPassword, user.getPassword()))
+            throw new RuntimeException("Wrong old password");
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(String token) throws ParseException, JOSEException {
+        tokenStore.verifyToken(token, Constants.RESET_PASSWORD_CLAIM);
+        String username = tokenStore.getUser(token);
+        User user = userRepository.findByUsername(username);
+        if(user == null)
+            throw new RuntimeException("User not found");
+        String newPassword = RandomStringUtils.randomAlphanumeric(12);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        emailService.sendEmail(user.getEmail(), Constants.NEW_PASSWORD_EMAIL_SUBJECT,Constants.NEW_PASSWORD_EMAIL_TEXT + newPassword);
+    }
+
+    @Override
+    public void resetPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user == null)
+            throw new RuntimeException("User not found");
+        String token = tokenStore.createEmailToken(user.getUsername(), Constants.RESET_PASSWORD_CLAIM);
+        String url = "https://localhost:8443/api/v1/users/getNewPassword?token=" + token;
+        emailService.sendEmail(user.getEmail(), Constants.RESET_PASSWORD_EMAIL_SUBJECT,Constants.RESET_PASSWORD_EMAIL_TEXT + url);
+    }
+
+
+
+    @Override
     public Optional<UserDTO> findUserFromContext() {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
         if (username.isEmpty())
             return Optional.empty();
 
-        Optional<UserDTO> user = findByUsername(username.get());
-        user.orElseThrow().setPassword(null);
-        return user;
+        return findByUsername(username.get());
     }
 
     public void throwOnIdMismatch(String id, UserDTO userDTO){
@@ -271,6 +300,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void activateUser(String token) throws ParseException, JOSEException {
+        tokenStore.verifyToken(token, Constants.EMAIL_VERIFICATION_CLAIM);
         String username = tokenStore.getUser(token);
 
         User user = userRepository.findByUsername(username);

@@ -168,6 +168,24 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/changePassword")
+    public ResponseEntity<Void> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) throws EntityNotFoundException {
+        userService.changePassword(oldPassword, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/resetPassword")
+    public ResponseEntity<Void> resetPassword(@RequestParam("email") String email) throws EntityNotFoundException {
+        userService.resetPassword(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getNewPassword")
+    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException {
+        userService.changePassword(token);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/followers/{id}")
     public ResponseEntity<Page<UserBasicDTO>> getFollowers(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         if (userService.findUserById(id) == null)
