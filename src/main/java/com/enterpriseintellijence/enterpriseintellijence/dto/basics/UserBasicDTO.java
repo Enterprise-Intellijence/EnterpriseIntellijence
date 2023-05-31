@@ -21,6 +21,8 @@ public class UserBasicDTO {
     private String username;
 
     private UserImageDTO photoProfile;
+    private int reviews_total_sum;
+    private int reviews_number;
 
     private int followers_number;
     private int following_number;

@@ -54,6 +54,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified;
+
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_payment_method")
     private PaymentMethod defaultPaymentMethod;
@@ -75,13 +78,17 @@ public class User implements UserDetails {
     @JoinTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
     private List<User> following;
 
-
-
     @Column(name = "followers_number", nullable = false)
     private int followers_number;
 
     @Column(name = "following_number", nullable = false)
     private int following_number;
+
+    @Column(name = "reviews_total_sum", nullable = false)
+    private int reviews_total_sum;
+
+    @Column(name = "reviews_number", nullable = false)
+    private int reviews_number;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -129,6 +136,21 @@ public class User implements UserDetails {
         return null;
     }
 
+    public void addReview(int vote) {
+        reviews_number++;
+        reviews_total_sum += vote;
+    }
+
+    public void removeReview(int vote) {
+        reviews_number--;
+        reviews_total_sum -= vote;
+    }
+
+    public void editReview(int oldVote, int newVote) {
+        reviews_total_sum -= oldVote;
+        reviews_total_sum += newVote;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -146,7 +168,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return emailVerified;
     }
 
     @Override
