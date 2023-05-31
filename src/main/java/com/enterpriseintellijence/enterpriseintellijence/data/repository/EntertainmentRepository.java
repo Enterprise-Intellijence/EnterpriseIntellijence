@@ -13,7 +13,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EntertainmentRepository extends JpaRepository<Entertainment,String>, JpaSpecificationExecutor<Clothing> {
-    Page<Product> findAllByEntertainmentTypeAndVisibility(EntertainmentLanguage entertainmentLanguage, Visibility visibility, Pageable pageable);
-
 }
 

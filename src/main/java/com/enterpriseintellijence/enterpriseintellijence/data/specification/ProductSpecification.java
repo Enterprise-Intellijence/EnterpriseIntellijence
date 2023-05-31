@@ -2,22 +2,28 @@ package com.enterpriseintellijence.enterpriseintellijence.data.specification;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 public class ProductSpecification {
 
     @Data
     public static class Filter {
+        private final UserRepository userRepository;
+
         private String title;
         private String description;
         private Double minProductCost;
@@ -32,6 +38,13 @@ public class ProductSpecification {
         private ProductCategoryChild productCategoryChild;
         private Integer likesNumber;
         private User seller;
+        private ProductGender productGender;
+
+        public void setSeller(String userID) {
+            Optional<User> user = userRepository.findById(userID);
+            if(user.isPresent())
+                this.seller = user.get();
+        }
     }
 
     public static Specification<Product> withFilters(Filter filter) {
@@ -82,6 +95,10 @@ public class ProductSpecification {
 
                 if (filter.getProductCategoryChild() != null) {
                     predicates.add(criteriaBuilder.equal(root.get("productCategoryChild"), filter.getProductCategoryChild()));
+                }
+
+                if(filter.getProductGender()!=null){
+                    predicates.add(criteriaBuilder.equal(root.get("productGender"),filter.getProductGender()));
                 }
 
                 if (filter.getLikesNumber() != null) {

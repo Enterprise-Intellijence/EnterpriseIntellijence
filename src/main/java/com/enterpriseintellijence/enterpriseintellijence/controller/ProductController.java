@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.data.specification.ProductSpecification;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
@@ -18,6 +20,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -36,6 +39,7 @@ import java.util.Arrays;
 public class ProductController {
     private final ProductService productService;
     private final TokenStore tokenStore;
+    private final UserRepository userRepository;
     // TODO: 16/05/23 Erne
 
     private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
@@ -100,7 +104,7 @@ public class ProductController {
             @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection
     ) {
-        ProductSpecification.Filter filter = new ProductSpecification.Filter();
+        ProductSpecification.Filter filter = new ProductSpecification.Filter(userRepository );
         filter.setTitle(title);
         filter.setDescription(description);
         filter.setMinProductCost(minProductCost);
@@ -108,6 +112,8 @@ public class ProductController {
         filter.setBrands(brands != null ? Arrays.asList(brands) : null);
         filter.setCondition(condition);
         filter.setViews(views);
+        filter.setProductGender(productGender);
+        filter.setSeller(userId);
         filter.setUploadDate(uploadDate);
         filter.setAvailability(availability);
         filter.setProductCategory(productCategory);

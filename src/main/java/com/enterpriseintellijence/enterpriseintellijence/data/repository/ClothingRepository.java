@@ -11,5 +11,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClothingRepository extends JpaRepository<Clothing,String>, JpaSpecificationExecutor<Clothing> {
-    Page<Product> findAllByClothingTypeAndVisibility(ClothingType clothingType, Visibility visibility, Pageable pageable);
 }

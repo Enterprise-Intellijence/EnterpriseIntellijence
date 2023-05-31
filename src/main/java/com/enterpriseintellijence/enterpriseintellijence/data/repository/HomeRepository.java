@@ -13,5 +13,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HomeRepository  extends JpaRepository<Home,String>, JpaSpecificationExecutor<Clothing> {
-    Page<Product> findAllByHomeTypeAndVisibility(HomeSize homeSize, Visibility visibility, Pageable pageable);
 }
