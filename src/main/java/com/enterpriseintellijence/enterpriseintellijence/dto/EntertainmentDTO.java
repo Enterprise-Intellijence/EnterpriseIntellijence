@@ -1,6 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.EntertainmentType;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.EntertainmentLanguage;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,5 +13,5 @@ import lombok.ToString;
 @ToString
 public class EntertainmentDTO extends ProductDTO {
     @NotNull
-    private EntertainmentType entertainmentType;
+    private EntertainmentLanguage entertainmentLanguage;
 }

@@ -144,12 +144,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.getClothingByTypePaged(page,size,clothingType));
     }
     @GetMapping("/category/entertainment")
-    public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentType entertainmentType){
+    public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentLanguage entertainmentType){
         return ResponseEntity.ok(productService.getEntertainmentByTypePaged(page,size,entertainmentType));
     }
 
     @GetMapping("/category/home")
-    public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeType homeType){
+    public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeSize homeType){
         return ResponseEntity.ok(productService.getHomeByTypePaged(page,size,homeType));
     }
 
