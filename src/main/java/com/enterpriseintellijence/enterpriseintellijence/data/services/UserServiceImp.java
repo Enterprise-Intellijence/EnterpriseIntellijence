@@ -263,6 +263,8 @@ public class UserServiceImp implements UserService{
         user.setProvider(Provider.LOCAL);
         user.setFollowers_number(0);
         user.setFollowing_number(0);
+        user.setReviews_total_sum(0);
+        user.setReviews_number(0);
         user.setEmailVerified(false);
         createUser(user);
     }
