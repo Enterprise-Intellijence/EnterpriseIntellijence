@@ -10,6 +10,8 @@ public class PaymentMethodConverter extends AbstractConverter<PaymentMethod, Pay
 
     @Override
     protected PaymentMethodBasicDTO convert(PaymentMethod paymentMethod) {
+        if(paymentMethod == null)
+            return null;
         return PaymentMethodBasicDTO.builder()
                 .id(paymentMethod.getId())
                 .creditCard("**** **** **** "+paymentMethod.getCreditCard().substring(15,19))

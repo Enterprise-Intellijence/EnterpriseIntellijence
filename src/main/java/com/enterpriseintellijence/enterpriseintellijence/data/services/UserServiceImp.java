@@ -18,6 +18,7 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -186,7 +187,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<String> sendVerificationEmail(String username) {
+    public ResponseEntity<String> sendVerificationEmail(String username) throws MessagingException {
         User user = userRepository.findByUsername(username);
         if(user == null)
             return new ResponseEntity<>( "user not found" , HttpStatus.NOT_FOUND);
@@ -244,7 +245,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void changePassword(String token) throws ParseException, JOSEException {
+    public void changePassword(String token) throws ParseException, JOSEException, MessagingException {
         tokenStore.verifyToken(token, Constants.RESET_PASSWORD_CLAIM);
         String username = tokenStore.getUser(token);
         User user = userRepository.findByUsername(username);
@@ -257,7 +258,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void resetPassword(String email) {
+    public void resetPassword(String email) throws MessagingException {
         User user = userRepository.findByEmail(email);
         if(user == null)
             throw new RuntimeException("User not found");
