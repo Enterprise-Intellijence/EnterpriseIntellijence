@@ -1,12 +1,16 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.MessageService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ConversationDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.MessageCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +32,8 @@ public class MessageController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageDTO createMessage(@Valid @RequestBody MessageDTO messageDTO) {
-        return messageService.createMessage(messageDTO);
+    public MessageDTO createMessage(@Valid @RequestBody MessageCreateDTO messageCreateDTO) {
+        return messageService.createMessage(messageCreateDTO);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
@@ -57,6 +61,24 @@ public class MessageController {
     @PostMapping(path="/read")
     @ResponseStatus(HttpStatus.OK)
     public void setReadMessages(@RequestBody List<String> idList){
-        // TODO: 29/05/2023
+        messageService.setReadMessages(idList);
+    }
+
+    @GetMapping("/conversations/{user}")
+    public ResponseEntity<Page<MessageDTO>> getConversation(
+            @PathVariable("user") String user,
+            @RequestParam(name="prodId",required = false) String prodId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int sizePage){
+
+        return ResponseEntity.ok(messageService.getConversation(user,prodId,page,sizePage));
+
+    }
+
+    @GetMapping("/conversations")
+    public ResponseEntity<Iterable<ConversationDTO>> getAllMyConversations(){
+
+        return ResponseEntity.ok(messageService.getAllMyConversations());
+
     }
 }

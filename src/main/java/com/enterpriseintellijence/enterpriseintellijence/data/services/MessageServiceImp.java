@@ -6,8 +6,11 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ConversationDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.MessageCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.MessageStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -16,10 +19,18 @@ import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtil
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,26 +48,23 @@ public class MessageServiceImp implements MessageService{
     private final ModelMapper modelMapper;
 
     @Override
-    public MessageDTO createMessage(MessageDTO messageDTO) {
-        Message message = mapToEntity(messageDTO);
-        message.setId(null);
+    public MessageDTO createMessage(MessageCreateDTO messageCreateDTO) {
+        Message message = new Message();
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        // TODO: 23/05/2023 l'utente che invia lo prendo dal jwtcontext...dovrei confrontarlo con l'id del messaggioDTO.getSendUser?
+        User receivedUser = userRepository.findById(messageCreateDTO.getReceivedUser().getId()).orElseThrow(EntityNotFoundException::new) ;
 
-        User receivedUser = userRepository.findById(messageDTO.getId()).orElseThrow(EntityNotFoundException::new) ;
+        message.setText(messageCreateDTO.getText());
+        message.setMessageDate(LocalDateTime.now(clock));
+        message.setMessageStatus(MessageStatus.UNREAD);
+        message.setOffer(null);
+        Product product;
+        if(messageCreateDTO.getProduct()!=null) {
+            product = productRepository.findById(messageCreateDTO.getProduct().getId()).orElseThrow(EntityNotFoundException::new);
+            message.setProduct(product);
+        }
 
         message.setSendUser(loggedUser);
         message.setReceivedUser(receivedUser);
-        message.setMessageDate(LocalDateTime.now(clock));
-
-        Product product;
-        if(messageDTO.getProduct()!=null) {
-            product = productRepository.findById(messageDTO.getProduct().getId()).orElseThrow(EntityNotFoundException::new);
-            message.setProduct(product);
-        }
-        message.setMessageStatus(MessageStatus.UNREAD);
-        message.setOffer(null);
-
         message = messageRepository.save(message);
 
         return mapToDTO(message);
@@ -81,8 +89,8 @@ public class MessageServiceImp implements MessageService{
         if(message.getMessageStatus().equals(MessageStatus.READ))
             throw new IllegalAccessException("Cannot modify message readed");
 
-        if (patch.getContext() != null) {
-            message.setContext(patch.getContext());
+        if (patch.getText() != null) {
+            message.setText(patch.getText());
         }
 
         if (patch.getReceivedUser() != null) {
@@ -116,6 +124,95 @@ public class MessageServiceImp implements MessageService{
             throw new IllegalAccessException("Cannot read others message");
 
         return mapToDTO(message);
+    }
+
+    @Override
+    public Page<MessageDTO> getConversation(String user, String prod, int page, int sizePage) {
+        try {
+            // TODO: 01/06/2023 capire come gestire la validazione dell'id prodotto
+            User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+            Page<Message> messages;
+            Pageable pageable = PageRequest.of(page,sizePage);
+            System.out.println(prod);
+            if(prod!=null) {
+                System.out.println("entro qui");
+                messages = messageRepository.findConversationWithProduct(loggedUser.getId(), user, prod, pageable);
+            }
+            else
+                messages = messageRepository.findConversation(loggedUser.getId(), user, pageable);
+            List<MessageDTO> collect=messages.stream().map(s->modelMapper.map(s,MessageDTO.class)).collect(Collectors.toList());
+
+            return new PageImpl<>(collect);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Override
+    public Iterable<ConversationDTO> getAllMyConversations() {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        Map<String,ConversationDTO> myConversationsMap = new HashMap<>();
+        String loggedUserID= loggedUser.getId();
+
+        for(Message message: loggedUser.getSentMessages()){
+            String tempKey;
+            if(message.getProduct()!=null){
+                tempKey=message.getProduct().getId()+loggedUserID+message.getReceivedUser().getId();
+            }else
+                tempKey=loggedUserID+message.getReceivedUser().getId();
+            checkAndSetConversation(myConversationsMap,tempKey,message,true);
+        }
+
+        for(Message message: loggedUser.getReceivedMessages()){
+            String tempKey;
+            if(message.getProduct()!=null){
+                tempKey=message.getProduct().getId()+loggedUserID+message.getSendUser().getId();
+            }else
+                tempKey=loggedUserID+message.getSendUser().getId();
+            checkAndSetConversation(myConversationsMap,tempKey,message,false);
+        }
+
+
+        return new ArrayList<ConversationDTO>(myConversationsMap.values());
+    }
+
+    @Override
+    public void setReadMessages(List<String> idList) {
+        for (String id: idList){
+            Optional<Message> message= messageRepository.findById(id);
+            if(message.isPresent() && message!=null){
+                message.get().setMessageStatus(MessageStatus.READ);
+                messageRepository.save(message.get());
+            }
+
+        }
+    }
+
+    private void checkAndSetConversation(Map<String,ConversationDTO> myConversationsMap,String key,Message message,boolean sent){
+        if(!myConversationsMap.containsKey(key)){
+            ConversationDTO conversationDTO = new ConversationDTO();
+            if(sent)
+                conversationDTO.setOtherUser(modelMapper.map(message.getReceivedUser(), UserBasicDTO.class) );
+            else
+                conversationDTO.setOtherUser(modelMapper.map(message.getSendUser(), UserBasicDTO.class) );
+
+            if(message.getProduct()!=null)
+                conversationDTO.setProductBasicDTO(modelMapper.map(message.getProduct(), ProductBasicDTO.class) );
+            conversationDTO.setLastMessage(modelMapper.map(message,MessageDTO.class));
+            int n=0;
+            if(message.getMessageStatus().equals(MessageStatus.UNREAD))
+                n++;
+            conversationDTO.setUnreadMessagesCount(n);
+            myConversationsMap.put(key,conversationDTO);
+        }
+        else{
+            if(myConversationsMap.get(key).getLastMessage().getMessageDate().isAfter(message.getMessageDate()))
+                myConversationsMap.get(key).setLastMessage(modelMapper.map(message,MessageDTO.class));
+            if(message.getMessageStatus().equals(MessageStatus.UNREAD))
+                myConversationsMap.get(key).setUnreadMessagesCount(myConversationsMap.get(key).getUnreadMessagesCount()+1);
+        }
     }
 
     private Message mapToEntity(MessageDTO messageDTO) {

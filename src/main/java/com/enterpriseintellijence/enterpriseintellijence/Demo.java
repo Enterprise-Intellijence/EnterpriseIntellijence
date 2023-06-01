@@ -3,13 +3,12 @@ package com.enterpriseintellijence.enterpriseintellijence;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Demo {
     private ArrayList<User> userArrays = new ArrayList<>();
     private ArrayList<Product> productArrayList ;
-    private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" +
-            "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n" +
-            "Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC\n" +
-            "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. \n";
+    private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" ;
     private ArrayList<String> brand =new ArrayList<>();
     private ArrayList<byte[]> productImageArrayList = new ArrayList<>();
 
@@ -42,6 +38,7 @@ public class Demo {
     private final PaymentMethodRepository paymentMethodRepository;
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
+    private final MessageRepository messageRepository;
 
 
 
@@ -49,12 +46,55 @@ public class Demo {
         initializeProductImageList();
         initializeBrandList();
         createUser();
-        for(int i=0;i<15;i++){
-            createProduct(userArrays.get(i));
+        for(User user:userArrays){
+            createProduct(user);
         }
+        userArrays = (ArrayList<User>) userRepository.findAll();
+        setMessage();
         //setFollower();
         //setLikeProduct();
 
+
+    }
+
+    private void setMessage() {
+        Random rand = new Random();
+        productArrayList = (ArrayList<Product>) productRepository.findAll();
+        List<Message> messages;
+        for(User user : userArrays){
+            messages = new ArrayList<>();
+            int n = rand.nextInt(50);
+            for(int i=0;i<n;i++){
+                Message message = new Message();
+                User receiver = userArrays.get(rand.nextInt(userArrays.size()));
+                if(!receiver.equals(user)){
+                    message.setText("Random text from "+user.getUsername()+" to "+receiver.getUsername());
+                    message.setMessageDate(LocalDateTime.now());
+                    message.setMessageStatus(MessageStatus.UNREAD);
+                    message.setOffer(null);
+                    if(rand.nextInt(100)%2==0) {
+                        Product product;
+                        List<Product> products = productRepository.findAllBySeller(receiver, PageRequest.of(0,1000)).stream().toList();
+
+                        if(products!=null && !products.isEmpty()){
+                            product = products.get(rand.nextInt(products.size()));
+                            message.setProduct(product);
+
+                        }
+
+
+                    }
+
+                    message.setSendUser(user);
+                    message.setReceivedUser(receiver);
+                    messages.add(message);
+                }
+
+            }
+            messageRepository.saveAll(messages);
+            messages.clear();
+
+        }
 
     }
 
@@ -95,7 +135,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=1; i<20;i++){
+        for (int i=1; i<50;i++){
             User user = new User();
             user.setUsername("username"+i);
             user.setPassword(passwordEncoder.encode("password"+i));
@@ -112,6 +152,7 @@ public class Demo {
             user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
             user.setStatus(UserStatus.ACTIVE);
+            user.setEmailVerified(true);
             /*
             user.setFollowers_number(0);
             user.setFollowing_number(0);
@@ -174,7 +215,7 @@ public class Demo {
 
         Random random = new Random();
 
-        int rand = ThreadLocalRandom.current().nextInt(5, 10);
+        int rand = ThreadLocalRandom.current().nextInt(1, 6);
         for (int i=1;i<=rand;i++){
 
             int rand2=ThreadLocalRandom.current().nextInt(0, 4);
