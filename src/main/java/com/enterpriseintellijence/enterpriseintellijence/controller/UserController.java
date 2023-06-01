@@ -12,6 +12,7 @@ import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,7 +80,7 @@ public class UserController {
     }
 
     @PostMapping(path= "/register" )
-    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
+    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
         userService.registerUser(username, email, password);
         userService.sendVerificationEmail(username);
         return ResponseEntity.ok("User registered successfully");
@@ -175,13 +176,13 @@ public class UserController {
     }
 
     @GetMapping("/resetPassword")
-    public ResponseEntity<Void> resetPassword(@RequestParam("email") String email) throws EntityNotFoundException {
+    public ResponseEntity<Void> resetPassword(@RequestParam("email") String email) throws EntityNotFoundException, MessagingException {
         userService.resetPassword(email);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/getNewPassword")
-    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException {
+    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
         userService.changePassword(token);
         return ResponseEntity.ok().build();
     }
