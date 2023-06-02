@@ -18,7 +18,7 @@ public class NotificationSystem {
 
     public Message offerCreatedNotification(Offer offer , Product product){
         return Message.builder()
-                .context("A new Offer is available for product: "+product.getTitle())
+                .text("A new Offer is available for product: "+product.getTitle())
                 .messageDate(LocalDateTime.now(clock))
                 .messageStatus(MessageStatus.UNREAD)
                 .product(product)
@@ -38,7 +38,7 @@ public class NotificationSystem {
 
 
         return Message.builder()
-                .context(basic)
+                .text(basic)
                 .messageDate(LocalDateTime.now(clock))
                 .messageStatus(MessageStatus.UNREAD)
                 .product(offer.getProduct())

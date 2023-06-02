@@ -242,11 +242,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyPaymentMethods(page, size));
     }
 
+    // TODO: 01/06/2023 commentare
     @GetMapping("/me/inbox")
     public ResponseEntity<Page<MessageDTO>> getMyInBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyInBoxMessage(page, size));
     }
 
+
+    // TODO: 01/06/2023 commentare
     @GetMapping("/me/outbox")
     public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));

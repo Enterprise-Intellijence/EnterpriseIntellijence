@@ -22,7 +22,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
-    private String context;
+    private String text;
 
     @Column(name = "message_date")
     private LocalDateTime messageDate;
