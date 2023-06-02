@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.nimbusds.jose.JOSEException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public interface UserService {
 
     ResponseEntity<String> registerUser(String username, String email, String password);
 
-    ResponseEntity<String> sendVerificationEmail(String username);
+    ResponseEntity<String> sendVerificationEmail(String username) throws MessagingException;
 
     void refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException;
 
@@ -75,4 +76,10 @@ public interface UserService {
     Page<MessageDTO> getMyOutBoxMessage(int page, int size);
 
     Page<OfferBasicDTO> getMyOffers(int page, int size);
+
+    void changePassword(String oldPassword, String newPassword);
+
+    void changePassword(String token) throws ParseException, JOSEException, MessagingException;
+
+    void resetPassword(String email) throws MessagingException;
 }

@@ -12,6 +12,7 @@ import com.nimbusds.jose.JOSEException;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,7 +80,7 @@ public class UserController {
     }
 
     @PostMapping(path= "/register" )
-    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) {
+    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
         userService.registerUser(username, email, password);
         userService.sendVerificationEmail(username);
         return ResponseEntity.ok("User registered successfully");
@@ -165,6 +166,24 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException, JOSEException {
         userService.logout(request.getHeader(AUTHORIZATION));
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<Void> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) throws EntityNotFoundException {
+        userService.changePassword(oldPassword, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/resetPassword")
+    public ResponseEntity<Void> resetPassword(@RequestParam("email") String email) throws EntityNotFoundException, MessagingException {
+        userService.resetPassword(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getNewPassword")
+    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
+        userService.changePassword(token);
         return ResponseEntity.ok().build();
     }
 

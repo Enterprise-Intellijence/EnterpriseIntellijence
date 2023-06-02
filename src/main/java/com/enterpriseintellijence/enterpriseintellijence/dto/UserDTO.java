@@ -31,11 +31,10 @@ public class UserDTO {
     @Length(min = 3, max = 25)
     @NotNull
     private String username;
-
-    @Length(min = 8, max = 20)
-    private String password;
     @Email
     private String email;
+
+    private String bio;
 
     private UserImageDTO photoProfile;
     @NotNull
