@@ -47,9 +47,12 @@ public class ProductSpecification {
         private HomeMaterial homeMaterial;
 
         public void setSeller(String userID) {
-            Optional<User> user = userRepository.findById(userID);
-            if(user.isPresent())
+            if(userID!=null){
+                Optional<User> user = userRepository.findById(userID);
                 this.seller = user.get();
+            }
+
+
         }
     }
 
@@ -57,82 +60,90 @@ public class ProductSpecification {
         return new Specification<Product>() {
             @Override
             public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<>();
 
-                if (filter.getTitle() != null && !filter.getTitle().isEmpty()) {
-                    predicates.add(criteriaBuilder.equal(root.get("title"), filter.getTitle()));
+                try{
+                    List<Predicate> predicates = new ArrayList<>();
+
+                    if (filter.getTitle() != null && !filter.getTitle().isEmpty()) {
+                        predicates.add(criteriaBuilder.equal(root.get("title"), filter.getTitle()));
+                    }
+
+                    if (filter.getDescription() != null && !filter.getDescription().isEmpty()) {
+                        predicates.add(criteriaBuilder.equal(root.get("description"), filter.getDescription()));
+                    }
+                    // TODO: 28/05/2023 fixare
+                    if (filter.getMinProductCost() != null && filter.getMaxProductCost() != null) {
+                        predicates.add(criteriaBuilder.between(root.get("productCost").get("price"), filter.getMinProductCost(), filter.getMaxProductCost()));
+                    }
+
+                    if (filter.getBrands() != null && !filter.getBrands().isEmpty()) {
+                        predicates.add(root.get("brand").in(filter.getBrands()));
+                    }
+
+                    if (filter.getCondition() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("condition"), filter.getCondition()));
+                    }
+
+                    if (filter.getViews() != null) {
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("views"), filter.getViews()));
+                    }
+
+                    if (filter.getUploadDate() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("uploadDate"), filter.getUploadDate()));
+                    }
+
+                    if (filter.getAvailability() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("availability"), Availability.AVAILABLE));
+                    }
+
+                    if (filter.getProductCategory() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("productCategory"), filter.getProductCategory()));
+                    }
+
+                    if (filter.getProductCategoryParent() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("productCategoryParent"), filter.getProductCategoryParent()));
+                    }
+
+                    if (filter.getProductCategoryChild() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("productCategoryChild"), filter.getProductCategoryChild()));
+                    }
+
+                    if(filter.getProductGender()!=null){
+                        predicates.add(criteriaBuilder.equal(root.get("productGender"),filter.getProductGender()));
+                    }
+
+                    if (filter.getLikesNumber() != null) {
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("likesNumber"), filter.getLikesNumber()));
+                    }
+
+                    if (filter.getSeller() != null) {
+                        predicates.add(criteriaBuilder.equal(root.get("seller"), filter.getSeller()));
+                    }
+                    if(filter.getSize()!=null){
+                        predicates.add(criteriaBuilder.equal(root.get("size"),filter.getSize()));
+                    }
+                    if(filter.getColour()!=null){
+                        predicates.add(criteriaBuilder.equal(root.get("colour"),filter.getColour()));
+                    }
+                    if(filter.getEntertainmentLanguage()!=null){
+                        predicates.add(criteriaBuilder.equal(root.get("entertainmentLanguage"),filter.getEntertainmentLanguage()));
+                    }
+                    if(filter.getHomeSize()!=null){
+                        predicates.add(criteriaBuilder.equal(root.get("homeSize"),filter.getHomeSize()));
+                    }
+                    if(filter.getHomeMaterial()!=null){
+                        predicates.add(criteriaBuilder.equal(root.get("homeMaterial"),filter.getHomeMaterial()));
+                    }
+
+                    predicates.add(criteriaBuilder.equal(root.get("visibility"), Visibility.PUBLIC));
+
+                    return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return null;
                 }
 
-                if (filter.getDescription() != null && !filter.getDescription().isEmpty()) {
-                    predicates.add(criteriaBuilder.equal(root.get("description"), filter.getDescription()));
-                }
-                // TODO: 28/05/2023 fixare 
-                if (filter.getMinProductCost() != null && filter.getMaxProductCost() != null) {
-                    predicates.add(criteriaBuilder.between(root.get("productCost").get("price"), filter.getMinProductCost(), filter.getMaxProductCost()));
-                }
-
-                if (filter.getBrands() != null && !filter.getBrands().isEmpty()) {
-                    predicates.add(root.get("brand").in(filter.getBrands()));
-                }
-
-                if (filter.getCondition() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("condition"), filter.getCondition()));
-                }
-
-                if (filter.getViews() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("views"), filter.getViews()));
-                }
-
-                if (filter.getUploadDate() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("uploadDate"), filter.getUploadDate()));
-                }
-
-                if (filter.getAvailability() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("availability"), Availability.AVAILABLE));
-                }
-
-                if (filter.getProductCategory() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("productCategory"), filter.getProductCategory()));
-                }
-
-                if (filter.getProductCategoryParent() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("productCategoryParent"), filter.getProductCategoryParent()));
-                }
-
-                if (filter.getProductCategoryChild() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("productCategoryChild"), filter.getProductCategoryChild()));
-                }
-
-                if(filter.getProductGender()!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("productGender"),filter.getProductGender()));
-                }
-
-                if (filter.getLikesNumber() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("likesNumber"), filter.getLikesNumber()));
-                }
-
-                if (filter.getSeller() != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("seller"), filter.getSeller()));
-                }
-                if(filter.getSize()!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("size"),filter.getSize()));
-                }
-                if(filter.getColour()!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("colour"),filter.getColour()));
-                }
-                if(filter.getEntertainmentLanguage()!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("entertainmentLanguage"),filter.getEntertainmentLanguage()));
-                }
-                if(filter.getHomeSize()!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("homeSize"),filter.getHomeSize()));
-                }
-                if(filter.getHomeMaterial()!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("homeMaterial"),filter.getHomeMaterial()));
-                }
-
-                predicates.add(criteriaBuilder.equal(root.get("visibility"), Visibility.PUBLIC));
-
-                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }
         };
     }
