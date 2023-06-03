@@ -189,16 +189,16 @@ public class ProductController {
     }*/
 
     @GetMapping("/{id}/offers")
-    public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@RequestParam("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
+    public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@PathVariable("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
         return ResponseEntity.ok(productService.getProductOffers(id,page,size));
     }
 
     @GetMapping("/{id}/messages")
-    public ResponseEntity<Page<MessageDTO>> getProductMessages(@RequestParam("id") String id, @RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
+    public ResponseEntity<Page<MessageDTO>> getProductMessages(@PathVariable("id") String id, @RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
         return ResponseEntity.ok(productService.getProductMessages(id,page,size));
     }
     @GetMapping("/{id}/order")
-    public ResponseEntity<OrderBasicDTO> getProductOrder(@RequestParam("id") String id) throws IllegalAccessException {
+    public ResponseEntity<OrderBasicDTO> getProductOrder(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(productService.getProductOrder(id));
     }
 
