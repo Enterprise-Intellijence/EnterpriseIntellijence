@@ -38,6 +38,7 @@ public class Demo {
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
     private final MessageRepository messageRepository;
+    private final AddressRepository addressRepository;
 
 
 
@@ -45,6 +46,7 @@ public class Demo {
         initializeProductImageList();
         initializeBrandList();
         createUser();
+        setAddress();
         for(User user:userArrays){
             createProduct(user);
         }
@@ -54,6 +56,36 @@ public class Demo {
         //setLikeProduct();
 
 
+    }
+
+    private void setAddress() {
+        Random random = new Random();
+        for (int i=0;i<userArrays.size();i++){
+            Address address = new Address();
+            setParameterToAddress(address, String.valueOf(i+1),userArrays.get(i),userArrays.get(i).getUsername(),true);
+            addressRepository.save(address);
+            int n= random.nextInt(0,3);
+            for(int l=1;l<=n;l++){
+                address = new Address();
+                String val = (i+1) + " . " +l;
+                setParameterToAddress(address,val,userArrays.get(i),userArrays.get(i).getUsername(),false);
+                addressRepository.save(address);
+
+            }
+        }
+    }
+    private void setParameterToAddress(Address address, String i,User user,String username,boolean setDefault){
+        address.setHeader(username+" "+username);
+        address.setCountry("country"+i);
+        address.setCity("city"+i);
+        address.setStreet("street"+i);
+        address.setZipCode("85269");
+        address.setPhoneNumber("342 6989745");
+        if(setDefault) {
+            address.setDefaultUser(user);
+            user.setDefaultAddress(address);
+        }
+        address.setUser(user);
     }
 
     private void setMessage() {

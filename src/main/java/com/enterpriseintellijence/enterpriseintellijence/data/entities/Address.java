@@ -21,16 +21,25 @@ public class Address {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+    @Column(nullable = false)
     private String header;
+
+    @Column(nullable = false)
     private String country;
+
+    @Column(nullable = false)
     private String city;
+
+    @Column(nullable = false)
     private String street;
 
     @Column(name = "zip_code")
     private String zipCode;
+
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "defaultAddress",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "defaultAddress",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private User defaultUser;
 
     @ManyToOne

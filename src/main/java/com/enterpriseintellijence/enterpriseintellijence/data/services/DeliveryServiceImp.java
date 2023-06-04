@@ -1,17 +1,17 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Delivery;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.AddressRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.DeliveryRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.AddressCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.DeliveryStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class DeliveryServiceImp implements DeliveryService {
     private final ProcessSaleServiceImp processSaleServiceImp;
     private final ModelMapper modelMapper;
     private final Clock clock;
+    private final AddressRepository addressRepository;
 
     @Override
     public DeliveryDTO createDelivery(DeliveryCreateDTO deliveryDTO) throws IllegalAccessException {
@@ -120,6 +123,90 @@ public class DeliveryServiceImp implements DeliveryService {
             return mapToDTO(delivery);
         else
             throw new IllegalAccessException("Only seller can update a delivery");
+    }
+
+    @Override
+    public AddressDTO createAddress(AddressCreateDTO addressCreateDTO) {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+
+        Address address = modelMapper.map(addressCreateDTO,Address.class);
+        address.setUser(loggedUser);
+        if(loggedUser.getDefaultAddress()==null)
+            loggedUser.setDefaultAddress(address);
+
+        addressRepository.save(address);
+
+        return modelMapper.map(address,AddressDTO.class);
+    }
+
+    @Override
+    public AddressDTO replaceAddress(String id, AddressDTO addressDTO) throws IllegalAccessException {
+        return updateAddress(id,addressDTO);
+    }
+
+    @Override
+    public AddressDTO updateAddress(String id, AddressDTO addressDTO) throws IllegalAccessException {
+        if(addressDTO!=null && !id.equals(addressDTO.getId()))
+            throw new IdMismatchException();
+        Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(!address.getUser().equals(loggedUser))
+            throw new IllegalAccessException("Cannot modify address of other user");
+
+        if(addressDTO.getHeader()!=null && !addressDTO.getHeader().equals(address.getHeader()))
+            address.setHeader(addressDTO.getHeader());
+        if(addressDTO.getCountry()!=null && !addressDTO.getCountry().equals(address.getCountry()))
+            address.setCountry(addressDTO.getCountry());
+        if(addressDTO.getCity()!=null && !addressDTO.getCity().equals(address.getCity()))
+            address.setCity(addressDTO.getCity());
+        if(addressDTO.getStreet()!=null && !addressDTO.getStreet().equals(address.getStreet()))
+            address.setStreet(addressDTO.getStreet());
+        if(addressDTO.getZipCode()!=null && !addressDTO.getZipCode().equals(address.getZipCode()))
+            address.setZipCode(addressDTO.getZipCode());
+        if(addressDTO.getPhoneNumber()!=null && !addressDTO.getPhoneNumber().equals(address.getPhoneNumber()))
+            address.setPhoneNumber(addressDTO.getPhoneNumber());
+
+        addressRepository.save(address);
+
+
+        return modelMapper.map(address,AddressDTO.class);
+    }
+
+    @Override
+    public void deleteAddress(String id) throws IllegalAccessException {
+        Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getRole().equals(UserRole.USER) && !address.getUser().equals(loggedUser))
+            throw new IllegalAccessException("Cannot delete address of other user");
+
+        addressRepository.delete(address);
+    }
+
+    @Override
+    public AddressDTO getAddress(String id) {
+        Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        return modelMapper.map(address,AddressDTO.class);
+    }
+
+    @Override
+    public Iterable<AddressDTO> getMyAddressList() throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        List<AddressDTO> addressList = loggedUser.getAddresses().stream().map(s->modelMapper.map(s,AddressDTO.class)).collect(Collectors.toList());
+        return addressList;
+    }
+
+    @Override
+    public AddressDTO changeDefaultAddress(String id) throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(!loggedUser.equals(address.getUser()))
+            throw new IllegalAccessException("cannot use address of others");
+
+        loggedUser.setDefaultAddress(address);
+        address.setDefaultUser(loggedUser);
+        addressRepository.save(address);
+        return modelMapper.map(address,AddressDTO.class);
     }
 
     public Delivery mapToEntity(DeliveryDTO deliveryDTO) {
