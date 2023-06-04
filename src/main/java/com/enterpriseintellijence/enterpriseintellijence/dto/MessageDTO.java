@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 public class MessageDTO {
 
     private String id;
+
+    private String conversationId;
+
     @NotNull
     @Length(max = 500)
     private String text;

@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
+import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,24 +58,26 @@ public class Demo {
 
     private void setMessage() {
         Random rand = new Random();
-        productArrayList = (ArrayList<Product>) productRepository.findAll();
         List<Message> messages;
-        for(User user : userArrays){
+        for (User user : userArrays) {
             messages = new ArrayList<>();
-            int n = rand.nextInt(50);
-            for(int i=0;i<n;i++){
+            int n = rand.nextInt(1, 15);
+            for (int i = 0; i < n; i++) {
                 Message message = new Message();
                 User receiver = userArrays.get(rand.nextInt(userArrays.size()));
-                if(!receiver.equals(user)){
-                    message.setText("Random text from "+user.getUsername()+" to "+receiver.getUsername());
+                while (receiver.equals(user))
+                    receiver = userArrays.get(rand.nextInt(userArrays.size()));
+                if (!receiver.equals(user)) {
+
+                    message.setText("Random text from " + user.getUsername() + " to " + receiver.getUsername());
                     message.setMessageDate(LocalDateTime.now());
                     message.setMessageStatus(MessageStatus.UNREAD);
                     message.setOffer(null);
-                    if(rand.nextInt(100)%2==0) {
+                    if (rand.nextInt(100) % 2 == 0) {
                         Product product;
-                        List<Product> products = productRepository.findAllBySeller(receiver, PageRequest.of(0,1000)).stream().toList();
+                        List<Product> products = productRepository.findAllBySeller(receiver, PageRequest.of(0, 1000)).stream().toList();
 
-                        if(products!=null && !products.isEmpty()){
+                        if (products != null && !products.isEmpty()) {
                             product = products.get(rand.nextInt(products.size()));
                             message.setProduct(product);
 
@@ -85,15 +88,50 @@ public class Demo {
 
                     message.setSendUser(user);
                     message.setReceivedUser(receiver);
-                    messages.add(message);
+                    String convID;
+                    if (message.getConversationId() == null) {
+                        convID = UUID.randomUUID().toString();
+                        while(!messageRepository.canUseConversationId(convID))
+                            convID = UUID.randomUUID().toString();
+
+                        message.setConversationId(convID);
+
+                        message = messageRepository.save(message);
+
+                        Product productTemp = message.getProduct() != null ? message.getProduct() : null;
+                        int y = rand.nextInt(1, 8);
+                        //messages.add(message);
+                        for (int l = 0; l < y; l++) {
+                            message = new Message();
+                            User user1;
+                            User user2;
+                            if (l % 2 != 0) {
+                                user1 = receiver;
+                                user2 = user;
+                            } else {
+                                user1 = user;
+                                user2 = receiver;
+                            }
+                            message.setText("Random text from " + user1.getUsername() + " to " + user2.getUsername());
+                            message.setMessageDate(LocalDateTime.now());
+                            message.setConversationId(convID);
+                            message.setMessageStatus(MessageStatus.UNREAD);
+                            message.setOffer(null);
+                            message.setProduct(productTemp);
+                            message.setSendUser(user1);
+                            message.setReceivedUser(user2);
+                            messages.add(message);
+                        }
+                    }
+
+
                 }
+                messageRepository.saveAll(messages);
+                messages.clear();
 
             }
-            messageRepository.saveAll(messages);
-            messages.clear();
 
         }
-
     }
 
 /*    private void setFollower() {

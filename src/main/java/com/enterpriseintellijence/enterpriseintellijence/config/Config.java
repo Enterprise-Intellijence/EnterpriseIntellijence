@@ -41,7 +41,8 @@ public class Config {
                 .setAmbiguityIgnored(true);
 
         modelMapper.createTypeMap(PaymentMethod.class, PaymentMethodBasicDTO.class).setConverter(paymentMethodConverter);
-/*        modelMapper.createTypeMap(User.class, UserDTO.class).setConverter(new AbstractConverter<User, UserDTO>() {
+
+        /*        modelMapper.createTypeMap(User.class, UserDTO.class).setConverter(new AbstractConverter<User, UserDTO>() {
             @Override
             protected UserDTO convert(User user) {
                 int followers_number = 0;

@@ -64,14 +64,13 @@ public class MessageController {
         messageService.setReadMessages(idList);
     }
 
-    @GetMapping("/conversations/{user}")
+    @GetMapping("/conversations/{conversationId}")
     public ResponseEntity<Page<MessageDTO>> getConversation(
-            @PathVariable("user") String user,
-            @RequestParam(name="prodId",required = false) String prodId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int sizePage){
+            @PathVariable("conversationId") String conversationId,
+            @RequestParam(defaultValue = "0",required = false) int page,
+            @RequestParam(defaultValue = "10",required = false) int sizePage){
 
-        return ResponseEntity.ok(messageService.getConversation(user,prodId,page,sizePage));
+        return ResponseEntity.ok(messageService.getConversation(conversationId,page,sizePage));
 
     }
 

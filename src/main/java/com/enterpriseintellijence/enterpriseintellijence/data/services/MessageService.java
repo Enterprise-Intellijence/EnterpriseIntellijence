@@ -17,7 +17,7 @@ public interface MessageService {
     void deleteMessage(String id) throws IllegalAccessException;
     MessageDTO getMessage(String id) throws IllegalAccessException;
 
-    Page<MessageDTO> getConversation(String user, String prod, int page, int sizePage);
+    Page<MessageDTO> getConversation(String conversationId, int page, int sizePage);
 
     Iterable<ConversationDTO> getAllMyConversations();
 
