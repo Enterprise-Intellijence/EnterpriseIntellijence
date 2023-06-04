@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
@@ -120,7 +119,13 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
+/*        if(userDTO.getDefaultAddress()!=null){
+            Address address
+            oldUser.setDefaultAddress(mo);
+        }*/
+
+
+        //oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
         if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
             PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());
             paymentMethod.setDefaultUser(oldUser);

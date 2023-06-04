@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
@@ -19,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -52,7 +50,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    private Address address;
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "default_address_delivery")
+    private Address defaultAddress;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private List<Address> addresses;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

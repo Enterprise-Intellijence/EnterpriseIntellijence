@@ -144,9 +144,10 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         delivery.setDeliveryStatus(DeliveryStatus.SHIPPED);
         delivery.setDeliveryCost(order.getProduct().getDeliveryCost());
 
+        // TODO: 03/06/2023 occhio indirizzo
         delivery.setShipper(shipper);
-        delivery.setSenderAddress(loggedUser.getAddress());
-        delivery.setReceiverAddress(order.getUser().getAddress());
+        delivery.setSenderAddress(loggedUser.getDefaultAddress());
+        delivery.setReceiverAddress(order.getUser().getDefaultAddress());
 
         return delivery;
     }

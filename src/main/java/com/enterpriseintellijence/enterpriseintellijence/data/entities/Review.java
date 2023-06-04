@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

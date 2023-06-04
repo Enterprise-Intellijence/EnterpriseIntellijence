@@ -152,7 +152,7 @@ public class MessageServiceImp implements MessageService{
 
     @Override
     public Iterable<ConversationDTO> getAllMyConversations() {
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+/*
         Map<String,ConversationDTO> myConversationsMap = new HashMap<>();
         String loggedUserID= loggedUser.getId();
 
@@ -173,9 +173,33 @@ public class MessageServiceImp implements MessageService{
                 tempKey=loggedUserID+message.getSendUser().getId();
             checkAndSetConversation(myConversationsMap,tempKey,message,false);
         }
+*/
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        try{
+            List<Message> messages = messageRepository.findMannaia(loggedUser.getId());
+            List<ConversationDTO> conversationDTOS = new ArrayList<>();
+            for (Message message: messages){
+                UserBasicDTO userBasicDTO;
+                if(message.getSendUser().equals(loggedUser))
+                    userBasicDTO = modelMapper.map(message.getReceivedUser(),UserBasicDTO.class);
+                else
+                    userBasicDTO = modelMapper.map(message.getSendUser(),UserBasicDTO.class);
 
+                ProductBasicDTO productBasicDTO = null;
+                if (message.getProduct() != null) {
+                    productBasicDTO = modelMapper.map(message.getProduct(), ProductBasicDTO.class);
+                }
+                conversationDTOS.add(ConversationDTO.builder()
+                        .otherUser(userBasicDTO)
+                        .lastMessage(modelMapper.map(message,MessageDTO.class))
+                        .productBasicDTO(productBasicDTO)
+                        .unreadMessagesCount(1)
+                        .build());
+            }
+            return conversationDTOS;
+        }catch (Exception e){e.printStackTrace();return null;}
 
-        return new ArrayList<ConversationDTO>(myConversationsMap.values());
+//        return new ArrayList<ConversationDTO>(myConversationsMap.values());
     }
 
     @Override

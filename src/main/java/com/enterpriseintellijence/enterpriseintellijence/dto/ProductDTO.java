@@ -49,7 +49,7 @@ public class ProductDTO {
     private UserBasicDTO seller;
 
 
-    private AddressDTO address;
+    //private AddressDTO address;
     private ProductSize productSize;
 
     @PositiveOrZero

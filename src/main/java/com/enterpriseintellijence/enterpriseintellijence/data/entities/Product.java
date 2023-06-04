@@ -1,8 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.persistence.*;
@@ -57,8 +55,8 @@ public class Product {
     //TODO: che significa condition?
     // usato, nuovo, quasi nuovo, ecc
 
-    @Embedded
-    private Address address;
+/*    @Embedded
+    private Address address;*/
 
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_type")

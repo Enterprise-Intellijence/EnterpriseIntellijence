@@ -1,12 +1,10 @@
 package com.enterpriseintellijence.enterpriseintellijence;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -149,7 +147,7 @@ public class Demo {
             //userImage.setUser(user);
             //user.setPhotoProfile(userImage);
             user.setProvider(Provider.LOCAL);
-            user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
+            //user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
             user.setRole(UserRole.USER);
             user.setStatus(UserStatus.ACTIVE);
             user.setEmailVerified(true);
@@ -315,7 +313,7 @@ public class Demo {
             product.setLikesNumber(random.nextInt(150));
 
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
-            product.setAddress(user.getAddress());
+            //product.setAddress(user.getAddress());
             product.setProductSize(productSizeList.get(random.nextInt(sizeProductSize)));
             product.setViews(random.nextInt(0,120));
             LocalDateTime date = LocalDateTime.now();
