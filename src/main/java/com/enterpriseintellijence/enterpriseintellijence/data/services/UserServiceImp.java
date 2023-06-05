@@ -316,7 +316,7 @@ public class UserServiceImp implements UserService{
         new ResponseEntity<>("user activated", HttpStatus.OK);
     }
 
-    @Override
+ /*   @Override
     public Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size) {
         return userRepository.findAllByFollowingId(userId, PageRequest.of(page, size))
                 .map(user -> modelMapper.map(user, UserBasicDTO.class));
@@ -347,10 +347,10 @@ public class UserServiceImp implements UserService{
         userRepository.save(actualUser);
         //userRepository.save(userToFollow);
 
-        /*
+        *//*
         userRepository.increaseFollowersNumber(userIdToFollow);
         userRepository.increaseFollowingNumber(userId);
-        */
+        *//*
     }
 
     @Override
@@ -374,16 +374,16 @@ public class UserServiceImp implements UserService{
         //userRepository.save(userToUnfollow);
         userRepository.save(actualUser);
 
-        /*
+        *//*
         userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
 
-        userRepository.removeFollow(userId, userIdToUnfollow);*/
-/*
+        userRepository.removeFollow(userId, userIdToUnfollow);*//*
+*//*
         userRepository.decreaseFollowingNumbers(userId);
         userRepository.decreaseFollowersNumbers(userIdToUnfollow);
-        */
-    }
+        *//*
+    }*/
 
     @Override
     public void addLikeToProduct(String productId) {

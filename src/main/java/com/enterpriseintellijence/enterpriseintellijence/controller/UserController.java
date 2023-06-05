@@ -187,7 +187,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/followers/{id}")
+    /*@GetMapping("/followers/{id}")
     public ResponseEntity<Page<UserBasicDTO>> getFollowers(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         if (userService.findUserById(id) == null)
             return ResponseEntity.notFound().build();
@@ -213,7 +213,7 @@ public class UserController {
     public ResponseEntity<Void> unfollow(@PathVariable("id") String id) throws EntityNotFoundException {
         userService.unfollowUser(id);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     @PostMapping("/like/{id}")
     public ResponseEntity<Void> like(@PathVariable("id") String id) throws EntityNotFoundException {

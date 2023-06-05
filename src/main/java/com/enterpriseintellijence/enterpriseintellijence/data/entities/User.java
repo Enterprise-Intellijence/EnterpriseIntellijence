@@ -86,7 +86,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy="following")
     private List<Following> followers;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="follower")
     private List<Following> following;
 
     @Column(name = "followers_number", nullable = false)

@@ -25,8 +25,8 @@ public class Following {
     private LocalDateTime followingFrom;
 
     @ManyToOne
-    @JoinColumn(name="user")
-    private User user;
+    @JoinColumn(name="follower")
+    private User follower;
 
     @ManyToOne
     @JoinColumn(name="following")

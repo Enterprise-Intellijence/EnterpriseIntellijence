@@ -1,12 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.FollowingService;
-import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.FollowingDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.creation.AddressCreateDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCreateDTO;
-import jakarta.validation.Valid;
+import com.enterpriseintellijence.enterpriseintellijence.dto.FollowingFollowersDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,38 +16,36 @@ public class FollowingController {
 
     private final FollowingService followingService;
 
-    @PostMapping("/following/set/{id}")
+    @PostMapping("/follow/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<FollowingDTO> follow(
-            @PathVariable("id") String id)
-    {
+    public ResponseEntity<FollowingFollowersDTO> follow(
+            @PathVariable("userId") String id) throws IllegalAccessException {
         return ResponseEntity.ok(followingService.follow(id));
     }
 
-    @DeleteMapping(path = "/following/set/{id}")
+    @DeleteMapping(path = "/follow/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unfollow(
-            @PathVariable("id") String id)
-    {
+            @PathVariable("userId") String id) throws IllegalAccessException {
         followingService.unfollow(id);
     }
 
-    @GetMapping("/{userId}/following")
-    public ResponseEntity<Page<FollowingDTO>> getFollowingByUser(
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<Page<FollowingFollowersDTO>> getFollowingByUser(
             @PathVariable("userId") String id,
             @RequestParam(defaultValue = "0",required = false) int page,
             @RequestParam(defaultValue = "10",required = false) int sizePage)
     {
-        return ResponseEntity.ok(followingService.getDeliveryById(id,page,sizePage));
+        return ResponseEntity.ok(followingService.getFollowingByUser(id,page,sizePage));
     }
 
-    @GetMapping("/{userId}/follower")
-    public ResponseEntity<Page<FollowingDTO>> getFollowingByUser(
+    @GetMapping("/followers/{userId}")
+    public ResponseEntity<Page<FollowingFollowersDTO>> getFollowersOfUser(
             @PathVariable("userId") String id,
             @RequestParam(defaultValue = "0",required = false) int page,
             @RequestParam(defaultValue = "10",required = false) int sizePage)
     {
-        return ResponseEntity.ok(followingService.getDeliveryById(id,page,sizePage));
+        return ResponseEntity.ok(followingService.getFollowersOfUser(id,page,sizePage));
     }
 
 }

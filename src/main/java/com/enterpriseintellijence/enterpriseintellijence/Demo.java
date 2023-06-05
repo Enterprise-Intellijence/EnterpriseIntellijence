@@ -44,6 +44,7 @@ public class Demo {
     private final ProductImageRepository productImageRepository;
     private final MessageRepository messageRepository;
     private final AddressRepository addressRepository;
+    private final FollowingRepository followingRepository;
 
 
 
@@ -58,11 +59,12 @@ public class Demo {
                 createPayment(user);
                 setFollower(user);
             }
+            userRepository.saveAll(userArrays);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        userArrays = (ArrayList<User>) userRepository.findAll();
+        //userArrays = (ArrayList<User>) userRepository.findAll();
         setMessage();
         //convertToString();
         //createFollowersAndFollowing();
@@ -105,7 +107,7 @@ public class Demo {
 
         }
 
-        convertToString();
+        //convertToString();
 
 
     }
@@ -230,21 +232,21 @@ public class Demo {
             int n= random.nextInt(15);
             for (int i=0;i<n;i++){
 
-                String id2 =userIdArrays.get(random.nextInt(userIdArrays.size())) ;
-                User user2= userRepository.findById(id2).orElseThrow(EntityExistsException::new);
+                User user2= userArrays.get(random.nextInt(userArrays.size())) ;
                 if(!user.getId().equals(user2.getId())){
-                        List<User> local = user.getFollowing();
-                        local.add(user2);
-                        user.getFollowing().addAll(local);
+                    // TODO: 05/06/2023 valid date
+                    followingRepository.save(Following.builder()
+                            .followingFrom(LocalDateTime.now())
+                            .follower(user)
+                            .following(user2)
+                            .build());
                         user.setFollowing_number(user.getFollowing_number()+1);
-                        List<User> local2 = user2.getFollowers();
-                        local2.add(user);
-                        user2.getFollowers().addAll(local2);
                         user2.setFollowers_number(user2.getFollowers_number()+1);
                 }
             }
-            userRepository.save(user);
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

@@ -50,7 +50,7 @@ public class AppSecurityConfig  {
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/v1/superAdmin/**").hasAuthority("ROLE_SUPER_ADMIN")
                 .and()
-                .authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/api/v1/products/**","/api/v1/deliveries/address/{id}").permitAll()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/api/v1/products/**","/api/v1/deliveries/address/{id}","/api/v1/following/{userId}","/api/v1/followers/{userId}").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/api/v1/products/capability/url/**").authenticated()
                 .and()

@@ -16,10 +16,10 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
     Page<User> findAll(Pageable pageable);
 
-    Page<User> findAllByFollowingId(String userId, Pageable pageable);
+/*    Page<User> findAllByFollowingId(String userId, Pageable pageable);
 
     Page<User> findAllByFollowersId(String userId, Pageable pageable);
-/*
+
 
     @Query("update User u set u.followers_number = u.followers_number + 1 where u.id = ?1")
     void increaseFollowersNumber(String userId);
@@ -32,7 +32,7 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
     @Query("update User u set u.following_number = u.following_number - 1 where u.id = ?1")
     void decreaseFollowingNumbers(String userId);
-*/
+
 
     @Query(value = "insert into user_follows (user_id, following_id) values (?1, ?2)", nativeQuery = true)
     void addFollow(String userId, String userIdToFollow);
@@ -40,7 +40,7 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
     @Query(value = "delete from user_follows where user_id = ?1 and following_id = ?2", nativeQuery = true)
     void removeFollow(String userId, String userIdToUnFollow);
-
+*/
     @Query(value = "insert into user_likes values (?1, ?2)", nativeQuery = true)
     void addLikeToProduct(String userId, String productId);
 
