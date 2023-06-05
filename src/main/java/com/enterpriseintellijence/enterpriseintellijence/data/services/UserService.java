@@ -35,7 +35,7 @@ public interface UserService {
 
     ResponseEntity<String> sendVerificationEmail(String username) throws MessagingException;
 
-    void refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException;
+    Map<String, String> refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException;
 
     void logout(String authorizationHeader) throws ParseException, JOSEException;
 
