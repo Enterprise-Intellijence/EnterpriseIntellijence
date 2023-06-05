@@ -72,11 +72,9 @@ public class UserController {
   
     @PostMapping(path = "/authenticate" )
     @ResponseStatus(HttpStatus.OK)
-    public void authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
+    public ResponseEntity<Map<String, String>> authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
             response) throws JOSEException {
-        Map<String, String> tokens = userService.authenticateUser(username, password);
-        response.addHeader(AUTHORIZATION, "Bearer " + tokens.get("accessToken"));
-        response.addHeader("RefreshToken", "Bearer " + tokens.get("refreshToken"));
+        return ResponseEntity.ok(userService.authenticateUser(username, password));
     }
 
     @PostMapping(path= "/register" )
@@ -159,8 +157,8 @@ public class UserController {
     }
 
     @GetMapping("/refreshToken")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        userService.refreshToken(request.getHeader(AUTHORIZATION), response);
+    public ResponseEntity<Map<String, String >> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return ResponseEntity.ok(userService.refreshToken(request.getHeader(AUTHORIZATION), response));
     }
 
     @PostMapping("/logout")

@@ -41,7 +41,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Map.of;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -174,7 +173,7 @@ public class UserServiceImp implements UserService{
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         String accessToken = tokenStore.createAccessToken(Map.of("username", username, "role", "user"));
         String refreshToken = tokenStore.createRefreshToken(username);
-        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+        return Map.of("accessToken", "Bearer "+accessToken, "refreshToken", "Bearer "+refreshToken);
     }
 
     @Override
@@ -200,7 +199,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException {
+    public Map<String, String> refreshToken(String authorizationHeader, HttpServletResponse response) throws IOException {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
@@ -209,8 +208,8 @@ public class UserServiceImp implements UserService{
 
                 User userDetails = mapToEntity(user);
                 String accessToken = tokenStore.createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));;
-                response.addHeader(AUTHORIZATION, "Bearer " + accessToken);
-                response.addHeader("refresh_token", "Bearer " + refreshToken);
+
+                return Map.of("accessToken", "Bearer "+accessToken, "refreshToken", "Bearer "+refreshToken);
             }
             catch (Exception e) {
                 log.error(String.format("Error refresh token: %s", authorizationHeader), e);
@@ -223,6 +222,7 @@ public class UserServiceImp implements UserService{
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
+        return null;
     }
 
     @Override
