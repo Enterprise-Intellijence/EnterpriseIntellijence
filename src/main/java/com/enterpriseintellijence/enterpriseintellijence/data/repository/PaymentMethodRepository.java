@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, String>, JpaSpecificationExecutor<PaymentMethod>, PagingAndSortingRepository<PaymentMethod, String> {
-    Page<PaymentMethodDTO> findAllByDefaultUser_Id(String id, Pageable pageable);
+    //Page<PaymentMethodDTO> findAllByDefaultUser_Id(String id, Pageable pageable);
 }

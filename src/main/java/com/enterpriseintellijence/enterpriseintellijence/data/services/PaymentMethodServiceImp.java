@@ -31,9 +31,9 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-        if (!loggedUser.getId().equals(paymentMethod.getDefaultUser().getId())) {
+/*        if (!loggedUser.getId().equals(paymentMethod.getDefaultUser().getId())) {
             throw new IllegalAccessException("User cannot create payment method");
-        }
+        }*/
 
         paymentMethod.setCreditCard(paymentMethodDTO.getCreditCard());
         paymentMethod.setOwner(paymentMethodDTO.getOwner());

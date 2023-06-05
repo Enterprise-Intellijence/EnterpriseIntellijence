@@ -6,10 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,6 +47,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    @ToString.Exclude
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_address_delivery")
     private Address defaultAddress;
@@ -63,6 +61,7 @@ public class User implements UserDetails {
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
 
+    @ToString.Exclude
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_payment_method")
     private PaymentMethod defaultPaymentMethod;
@@ -76,13 +75,19 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
     private List<Product> sellingProducts;
 
-    @ManyToMany()
+/*    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "followers_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> followers;
+    private List<User> followers= new ArrayList<>();;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
-    private List<User> following;
+    private List<User> following= new ArrayList<>();;*/
+
+    @OneToMany(mappedBy="following")
+    private List<Following> followers;
+
+    @OneToMany(mappedBy="user")
+    private List<Following> following;
 
     @Column(name = "followers_number", nullable = false)
     private int followers_number;

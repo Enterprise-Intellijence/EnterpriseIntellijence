@@ -204,7 +204,7 @@ public class DeliveryServiceImp implements DeliveryService {
             throw new IllegalAccessException("cannot use address of others");
 
         loggedUser.setDefaultAddress(address);
-        address.setDefaultUser(loggedUser);
+        //address.setDefaultUser(loggedUser);
         addressRepository.save(address);
         return modelMapper.map(address,AddressDTO.class);
     }

@@ -2,10 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -39,10 +36,11 @@ public class Address {
     @Column(nullable = false)
     private String phoneNumber;
 
+/*    @ToString.Exclude
     @OneToOne(mappedBy = "defaultAddress",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
-    private User defaultUser;
+    private User defaultUser;*/
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_address")
     private User user;
 

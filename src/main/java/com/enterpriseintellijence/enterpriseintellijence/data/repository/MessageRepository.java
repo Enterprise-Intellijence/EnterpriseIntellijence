@@ -25,7 +25,7 @@ public interface MessageRepository extends JpaRepository<Message, String>, JpaSp
     @Query("select CASE WHEN COUNT(p) = 0 THEN true ELSE false END FROM Message p where p.conversationId=:convId")
     boolean canUseConversationId(@Param("convId") String conversationId);
 
-    @Query("select p from Message p where p.sendUser.id= :user or p.receivedUser.id= :user AND p.messageDate = (SELECT MAX(m.messageDate) FROM Message m WHERE m.conversationId = p.conversationId) ")
+    @Query("select distinct p from Message p where (p.sendUser.id= :user or p.receivedUser.id= :user) AND p.messageDate = (SELECT MAX(m.messageDate) FROM Message m WHERE m.conversationId = p.conversationId) ")
     List<Message> findAllMyConversation(@Param("user") String loggedUser);
 
 }

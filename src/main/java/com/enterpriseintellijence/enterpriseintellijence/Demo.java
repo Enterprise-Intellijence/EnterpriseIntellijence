@@ -1,10 +1,14 @@
 package com.enterpriseintellijence.enterpriseintellijence;
 
+import com.enterpriseintellijence.enterpriseintellijence.controller.UserController;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
+import com.nimbusds.jose.JOSEException;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +35,7 @@ public class Demo {
     private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" ;
     private ArrayList<String> brand =new ArrayList<>();
     private ArrayList<byte[]> productImageArrayList = new ArrayList<>();
+    private ArrayList<String> userIdArrays=new ArrayList<>();
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -43,19 +48,72 @@ public class Demo {
 
 
     public void initialize() throws IOException {
-        initializeProductImageList();
+        //initializeProductImageList();
         initializeBrandList();
         createUser();
         setAddress();
-        for(User user:userArrays){
-            createProduct(user);
+        try{
+            for(User user:userArrays){
+                createProduct(user);
+                createPayment(user);
+                setFollower(user);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         userArrays = (ArrayList<User>) userRepository.findAll();
         setMessage();
-        //setFollower();
+        //convertToString();
+        //createFollowersAndFollowing();
         //setLikeProduct();
 
 
+    }
+
+
+    public void createUser() throws IOException {
+
+        for (int i=1; i<50;i++){
+            User user = new User();
+            user.setUsername("username"+i);
+            user.setPassword(passwordEncoder.encode("password"+i));
+            user.setEmail("email"+i+"@gmail.com");
+            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage,"png",bos);
+            //UserImage userImage = new UserImage();
+            ///userImage.setPhoto(bos.toByteArray());
+            //userImage.setDescription("No description avalaible");
+            //userImage.setUser(user);
+            //user.setPhotoProfile(userImage);
+            user.setProvider(Provider.LOCAL);
+            //user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
+            user.setRole(UserRole.USER);
+            user.setStatus(UserStatus.ACTIVE);
+            user.setEmailVerified(true);
+
+            user.setFollowers_number(0);
+            user.setFollowing_number(0);
+
+            //user.setDefaultPaymentMethod(createPayment(user));
+            user = userRepository.save(user);
+            userArrays.add(user);
+            createPayment(user);
+/*            if(i<=35)
+                createProduct(user);*/
+
+        }
+
+        convertToString();
+
+
+    }
+
+    private void convertToString() {
+        for(User user: userArrays)
+            userIdArrays.add(user.getId());
+        //userArrays.clear();
     }
 
     private void setAddress() {
@@ -82,7 +140,7 @@ public class Demo {
         address.setZipCode("85269");
         address.setPhoneNumber("342 6989745");
         if(setDefault) {
-            address.setDefaultUser(user);
+            //address.setDefaultUser(user);
             user.setDefaultAddress(address);
         }
         address.setUser(user);
@@ -166,21 +224,35 @@ public class Demo {
         }
     }
 
-/*    private void setFollower() {
-        for (User user: userArrays){
+    private void setFollower(User user) {
+        try{
             Random random = new Random();
-            int n= random.nextInt(3,30);
-            if(user.getFollowers()==null)
-                user.setFollowers(new HashSet<>());
-
+            int n= random.nextInt(15);
             for (int i=0;i<n;i++){
-                User temp = userArrays.get(random.nextInt(userArrays.size()));
-                if(!user.getFollowers().contains(temp))
-                    user.getFollowers().add(temp);
+
+                String id2 =userIdArrays.get(random.nextInt(userIdArrays.size())) ;
+                User user2= userRepository.findById(id2).orElseThrow(EntityExistsException::new);
+                if(!user.getId().equals(user2.getId())){
+                        List<User> local = user.getFollowing();
+                        local.add(user2);
+                        user.getFollowing().addAll(local);
+                        user.setFollowing_number(user.getFollowing_number()+1);
+                        List<User> local2 = user2.getFollowers();
+                        local2.add(user);
+                        user2.getFollowers().addAll(local2);
+                        user2.setFollowers_number(user2.getFollowers_number()+1);
+                }
             }
             userRepository.save(user);
-        }
-    }*/
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+
+
+
+
+
+
 
     private void setLikeProduct(){
 /*        // TODO: 13/05/2023 perchè non va????
@@ -201,41 +273,7 @@ public class Demo {
         }*/
     }
 
-    public void createUser() throws IOException {
 
-        for (int i=1; i<50;i++){
-            User user = new User();
-            user.setUsername("username"+i);
-            user.setPassword(passwordEncoder.encode("password"+i));
-            user.setEmail("email"+i+"@gmail.com");
-            BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/tempFileDemo/foto_profilo.png"));
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage,"png",bos);
-            //UserImage userImage = new UserImage();
-            ///userImage.setPhoto(bos.toByteArray());
-            //userImage.setDescription("No description avalaible");
-            //userImage.setUser(user);
-            //user.setPhotoProfile(userImage);
-            user.setProvider(Provider.LOCAL);
-            //user.setAddress(new Address("country"+i,"city"+i,"street"+i,"88070"));
-            user.setRole(UserRole.USER);
-            user.setStatus(UserStatus.ACTIVE);
-            user.setEmailVerified(true);
-            /*
-            user.setFollowers_number(0);
-            user.setFollowing_number(0);
-            */
-            //user.setDefaultPaymentMethod(createPayment(user));
-            user = userRepository.save(user);
-            userArrays.add(user);
-            createPayment(user);
-/*            if(i<=35)
-                createProduct(user);*/
-
-        }
-
-
-    }
 
     private void createPayment(User user){
         int rand = ThreadLocalRandom.current().nextInt(1, 4);

@@ -128,7 +128,7 @@ public class UserServiceImp implements UserService{
         //oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
         if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
             PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());
-            paymentMethod.setDefaultUser(oldUser);
+            //paymentMethod.setDefaultUser(oldUser);
             oldUser.setDefaultPaymentMethod(paymentMethod);
         }
         userRepository.save(oldUser);

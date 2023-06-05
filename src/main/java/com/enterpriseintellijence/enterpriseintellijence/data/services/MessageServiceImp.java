@@ -253,6 +253,7 @@ public class MessageServiceImp implements MessageService{
                     .lastMessage(modelMapper.map(message,MessageDTO.class))
                     .productBasicDTO(productBasicDTO)
                     .unreadMessages(message.getMessageStatus().equals(MessageStatus.UNREAD))
+                    .conversationId(message.getConversationId())
                     .build());
         }
         return conversationDTOS;
