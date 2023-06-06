@@ -19,6 +19,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.TransactionSt
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -99,6 +100,7 @@ public class DeliveryServiceImp implements DeliveryService {
         return mapToDTO(delivery);
     }
 
+    @Transactional
     @Override
     public void deleteDelivery(String id) throws IllegalAccessException {
         Delivery delivery = deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -109,6 +111,7 @@ public class DeliveryServiceImp implements DeliveryService {
             throw new IllegalAccessException("Only seller can update a delivery");
 
         // TODO: 25/05/2023 perchè si dovrebbe deletare una consegna?
+        order.setDelivery(null);
         deliveryRepository.delete(delivery);
     }
 
@@ -131,8 +134,14 @@ public class DeliveryServiceImp implements DeliveryService {
 
         Address address = modelMapper.map(addressCreateDTO,Address.class);
         address.setUser(loggedUser);
-        if(loggedUser.getDefaultAddress()==null)
-            loggedUser.setDefaultAddress(address);
+        if(addressCreateDTO.isDefault()){
+            for (Address address1: loggedUser.getAddresses()){
+                if(address1.isDefault()){
+                    address1.setDefault(false);
+                    addressRepository.save(address1);
+                }
+            }
+        }
 
         addressRepository.save(address);
 
@@ -165,6 +174,15 @@ public class DeliveryServiceImp implements DeliveryService {
             address.setZipCode(addressDTO.getZipCode());
         if(addressDTO.getPhoneNumber()!=null && !addressDTO.getPhoneNumber().equals(address.getPhoneNumber()))
             address.setPhoneNumber(addressDTO.getPhoneNumber());
+        if(addressDTO.isDefault() && !address.isDefault()){
+            address.setDefault(true);
+            for(Address address1: loggedUser.getAddresses()){
+                if(address1.isDefault()){
+                    address1.setDefault(false);
+                    addressRepository.save(address1);
+                }
+            }
+        }
 
         addressRepository.save(address);
 
@@ -196,18 +214,7 @@ public class DeliveryServiceImp implements DeliveryService {
         return addressList;
     }
 
-    @Override
-    public AddressDTO changeDefaultAddress(String id) throws IllegalAccessException {
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if(!loggedUser.equals(address.getUser()))
-            throw new IllegalAccessException("cannot use address of others");
 
-        loggedUser.setDefaultAddress(address);
-        //address.setDefaultUser(loggedUser);
-        addressRepository.save(address);
-        return modelMapper.map(address,AddressDTO.class);
-    }
 
     public Delivery mapToEntity(DeliveryDTO deliveryDTO) {
         return modelMapper.map(deliveryDTO, Delivery.class);

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Builder
@@ -36,12 +39,27 @@ public class Address {
     @Column(nullable = false)
     private String phoneNumber;
 
+
+
+    @OneToMany(mappedBy = "deliveryAddress",fetch = FetchType.LAZY)
+    private List<Order> orders;
+
 /*    @ToString.Exclude
     @OneToOne(mappedBy = "defaultAddress",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private User defaultUser;*/
 
+    private boolean isDefault;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_address")
     private User user;
+
+    @OneToMany(mappedBy = "senderAddress",fetch = FetchType.LAZY)
+    private List<Delivery> sentDeliveries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiverAddress",fetch = FetchType.LAZY)
+    private List<Delivery> receivedDeliveries = new ArrayList<>();
+
+
 
 }

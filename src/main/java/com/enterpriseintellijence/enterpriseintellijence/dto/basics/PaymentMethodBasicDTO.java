@@ -16,4 +16,7 @@ public class PaymentMethodBasicDTO {
     @Length(min = 19, max = 19)
     private String creditCard;
 
+    private boolean isDefault;
+
+
 }

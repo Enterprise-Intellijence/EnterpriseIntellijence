@@ -31,6 +31,8 @@ public class AddressDTO {
     @NotNull
     private String phoneNumber;
 
-    private UserBasicDTO user;
+    @NotNull
+    private boolean isDefault;
+
 
 }

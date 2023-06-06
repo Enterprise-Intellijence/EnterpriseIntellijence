@@ -126,11 +126,11 @@ public class UserServiceImp implements UserService{
 
 
         //oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
-        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
+/*        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
             PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());
             //paymentMethod.setDefaultUser(oldUser);
             oldUser.setDefaultPaymentMethod(paymentMethod);
-        }
+        }*/
         userRepository.save(oldUser);
         return mapToDto(oldUser);
     }
@@ -394,7 +394,9 @@ public class UserServiceImp implements UserService{
         Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
 
         product.setLikesNumber(product.getLikesNumber()+1);
-        user.getLikedProducts().add(product);
+        //user.getLikedProducts().add(product);
+
+
         //product.getUsersThatLiked(user);
         //userRepository.addLikeToProduct(userId, productId);
         //productRepository.increaseLikesNumber(productId);
@@ -468,14 +470,7 @@ public class UserServiceImp implements UserService{
         user.setStatus(UserStatus.ACTIVE);
         return mapToDto(userRepository.save(user));
     }
-    public Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User user = userRepository.findByUsername(username);
-        Page<PaymentMethod> paymentMethods = new PageImpl<PaymentMethod>(user.getPaymentMethods(),PageRequest.of(page,size),user.getPaymentMethods().size());
-        List<PaymentMethodBasicDTO> collect = paymentMethods.stream().map(s->modelMapper.map(s, PaymentMethodBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
-    }
 
     @Override
     public Page<MessageDTO> getMyInBoxMessage(int page, int size) {

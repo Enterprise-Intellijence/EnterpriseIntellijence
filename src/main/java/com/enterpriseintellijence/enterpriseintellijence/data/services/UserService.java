@@ -69,8 +69,6 @@ public interface UserService {
 
     UserDTO unBanUser(String userId);
 
-    Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size);
-
     Page<MessageDTO> getMyInBoxMessage(int page, int size);
 
     Page<MessageDTO> getMyOutBoxMessage(int page, int size);

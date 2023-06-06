@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user_image")
 public class UserImage {
@@ -21,6 +22,7 @@ public class UserImage {
 
     private String urlPhoto;
 
-    @OneToOne(mappedBy = "photoProfile",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 }

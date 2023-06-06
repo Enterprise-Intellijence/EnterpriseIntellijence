@@ -6,14 +6,22 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Payment
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.PaymentMethodCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +34,8 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     private final JwtContextUtils jwtContextUtils;
 
     @Override
-    public PaymentMethodDTO createPaymentMethod(PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
-        PaymentMethod paymentMethod = mapToEntity(paymentMethodDTO);
+    public PaymentMethodDTO createPaymentMethod(PaymentMethodCreateDTO paymentMethodCreateDTO) throws IllegalAccessException {
+        PaymentMethod paymentMethod = modelMapper.map(paymentMethodCreateDTO,PaymentMethod.class);
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
@@ -35,10 +43,19 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
             throw new IllegalAccessException("User cannot create payment method");
         }*/
 
-        paymentMethod.setCreditCard(paymentMethodDTO.getCreditCard());
+/*        paymentMethod.setCreditCard(paymentMethodDTO.getCreditCard());
         paymentMethod.setOwner(paymentMethodDTO.getOwner());
-        paymentMethod.setExpiryDate(paymentMethodDTO.getExpiryDate());
+        paymentMethod.setExpiryDate(paymentMethodDTO.getExpiryDate());*/
         paymentMethod.setOwnerUser(loggedUser);
+
+        if(paymentMethod.isDefault()){
+            for(PaymentMethod paymentMethod1:loggedUser.getPaymentMethods()) {
+                if (paymentMethod1.isDefault()) {
+                    paymentMethod1.setDefault(false);
+                    paymentMethodRepository.save(paymentMethod1);
+                }
+            }
+        }
 
         paymentMethod = paymentMethodRepository.save(paymentMethod);
         return mapToDTO(paymentMethod);
@@ -87,6 +104,15 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         if (patch.getOwner() != null && !paymentMethod.getOwner().equals(patch.getOwner())) {
             paymentMethod.setOwner(patch.getOwner());
         }
+        if(patch.isDefault()){
+            for(PaymentMethod paymentMethod1:loggedUser.getPaymentMethods()) {
+                if (paymentMethod1.isDefault()) {
+                    paymentMethod1.setDefault(false);
+                    paymentMethodRepository.save(paymentMethod1);
+                }
+            }
+            paymentMethod.setDefault(true);
+        }
 
 
         paymentMethodRepository.save(paymentMethod);
@@ -113,6 +139,15 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         }
 
         return mapToDTO(paymentMethod);
+    }
+
+    @Override
+    public Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size) {
+        User user = jwtContextUtils.getUserLoggedFromContext();
+        Page<PaymentMethod> paymentMethods = new PageImpl<PaymentMethod>(user.getPaymentMethods(), PageRequest.of(page,size),user.getPaymentMethods().size());
+        List<PaymentMethodBasicDTO> collect = paymentMethods.stream().map(s->modelMapper.map(s, PaymentMethodBasicDTO.class)).collect(Collectors.toList());
+
+        return new PageImpl<>(collect);
     }
 
     public PaymentMethod mapToEntity(PaymentMethodDTO paymentMethodDTO) {

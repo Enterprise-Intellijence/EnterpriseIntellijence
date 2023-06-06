@@ -237,10 +237,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyOrders(page, size));
     }
 
-    @GetMapping("/me/payment-methods")
-    public ResponseEntity<Page<PaymentMethodBasicDTO>> getMyPaymentMethods(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        return ResponseEntity.ok(userService.getMyPaymentMethods(page, size));
-    }
+
 
     // TODO: 01/06/2023 commentare
     @GetMapping("/me/inbox")

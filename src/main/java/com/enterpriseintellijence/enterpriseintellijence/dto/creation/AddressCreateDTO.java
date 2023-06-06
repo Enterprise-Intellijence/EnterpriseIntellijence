@@ -26,4 +26,7 @@ public class AddressCreateDTO {
 
     @NotNull
     private String phoneNumber;
+    @NotNull
+    private boolean isDefault;
+
 }

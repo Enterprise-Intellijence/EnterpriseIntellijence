@@ -25,5 +25,4 @@ public interface DeliveryService {
 
     Iterable<AddressDTO> getMyAddressList() throws IllegalAccessException;
 
-    AddressDTO changeDefaultAddress(String id) throws IllegalAccessException;
 }

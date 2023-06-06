@@ -4,11 +4,15 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Product
 import com.enterpriseintellijence.enterpriseintellijence.data.services.PaymentMethodService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.PaymentMethodCreateDTO;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +35,9 @@ public class PaymentMethodController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
+    public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@Valid @RequestBody PaymentMethodCreateDTO paymentMethodCreateDTO) throws IllegalAccessException {
         productRepository.findAll();
-        return ResponseEntity.ok(paymentMethodService.createPaymentMethod(paymentMethodDTO));
+        return ResponseEntity.ok(paymentMethodService.createPaymentMethod(paymentMethodCreateDTO));
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
@@ -56,5 +60,10 @@ public class PaymentMethodController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<PaymentMethodDTO> getPaymentMethod(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(paymentMethodService.getPaymentMethodById(id));
+    }
+
+    @GetMapping()
+    public ResponseEntity<Page<PaymentMethodBasicDTO>> getMyPaymentMethods(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
+        return ResponseEntity.ok(paymentMethodService.getMyPaymentMethods(page, size));
     }
 }

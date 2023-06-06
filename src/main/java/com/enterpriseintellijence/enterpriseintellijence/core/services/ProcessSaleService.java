@@ -14,7 +14,7 @@ public interface ProcessSaleService {
     Offer madeAnOffer(OfferCreateDTO offerCreateDTO, Product product, User loggedUser);
     Offer acceptOrRejectAnOffer(Offer offer, OfferDTO offerDTO, Product product, User loggedUser,boolean isAccepted);
 
-    Order buyProduct(Product product,User loggedUser);
+    Order buyProduct(Product product,User loggedUser,Address deliveryAddress);
     Order cancelOrder(Order order,User loggedUser);
 
     Transaction payProduct(Order order, User loggedUser, PaymentMethod paymentMethod);

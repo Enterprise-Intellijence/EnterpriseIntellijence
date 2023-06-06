@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -94,32 +97,36 @@ public class Product {
 
 
     @Column(name = "like_number", nullable = false)
-    private Integer likesNumber;
+    private Integer likesNumber ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id"/*, nullable = false*/)
     private User seller;
 
-    @ManyToMany(mappedBy = "likedProducts",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<User> usersThatLiked;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    List<User> usersThatLiked = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Offer> offers;
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private List<Offer> offers =new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Message> messages;
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private List<Message> messages = new ArrayList<>();
 
-    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private Order order;
 
 /*    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_image")
     private ProductImage defaultImage;*/
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ProductImage> productImages;
 
-    @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY)
     private List<Report> reports;
 
 

@@ -27,9 +27,8 @@ public class PaymentMethod {
     private LocalDate expiryDate;  // DD//MM/YYYY
     private String owner;
 
-/*    @ToString.Exclude
-    @OneToOne(mappedBy = "defaultPaymentMethod",fetch = FetchType.LAZY)
-    private User defaultUser;*/
+
+    private boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

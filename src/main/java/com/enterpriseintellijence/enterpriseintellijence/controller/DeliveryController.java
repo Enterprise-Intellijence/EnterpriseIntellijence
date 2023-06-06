@@ -89,11 +89,4 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getMyAddressList());
     }
 
-    @PostMapping(path = "/address/set/default/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<AddressDTO> changeDefaultAddress(@PathVariable("id") String id) throws IllegalAccessException {
-        return ResponseEntity.ok(deliveryService.changeDefaultAddress(id));
-    }
-
-
 }

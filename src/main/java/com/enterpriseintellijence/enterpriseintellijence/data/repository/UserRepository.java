@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.repository;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,String>, JpaSpecificationExecutor<User> {
@@ -56,4 +59,5 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
     @Query(value = "select p from user_likes ul, products p where ul.user_id = ?1 and ul.product_id = p.id", nativeQuery = true)
     Page<Product> findAllLikedProducts(String userId, Pageable pageable);
 */
+
 }

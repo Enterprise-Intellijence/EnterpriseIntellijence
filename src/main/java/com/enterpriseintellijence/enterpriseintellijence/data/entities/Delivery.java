@@ -25,7 +25,7 @@ public class  Delivery {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @OneToOne(mappedBy = "delivery",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "delivery",cascade = {CascadeType.PERSIST})
     private Order order;
 
     private LocalDateTime sendTime;
@@ -41,11 +41,11 @@ public class  Delivery {
     private DeliveryStatus deliveryStatus;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "sender_address")
     private Address senderAddress;
 
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "receiver_address")
     private Address receiverAddress;
 }
