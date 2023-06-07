@@ -33,7 +33,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
-    @OneToOne(cascade = {CascadeType.PERSIST})
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_product")
     private Product product;
 

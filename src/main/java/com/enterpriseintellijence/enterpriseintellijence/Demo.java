@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PrePersist;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -79,6 +80,11 @@ public class Demo {
     private final NotificationSystem notificationSystem;
     private final OfferRepository offerRepository;
     private final OrderRepository orderRepository;
+    private final TransactionRepository transactionRepository;
+    private final DeliveryRepository deliveryRepository;
+    private final ReviewRepository reviewRepository;
+    private int globalPurchased=0;
+    private int limitPurchasing;
 
 
 
@@ -111,7 +117,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=1; i<50;i++){
+        for (int i=1; i<100;i++){
             User user = new User();
             user.setUsername("username"+i);
             user.setPassword(passwordEncoder.encode("password"+i));
@@ -145,13 +151,13 @@ public class Demo {
             Address address = new Address();
             setParameterToAddress(address, String.valueOf(i+1),userArrays.get(i),userArrays.get(i).getUsername(),true);
             addressRepository.save(address);
-            int n= random.nextInt(1,3);
-            /*for(int l=1;l<=n;l++){
+            int n= random.nextInt(0,3);
+            for(int l=1;l<=n;l++){
                 address = new Address();
                 String val = (i+1) + " . " +l;
                 setParameterToAddress(address,val,userArrays.get(i),userArrays.get(i).getUsername(),false);
                 addressRepository.save(address);
-            }*/
+            }
         }
     }
 
@@ -309,7 +315,7 @@ public class Demo {
 
         Random random = new Random();
 
-        int rand = ThreadLocalRandom.current().nextInt(1, 6);
+        int rand = ThreadLocalRandom.current().nextInt(1, 30);
         for (int i=1;i<=rand;i++){
 
             int rand2=ThreadLocalRandom.current().nextInt(0, 4);
@@ -464,48 +470,132 @@ public class Demo {
         }
     }
 
+    @Transactional
     private void processSaleExampleData(){
 
         for (User user: userArrays){
             madeAnOffer(user);
         }
         List<Offer> offers = offerRepository.findAll();
+        List<Product> offerAccepted = new ArrayList<>();
         for(Offer offer: offers){
-            rejectOrAcceptOffer(offer);
+            rejectOrAcceptOffer(offer,offerAccepted);
         }
-        List<Product> products = productRepository.findAll();
-        List<User> users = userRepository.findAll();
         Random random = new Random();
+
+
+        offers.clear();
+        offers = offerRepository.findAll();
+        List<Product> products = productRepository.findAll();
+        limitPurchasing= products.size()/100*25;
+        for(Offer offer: offers){
+            buyFromOffer(offer);
+        }
+
+        List<User> users = userRepository.findAll();
+
+
         for(Product product: products){
             User buyer =users.get(random.nextInt(users.size()));
             buyProduct(product,buyer);
 
         }
 
-        offers.clear();
-        offers = offerRepository.findAll();
-        for(Offer offer: offers){
-            User buyer = users.get(random.nextInt(users.size()));
-            buyFromOffer(offer,buyer);
+        List<Order> orders = orderRepository.findAll();
+        int sizeOrders = orders.size();
+        int pay= sizeOrders/100*75;
+        int count=0;
+        while(count<pay){
+            payForProduct(orders.get(count));
+            count++;
         }
-        String id = userArrays.get(random.nextInt(userArrays.size())).getId();
-        userRepository.flush();
-        addressRepository.flush();
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        System.out.println(user.getAddresses().size());
 
+        orders.clear();
+        orders = orderRepository.findAll();
+        for (Order order: orders){
+            if(order.getState().equals(OrderState.PURCHASED)){
+                boolean deliveryCreated = random.nextBoolean();
+                if(deliveryCreated){
+                    boolean isDelivered = random.nextBoolean();
+                    Address senderAddress = addressRepository.findAllByUserEquals(order.getProduct().getSeller()).get(0);
+                    DeliveryStatus deliveryStatus = DeliveryStatus.DELIVERED;
+                    if(!isDelivered)
+                        deliveryStatus = DeliveryStatus.SHIPPED;
+                    Delivery delivery =Delivery.builder()
+                            .order(order)
+                            .sendTime(LocalDateTime.now())
+                            .deliveredTime(LocalDateTime.now())
+                            .deliveryCost(order.getProduct().getDeliveryCost())
+                            .shipper("Bartolini spa")
+                            .deliveryStatus(deliveryStatus)
+                            .senderAddress(senderAddress)
+                            .receiverAddress(order.getDeliveryAddress())
+                            .build();
+                    if(isDelivered)
+                        order.setState(OrderState.DELIVERED);
+                    else
+                        order.setState(OrderState.SHIPPED);
+                    deliveryRepository.save(delivery);
+                    orderRepository.save(order);
+                    if(order.getState().equals(OrderState.DELIVERED)){
+                        order.setState(OrderState.COMPLETED);
+                        orderRepository.save(order);
+                        User buyer = order.getUser();
+                        User seller = order.getProduct().getSeller();
+                        int voto= random.nextInt(1,6);
+                        Review review = Review.builder()
+                                .date(LocalDateTime.now())
+                                .title(buyer.getUsername() +" recensisce "+seller.getUsername())
+                                .description("Questa è una recensione finta, e serve come placeholder")
+                                .vote(voto)
+                                .reviewed(buyer)
+                                .reviewed(seller)
+                                .build();
+
+                        reviewRepository.save(review);
+                        seller.setReviews_number(seller.getReviews_number()+1);
+                        seller.setReviews_total_sum(seller.getReviews_total_sum()+voto);
+                        userRepository.save(seller);
+                    }
+
+                }
+            }
+        }
     }
 
-    private void buyFromOffer(Offer offer, User buyer) {
+    private void payForProduct(Order order) {
+        User user = order.getUser();
+        List<PaymentMethod> paymentMethods = paymentMethodRepository.findByOwnerUserEquals(user);
+        Double price = order.getProduct().getProductCost().getPrice();
+        if(order.getOffer()!=null)
+            price +=order.getOffer().getAmount().getPrice();
+        price = Math.round(price * 100.00) / 100.00;
+        Transaction transaction = Transaction.builder()
+                .creationTime(LocalDateTime.now())
+                .amount(new CustomMoney(price,order.getProduct().getProductCost().getCurrency()))
+                .transactionState(TransactionState.COMPLETED)
+                .paymentMethod(paymentMethods.get(0))
+                .order(order)
+                .build();
+        order.setTransaction(transaction);
+        order.getProduct().setAvailability(Availability.UNAVAILABLE);
+        order.setState(OrderState.PURCHASED);
+        transactionRepository.save(transaction);
+        orderRepository.save(order);
+    }
+
+    private void buyFromOffer(Offer offer) {
         Product product = offer.getProduct();
-        if(offer.getState().equals(OfferState.ACCEPTED) && product.getAvailability().equals(Availability.AVAILABLE)){
+        if(offer.getState().equals(OfferState.ACCEPTED) && product.getAvailability().equals(Availability.PENDING) && globalPurchased<limitPurchasing){
+            User buyer = offer.getOfferer();
             List<Address> addresses = addressRepository.findAllByUserEquals(buyer);
             product.setAvailability(Availability.PENDING);
+
 
             Order order = Order.builder()
                     .orderDate(LocalDateTime.now())
                     .orderUpdateDate(LocalDateTime.now())
-                    .state(OrderState.PURCHASED)
+                    .state(OrderState.PENDING)
                     .product(product)
                     .user(buyer)
                     .deliveryAddress(addresses.get(0))
@@ -513,6 +603,10 @@ public class Demo {
                     .build();
 
             orderRepository.save(order);
+            product.setOrder(order);
+
+            productRepository.save(product);
+            globalPurchased++;
 
         }
     }
@@ -521,34 +615,43 @@ public class Demo {
 
         Random random = new Random();
         int value = random.nextInt(100);
-        if(value>=70){
+        if(value>=70 && product.getAvailability().equals(Availability.AVAILABLE) && globalPurchased<limitPurchasing){
             product.setAvailability(Availability.PENDING);
             List<Address> addresses = addressRepository.findAllByUserEquals(user);
             Order order = Order.builder()
                     .orderDate(LocalDateTime.now())
                     .orderUpdateDate(LocalDateTime.now())
-                    .state(OrderState.PURCHASED)
+                    .state(OrderState.PENDING)
                     .product(product)
                     .user(user)
                     .deliveryAddress(addresses.get(0))
                     .build();
-            for(Offer offer: product.getOffers()){
-                if(offer.getOfferer().getId().equals(user.getId()) && offer.getState().equals(OfferState.ACCEPTED))
-                    order.setOffer(offer);
 
-            }
             orderRepository.save(order);
+            product.setOrder(order);
+            productRepository.save(product);
+            globalPurchased++;
+
+
 
         }
     }
 
-    private void rejectOrAcceptOffer(Offer offer) {
+    private void rejectOrAcceptOffer(Offer offer,List<Product> offerAccepted) {
         Random random = new Random();
-        boolean isAccepted = random.nextBoolean();
-        if(isAccepted){
-            offer.setState(OfferState.ACCEPTED);
-            offer.getProduct().setAvailability(Availability.PENDING);
-            offer.getProduct().setLastUpdateDate(LocalDateTime.now());
+        int prob = random.nextInt(101);
+        boolean isAccepted=false;
+        if(prob>75)
+            isAccepted=true;
+        if(isAccepted ){
+            if(offerAccepted.isEmpty() || !offerAccepted.contains(offer.getProduct())){
+                offer.setState(OfferState.ACCEPTED);
+                offer.getProduct().setAvailability(Availability.PENDING);
+                offer.getProduct().setLastUpdateDate(LocalDateTime.now());
+                offerAccepted.add(offer.getProduct());
+            }else
+                offer.setState(OfferState.REJECTED);
+
         }
         else
             offer.setState(OfferState.REJECTED);
@@ -563,7 +666,7 @@ public class Demo {
 
     private void madeAnOffer(User user) {
         Random random = new Random();
-        int n = random.nextInt(0,15);
+        int n = random.nextInt(0,8);
         for(int i=0; i<n;i++){
             Product product = productArrayList.get(random.nextInt(1, productArrayList.size()));
             if(!product.getSeller().getId().equals(user.getId())){
