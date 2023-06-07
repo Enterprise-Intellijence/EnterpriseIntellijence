@@ -472,7 +472,7 @@ public class UserServiceImp implements UserService{
     }
 
 
-    @Override
+    /*@Override
     public Page<MessageDTO> getMyInBoxMessage(int page, int size) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUsername(username);
@@ -490,7 +490,7 @@ public class UserServiceImp implements UserService{
         List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect);
-    }
+    }*/
 
     @Override
     public Page<OfferBasicDTO> getMyOffers(int page, int size) {

@@ -237,18 +237,18 @@ public class UserController {
 
 
 
-    // TODO: 01/06/2023 commentare
+/*    // TODO: 01/06/2023 commentare
     @GetMapping("/me/inbox")
     public ResponseEntity<Page<MessageDTO>> getMyInBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyInBoxMessage(page, size));
-    }
+    }*/
 
 
-    // TODO: 01/06/2023 commentare
+/*    // TODO: 01/06/2023 commentare
     @GetMapping("/me/outbox")
     public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));
-    }
+    }*/
 
     @GetMapping("/me/offers")
     public ResponseEntity<Page<OfferBasicDTO>> getMyOffers(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
