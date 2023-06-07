@@ -43,7 +43,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/users", produces="application/json")
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:4200")
 @Slf4j
 public class UserController {
     private final UserService userService;

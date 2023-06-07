@@ -391,7 +391,7 @@ public class ProductServiceImp implements ProductService {
         Page<Product> products = productRepository.findAll(withFilters,pageable);
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect,pageable, products.getTotalElements());
     }
 
     private LocalDateTime getTimeNow(){

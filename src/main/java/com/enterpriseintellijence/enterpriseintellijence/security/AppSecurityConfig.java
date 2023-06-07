@@ -48,7 +48,7 @@ public class AppSecurityConfig  {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        return http.csrf().disable()
+        http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers("/api/v1/admin/**", "/api/v1/reports/close/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
                 .and()
                 .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/api/v1/reports").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
@@ -74,9 +74,9 @@ public class AppSecurityConfig  {
                 .and()
                 .addFilter(new CustomAuthenticationFilter(authenticationManager, tokenStore))
                 .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login()
-                .and()
-                .build();
+                .oauth2Login();
+        http.cors();
+    return http.build();
 
     }
 
