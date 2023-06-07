@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InvalidTokensRepository extends JpaRepository<InvalidToken,String>, JpaSpecificationExecutor<InvalidToken> {
 
-    InvalidToken findByToken(String token);
+    Optional<InvalidToken> findByToken(String token);
 
     List<InvalidToken> findAllByExpirationDateBefore(LocalDateTime expirationDate);
 

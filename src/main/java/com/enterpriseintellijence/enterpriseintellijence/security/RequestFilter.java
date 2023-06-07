@@ -30,7 +30,7 @@ public class RequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String token = tokenStore.getToken(request);
-        if(invalidTokensRepository.findByToken(token) != null) {
+        if(invalidTokensRepository.findByToken(token).isPresent()) {
             token = "invalid";
         }
         if(!"invalid".equals(token)) {
