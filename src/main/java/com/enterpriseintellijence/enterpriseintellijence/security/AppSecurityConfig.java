@@ -20,6 +20,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +61,7 @@ public class AppSecurityConfig  {
                 .and()
                 .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/api/v1/users/{id}","/api/v1/users/find-by-username","/api/v1/users/followers/{id}","/api/v1/users/following/{id}").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/api/v1/products/{id}","/api/v1/products/filter","/api/v1/products/wardrobe").permitAll()
+                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/api/v1/products/{id}","/api/v1/products/filter","/api/v1/products/wardrobe","/api/v1/images/users/photo-profile/{id}","/api/v1/images/product/{id}").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/v1/demo","/api/v1/users/register", "/api/v1/users/authenticate",
                         "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**","/api/v1/images/users/photo-profile","/api/v1/images/product",
@@ -73,6 +78,19 @@ public class AppSecurityConfig  {
                 .and()
                 .build();
 
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 
