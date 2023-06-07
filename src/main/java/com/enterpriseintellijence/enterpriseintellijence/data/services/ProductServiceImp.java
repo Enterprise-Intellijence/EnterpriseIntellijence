@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ClothingRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.EntertainmentRepository;
@@ -125,8 +124,8 @@ public class ProductServiceImp implements ProductService {
             // TODO: 28/05/2023 se cambia l'istanza del prodotto?
         }
 
-        if(patch.getAddress()!=null && !product.getAddress().equals(patch.getAddress()) )
-            product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );
+/*        if(patch.getAddress()!=null && !product.getAddress().equals(patch.getAddress()) )
+            product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );*/
         if(patch.getBrand()!=null && !product.getBrand().equals(patch.getBrand()))
             product.setBrand(patch.getBrand());
         if(patch.getProductSize()!=null && !product.getProductSize().equals(patch.getProductSize()))
@@ -392,7 +391,7 @@ public class ProductServiceImp implements ProductService {
         Page<Product> products = productRepository.findAll(withFilters,pageable);
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect,pageable, products.getTotalElements());
     }
 
     private LocalDateTime getTimeNow(){

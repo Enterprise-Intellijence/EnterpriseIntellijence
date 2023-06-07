@@ -7,22 +7,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "user_image")
-public class UserImage {
+@Table(name = "followers_list")
+public class Following {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
-    private String description;
 
-    private String urlPhoto;
+    private LocalDateTime followingFrom;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne
+    @JoinColumn(name="follower")
+    private User follower;
+
+    @ManyToOne
+    @JoinColumn(name="following")
+    private User following;
 }

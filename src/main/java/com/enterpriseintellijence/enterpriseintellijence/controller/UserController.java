@@ -43,7 +43,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/users", produces="application/json")
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:4200")
 @Slf4j
 public class UserController {
     private final UserService userService;
@@ -185,7 +185,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/followers/{id}")
+    /*@GetMapping("/followers/{id}")
     public ResponseEntity<Page<UserBasicDTO>> getFollowers(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         if (userService.findUserById(id) == null)
             return ResponseEntity.notFound().build();
@@ -211,7 +211,7 @@ public class UserController {
     public ResponseEntity<Void> unfollow(@PathVariable("id") String id) throws EntityNotFoundException {
         userService.unfollowUser(id);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     @PostMapping("/like/{id}")
     public ResponseEntity<Void> like(@PathVariable("id") String id) throws EntityNotFoundException {
@@ -235,23 +235,20 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyOrders(page, size));
     }
 
-    @GetMapping("/me/payment-methods")
-    public ResponseEntity<Page<PaymentMethodBasicDTO>> getMyPaymentMethods(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        return ResponseEntity.ok(userService.getMyPaymentMethods(page, size));
-    }
 
-    // TODO: 01/06/2023 commentare
+
+/*    // TODO: 01/06/2023 commentare
     @GetMapping("/me/inbox")
     public ResponseEntity<Page<MessageDTO>> getMyInBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyInBoxMessage(page, size));
-    }
+    }*/
 
 
-    // TODO: 01/06/2023 commentare
+/*    // TODO: 01/06/2023 commentare
     @GetMapping("/me/outbox")
     public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));
-    }
+    }*/
 
     @GetMapping("/me/offers")
     public ResponseEntity<Page<OfferBasicDTO>> getMyOffers(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {

@@ -1,8 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
@@ -17,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -39,11 +36,16 @@ public class UserDTO {
     private UserImageDTO photoProfile;
     @NotNull
     private Provider provider;
-    private AddressDTO address;
+
+    //private AddressDTO defaultAddress;
+
+
+    private List<AddressDTO> addresses;
+    private List<PaymentMethodDTO> paymentMethods;
     @NotNull
     private UserRole role;
 
-    private PaymentMethodBasicDTO defaultPaymentMethod;
+    //private PaymentMethodBasicDTO defaultPaymentMethod;
 
     private int reviews_total_sum;
     private int reviews_number;

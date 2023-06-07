@@ -81,7 +81,7 @@ mode 000000,100644..100644
 + package com.enterpriseintellijence.enterpriseintellijence;
 + 
 + import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-+ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
++ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Address;
 + import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 + import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 + import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
@@ -766,7 +766,7 @@ mode 000000,100644..100644
 ++package com.enterpriseintellijence.enterpriseintellijence;
 ++
 ++import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
+++import com.enterpriseintellijence.enterpriseintellijence.data.entities.Address;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 ++import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;

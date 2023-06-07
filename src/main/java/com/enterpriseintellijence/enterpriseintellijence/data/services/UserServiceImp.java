@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
@@ -119,12 +118,18 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
-        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
+/*        if(userDTO.getDefaultAddress()!=null){
+            Address address
+            oldUser.setDefaultAddress(mo);
+        }*/
+
+
+        //oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
+/*        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
             PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());
-            paymentMethod.setDefaultUser(oldUser);
+            //paymentMethod.setDefaultUser(oldUser);
             oldUser.setDefaultPaymentMethod(paymentMethod);
-        }
+        }*/
         userRepository.save(oldUser);
         return mapToDto(oldUser);
     }
@@ -311,7 +316,7 @@ public class UserServiceImp implements UserService{
         new ResponseEntity<>("user activated", HttpStatus.OK);
     }
 
-    @Override
+ /*   @Override
     public Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size) {
         return userRepository.findAllByFollowingId(userId, PageRequest.of(page, size))
                 .map(user -> modelMapper.map(user, UserBasicDTO.class));
@@ -342,10 +347,10 @@ public class UserServiceImp implements UserService{
         userRepository.save(actualUser);
         //userRepository.save(userToFollow);
 
-        /*
+        *//*
         userRepository.increaseFollowersNumber(userIdToFollow);
         userRepository.increaseFollowingNumber(userId);
-        */
+        *//*
     }
 
     @Override
@@ -369,16 +374,16 @@ public class UserServiceImp implements UserService{
         //userRepository.save(userToUnfollow);
         userRepository.save(actualUser);
 
-        /*
+        *//*
         userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
 
-        userRepository.removeFollow(userId, userIdToUnfollow);*/
-/*
+        userRepository.removeFollow(userId, userIdToUnfollow);*//*
+*//*
         userRepository.decreaseFollowingNumbers(userId);
         userRepository.decreaseFollowersNumbers(userIdToUnfollow);
-        */
-    }
+        *//*
+    }*/
 
     @Override
     public void addLikeToProduct(String productId) {
@@ -389,7 +394,9 @@ public class UserServiceImp implements UserService{
         Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
 
         product.setLikesNumber(product.getLikesNumber()+1);
-        user.getLikedProducts().add(product);
+        //user.getLikedProducts().add(product);
+
+
         //product.getUsersThatLiked(user);
         //userRepository.addLikeToProduct(userId, productId);
         //productRepository.increaseLikesNumber(productId);
@@ -422,11 +429,11 @@ public class UserServiceImp implements UserService{
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUsername(username);
 
-        /*return productRepository.findAllByUsersThatLiked(user, PageRequest.of(page, size))
-                .map(product -> modelMapper.map(product, ProductBasicDTO.class));*/
         Page<Product> products =productRepository.findAllByVisibilityAndUsersThatLiked(Visibility.PUBLIC,user,PageRequest.of(page,size));
+        System.out.println(products.getTotalElements());
+
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect,PageRequest.of(page,size), products.getTotalElements());
     }
 
     @Override
@@ -463,16 +470,9 @@ public class UserServiceImp implements UserService{
         user.setStatus(UserStatus.ACTIVE);
         return mapToDto(userRepository.save(user));
     }
-    public Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User user = userRepository.findByUsername(username);
-        Page<PaymentMethod> paymentMethods = new PageImpl<PaymentMethod>(user.getPaymentMethods(),PageRequest.of(page,size),user.getPaymentMethods().size());
-        List<PaymentMethodBasicDTO> collect = paymentMethods.stream().map(s->modelMapper.map(s, PaymentMethodBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
-    }
 
-    @Override
+    /*@Override
     public Page<MessageDTO> getMyInBoxMessage(int page, int size) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         User user = userRepository.findByUsername(username);
@@ -490,7 +490,7 @@ public class UserServiceImp implements UserService{
         List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect);
-    }
+    }*/
 
     @Override
     public Page<OfferBasicDTO> getMyOffers(int page, int size) {

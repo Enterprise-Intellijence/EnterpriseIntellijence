@@ -1,7 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
-
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.DeliveryStatus;
 import jakarta.persistence.*;
@@ -11,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.joda.money.Money;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +25,7 @@ public class  Delivery {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @OneToOne(mappedBy = "delivery",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "delivery",cascade = {CascadeType.PERSIST})
     private Order order;
 
     private LocalDateTime sendTime;
@@ -43,21 +40,12 @@ public class  Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "country", column = @Column(name = "sender_country")),
-        @AttributeOverride(name = "city", column = @Column(name = "sender_city")),
-        @AttributeOverride(name = "street", column = @Column(name = "sender_street")),
-        @AttributeOverride(name = "postalCode", column = @Column(name = "sender_postal_code"))
-    })
+    @ManyToOne
+    @JoinColumn(name = "sender_address")
     private Address senderAddress;
 
-    @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "country", column = @Column(name = "receiver_country")),
-        @AttributeOverride(name = "city", column = @Column(name = "receiver_city")),
-        @AttributeOverride(name = "street", column = @Column(name = "receiver_street")),
-        @AttributeOverride(name = "postalCode", column = @Column(name = "receiver_postal_code"))
-    })
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_address")
     private Address receiverAddress;
 }

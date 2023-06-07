@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 
 import jakarta.persistence.*;
@@ -32,24 +33,27 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_product")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "order_user")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "order_delivery")
     private Delivery delivery;
 
-    // todo: remove comment
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="delivery_address")
+    private Address deliveryAddress;
+
+    @OneToOne()
     @JoinColumn(name = "order_offer"/*,nullable = false*/)
     private Offer offer;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "order_transaction")
     private Transaction transaction;
 }

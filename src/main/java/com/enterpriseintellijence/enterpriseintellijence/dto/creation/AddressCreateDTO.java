@@ -1,18 +1,14 @@
-package com.enterpriseintellijence.enterpriseintellijence.dto;
+package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
-public class AddressDTO {
-    @NotNull
-    private String id;
-
+@Builder
+@AllArgsConstructor
+public class AddressCreateDTO {
     @NotNull
     private String header;
 
@@ -30,9 +26,7 @@ public class AddressDTO {
 
     @NotNull
     private String phoneNumber;
-
     @NotNull
     private boolean isDefault;
-
 
 }

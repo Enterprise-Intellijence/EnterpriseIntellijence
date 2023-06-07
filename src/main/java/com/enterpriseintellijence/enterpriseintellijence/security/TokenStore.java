@@ -10,6 +10,7 @@ import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -185,4 +187,6 @@ public class TokenStore {
         List<InvalidToken> invalidTokens = invalidTokensRepository.findAllByExpirationDateBefore(now);
         invalidTokensRepository.deleteAll(invalidTokens);
     }
+
+
 }

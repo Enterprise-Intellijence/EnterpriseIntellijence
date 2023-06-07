@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +24,9 @@ public class Message {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
     private String text;
+
+    @Column(length = 36, nullable = false, updatable = false)
+    private String conversationId;
 
     @Column(name = "message_date")
     private LocalDateTime messageDate;
@@ -46,5 +50,8 @@ public class Message {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="offer_id")
     private Offer offer;
+
+
+
 
 }

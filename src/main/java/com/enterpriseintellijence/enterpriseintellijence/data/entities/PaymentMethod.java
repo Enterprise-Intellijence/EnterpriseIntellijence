@@ -1,10 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -29,8 +26,9 @@ public class PaymentMethod {
 
     private LocalDate expiryDate;  // DD//MM/YYYY
     private String owner;
-    @OneToOne(mappedBy = "defaultPaymentMethod",fetch = FetchType.LAZY)
-    private User defaultUser;
+
+
+    private boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -38,6 +36,7 @@ public class PaymentMethod {
 
     @OneToMany(mappedBy = "paymentMethod")
     private List<Transaction> transaction;
+
 
 
 

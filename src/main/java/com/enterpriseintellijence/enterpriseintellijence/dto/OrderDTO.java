@@ -36,6 +36,8 @@ public class OrderDTO {
     private UserBasicDTO user;
     private DeliveryDTO delivery;
 
+    private AddressDTO deliveryAddress;
+
     private OfferBasicDTO offer;
     private TransactionDTO transaction;
 }

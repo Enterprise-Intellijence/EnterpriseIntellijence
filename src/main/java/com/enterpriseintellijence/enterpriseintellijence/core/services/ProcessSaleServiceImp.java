@@ -56,7 +56,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     }
 
     @Override
-    public Order buyProduct(Product product, User loggedUser) {
+    public Order buyProduct(Product product, User loggedUser,Address deliveryAddress) {
         Order order = new Order();
 
         if(product.getOffers()!=null && !product.getOffers().isEmpty()){
@@ -74,7 +74,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.setOrderUpdateDate(now);
 
         order.setState(OrderState.PENDING);
-
+        order.setDeliveryAddress(deliveryAddress);
         product.setAvailability(Availability.PENDING);
         product.setLastUpdateDate(now);
         product.setOrder(order);
@@ -144,9 +144,14 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         delivery.setDeliveryStatus(DeliveryStatus.SHIPPED);
         delivery.setDeliveryCost(order.getProduct().getDeliveryCost());
 
+        // TODO: 03/06/2023 occhio indirizzo
         delivery.setShipper(shipper);
-        delivery.setSenderAddress(loggedUser.getAddress());
-        delivery.setReceiverAddress(order.getUser().getAddress());
+        Address addressSender;
+        for (Address address:loggedUser.getAddresses()){
+            if(address.isDefault())
+                delivery.setSenderAddress(address);
+        }
+        delivery.setReceiverAddress(order.getDeliveryAddress());
 
         return delivery;
     }

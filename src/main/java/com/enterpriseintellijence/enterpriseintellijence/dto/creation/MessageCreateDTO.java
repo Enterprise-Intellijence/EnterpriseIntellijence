@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class MessageCreateDTO {
+
+    private String conversationId;
+
     @NotNull
     @Length(max = 500)
     private String text;

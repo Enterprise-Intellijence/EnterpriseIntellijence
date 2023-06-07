@@ -46,13 +46,13 @@ public interface UserService {
 
     void activateUser(String token) throws ParseException, JOSEException;
 
-    Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size);
+/*    Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size);
 
     Page<UserBasicDTO> getFollowingByUserId(String userId, int page, int size);
 
     void followUser(String userIdToFollow);
 
-    void unfollowUser(String userIdToUnfollow);
+    void unfollowUser(String userIdToUnfollow);*/
 
     void addLikeToProduct(String productId);
 
@@ -69,11 +69,9 @@ public interface UserService {
 
     UserDTO unBanUser(String userId);
 
-    Page<PaymentMethodBasicDTO> getMyPaymentMethods(int page, int size);
+/*    Page<MessageDTO> getMyInBoxMessage(int page, int size);
 
-    Page<MessageDTO> getMyInBoxMessage(int page, int size);
-
-    Page<MessageDTO> getMyOutBoxMessage(int page, int size);
+    Page<MessageDTO> getMyOutBoxMessage(int page, int size);*/
 
     Page<OfferBasicDTO> getMyOffers(int page, int size);
 

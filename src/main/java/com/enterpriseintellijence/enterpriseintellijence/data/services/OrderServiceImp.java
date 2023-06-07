@@ -1,9 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Order;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.AddressRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
@@ -38,16 +40,21 @@ public class OrderServiceImp implements OrderService {
     private final ModelMapper modelMapper;
     private final Clock clock;
     private final ProcessSaleServiceImp processSaleServiceImp;
+    private final AddressRepository addressRepository;
 
     @Override
     public OrderDTO createOrder(OrderCreateDTO orderDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(orderDTO.getProduct().getId()).orElseThrow(EntityNotFoundException::new);
+        Address address = addressRepository.findById(orderDTO.getDeliveryAddress().getId()).orElseThrow(EntityNotFoundException::new);
 
         if(!product.getAvailability().equals(Availability.AVAILABLE))
             throw new IllegalArgumentException("cannot buy product not available");
 
-        Order order = processSaleServiceImp.buyProduct(product,loggedUser);
+        if(!address.getUser().equals(loggedUser))
+            throw new IllegalAccessException("Cannot use address of other user");
+
+        Order order = processSaleServiceImp.buyProduct(product,loggedUser,address);
 
 
 
@@ -89,10 +96,14 @@ public class OrderServiceImp implements OrderService {
         throwOnIdMismatch(id,patch);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-
+        // TODO: 05/06/2023
         if (loggedUser.getId().equals(order.getUser().getId()) && patch.getState().equals(OrderState.DELIVERED)) {
             processSaleServiceImp.completeOrder(order,loggedUser);
         }
+        else if(patch.getDeliveryAddress()!=null && !patch.getDeliveryAddress().getId().equals(order.getDeliveryAddress().getId())){
+            Address address = addressRepository.findById(patch.getDeliveryAddress().getId()).orElseThrow(EntityNotFoundException::new);
+            order.setDeliveryAddress(address);
+        } 
         else
             throw new IllegalAccessException("User cannot change order");
 
@@ -101,75 +112,7 @@ public class OrderServiceImp implements OrderService {
         orderRepository.save(order);
         return mapToDTO(order);
 
-        /*
 
-        OrderDTO orderDTO = mapToDTO(orderRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
-
-
-
-        if (Arrays.asList(OrderState.values()).contains(patch.getState())) {
-
-            switch (orderDTO.getState()) {
-
-                case CANCELED -> {
-                    if (!patch.getState().equals(OrderState.COMPLETED)) {
-                        throw new IllegalAccessException("State cannot be changed");
-                    }
-                }
-
-                case PENDING -> {
-                    if (!(patch.getState().equals(OrderState.CANCELED) ||
-                        patch.getState().equals(OrderState.PURCHASED))) {
-                        throw new IllegalAccessException("State cannot be changed");
-                    }
-                }
-
-                case PURCHASED -> {
-                    if (patch.getState().equals(OrderState.PENDING) ||
-                        patch.getState().equals(OrderState.DELIVERED) ||
-                        patch.getState().equals(OrderState.COMPLETED) ||
-                        patch.getState().equals(OrderState.CANCELED)) {
-                        throw new IllegalAccessException("State cannot be changed");
-                    }
-                }
-
-                case SHIPPED -> {
-                    if (patch.getState().equals(OrderState.PENDING) ||
-                        patch.getState().equals(OrderState.PURCHASED) ||
-                        patch.getState().equals(OrderState.COMPLETED) ||
-                        patch.getState().equals(OrderState.CANCELED)) {
-                        throw new IllegalAccessException("State cannot be changed");
-                    }
-                }
-
-                case DELIVERED -> {
-                    if (patch.getState().equals(OrderState.PENDING) ||
-                        patch.getState().equals(OrderState.PURCHASED) ||
-                        patch.getState().equals(OrderState.SHIPPED) ||
-                        patch.getState().equals(OrderState.CANCELED)) {
-                        throw new IllegalAccessException("State cannot be changed");
-                    }
-                }
-
-                case COMPLETED -> {
-                    if (!patch.getState().equals(OrderState.CANCELED)) {
-                        throw new IllegalAccessException("State cannot be changed");
-                    }
-                }
-            }
-
-            orderDTO.setState(patch.getState());
-
-        } else {
-            throw new IllegalAccessException("State cannot be changed");
-        }
-
-        orderDTO = mapToDTO(orderRepository.save(mapToEntity(orderDTO)));
-        return orderDTO;
-*/
     }
 
     @Override

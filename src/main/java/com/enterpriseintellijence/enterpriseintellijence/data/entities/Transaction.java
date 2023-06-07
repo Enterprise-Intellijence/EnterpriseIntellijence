@@ -40,6 +40,6 @@ public class Transaction {
     @JoinColumn(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @OneToOne(mappedBy = "transaction")
+    @OneToOne(mappedBy = "transaction",cascade = CascadeType.PERSIST)
     private Order order;
 }

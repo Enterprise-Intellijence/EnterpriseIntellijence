@@ -25,8 +25,12 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImp implements ImageService{
+    private static String userDir = System.getProperty("user.dir") + "/user_photos/";
+    private static String prodDir = System.getProperty("user.dir") + "/product_photos/";
+/*
     private static String userDir="src/main/resources/user_photos/";
     private static String prodDir="src/main/resources/product_photos/";
+*/
 
 
     private final ProductImageRepository productImageRepository;

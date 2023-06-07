@@ -1,25 +1,18 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.Address;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -45,14 +38,16 @@ public class User implements UserDetails {
     @Column(name = "bio", length = 500)
     private String bio;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "photo_profile")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private UserImage photoProfile;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    private Address address;
+
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    private List<Address> addresses = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -60,9 +55,9 @@ public class User implements UserDetails {
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+/*    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "default_payment_method")
-    private PaymentMethod defaultPaymentMethod;
+    private PaymentMethod defaultPaymentMethod;*/
 
     @OneToMany(mappedBy = "ownerUser",fetch = FetchType.LAZY)
     private List<PaymentMethod> paymentMethods;
@@ -71,15 +66,21 @@ public class User implements UserDetails {
     private List<Offer> offersMade;
 
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
-    private List<Product> sellingProducts;
+    private List<Product> sellingProducts = new ArrayList<>();
 
-    @ManyToMany()
+/*    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "followers_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> followers;
+    private List<User> followers= new ArrayList<>();;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
-    private List<User> following;
+    private List<User> following= new ArrayList<>();;*/
+
+    @OneToMany(mappedBy="following",fetch = FetchType.LAZY)
+    private List<Following> followers;
+
+    @OneToMany(mappedBy="follower",fetch = FetchType.LAZY)
+    private List<Following> following;
 
     @Column(name = "followers_number", nullable = false)
     private int followers_number;
@@ -93,10 +94,12 @@ public class User implements UserDetails {
     @Column(name = "reviews_number", nullable = false)
     private int reviews_number;
 
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_likes", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> likedProducts;
+    @ManyToMany(mappedBy = "usersThatLiked",fetch = FetchType.LAZY)
+/*    @JoinTable(
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))*/
+    List<Product> likedProducts= new ArrayList<>();
 
     @OneToMany(mappedBy = "sendUser",fetch = FetchType.LAZY)
     private List<Message> sentMessages;
@@ -117,10 +120,10 @@ public class User implements UserDetails {
     @Column(name = "status", nullable = false)
     private UserStatus status;
 
-    @OneToMany(mappedBy = "reporterUser",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reporterUser",fetch = FetchType.LAZY)
     private List<Report> reports;
 
-    @OneToMany(mappedBy = "reportedUser",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reportedUser",fetch = FetchType.LAZY)
     private List<Report> reported;
 
     @Override
