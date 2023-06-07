@@ -454,7 +454,7 @@ public class Demo {
         for (User user: userArrays){
             if(!product.getSeller().getId().equals(user.getId())){
                 int n = random.nextInt(101);
-                if(n<=30){
+                if(n<=12){
                     //user.getLikedProducts().add(product);/*
                     product.getUsersThatLiked().add(user);
                     cont++;
