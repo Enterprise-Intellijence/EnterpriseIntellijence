@@ -8,6 +8,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,8 +54,19 @@ public class ReviewController {
 
     // TODO: avrebbe più senso fare un metodo allReviewsByUser, che restituisce tutte le recensioni riferite ad uno stesso utente
     // forse è meglio parlarne quando si ha il frontend
-    @GetMapping("")
-    public Iterable<ReviewDTO> allReview() {
-        return reviewService.findAll();
+    @GetMapping("/received")
+    public Page<ReviewDTO> allReviewReceived(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int sizePage)
+    {
+    return reviewService.allReviewReceived(page,sizePage);
+    }
+
+    @GetMapping("/sent")
+    public Page<ReviewDTO> allReviewSent(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int sizePage)
+    {
+        return reviewService.allReviewSent(page,sizePage);
     }
 }

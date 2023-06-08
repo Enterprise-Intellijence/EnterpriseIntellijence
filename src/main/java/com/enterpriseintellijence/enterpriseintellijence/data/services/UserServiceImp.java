@@ -272,6 +272,18 @@ public class UserServiceImp implements UserService{
         emailService.sendEmail(user.getEmail(), Constants.RESET_PASSWORD_EMAIL_SUBJECT,Constants.RESET_PASSWORD_EMAIL_TEXT + url);
     }
 
+    @Override
+    public UserDTO findMyProfile() {
+        try {
+            User user = jwtContextUtils.getUserLoggedFromContext();
+            UserDTO userDTO = modelMapper.map(user,UserDTO.class);
+            return userDTO;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
 
     @Override

@@ -152,8 +152,9 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
-        UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
-        return ResponseEntity.ok(userDTO);
+
+        //UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
+        return ResponseEntity.ok(userService.findMyProfile());
     }
 
     @GetMapping("/refreshToken")
