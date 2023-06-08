@@ -80,4 +80,6 @@ public interface UserService {
     void changePassword(String token) throws ParseException, JOSEException, MessagingException;
 
     void resetPassword(String email) throws MessagingException;
+
+    UserDTO findMyProfile();
 }

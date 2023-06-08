@@ -46,7 +46,7 @@ public class User implements UserDetails {
 
 
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -110,11 +110,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Order> orders;
 
+    // TODO: 08/06/2023 problemi di conversione e caricamento
     @OneToMany(mappedBy = "reviewed",fetch = FetchType.LAZY)
-    private List<Review> receivedReviews;
+    private List<Review> receivedReviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "reviewer",fetch = FetchType.LAZY)
-    private List<Review> sentReviews;
+    private List<Review> sentReviews = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

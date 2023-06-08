@@ -19,12 +19,17 @@ import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtil
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -149,6 +154,22 @@ public class ReviewServiceImp implements ReviewService {
     public Iterable<ReviewDTO> findAll() {
         Iterable<Review> reviews = reviewRepository.findAll();
         return mapToDTO(reviews);
+    }
+
+    @Override
+    public Page<ReviewDTO> allReviewReceived(int page, int sizePage) {
+        User user = jwtContextUtils.getUserLoggedFromContext();
+        Page<Review> reviews = reviewRepository.findAllByReviewedEquals(user,PageRequest.of(page,sizePage));
+        List<ReviewDTO> collect =reviews.stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect,PageRequest.of(page,sizePage),reviews.getTotalElements());
+    }
+
+    @Override
+    public Page<ReviewDTO> allReviewSent(int page, int sizePage) {
+        User user = jwtContextUtils.getUserLoggedFromContext();
+        Page<Review> reviews = reviewRepository.findAllByReviewerEquals(user,PageRequest.of(page,sizePage));
+        List<ReviewDTO> collect =reviews.stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList());
+        return new PageImpl<>(collect,PageRequest.of(page,sizePage),reviews.getTotalElements());
     }
 
     // TODO: VA TESTATA ASSOLUTAMENTE

@@ -53,8 +53,8 @@ public class UserDTO {
     private Integer followers_number;
     private Integer following_number;
 
-    private List<ReviewDTO> receivedReviews;
-    private List<ReviewDTO> sentReviews;
+    //private List<ReviewDTO> receivedReviews;
+    //private List<ReviewDTO> sentReviews;
 
     /*esiste il metodo per fare la get su questo
     private List<ProductBasicDTO> sellingProducts; FATTO */
