@@ -75,9 +75,9 @@ public interface UserService {
 
     Page<OfferBasicDTO> getMyOffers(int page, int size);
 
-    void changePassword(String oldPassword, String newPassword);
+    void changePassword(String oldPassword, String newPassword, String authToken) throws ParseException, JOSEException, MessagingException;
 
-    void changePassword(String token) throws ParseException, JOSEException, MessagingException;
+    void changePassword(String token, String authToken) throws ParseException, JOSEException, MessagingException;
 
     void resetPassword(String email) throws MessagingException;
 
