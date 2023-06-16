@@ -84,7 +84,7 @@ public class UserController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @PostMapping("/activate")
+    @GetMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
     public void activate(@RequestParam("token") String unique_code) throws ParseException, JOSEException {
         userService.activateUser(unique_code);
@@ -169,8 +169,8 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<Void> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) throws EntityNotFoundException {
-        userService.changePassword(oldPassword, newPassword);
+    public ResponseEntity<Void> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword, HttpServletRequest request) throws EntityNotFoundException, MessagingException, ParseException, JOSEException {
+        userService.changePassword(oldPassword, newPassword, request.getHeader(AUTHORIZATION));
         return ResponseEntity.ok().build();
     }
 
@@ -181,8 +181,8 @@ public class UserController {
     }
 
     @GetMapping("/getNewPassword")
-    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
-        userService.changePassword(token);
+    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token, HttpServletRequest request) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
+        userService.changePassword(token, request.getHeader(AUTHORIZATION));
         return ResponseEntity.ok().build();
     }
 
