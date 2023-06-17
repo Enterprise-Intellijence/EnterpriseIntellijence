@@ -1,11 +1,14 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductCategory;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Size;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.SizeRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.data.specification.ProductSpecification;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.SizeDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
@@ -20,9 +23,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,7 @@ public class ProductController {
     private final ProductService productService;
     private final TokenStore tokenStore;
     private final UserRepository userRepository;
+    private final SizeRepository sizeRepository;
 
     private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
     private final Bucket bucket = Bucket.builder().addLimit(limit).build();
@@ -95,21 +97,21 @@ public class ProductController {
             @RequestParam(required = false) LocalDateTime uploadDate,
             @RequestParam(required = false) Availability availability,
             @RequestParam(required = false) ProductCategory productCategory,
-            @RequestParam(required = false) ProductCategoryParent productCategoryParent,
-            @RequestParam(required = false) ProductCategoryChild productCategoryChild,
+            @RequestParam(required = false) String primaryCat,
+            @RequestParam(required = false) String secondaryCat,
+            @RequestParam(required = false) String tertiaryCat,
             @RequestParam(required = false) Integer likesNumber,
             @RequestParam(required = false) ProductGender productGender,
-            @RequestParam(required = false) ClothingSize size,
+            @RequestParam(required = false) String[] sizes,
             @RequestParam(required = false) Colour colour,
             @RequestParam(required = false) EntertainmentLanguage entertainmentLanguage,
-            @RequestParam(required = false) HomeSize homeSize,
             @RequestParam(required = false) HomeMaterial homeMaterial,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int sizePage,
             @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection
     ) {
-        ProductSpecification.Filter filter = new ProductSpecification.Filter(userRepository );
+        ProductSpecification.Filter filter = new ProductSpecification.Filter(userRepository,sizeRepository );
         filter.setTitle(title);
         filter.setDescription(description);
         filter.setMinProductCost(minProductCost);
@@ -122,13 +124,13 @@ public class ProductController {
         filter.setUploadDate(uploadDate);
         filter.setAvailability(availability);
         filter.setProductCategory(productCategory);
-        filter.setProductCategoryParent(productCategoryParent);
-        filter.setProductCategoryChild(productCategoryChild);
+        filter.setPrimaryCat(primaryCat);
+        filter.setSecondaryCat(secondaryCat);
+        filter.setTertiaryCat(tertiaryCat);
         filter.setLikesNumber(likesNumber);
-        filter.setSize(size);
+        filter.setSizes(sizes != null ? Arrays.asList(sizes) :null);
         filter.setColour(colour);
         filter.setEntertainmentLanguage(entertainmentLanguage);
-        filter.setHomeSize(homeSize);
         filter.setHomeMaterial(homeMaterial);
 
         //Specification<Product> specification = ProductSpecification.withFilters(filter);
@@ -150,7 +152,7 @@ public class ProductController {
     }
 
 /*    @GetMapping("/category")
-    public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategory category){
+    public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategoryOld category){
 
             return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,category));
     }
@@ -222,6 +224,18 @@ public class ProductController {
     @GetMapping("/capability/{token}")
     public ResponseEntity<ProductDTO> getCapability(@PathVariable("token") String token) throws ParseException, JOSEException {
         return ResponseEntity.ok(productService.getProductById(tokenStore.getIdByCapability(token), true));
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<Iterable<ProductCategoryDTO>> getCategoriesList()
+    {
+        return ResponseEntity.ok(productService.getCategoriesList());
+    }
+
+    @GetMapping("/sizes")
+    public ResponseEntity<Iterable<SizeDTO>> getSizesList()
+    {
+        return ResponseEntity.ok(productService.getSizeList());
     }
 
 }

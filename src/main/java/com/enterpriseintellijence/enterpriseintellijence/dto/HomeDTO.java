@@ -2,7 +2,6 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Colour;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.HomeMaterial;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.HomeSize;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +16,7 @@ public class HomeDTO extends ProductDTO {
     @NotNull
     private Colour colour;
     @NotNull
-    private HomeSize homeSize;
+    private SizeDTO size;
     @NotNull
     private HomeMaterial homeMaterial;
 }

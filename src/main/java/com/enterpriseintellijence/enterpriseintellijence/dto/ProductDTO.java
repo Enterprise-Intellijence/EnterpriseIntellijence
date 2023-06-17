@@ -2,7 +2,6 @@ package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
@@ -21,13 +20,14 @@ import java.util.List;
 @ToString
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "productCategory", visible = true, defaultImpl = ProductDTO.class)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING"),
-        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT"),
-        @JsonSubTypes.Type(value = HomeDTO.class, name = "HOME"),
-        @JsonSubTypes.Type(value = ProductDTO.class, name = "OTHER")
+        @JsonSubTypes.Type(value = ClothingDTO.class, name = "Clothing"),
+        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "Entertainment"),
+        @JsonSubTypes.Type(value = HomeDTO.class, name = "Home"),
+        @JsonSubTypes.Type(value = ProductDTO.class, name = "Other")
 })
 
 public class ProductDTO {
+
     private String id;
 
     @Length(max = 100)
@@ -60,26 +60,29 @@ public class ProductDTO {
     private Visibility visibility;
     private Availability availability;
 
-    @NotNull
+    private ProductCategoryDTO productCategory;
+
+
+/*    @NotNull
     private ProductCategoryChild productCategoryChild;
 
     private ProductCategoryParent productCategoryParent;
 
     @NotNull
-    private ProductCategory productCategory;
+    private ProductCategoryOld productCategory;*/
 
     private List<UserBasicDTO> usersThatLiked;
 
 
     private List<ProductImageDTO> productImages;
 
-    @JsonSetter("productCategoryChild")
+/*    @JsonSetter("productCategoryChild")
     public void setProductCategoryChild(ProductCategoryChild productCategoryChild) {
         this.productCategoryChild = productCategoryChild;
         this.productCategoryParent = productCategoryChild.getSubCategoryType();
-        ProductCategory temp = productCategoryChild.getSubCategoryType().getProductCategory();
+        ProductCategoryOld temp = productCategoryChild.getSubCategoryType().getProductCategory();
         if (!temp.equals(productCategory))
             throw new IllegalArgumentException("Error of main category and sub category");
         this.productCategory = temp;
-    }
+    }*/
 }

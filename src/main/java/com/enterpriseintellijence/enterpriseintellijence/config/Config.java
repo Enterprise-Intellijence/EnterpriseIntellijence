@@ -1,29 +1,16 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductCategory;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Clock;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor

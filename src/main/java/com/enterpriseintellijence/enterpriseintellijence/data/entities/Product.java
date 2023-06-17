@@ -10,9 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Data
@@ -83,9 +81,13 @@ public class Product {
     @Column(name = "availability", nullable = false)
     private Availability availability;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="main_category"/*,nullable = false*/)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private ProductCategory productCategory;
+
+/*    @Enumerated(EnumType.STRING)
+    @Column(name="main_category"*//*,nullable = false*//*)
+    private ProductCategoryOld productCategory;
 
     @Enumerated(EnumType.STRING)
     @Column(name="product_category",nullable = false)
@@ -93,7 +95,7 @@ public class Product {
 
     @Enumerated(EnumType.STRING)
     @Column(name="product_category_child",nullable = false)
-    private ProductCategoryChild productCategoryChild;
+    private ProductCategoryChild productCategoryChild;*/
 
 
     @Column(name = "like_number", nullable = false)

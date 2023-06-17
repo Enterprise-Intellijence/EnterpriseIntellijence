@@ -1,7 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.specification;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.SizeRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -9,9 +9,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ public class ProductSpecification {
     @Data
     public static class Filter {
         private final UserRepository userRepository;
+        private final SizeRepository sizeRepository;
 
         private String title;
         private String description;
@@ -35,15 +34,15 @@ public class ProductSpecification {
         private LocalDateTime uploadDate;
         private Availability availability;
         private ProductCategory productCategory;
-        private ProductCategoryParent productCategoryParent;
-        private ProductCategoryChild productCategoryChild;
+        private String primaryCat;
+        private String secondaryCat;
+        private String tertiaryCat;
         private Integer likesNumber;
         private User seller;
         private ProductGender productGender;
-        private ClothingSize size;
+        private List<String> sizes;
         private Colour colour;
         private EntertainmentLanguage entertainmentLanguage;
-        private HomeSize homeSize;
         private HomeMaterial homeMaterial;
 
         public void setSeller(String userID) {
@@ -54,6 +53,17 @@ public class ProductSpecification {
 
 
         }
+
+        /*public void setSizes(List<String> sizesId){
+            if(sizesId!=null && !sizesId.isEmpty()){
+                sizes=new ArrayList<>();
+                for(String id: sizesId){
+                    Optional<Size> temp = sizeRepository.findById(id);
+                    this.sizes.add(temp.get());
+                }
+            }
+
+        }*/
     }
 
     public static Specification<Product> withFilters(Filter filter) {
@@ -95,17 +105,19 @@ public class ProductSpecification {
                     if (filter.getAvailability() != null) {
                         predicates.add(criteriaBuilder.equal(root.get("availability"), Availability.AVAILABLE));
                     }
+                    if(filter.getProductCategory()!=null)
+                        predicates.add(criteriaBuilder.equal(root.get("productCategory"),filter.getPrimaryCat()));
 
-                    if (filter.getProductCategory() != null) {
-                        predicates.add(criteriaBuilder.equal(root.get("productCategory"), filter.getProductCategory()));
+                    if (filter.getPrimaryCat() != null && !filter.getPrimaryCat().isEmpty()) {
+                        predicates.add(criteriaBuilder.equal(root.get("productCategory").get("primaryCat"), filter.getPrimaryCat()));
                     }
 
-                    if (filter.getProductCategoryParent() != null) {
-                        predicates.add(criteriaBuilder.equal(root.get("productCategoryParent"), filter.getProductCategoryParent()));
+                    if (filter.getSecondaryCat() != null && !filter.getSecondaryCat().isEmpty()) {
+                        predicates.add(criteriaBuilder.equal(root.get("productCategory").get("secondaryCat"), filter.getSecondaryCat()));
                     }
 
-                    if (filter.getProductCategoryChild() != null) {
-                        predicates.add(criteriaBuilder.equal(root.get("productCategoryChild"), filter.getProductCategoryChild()));
+                    if (filter.getTertiaryCat() != null && !filter.getTertiaryCat().isEmpty()) {
+                        predicates.add(criteriaBuilder.equal(root.get("productCategory").get("tertiaryCat"), filter.getTertiaryCat()));
                     }
 
                     if(filter.getProductGender()!=null){
@@ -119,8 +131,16 @@ public class ProductSpecification {
                     if (filter.getSeller() != null) {
                         predicates.add(criteriaBuilder.equal(root.get("seller"), filter.getSeller()));
                     }
-                    if(filter.getSize()!=null){
-                        predicates.add(criteriaBuilder.equal(root.get("size"),filter.getSize()));
+                    if(filter.getSizes()!=null && !filter.getSizes().isEmpty() ){
+                        Root<Clothing> rootClothing = criteriaBuilder.treat(root,Clothing.class);
+                        Root<Home> rootHome = criteriaBuilder.treat(root,Home.class);
+                        predicates.add(rootHome.get("homeSize").get("id").in(filter.getSizes()));
+                        predicates.add(rootClothing.get("clothingSize").get("id").in(filter.getSizes()));
+
+                       /* for(Size size: filter.getSizes()){
+                            if(size.getType().equals("Home"))
+                            else (!size.getType().equals("Other"))
+                        }*/
                     }
                     if(filter.getColour()!=null){
                         predicates.add(criteriaBuilder.equal(root.get("colour"),filter.getColour()));
@@ -128,9 +148,7 @@ public class ProductSpecification {
                     if(filter.getEntertainmentLanguage()!=null){
                         predicates.add(criteriaBuilder.equal(root.get("entertainmentLanguage"),filter.getEntertainmentLanguage()));
                     }
-                    if(filter.getHomeSize()!=null){
-                        predicates.add(criteriaBuilder.equal(root.get("homeSize"),filter.getHomeSize()));
-                    }
+
                     if(filter.getHomeMaterial()!=null){
                         predicates.add(criteriaBuilder.equal(root.get("homeMaterial"),filter.getHomeMaterial()));
                     }

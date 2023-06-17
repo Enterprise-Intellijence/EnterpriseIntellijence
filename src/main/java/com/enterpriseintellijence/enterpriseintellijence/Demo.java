@@ -1,29 +1,17 @@
 package com.enterpriseintellijence.enterpriseintellijence;
 
-import com.enterpriseintellijence.enterpriseintellijence.controller.UserController;
 import com.enterpriseintellijence.enterpriseintellijence.core.services.NotificationSystem;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
-import com.nimbusds.jose.JOSEException;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.PrePersist;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -67,6 +55,8 @@ public class Demo {
             "src/main/resources/tempFileDemo/product/26.jpeg",
             "src/main/resources/tempFileDemo/product/27.jpeg"));
     private ArrayList<Product> tempProduct;
+    private ArrayList<ProductCategory> categories;
+    private ArrayList<Size> sizes;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -83,6 +73,8 @@ public class Demo {
     private final TransactionRepository transactionRepository;
     private final DeliveryRepository deliveryRepository;
     private final ReviewRepository reviewRepository;
+    private final ProductCatRepository productCatRepository;
+    private final SizeRepository sizeRepository;
     private int globalPurchased=0;
     private int limitPurchasing;
 
@@ -90,6 +82,12 @@ public class Demo {
 
     public void initialize() throws IOException {
         initializeBrandList();
+        createCategory();
+        categories.clear();
+        categories.addAll(productCatRepository.findAll());
+        createSizes();
+        sizes.clear();
+        sizes.addAll(sizeRepository.findAll());
         createUser();
         //System.out.println(userArrays);
         setAddress();
@@ -113,6 +111,8 @@ public class Demo {
         productArrayList.addAll(productRepository.findAll());
         processSaleExampleData();
     }
+
+
 
 
     public void createUser() throws IOException {
@@ -287,9 +287,6 @@ public class Demo {
     private void createProduct(User user){
         tempProduct = new ArrayList<>();
 
-        List<ProductCategoryChild> type = List.of(ProductCategoryChild.class.getEnumConstants());
-        int sizeType = type.size();
-
         //for clothing enum
         List<ProductGender> genderList = List.of(ProductGender.class.getEnumConstants());
         int sizeGender = genderList.size();
@@ -297,17 +294,10 @@ public class Demo {
         List<Colour> colourList = List.of(Colour.class.getEnumConstants());
         int sizeColour = colourList.size();
 
-        List<ClothingSize> clothsSizeList = List.of(ClothingSize.class.getEnumConstants());
-        int clothSize = clothsSizeList.size();
-
-
         //for entertainment enum
         List<EntertainmentLanguage> entertainmentLanguageList = List.of(EntertainmentLanguage.class.getEnumConstants());
         int sizeLanguage = entertainmentLanguageList.size();
 
-        //for home enum
-        List<HomeSize> homeSizeList = List.of(HomeSize.class.getEnumConstants());
-        int sizeHomeSize = homeSizeList.size();
 
         List<HomeMaterial> homeMaterials = List.of(HomeMaterial.class.getEnumConstants());
         int sizeHomeMaterial = homeMaterials.size();
@@ -324,59 +314,61 @@ public class Demo {
                 Clothing clothing = new Clothing();
                 clothing.setProductGender(genderList.get(random.nextInt(sizeGender)));
                 clothing.setColour(colourList.get(random.nextInt(sizeColour)));
-                ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
-                while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.CLOTHING)) {
-                    productCategoryChild = type.get(random.nextInt(sizeType));
-                }
-                clothing.setProductCategoryChild(productCategoryChild);
-                clothing.setProductCategoryParent(productCategoryChild.productCategoryParent);
-                clothing.setProductCategory(clothing.getProductCategoryParent().productCategory);
-
-                ClothingSize clothingSize = clothsSizeList.get(random.nextInt(clothSize));
-                while(clothingSize.productCategoryParent.equals(clothing.getProductCategoryParent())) {
-                    clothingSize = clothsSizeList.get(random.nextInt(clothSize));
+                ProductCategory productCategory = categories.get(random.nextInt(categories.size()));
+                while(!productCategory.getPrimaryCat().equals("Clothing")) {
+                    productCategory = categories.get(random.nextInt(categories.size()));
                 }
 
-                clothing.setSize(clothingSize);
-                //clothing.setProductCategory(ProductCategory.CLOTHING);
+                clothing.setProductCategory(productCategory);
+
+                Size size = sizes.get(random.nextInt(sizes.size()));
+                while(!size.getType().equals(productCategory.getSecondaryCat())) {
+                    size = sizes.get(random.nextInt(sizes.size()));
+                }
+
+                clothing.setClothingSize(size);
+                //clothing.setProductCategory(ProductCategoryOld.CLOTHING);
                 tempProduct.add(clothing);
             }
             //setting entertainment
             else if(rand2==2){
                 Entertainment entertainment = new Entertainment();
-                ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
-                while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.ENTERTAINMENT)) {
-                    productCategoryChild = type.get(random.nextInt(sizeType));
+                ProductCategory productCategory = categories.get(random.nextInt(categories.size()));
+                while(!productCategory.getPrimaryCat().equals("Entertainment")) {
+                    productCategory = categories.get(random.nextInt(categories.size()));
                 }
-                entertainment.setProductCategoryChild(productCategoryChild);
-                entertainment.setProductCategoryParent(productCategoryChild.productCategoryParent);
-                entertainment.setProductCategory(entertainment.getProductCategoryParent().productCategory);
+
+                entertainment.setProductCategory(productCategory);
                 entertainment.setEntertainmentLanguage(entertainmentLanguageList.get(random.nextInt(sizeLanguage)));
-                //entertainment.setProductCategory(ProductCategory.ENTERTAINMENT);
+                //entertainment.setProductCategory(ProductCategoryOld.ENTERTAINMENT);
                 tempProduct.add(entertainment);
             }
             //setting home
             else if(rand2==3){
                 Home home = new Home();
-                home.setHomeSize(homeSizeList.get(random.nextInt(sizeHomeSize)));
-                ProductCategoryChild productCategoryChild = type.get(random.nextInt(sizeType));
-                while(!productCategoryChild.productCategoryParent.getProductCategory().equals(ProductCategory.HOME)) {
-                    productCategoryChild = type.get(random.nextInt(sizeType));
+
+                ProductCategory productCategory = categories.get(random.nextInt(categories.size()));
+                while(!productCategory.getPrimaryCat().equals("Home")) {
+                    productCategory = categories.get(random.nextInt(categories.size()));
                 }
-                home.setProductCategoryChild(productCategoryChild);
-                home.setProductCategoryParent(productCategoryChild.productCategoryParent);
-                home.setProductCategory(home.getProductCategoryParent().productCategory);
+
+                home.setProductCategory(productCategory);
+                Size size = sizes.get(random.nextInt(sizes.size()));
+                while(!size.getType().equals(productCategory.getPrimaryCat())) {
+                    size = sizes.get(random.nextInt(sizes.size()));
+                }
+                home.setHomeSize(size);
                 home.setColour(colourList.get(random.nextInt(sizeColour)));
                 home.setHomeMaterial(homeMaterials.get(random.nextInt(sizeHomeMaterial)));
-                //home.setProductCategory(ProductCategory.HOME);
+                //home.setProductCategory(ProductCategoryOld.HOME);
                 tempProduct.add(home);
             }
             else{
                 Product product=new Product();
-                product.setProductCategory(ProductCategory.OTHER);
-                product.setProductCategoryParent(ProductCategoryParent.OTHER);
-                product.setProductCategoryChild(ProductCategoryChild.OTHER);
-                //product.setProductCategory(ProductCategory.OTHER);
+                for(ProductCategory productCategory:categories)
+                    if(productCategory.getPrimaryCat().equals("Other"))
+                        product.setProductCategory(productCategory);
+                //product.setProductCategory(ProductCategoryOld.OTHER);
                 tempProduct.add(product);
             }
 
@@ -411,6 +403,8 @@ public class Demo {
             Double priceProduct = price+random.nextInt(1,1500);
             product.setProductCost(new CustomMoney(priceProduct, Currency.EUR ));
             product.setDeliveryCost(new CustomMoney(5.00,Currency.EUR));
+
+            product.setProductCategory(categories.get(random.nextInt(categories.size())));
 
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             //product.setAddress(user.getAddress());
@@ -687,6 +681,134 @@ public class Demo {
             }
 
         }
+    }
+
+    private void createCategory() {
+        categories = new ArrayList<>();
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Cloths").tertiaryCat("Jeans").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Cloths").tertiaryCat("Dress").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Cloths").tertiaryCat("Skirt").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Cloths").tertiaryCat("T Shirt").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Cloths").tertiaryCat("Sweaters").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Cloths").tertiaryCat("Trousers").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Shoes").tertiaryCat("Boots").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Shoes").tertiaryCat("Heels").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Shoes").tertiaryCat("Sport").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Shoes").tertiaryCat("Trainers").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Shoes").tertiaryCat("Sandals").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Bags").tertiaryCat("Shoulder bag").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Bags").tertiaryCat("Handbags").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Bags").tertiaryCat("Luggage").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Bags").tertiaryCat("Backpacks").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Accessories").tertiaryCat("Watches").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Accessories").tertiaryCat("Sunglasses").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Accessories").tertiaryCat("Belts").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Clothing").secondaryCat("Accessories").tertiaryCat("Hats Caps").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Gaming").tertiaryCat("XBox One").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Gaming").tertiaryCat("PS Five").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Gaming").tertiaryCat("PS Older").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Gaming").tertiaryCat("PC").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Media").tertiaryCat("Music").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Media").tertiaryCat("Video").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Books").tertiaryCat("Non Fiction").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Books").tertiaryCat("Kids").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Books").tertiaryCat("Literature").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Entertainment").secondaryCat("Books").tertiaryCat("Fiction").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Textiles").tertiaryCat("Blankets").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Textiles").tertiaryCat("Cushions").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Textiles").tertiaryCat("Table Linen").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Textiles").tertiaryCat("Towel").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Textiles").tertiaryCat("Bedding").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Home Accessories").tertiaryCat("Cooks").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Home Accessories").tertiaryCat("Picture").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Home Accessories").tertiaryCat("Photo Frames").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Home Accessories").tertiaryCat("Storage").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Home Accessories").tertiaryCat("Mirrors").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Home Accessories").tertiaryCat("Vases").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Tableware").tertiaryCat("Dinnerware").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Tableware").tertiaryCat("Cutlery").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Tableware").tertiaryCat("Drink ware").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Other").secondaryCat("Other").tertiaryCat("Other").visibility(Visibility.PUBLIC).build());
+        productCatRepository.saveAll(categories);
+    }
+
+    private void createSizes() {
+        sizes=new ArrayList<>();
+        sizes.add(Size.builder().sizeName("3XS").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("2XS").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("XS").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("S").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("M").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("L").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("XL").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("2XL").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("3L").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("4XL").type("Cloths").build());
+        sizes.add(Size.builder().sizeName("25").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("26").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("27").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("28").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("29").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("30").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("31").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("32").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("33").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("34").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("35").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("36").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("37").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("38").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("39").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("40").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("41").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("42").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("43").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("44").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("45").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("46").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("47").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("48").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("49").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("50").type("Shoes").build());
+        sizes.add(Size.builder().sizeName("SMALL_BAG").type("Bags").build());
+        sizes.add(Size.builder().sizeName("MEDIUM_BAG").type("Bags").build());
+        sizes.add(Size.builder().sizeName("BIG_BAG").type("Bags").build());
+        sizes.add(Size.builder().sizeName("SMALL_ACC").type("Accessories").build());
+        sizes.add(Size.builder().sizeName("MEDIUM_ACC").type("Accessories").build());
+        sizes.add(Size.builder().sizeName("BIG_ACC").type("Accessories").build());
+        sizes.add(Size.builder().sizeName("30 x 50 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("35 x 50 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("35 x 40 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("40 x 40 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("40 x 60 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("40 x 75 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("40 x 80 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("40 x 90 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("45 x 45 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("50 x 50 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("50 x 60 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("50 x 70 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("50 x 90 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("60 x 60 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("65 x 65 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("80 x 80 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("70 x 90 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("80 x 100 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("100 x 150 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("100 x 200 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("110 x 150 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("110 x 170 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("120 x 160 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("120 x 200 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("130 x 200 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("125 x 150 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("130 x 170 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("150 x 200 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("180 x 200 cm").type("Home").build());
+        sizes.add(Size.builder().sizeName("other").type("Home").build());
+
+        sizeRepository.saveAll(sizes);
+
     }
 
 

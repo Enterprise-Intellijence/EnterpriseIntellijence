@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.SizeDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
@@ -23,7 +25,7 @@ public interface ProductService {
 
     //Page<ProductBasicDTO> getAllPaged(int page, int size);
 
-    //Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory);
+    //Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategoryOld productCategory);
 
     String getCapabilityUrl(String id);
 
@@ -53,4 +55,8 @@ public interface ProductService {
     OrderBasicDTO getProductOrder(String id) throws IllegalAccessException;
 
     Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
+
+    Iterable<ProductCategoryDTO> getCategoriesList();
+
+    Iterable<SizeDTO> getSizeList();
 }

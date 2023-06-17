@@ -18,9 +18,10 @@ public class Home extends Product{
     @Column(name="colour",nullable = false)
     private Colour colour;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="home_size",nullable = false)
-    private HomeSize homeSize;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="size",nullable = false)
+    private Size homeSize;
+
     @Enumerated(EnumType.STRING)
     @Column(name="home_material",nullable = false)
     private HomeMaterial homeMaterial;

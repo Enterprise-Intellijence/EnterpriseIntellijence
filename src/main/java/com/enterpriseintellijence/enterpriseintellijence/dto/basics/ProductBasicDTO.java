@@ -1,10 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import jakarta.validation.constraints.NotNull;
@@ -56,7 +54,8 @@ public class ProductBasicDTO {
     private Integer likesNumber;
     private UserBasicDTO seller;
     private ProductImageDTO productImages;
-    private ProductCategory productCategory;
+/*    private ProductCategoryOld productCategory;*/
+    private ProductCategoryDTO productCategory;
 /*
 
     private AddressDTO address;
