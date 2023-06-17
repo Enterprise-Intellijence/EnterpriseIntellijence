@@ -11,4 +11,6 @@ import lombok.*;
 public class ProductImageDTO {
     private String id;
     private String description;
+    private String urlPhoto;
+
 }

@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ClothingSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Colour;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender;
 import jakarta.persistence.*;
@@ -19,12 +18,13 @@ public class Clothing extends Product{
     @Column(name="product_gender",nullable = false)
     private ProductGender productGender;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="size",nullable = false)
-    private ClothingSize size;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="size",nullable = false)
+    private Size clothingSize;
 
     @Enumerated(EnumType.STRING)
     @Column(name="colour",nullable = false)
     private Colour colour;
+
 
 }

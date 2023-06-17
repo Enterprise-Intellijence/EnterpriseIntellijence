@@ -13,4 +13,6 @@ import org.hibernate.annotations.GenericGenerator;
 public class UserImageDTO {
     private String id;
     private String description;
+    private String urlPhoto;
+
 }

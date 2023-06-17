@@ -2,11 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.ClothingRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.EntertainmentRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.HomeRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
@@ -42,6 +38,8 @@ public class ProductServiceImp implements ProductService {
     private final HomeRepository homeRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
+    private final ProductCatRepository productCatRepository;
+    private final SizeRepository sizeRepository;
     private final TokenStore tokenStore;
 
     private final Clock clock;
@@ -116,13 +114,6 @@ public class ProductServiceImp implements ProductService {
             product.setDeliveryCost(checkAndChangeCustomMoney(product.getDeliveryCost(),patch.getDeliveryCost()));
 
 
-        // TODO: 28/05/2023 il !=null qui mi sa che è superfluo, sono cmq settati dalla deserializzazione
-        if(!product.getProductCategoryChild().equals(patch.getProductCategoryChild())){
-            product.setProductCategoryChild(patch.getProductCategoryChild());
-            product.setProductCategoryParent(patch.getProductCategoryParent());
-            product.setProductCategory(patch.getProductCategory());
-            // TODO: 28/05/2023 se cambia l'istanza del prodotto?
-        }
 
 /*        if(patch.getAddress()!=null && !product.getAddress().equals(patch.getAddress()) )
             product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );*/
@@ -196,7 +187,7 @@ public class ProductServiceImp implements ProductService {
     }*/
 
 /*    @Override
-    public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategory productCategory) {
+    public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategoryOld productCategory) {
         Page<Product> products = productRepository.findAllByProductCategoryAndVisibility(productCategory,Visibility.PUBLIC,PageRequest.of(page,size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect);
@@ -271,31 +262,27 @@ public class ProductServiceImp implements ProductService {
 
 
     private Product mapToEntity(ProductDTO productDTO) {
-        if(productDTO.getProductCategory().equals(ProductCategory.CLOTHING)) {
-            System.out.println("ma pure qui 1");
+        if(productDTO.getProductCategory().getPrimaryCat().equals("Clothing")) {
             return modelMapper.map(productDTO, Clothing.class);
         }
-        else if(productDTO.getProductCategory().equals(ProductCategory.HOME)) {
-            System.out.println("ma pure qui 2");
+        else if(productDTO.getProductCategory().getPrimaryCat().equals("Home")) {
 
             return modelMapper.map(productDTO, Home.class);
         }
-        else if(productDTO.getProductCategory().equals(ProductCategory.ENTERTAINMENT)) {
-            System.out.println("ma pure qui 3");
+        else if(productDTO.getProductCategory().getPrimaryCat().equals("Entertainment")) {
             return modelMapper.map(productDTO, Entertainment.class);
         }
         else {
-            System.out.println("ma pure qui 4");
             return modelMapper.map(productDTO, Product.class);
         }
     }
 
     private ProductDTO mapToProductDetailsDTO(Product product) {
-        if(product.getProductCategory().equals(ProductCategory.CLOTHING))
+        if(product.getProductCategory().getPrimaryCat().equals("Clothing"))
             return modelMapper.map(product, ClothingDTO.class);
-        else if(product.getProductCategory().equals(ProductCategory.HOME))
+        else if(product.getProductCategory().getPrimaryCat().equals("Home"))
             return modelMapper.map(product, HomeDTO.class);
-        else if(product.getProductCategory().equals(ProductCategory.ENTERTAINMENT))
+        else if(product.getProductCategory().getPrimaryCat().equals("Entertainment"))
             return modelMapper.map(product, EntertainmentDTO.class);
         else
             return modelMapper.map(product, ProductDTO.class);
@@ -392,6 +379,21 @@ public class ProductServiceImp implements ProductService {
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect,pageable, products.getTotalElements());
+    }
+
+    @Override
+    public Iterable<ProductCategoryDTO> getCategoriesList() {
+        List<ProductCategory> productCategories = productCatRepository.findAll();
+
+        return productCategories.stream().map(s->modelMapper.map(s, ProductCategoryDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Iterable<SizeDTO> getSizeList() {
+        List<Size> sizes = sizeRepository.findAll();
+
+        return sizes.stream().map(s->modelMapper.map(s, SizeDTO.class)).collect(Collectors.toList());
+
     }
 
     private LocalDateTime getTimeNow(){
