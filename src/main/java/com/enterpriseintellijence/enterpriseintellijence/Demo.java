@@ -728,7 +728,7 @@ public class Demo {
         categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Tableware").tertiaryCat("Dinnerware").visibility(Visibility.PUBLIC).build());
         categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Tableware").tertiaryCat("Cutlery").visibility(Visibility.PUBLIC).build());
         categories.add(ProductCategory.builder().primaryCat("Home").secondaryCat("Tableware").tertiaryCat("Drink ware").visibility(Visibility.PUBLIC).build());
-        categories.add(ProductCategory.builder().primaryCat("Other").secondaryCat("Other").tertiaryCat("Other").visibility(Visibility.PUBLIC).build());
+        categories.add(ProductCategory.builder().primaryCat("Other").secondaryCat("Other#2").tertiaryCat("Other#3").visibility(Visibility.PUBLIC).build());
         productCatRepository.saveAll(categories);
     }
 
