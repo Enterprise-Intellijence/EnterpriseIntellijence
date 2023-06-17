@@ -4,7 +4,6 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
@@ -63,6 +62,7 @@ public class UserServiceImp implements UserService{
     public UserDTO createUser(User user) {
         user.setStatus(UserStatus.ACTIVE);
         user = userRepository.save(user);
+        System.out.println("createddd user"+ user.getUsername());
         return mapToDto(user);
     }
 
@@ -183,8 +183,9 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<String> registerUser(String username, String email, String password) {
+        System.out.println("registerUser");
         if(findByUsername(username).isPresent())
-            return new ResponseEntity<>( "existing username" , HttpStatus.CONFLICT);
+            throw new IllegalArgumentException("username already exists");
         createUser(username, passwordEncoder.encode(password), email);
         log.info("User created: " + username);
         return new ResponseEntity<>( "user created" , HttpStatus.CREATED);
@@ -241,16 +242,21 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword) {
+    public void changePassword(String oldPassword, String newPassword, String authToken) throws ParseException, JOSEException, MessagingException {
+        if (oldPassword.equals(newPassword))
+            throw new RuntimeException("New password must be different from old password");
         User user = jwtContextUtils.getUserLoggedFromContext();
         if(!passwordEncoder.matches(oldPassword, user.getPassword()))
             throw new RuntimeException("Wrong old password");
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        System.out.println("password changed");
+        authToken = authToken.substring("Bearer ".length());
+        tokenStore.logout(authToken);
     }
 
     @Override
-    public void changePassword(String token) throws ParseException, JOSEException, MessagingException {
+    public void changePassword(String token, String authToken) throws ParseException, JOSEException, MessagingException {
         tokenStore.verifyToken(token, Constants.RESET_PASSWORD_CLAIM);
         String username = tokenStore.getUser(token);
         User user = userRepository.findByUsername(username);
@@ -260,6 +266,8 @@ public class UserServiceImp implements UserService{
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         emailService.sendEmail(user.getEmail(), Constants.NEW_PASSWORD_EMAIL_SUBJECT,Constants.NEW_PASSWORD_EMAIL_TEXT + newPassword);
+        authToken = authToken.substring("Bearer ".length());
+        tokenStore.logout(authToken);
     }
 
     @Override
@@ -302,6 +310,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void createUser(String username, String password, String email) {
+        System.out.println("createUser");
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
@@ -442,7 +451,7 @@ public class UserServiceImp implements UserService{
         User user = userRepository.findByUsername(username);
 
         Page<Product> products =productRepository.findAllByVisibilityAndUsersThatLiked(Visibility.PUBLIC,user,PageRequest.of(page,size));
-        System.out.println(products.getTotalElements());
+        //System.out.println(products.getTotalElements());
 
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect,PageRequest.of(page,size), products.getTotalElements());

@@ -52,7 +52,8 @@ public class TokenStore {
         try {
             jwtContextUtils.getUsernameFromContext().ifPresentOrElse(username -> {
                 try {
-                    if(!username.equals(getUser(token)) || invalidTokensRepository.findByToken(token) != null)
+                    System.out.println("username: " + username);
+                    if(!username.equals(getUser(token)) || invalidTokensRepository.findByToken(token).isPresent())
                         throw new RuntimeException("Invalid token");
                     if(claim != null && !claim.equals(getClaim(token)))
                         throw new RuntimeException("Invalid token");
@@ -174,7 +175,9 @@ public class TokenStore {
     }
 
     public void logout(String accessToken) throws ParseException, JOSEException {
-        verifyToken(accessToken, null);
+        if( !verifyToken(accessToken, null))
+            throw new RuntimeException("Invalid token");
+        System.out.println(accessToken);
         InvalidToken invalidToken = new InvalidToken();
         invalidToken.setToken(accessToken);
         SignedJWT signedJWT = SignedJWT.parse(accessToken);
