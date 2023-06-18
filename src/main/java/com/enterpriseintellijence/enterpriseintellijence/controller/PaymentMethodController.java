@@ -30,9 +30,6 @@ public class PaymentMethodController {
 
     private final ProductRepository productRepository;
 
-    private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
-    private final Bucket bucket = Bucket.builder().addLimit(limit).build();
-
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PaymentMethodDTO> createPaymentMethod(@Valid @RequestBody PaymentMethodCreateDTO paymentMethodCreateDTO) throws IllegalAccessException {
