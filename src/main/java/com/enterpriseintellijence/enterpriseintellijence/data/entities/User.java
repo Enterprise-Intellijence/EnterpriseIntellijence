@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.swing.text.StyledEditorKit;
 import java.util.*;
 
 @Data
@@ -126,6 +127,10 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "reportedUser",fetch = FetchType.LAZY)
     private List<Report> reported;
+
+    public Boolean isAdministrator() {
+        return role.equals(UserRole.ADMIN) || role.equals(UserRole.SUPER_ADMIN);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
