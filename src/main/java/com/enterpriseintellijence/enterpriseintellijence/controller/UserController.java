@@ -49,26 +49,6 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    // TODO: 16/05/23 Ciccio
-
-
-    private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
-    private final Bucket bucket = Bucket.builder().addLimit(limit).build();
-
-
-    //ESEMPIO DI RATE LIMITING
-    /*
-
-    @GetMapping("/exampleRateLimit")
-    public ResponseEntity<String> exampleRateLimit() {
-        if (bucket.tryConsume(1))
-            return ResponseEntity.ok("Hello World!");
-        else
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
-     }
-
-     Guarda il metodo sotto per un esempio pratico
-     */
   
     @PostMapping(path = "/authenticate" )
     @ResponseStatus(HttpStatus.OK)

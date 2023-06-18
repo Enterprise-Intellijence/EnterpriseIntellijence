@@ -1,13 +1,14 @@
 package com.enterpriseintellijence.enterpriseintellijence.security.rateLimiter;
 
+import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Refill;
 
 import java.time.Duration;
 
 public enum UserTypePlan {
-    BASIC_USER (Bandwidth.classic(15, Refill.intervally(10, Duration.ofMinutes(2)))),
-    ADMIN (Bandwidth.classic(100, Refill.intervally(100, Duration.ofSeconds(1))));
+    BASIC_USER (Bandwidth.classic(Constants.BASIC_USER_RATE_LIMIT_BANDWIDTH, Refill.intervally(Constants.BASIC_USER_RATE_LIMIT_REFILL, Duration.ofMinutes(Constants.BASIC_USER_RATE_LIMIT_REFILL_DURATION)))),
+    ADMIN (Bandwidth.classic(Constants.ADMIN_RATE_LIMIT_BANDWIDTH, Refill.intervally(Constants.ADMIN_RATE_LIMIT_REFILL, Duration.ofSeconds(Constants.ADMIN_RATE_LIMIT_REFILL_DURATION))));
 
     Bandwidth limit;
 

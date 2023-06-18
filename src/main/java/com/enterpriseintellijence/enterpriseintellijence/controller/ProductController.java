@@ -43,9 +43,6 @@ public class ProductController {
     private final UserRepository userRepository;
     private final SizeRepository sizeRepository;
 
-    private final Bandwidth limit = Bandwidth.classic(20, Refill.greedy(25, Duration.ofMinutes(1)));
-    private final Bucket bucket = Bucket.builder().addLimit(limit).build();
-
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws IllegalAccessException {
@@ -135,20 +132,13 @@ public class ProductController {
 
         //Specification<Product> specification = ProductSpecification.withFilters(filter);
 
-        if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
-        }
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
+
     }
 
     @GetMapping("/wardrobe")
     public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
-        
-        if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
-        }
-
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
     }
 
 /*    @GetMapping("/category")
