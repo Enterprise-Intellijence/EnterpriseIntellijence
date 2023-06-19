@@ -73,59 +73,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
 
-/*    @GetMapping("")
-    public ResponseEntity<Page<ProductBasicDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
-        if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getAllPaged(page, size));
-        }
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }*/
-
-
     @GetMapping("/wardrobe")
     public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
         return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
     }
-
-/*    @GetMapping("/category")
-    public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategoryOld category){
-
-            return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,category));
-    }
-
-    @GetMapping("/category/clothing")
-    public ResponseEntity<Page<ProductBasicDTO>> getClothingByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("clothingType")ClothingType clothingType){
-        return ResponseEntity.ok(productService.getClothingByTypePaged(page,size,clothingType));
-    }
-    @GetMapping("/category/entertainment")
-    public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentLanguage entertainmentType){
-        return ResponseEntity.ok(productService.getEntertainmentByTypePaged(page,size,entertainmentType));
-    }
-
-    @GetMapping("/category/home")
-    public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeSize homeType){
-        return ResponseEntity.ok(productService.getHomeByTypePaged(page,size,homeType));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<Page<ProductBasicDTO>> searchProductByTitleOrDescription(@RequestParam("keystring") String keystring,@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.searchProduct(keystring,page,size));
-    }
-
-    @GetMapping("/search-by-price")
-    public ResponseEntity<Page<ProductBasicDTO>> searchProductByPrice(@RequestParam("startPrice") Double startPrice,@RequestParam("endPrice") Double endPrice,@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.searchProductByPrice(startPrice,endPrice,page,size));
-    }
-
-    @GetMapping("/most-liked")
-    public ResponseEntity<Page<ProductBasicDTO>> mostLikedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.getMostLikedProducts(page,size));
-    }
-
-    @GetMapping("/most-viewed")
-    public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
-    }*/
 
     @GetMapping("/{id}/offers")
     public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@PathVariable("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
@@ -229,11 +180,11 @@ public class ProductController {
 
         //Specification<Product> specification = ProductSpecification.withFilters(filter);
 
-        if (bucket.tryConsume(1)) {
+        //if (bucket.tryConsume(1)) {
             return ResponseEntity.ok(productService.getProductFilteredPage(
                     ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
-        }
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        //}
+        //return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
 }

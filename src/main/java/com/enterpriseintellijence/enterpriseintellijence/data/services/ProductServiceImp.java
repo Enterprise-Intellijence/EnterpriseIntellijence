@@ -180,27 +180,6 @@ public class ProductServiceImp implements ProductService {
         return mapToProductDetailsDTO(product);
     }
 
-/*    @Override
-    public Iterable<ProductBasicDTO> findAll() {
-        return productRepository.findAll().stream()
-                .map(s -> modelMapper.map(s, ProductBasicDTO.class))
-                .collect(Collectors.toList());
-    }*/
-
-/*    @Override
-    public Page<ProductBasicDTO> getAllPaged(int page, int size) {
-        Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC, PageRequest.of(page,size));//la dimensione deve arrivare tramite parametro
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }*/
-
-/*    @Override
-    public Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategoryOld productCategory) {
-        Page<Product> products = productRepository.findAllByProductCategoryAndVisibility(productCategory,Visibility.PUBLIC,PageRequest.of(page,size));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }*/
-
     @Override
     public Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size) {
         User user=modelMapper.map(userBasicDTO,User.class);
@@ -214,60 +193,6 @@ public class ProductServiceImp implements ProductService {
 
         return new PageImpl<>(collect);
     }
-
-/*    @Override
-    public Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType) {
-        Page<Product> products = clothingRepository.findAllByClothingTypeAndVisibility(clothingType,Visibility.PUBLIC,PageRequest.of(page,size));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }
-
-    @Override
-    public Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentLanguage entertainmentType) {
-        Page<Product> products = entertainmentRepository.findAllByEntertainmentTypeAndVisibility(entertainmentType,Visibility.PUBLIC,PageRequest.of(page,size));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }
-
-    @Override
-    public Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeSize homeType) {
-        Page<Product> products = homeRepository.findAllByHomeTypeAndVisibility(homeType,Visibility.PUBLIC,PageRequest.of(page,size));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }*/
-
-    /*@Override
-    public Page<ProductBasicDTO> searchProduct(String keystring, int page, int size) {
-
-//        List<Product> products = productRepository.search(keystring,PageRequest.of(page,size));
-        Page<Product> products = productRepository.findAllByTitleContainingOrDescriptionContainingAndVisibility(keystring,keystring,Visibility.PUBLIC,PageRequest.of(page,size));
-
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-
-    }
-
-    @Override
-    public Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size) {
-        Page<Product> products = productRepository.getByProductByPrice(startPrice,endPrice,Visibility.PUBLIC,PageRequest.of(page,size));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }
-
-    @Override
-    public Page<ProductBasicDTO> getMostLikedProducts(int page, int size) {
-        Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC,PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"likesNumber")));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }
-
-    @Override
-    public Page<ProductBasicDTO> getMostViewedProducts(int page, int size) {
-        Page<Product> products = productRepository.findAllByVisibility(Visibility.PUBLIC,PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"views")));
-        List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect);
-    }*/
-
 
     private Product mapToEntity(ProductDTO productDTO) {
         if(productDTO.getProductCategory().getPrimaryCat().equals("Clothing")) {

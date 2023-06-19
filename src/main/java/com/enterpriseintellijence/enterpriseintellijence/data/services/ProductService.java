@@ -22,30 +22,9 @@ public interface ProductService {
 
     ProductDTO getProductById(String id, boolean capability);
 
-    //Iterable<ProductBasicDTO> findAll();
-
-    //Page<ProductBasicDTO> getAllPaged(int page, int size);
-
-    //Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategoryOld productCategory);
-
     String getCapabilityUrl(String id);
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
-
-    //Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType);
-
-    //Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentLanguage entertainmentType);
-
-    //Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeSize homeType);
-
-
-    //Page<ProductBasicDTO> searchProduct(String keystring,int page, int size);
-
-    //Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size);
-
-    //Page<ProductBasicDTO> getMostLikedProducts(int page, int size);
-
-    //Page<ProductBasicDTO> getMostViewedProducts(int page, int size);
 
     Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
 
