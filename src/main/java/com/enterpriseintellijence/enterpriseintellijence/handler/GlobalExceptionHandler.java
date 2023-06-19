@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.handler;
 
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
+import com.enterpriseintellijence.enterpriseintellijence.exception.ManyRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,5 +52,12 @@ public class GlobalExceptionHandler {
     public ResponseStatusException defaultErrorHandler(WebRequest req, Exception ex) {
         return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+
+    @ExceptionHandler(ManyRequestException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public String manyRequestErrorHandler(WebRequest req ,Exception ex){
+        return new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage()).getMessage();
+    }
+
 
 }
