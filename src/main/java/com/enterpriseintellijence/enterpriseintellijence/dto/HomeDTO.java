@@ -16,7 +16,7 @@ public class HomeDTO extends ProductDTO {
     @NotNull
     private Colour colour;
     @NotNull
-    private SizeDTO size;
+    private SizeDTO homeSize;
     @NotNull
     private HomeMaterial homeMaterial;
 }

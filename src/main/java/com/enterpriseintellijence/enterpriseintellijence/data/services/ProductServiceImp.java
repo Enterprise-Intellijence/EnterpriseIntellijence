@@ -8,6 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDT
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Clock;
@@ -41,6 +43,8 @@ public class ProductServiceImp implements ProductService {
     private final ProductCatRepository productCatRepository;
     private final SizeRepository sizeRepository;
     private final TokenStore tokenStore;
+    // TODO: 19/06/2023 usare interfaccia
+    private final ImageServiceImp imageServiceImp;
 
     private final Clock clock;
 
@@ -48,26 +52,30 @@ public class ProductServiceImp implements ProductService {
     private final JwtContextUtils jwtContextUtils;
 
     @Override
-    public ProductDTO createProduct(ProductDTO productDTO) throws IllegalAccessException {
+    public ProductDTO createProduct(ProductCreateDTO productCreateDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        if(!loggedUser.getId().equals(productDTO.getSeller().getId()))
-            throw new IllegalAccessException("Seller Id missmatch with logged user, cannot insert product for other user");
 
         try{
             LocalDateTime now = getTimeNow();
-            Product product = mapToEntity(productDTO);
+            Product product = mapToEntityCreation(productCreateDTO);
             product.setUploadDate(now);
             product.setLastUpdateDate(now);
             product.setLikesNumber(0);
             product.setViews(0);
             product.setSeller(loggedUser);
+            // TODO: 19/06/2023 controlli sulla size 
             productRepository.save(product);
+            for(MultipartFile multipartFile: productCreateDTO.getProductImages()){
+                imageServiceImp.localProductImageSave(product,multipartFile,new ProductImage(),"ciao");
+            }
 
             return mapToProductDetailsDTO(product);
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @Override
     public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
@@ -364,6 +372,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection) {
+
         Sort sort = null;
         Sort.Direction direction = null;
         if(sortBy!=null && !sortBy.isEmpty()){
@@ -408,5 +417,20 @@ public class ProductServiceImp implements ProductService {
         return customMoney;
     }
 
+    private Product mapToEntityCreation(ProductCreateDTO productCreateDTO) {
+        if(productCreateDTO.getProductCategory().getPrimaryCat().equals("Clothing")) {
+            return modelMapper.map(productCreateDTO, Clothing.class);
+        }
+        else if(productCreateDTO.getProductCategory().getPrimaryCat().equals("Home")) {
+
+            return modelMapper.map(productCreateDTO, Home.class);
+        }
+        else if(productCreateDTO.getProductCategory().getPrimaryCat().equals("Entertainment")) {
+            return modelMapper.map(productCreateDTO, Entertainment.class);
+        }
+        else {
+            return modelMapper.map(productCreateDTO, Product.class);
+        }
+    }
 
 }
