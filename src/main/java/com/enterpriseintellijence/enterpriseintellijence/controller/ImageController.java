@@ -1,6 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ImageService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +22,7 @@ public class ImageController {
 
     @PostMapping("/users/photo-profile")
     @ResponseStatus(HttpStatus.CREATED)
-    public String savePhotoUser(@RequestBody MultipartFile multipartFile,@RequestParam("description") String description) throws IOException {
+    public UserImageDTO savePhotoUser(@RequestBody MultipartFile multipartFile, @RequestParam("description") String description) throws IOException {
         return imageService.savePhotoUser(multipartFile,description);
     }
 
@@ -43,7 +45,7 @@ public class ImageController {
 
     @PostMapping("/product")
     @ResponseStatus(HttpStatus.CREATED)
-    public String saveImageProduct(@RequestBody MultipartFile multipartFile,@RequestParam("product_id")String product_id,@RequestParam("description") String description) throws IOException, IllegalAccessException {
+    public ProductImageDTO saveImageProduct(@RequestBody MultipartFile multipartFile, @RequestParam("product_id")String product_id, @RequestParam("description") String description) throws IOException, IllegalAccessException {
         return imageService.saveImageProduct(multipartFile,product_id,description);
     }
 

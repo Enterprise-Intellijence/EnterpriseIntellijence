@@ -10,11 +10,12 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCreateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface ProductService {
-    ProductDTO createProduct(ProductDTO productDTO) throws IllegalAccessException;
+    ProductDTO createProduct(ProductCreateDTO productCreateDTO) throws IllegalAccessException;
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
     ProductDTO updateProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     void deleteProduct(String id) throws IllegalAccessException;
@@ -54,9 +55,11 @@ public interface ProductService {
 
     OrderBasicDTO getProductOrder(String id) throws IllegalAccessException;
 
-    Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
 
     Iterable<ProductCategoryDTO> getCategoriesList();
 
     Iterable<SizeDTO> getSizeList();
+
+    Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
+
 }
