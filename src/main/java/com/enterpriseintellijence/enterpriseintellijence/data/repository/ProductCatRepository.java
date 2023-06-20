@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductCatRepository extends JpaRepository<ProductCategory,String>, JpaSpecificationExecutor<ProductCategory> {
 
-
 }
