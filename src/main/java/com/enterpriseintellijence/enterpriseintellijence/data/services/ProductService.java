@@ -10,41 +10,21 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCreateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface ProductService {
-    ProductDTO createProduct(ProductDTO productDTO) throws IllegalAccessException;
+    ProductDTO createProduct(ProductCreateDTO productCreateDTO) throws IllegalAccessException;
     ProductDTO replaceProduct(String id, ProductDTO productDTO);
     ProductDTO updateProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     void deleteProduct(String id) throws IllegalAccessException;
 
     ProductDTO getProductById(String id, boolean capability);
 
-    //Iterable<ProductBasicDTO> findAll();
-
-    //Page<ProductBasicDTO> getAllPaged(int page, int size);
-
-    //Page<ProductBasicDTO> getProductFilteredForCategoriesPaged(int page, int size, ProductCategoryOld productCategory);
-
     String getCapabilityUrl(String id);
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
-
-    //Page<ProductBasicDTO> getClothingByTypePaged(int page, int size, ClothingType clothingType);
-
-    //Page<ProductBasicDTO> getEntertainmentByTypePaged(int page, int size, EntertainmentLanguage entertainmentType);
-
-    //Page<ProductBasicDTO> getHomeByTypePaged(int page, int size, HomeSize homeType);
-
-
-    //Page<ProductBasicDTO> searchProduct(String keystring,int page, int size);
-
-    //Page<ProductBasicDTO> searchProductByPrice(Double startPrice, Double endPrice, int page, int size);
-
-    //Page<ProductBasicDTO> getMostLikedProducts(int page, int size);
-
-    //Page<ProductBasicDTO> getMostViewedProducts(int page, int size);
 
     Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
 
@@ -54,9 +34,11 @@ public interface ProductService {
 
     OrderBasicDTO getProductOrder(String id) throws IllegalAccessException;
 
-    Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
 
     Iterable<ProductCategoryDTO> getCategoriesList();
 
     Iterable<SizeDTO> getSizeList();
+
+    Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
+
 }

@@ -117,13 +117,22 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=1; i<10;i++){
+        for (int i=0; i<100;i++){
             User user = new User();
-            user.setUsername("username"+i);
-            user.setPassword(passwordEncoder.encode("password"+i));
+            if(i==0) {
+                user.setUsername("superadmin");
+                user.setPassword(passwordEncoder.encode("superadmin"));
+                user.setRole(UserRole.SUPER_ADMIN);
+
+            }
+            else{
+                user.setUsername("username"+i);
+                user.setPassword(passwordEncoder.encode("password"+i));
+                user.setRole(UserRole.USER);
+            }
+
             user.setEmail("email"+i+"@gmail.com");
             user.setProvider(Provider.LOCAL);
-            user.setRole(UserRole.USER);
             user.setStatus(UserStatus.ACTIVE);
             user.setEmailVerified(true);
             user.setFollowers_number(0);
@@ -322,7 +331,7 @@ public class Demo {
                 clothing.setProductCategory(productCategory);
 
                 Size size = sizes.get(random.nextInt(sizes.size()));
-                while(!size.getType().equals(productCategory.getSecondaryCat())) {
+                while(!size.getType().equals(clothing.getProductCategory().getSecondaryCat())) {
                     size = sizes.get(random.nextInt(sizes.size()));
                 }
 
@@ -404,7 +413,7 @@ public class Demo {
             product.setProductCost(new CustomMoney(priceProduct, Currency.EUR ));
             product.setDeliveryCost(new CustomMoney(5.00,Currency.EUR));
 
-            product.setProductCategory(categories.get(random.nextInt(categories.size())));
+            //product.setProductCategory(categories.get(random.nextInt(categories.size())));
 
             product.setCondition(conditionList.get(random.nextInt(sizeCondition)));
             //product.setAddress(user.getAddress());

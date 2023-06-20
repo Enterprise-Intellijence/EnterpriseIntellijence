@@ -8,10 +8,13 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductImageRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserImageRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,11 +40,12 @@ public class ImageServiceImp implements ImageService{
     private final UserImageRepository userImageRepository;
     private final ProductRepository productRepository;
     private final JwtContextUtils jwtContextUtils;
+    private final ModelMapper modelMapper;
 
     // TODO: 25/05/2023 gestire massimo 5 immagini
 
     @Override
-    public String savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
+    public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
@@ -59,7 +63,7 @@ public class ImageServiceImp implements ImageService{
 
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
-        return userImage.getId();
+        return modelMapper.map(userImage,UserImageDTO.class);
     }
 
     @Override
@@ -109,7 +113,7 @@ public class ImageServiceImp implements ImageService{
     }
 
     @Override
-    public String saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {
+    public ProductImageDTO saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {
         // TODO: 25/05/2023 gestire massimo 5 immagini
 
 
@@ -118,22 +122,29 @@ public class ImageServiceImp implements ImageService{
         if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("cannot upload image for others product");
 
+        ProductImage productImage = new ProductImage();
+
+
+        return localProductImageSave(product,multipartFile,productImage,description);
+
+    }
+
+    public ProductImageDTO localProductImageSave(Product product, MultipartFile multipartFile, ProductImage productImage,String description) {
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-        String uploadDir = prodDir + product_id;
-        ProductImage productImage = new ProductImage();
+        try{
+        String uploadDir = prodDir +product.getId();
         productImage.setDescription(description);
         productImage.setUrlPhoto(uploadDir+"/"+fileName);
         productImage.setProduct(product);
-
-        // TODO: 24/05/2023 boolean for check save
-
-        productImage= productImageRepository.save(productImage);
-
-
+        productImageRepository.save(productImage);
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 
-        return productImage.getId();
+        return modelMapper.map(productImage,ProductImageDTO.class);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -184,6 +195,8 @@ public class ImageServiceImp implements ImageService{
             return null;
         }
     }
+
+
 
 
 
