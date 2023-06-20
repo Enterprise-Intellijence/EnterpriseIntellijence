@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.Following;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.FollowingService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.FollowingFollowersDTO;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,6 +49,12 @@ public class FollowingController {
             @RequestParam(defaultValue = "10",required = false) int sizePage)
     {
         return ResponseEntity.ok(followingService.getFollowersOfUser(id,page,sizePage));
+    }
+
+    @GetMapping("/me/following/{userId}")
+    public ResponseEntity<FollowingFollowersDTO> imFollowingThisUser(@PathVariable(name = "userId")String userId){
+        return followingService.imFollowingThisUser(userId);
+
     }
 
 }

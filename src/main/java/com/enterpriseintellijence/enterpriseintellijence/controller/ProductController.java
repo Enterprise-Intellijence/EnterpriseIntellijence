@@ -15,6 +15,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.nimbusds.jose.JOSEException;
@@ -45,9 +46,9 @@ public class ProductController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws IllegalAccessException {
+    public ProductDTO createProduct(@RequestBody @Valid ProductCreateDTO productCreateDTO) throws IllegalAccessException {
 
-        return productService.createProduct(productDTO);
+        return productService.createProduct(productCreateDTO);
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
@@ -72,114 +73,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
 
-/*    @GetMapping("")
-    public ResponseEntity<Page<ProductBasicDTO>> allProductPaged(@RequestParam int page, @RequestParam int size) {
-        if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getAllPaged(page, size));
-        }
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }*/
-
-    @GetMapping("/filter")
-    public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
-            // TODO: 03/06/2023 cambiare nome a like e view
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) Double minProductCost,
-            @RequestParam(required = false) Double maxProductCost,
-            @RequestParam(required = false) String[] brands,
-            @RequestParam(required = false) Condition condition,
-            @RequestParam(required = false) Integer views,
-            @RequestParam(required = false) String userId,
-            @RequestParam(required = false) LocalDateTime uploadDate,
-            @RequestParam(required = false) Availability availability,
-            @RequestParam(required = false) ProductCategory productCategory,
-            @RequestParam(required = false) String primaryCat,
-            @RequestParam(required = false) String secondaryCat,
-            @RequestParam(required = false) String tertiaryCat,
-            @RequestParam(required = false) Integer likesNumber,
-            @RequestParam(required = false) ProductGender productGender,
-            @RequestParam(required = false) String[] sizes,
-            @RequestParam(required = false) Colour colour,
-            @RequestParam(required = false) EntertainmentLanguage entertainmentLanguage,
-            @RequestParam(required = false) HomeMaterial homeMaterial,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int sizePage,
-            @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
-            @RequestParam(required = false, defaultValue = "DESC") String sortDirection
-    ) {
-        ProductSpecification.Filter filter = new ProductSpecification.Filter(userRepository,sizeRepository );
-        filter.setTitle(title);
-        filter.setDescription(description);
-        filter.setMinProductCost(minProductCost);
-        filter.setMaxProductCost(maxProductCost);
-        filter.setBrands(brands != null ? Arrays.asList(brands) : null);
-        filter.setCondition(condition);
-        filter.setViews(views);
-        filter.setProductGender(productGender);
-        filter.setSeller(userId);
-        filter.setUploadDate(uploadDate);
-        filter.setAvailability(availability);
-        filter.setProductCategory(productCategory);
-        filter.setPrimaryCat(primaryCat);
-        filter.setSecondaryCat(secondaryCat);
-        filter.setTertiaryCat(tertiaryCat);
-        filter.setLikesNumber(likesNumber);
-        filter.setSizes(sizes != null ? Arrays.asList(sizes) :null);
-        filter.setColour(colour);
-        filter.setEntertainmentLanguage(entertainmentLanguage);
-        filter.setHomeMaterial(homeMaterial);
-
-        //Specification<Product> specification = ProductSpecification.withFilters(filter);
-
-        return ResponseEntity.ok(productService.getProductFilteredPage(ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
-
-    }
-
     @GetMapping("/wardrobe")
     public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
         return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
     }
-
-/*    @GetMapping("/category")
-    public ResponseEntity<Page<ProductBasicDTO>> getProductFilteredForCategoriesPaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("category") ProductCategoryOld category){
-
-            return ResponseEntity.ok(productService.getProductFilteredForCategoriesPaged(page,size,category));
-    }
-
-    @GetMapping("/category/clothing")
-    public ResponseEntity<Page<ProductBasicDTO>> getClothingByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("clothingType")ClothingType clothingType){
-        return ResponseEntity.ok(productService.getClothingByTypePaged(page,size,clothingType));
-    }
-    @GetMapping("/category/entertainment")
-    public ResponseEntity<Page<ProductBasicDTO>> getEntertainmentByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("entertainmentType")EntertainmentLanguage entertainmentType){
-        return ResponseEntity.ok(productService.getEntertainmentByTypePaged(page,size,entertainmentType));
-    }
-
-    @GetMapping("/category/home")
-    public ResponseEntity<Page<ProductBasicDTO>> getHomeByTypePaged(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("homeType")HomeSize homeType){
-        return ResponseEntity.ok(productService.getHomeByTypePaged(page,size,homeType));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<Page<ProductBasicDTO>> searchProductByTitleOrDescription(@RequestParam("keystring") String keystring,@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.searchProduct(keystring,page,size));
-    }
-
-    @GetMapping("/search-by-price")
-    public ResponseEntity<Page<ProductBasicDTO>> searchProductByPrice(@RequestParam("startPrice") Double startPrice,@RequestParam("endPrice") Double endPrice,@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.searchProductByPrice(startPrice,endPrice,page,size));
-    }
-
-    @GetMapping("/most-liked")
-    public ResponseEntity<Page<ProductBasicDTO>> mostLikedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.getMostLikedProducts(page,size));
-    }
-
-    @GetMapping("/most-viewed")
-    public ResponseEntity<Page<ProductBasicDTO>> mostViewedProducts(@RequestParam("page") int page, @RequestParam("size") int size){
-        return ResponseEntity.ok(productService.getMostViewedProducts(page,size));
-    }*/
 
     @GetMapping("/{id}/offers")
     public ResponseEntity<Page<OfferBasicDTO>> getProductOffers(@PathVariable("id") String id,@RequestParam("page") int page, @RequestParam("size") int size) throws IllegalAccessException {
@@ -226,6 +123,68 @@ public class ProductController {
     public ResponseEntity<Iterable<SizeDTO>> getSizesList()
     {
         return ResponseEntity.ok(productService.getSizeList());
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
+            // TODO: 03/06/2023 cambiare nome a like e view
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double minProductCost,
+            @RequestParam(required = false) Double maxProductCost,
+            @RequestParam(required = false) String[] brands,
+            @RequestParam(required = false) Condition condition,
+            @RequestParam(required = false) Integer views,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) LocalDateTime uploadDate,
+            @RequestParam(required = false) Availability availability,
+            @RequestParam(required = false) ProductCategory productCategory,
+            @RequestParam(required = false) String primaryCat,
+            @RequestParam(required = false) String secondaryCat,
+            @RequestParam(required = false) String tertiaryCat,
+            @RequestParam(required = false) Integer likesNumber,
+            @RequestParam(required = false) ProductGender productGender,
+            @RequestParam(required = false) String[] sizes,
+            @RequestParam(required = false) Colour colour,
+            @RequestParam(required = false) EntertainmentLanguage entertainmentLanguage,
+            @RequestParam(required = false) HomeMaterial homeMaterial,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int sizePage,
+            @RequestParam(defaultValue = "uploadDate",required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "DESC") String sortDirection
+    ) {
+        ProductSpecification.Filter filter = new ProductSpecification.Filter(userRepository,sizeRepository );
+        //attributi comuni
+        filter.setTitle(title);
+        filter.setDescription(description);
+        filter.setMinProductCost(minProductCost);
+        filter.setMaxProductCost(maxProductCost);
+        filter.setBrands(brands != null ? Arrays.asList(brands) : null);
+        filter.setCondition(condition);
+        filter.setViews(views);
+        filter.setSeller(userId);
+        filter.setUploadDate(uploadDate);
+        filter.setAvailability(availability);
+        filter.setProductCategory(productCategory);
+        filter.setPrimaryCat(primaryCat);
+        filter.setSecondaryCat(secondaryCat);
+        filter.setTertiaryCat(tertiaryCat);
+
+
+        filter.setProductGender(productGender);
+        filter.setLikesNumber(likesNumber);
+        filter.setSizes(sizes != null ? Arrays.asList(sizes) :null);
+        filter.setColour(colour);
+        filter.setEntertainmentLanguage(entertainmentLanguage);
+        filter.setHomeMaterial(homeMaterial);
+
+        //Specification<Product> specification = ProductSpecification.withFilters(filter);
+
+        //if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getProductFilteredPage(
+                    ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
+        //}
+        //return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
 }

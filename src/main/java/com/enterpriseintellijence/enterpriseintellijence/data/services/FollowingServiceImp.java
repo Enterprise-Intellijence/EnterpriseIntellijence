@@ -13,12 +13,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -107,6 +109,17 @@ public class FollowingServiceImp implements FollowingService{
         }
 
         return new PageImpl<>(followingFollowersDTOS);
+    }
+
+    @Override
+    public ResponseEntity<FollowingFollowersDTO> imFollowingThisUser(String userId) {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        User followingUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Optional<Following> following = followingRepository.findByFollowerEqualsAndFollowingEquals(loggedUser,followingUser);
+        if(!following.isPresent())
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok(modelMapper.map(following.get(),FollowingFollowersDTO.class));
     }
 
     private FollowingFollowersDTO setTheOnlyFollowing(Following following){

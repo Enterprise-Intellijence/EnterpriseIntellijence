@@ -16,7 +16,7 @@ public class ClothingDTO extends ProductDTO {
     @NotNull
     private ProductGender productGender;
     @NotNull
-    private SizeDTO size;
+    private SizeDTO clothingSize;
     @NotNull
     private Colour colour;
 
