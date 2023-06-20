@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.handler;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.exception.ManyRequestException;
+import com.enterpriseintellijence.enterpriseintellijence.exception.ProductAlreadyLikedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IdMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseStatusException idMismatchExceptionHandler(WebRequest req, IdMismatchException ex) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(ProductAlreadyLikedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseStatusException productAlreadyLikedExceptionHandler(WebRequest req, ProductAlreadyLikedException ex) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
