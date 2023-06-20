@@ -20,6 +20,8 @@ public class UserBasicDTO {
     @NotNull
     private String username;
 
+    private String bio;
+
     private UserImageDTO photoProfile;
     private int reviews_total_sum;
     private int reviews_number;
