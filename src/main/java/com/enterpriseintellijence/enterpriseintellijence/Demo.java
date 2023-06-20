@@ -117,7 +117,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=1; i<100;i++){
+        for (int i=1; i<10;i++){
             User user = new User();
             user.setUsername("username"+i);
             user.setPassword(passwordEncoder.encode("password"+i));

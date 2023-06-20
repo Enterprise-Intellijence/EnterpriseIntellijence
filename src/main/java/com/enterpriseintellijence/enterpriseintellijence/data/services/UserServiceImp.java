@@ -10,6 +10,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
+import com.enterpriseintellijence.enterpriseintellijence.exception.ProductAlreadyLikedException;
 import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -413,14 +414,16 @@ public class UserServiceImp implements UserService{
 
         User user = userRepository.findByUsername(username);
         Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
+        if(user.getLikedProducts().contains(product))
+            throw new ProductAlreadyLikedException();
 
         product.setLikesNumber(product.getLikesNumber()+1);
-        //user.getLikedProducts().add(product);
+        user.getLikedProducts().add(product);
 
 
-        //product.getUsersThatLiked(user);
-        //userRepository.addLikeToProduct(userId, productId);
-        //productRepository.increaseLikesNumber(productId);
+        product.getUsersThatLiked().add(user);
+        
+        productRepository.save(product);
         userRepository.save(user);
     }
 
@@ -432,10 +435,14 @@ public class UserServiceImp implements UserService{
         User user = userRepository.findByUsername(username);
         Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
 
-        if(user.getLikedProducts().contains(product)){
+        if(user.getLikedProducts().contains(product) && product.getUsersThatLiked().contains(user)){
+
             product.setLikesNumber(product.getLikesNumber()-1);
             user.getLikedProducts().remove(product);
+            product.getUsersThatLiked().remove(user);
             userRepository.save(user);
+            productRepository.save(product);
+
         }
 
 /*        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
