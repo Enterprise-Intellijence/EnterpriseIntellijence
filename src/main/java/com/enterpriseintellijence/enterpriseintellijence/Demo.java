@@ -685,7 +685,7 @@ public class Demo {
                         .product(product)
                         .build();
                 offerRepository.save(offer);
-                Message message = notificationSystem.offerCreatedNotification(offer,product);
+                Message message = notificationSystem.offerCreatedNotification(offer);
                 messageRepository.save(message);
             }
 

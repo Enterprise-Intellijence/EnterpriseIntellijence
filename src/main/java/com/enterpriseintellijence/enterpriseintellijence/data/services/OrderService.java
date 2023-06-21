@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
@@ -12,6 +13,6 @@ public interface OrderService {
     OrderDTO updateOrder(String id, OrderDTO orderDTO) throws IllegalAccessException;
     void deleteOrder(String id) throws IllegalAccessException;
     OrderDTO getOrderById(String id) throws IllegalAccessException;
-    public Iterable<OrderDTO> findAllByUserId(String userId, Pageable pageable);
+    public Page<OrderDTO> findAllByUserId(Pageable pageable);
 
 }

@@ -472,7 +472,7 @@ public class UserServiceImp implements UserService{
         Page<Order> orders = new PageImpl<Order>(user.getOrders(),PageRequest.of(page,size),user.getOrders().size());
         List<OrderBasicDTO> collect = orders.stream().map(s->modelMapper.map(s, OrderBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size), orders.getTotalElements());
     }
 
     @Override
@@ -527,7 +527,7 @@ public class UserServiceImp implements UserService{
         Page<Offer> offers = new PageImpl<Offer>(loggedUser.getOffersMade(),PageRequest.of(page,size),loggedUser.getOffersMade().size());
         List<OfferBasicDTO> collect = offers.stream().map(s->modelMapper.map(s, OfferBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size),offers.getTotalElements());
     }
 
     @Override
