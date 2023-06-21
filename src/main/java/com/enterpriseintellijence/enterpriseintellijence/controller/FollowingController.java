@@ -52,7 +52,7 @@ public class FollowingController {
     }
 
     @GetMapping("/me/following/{userId}")
-    public ResponseEntity<FollowingFollowersDTO> imFollowingThisUser(@PathVariable(name = "userId")String userId){
+    public ResponseEntity<Boolean> imFollowingThisUser(@PathVariable(name = "userId")String userId){
         return followingService.imFollowingThisUser(userId);
 
     }
