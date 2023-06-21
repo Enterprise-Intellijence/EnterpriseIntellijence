@@ -196,58 +196,6 @@ public class ProductServiceImp implements ProductService {
         return new PageImpl<>(collect, products.getPageable(), products.getTotalElements());
     }
 
-    private Product mapToEntity(ProductDTO productDTO) {
-        if(productDTO.getProductCategory().getPrimaryCat().equals("Clothing")) {
-            return modelMapper.map(productDTO, Clothing.class);
-        }
-        else if(productDTO.getProductCategory().getPrimaryCat().equals("Home")) {
-
-            return modelMapper.map(productDTO, Home.class);
-        }
-        else if(productDTO.getProductCategory().getPrimaryCat().equals("Entertainment")) {
-            return modelMapper.map(productDTO, Entertainment.class);
-        }
-        else {
-            return modelMapper.map(productDTO, Product.class);
-        }
-    }
-
-    private ProductDTO mapToProductDetailsDTO(Product product) {
-        if(product.getProductCategory().getPrimaryCat().equals("Clothing"))
-            return modelMapper.map(product, ClothingDTO.class);
-        else if(product.getProductCategory().getPrimaryCat().equals("Home"))
-            return modelMapper.map(product, HomeDTO.class);
-        else if(product.getProductCategory().getPrimaryCat().equals("Entertainment"))
-            return modelMapper.map(product, EntertainmentDTO.class);
-        else
-            return modelMapper.map(product, ProductDTO.class);
-    }
-
-    private List<ProductBasicDTO> mapToProductBasicDTOList(Page<Product> products) {
-        return products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-    }
-
-
-
-    private void throwOnIdMismatch(String id, ProductDTO productDTO) {
-        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
-            throw new IdMismatchException();
-        }
-    }
-
-    public String getCapabilityUrl(String id) {
-
-        Optional<String> username = jwtContextUtils.getUsernameFromContext();
-        if (username.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
-        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if(!product.getSeller().getUsername().equals(username.get())){
-            throw new RuntimeException("Unauthorized operation");
-        }
-        String token = tokenStore.createCapabilityToken(id);
-        return  "https://localhost:8443/api/v1/products/capability/" + token;
-    }
 
     @Override
     public Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size) {
@@ -358,6 +306,60 @@ public class ProductServiceImp implements ProductService {
         else {
             return modelMapper.map(productCreateDTO, Product.class);
         }
+    }
+
+
+    private Product mapToEntity(ProductDTO productDTO) {
+        if(productDTO.getProductCategory().getPrimaryCat().equals("Clothing")) {
+            return modelMapper.map(productDTO, Clothing.class);
+        }
+        else if(productDTO.getProductCategory().getPrimaryCat().equals("Home")) {
+
+            return modelMapper.map(productDTO, Home.class);
+        }
+        else if(productDTO.getProductCategory().getPrimaryCat().equals("Entertainment")) {
+            return modelMapper.map(productDTO, Entertainment.class);
+        }
+        else {
+            return modelMapper.map(productDTO, Product.class);
+        }
+    }
+
+    private ProductDTO mapToProductDetailsDTO(Product product) {
+        if(product.getProductCategory().getPrimaryCat().equals("Clothing"))
+            return modelMapper.map(product, ClothingDTO.class);
+        else if(product.getProductCategory().getPrimaryCat().equals("Home"))
+            return modelMapper.map(product, HomeDTO.class);
+        else if(product.getProductCategory().getPrimaryCat().equals("Entertainment"))
+            return modelMapper.map(product, EntertainmentDTO.class);
+        else
+            return modelMapper.map(product, ProductDTO.class);
+    }
+
+    private List<ProductBasicDTO> mapToProductBasicDTOList(Page<Product> products) {
+        return products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+    }
+
+
+
+    private void throwOnIdMismatch(String id, ProductDTO productDTO) {
+        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
+            throw new IdMismatchException();
+        }
+    }
+
+    public String getCapabilityUrl(String id) {
+
+        Optional<String> username = jwtContextUtils.getUsernameFromContext();
+        if (username.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(!product.getSeller().getUsername().equals(username.get())){
+            throw new RuntimeException("Unauthorized operation");
+        }
+        String token = tokenStore.createCapabilityToken(id);
+        return  "https://localhost:8443/api/v1/products/capability/" + token;
     }
 
 }
