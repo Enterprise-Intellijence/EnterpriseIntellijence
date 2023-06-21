@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
-public class HomeCreateDTO {
+public class HomeCreateDTO extends ProductCreateDTO {
     @NotNull
     private Colour colour;
     @NotNull

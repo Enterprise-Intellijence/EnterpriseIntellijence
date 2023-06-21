@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
-public class EntertainmentCreateDTO {
+public class EntertainmentCreateDTO extends ProductCreateDTO {
     @NotNull
     private EntertainmentLanguage entertainmentLanguage;
 }

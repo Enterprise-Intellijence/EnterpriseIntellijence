@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
-public class ClothingCreateDTO {
+public class ClothingCreateDTO extends ProductCreateDTO {
     @NotNull
     private ProductGender productGender;
     @NotNull
