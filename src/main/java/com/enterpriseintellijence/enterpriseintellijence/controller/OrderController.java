@@ -11,6 +11,7 @@ import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
 
-    @GetMapping(path = "/me", params = {"page", "size"}, consumes = "application/json")
+    @GetMapping(path = "/me")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<OrderDTO>> getAllOrdersOfUser(@RequestBody Pageable pageable) {
-        return ResponseEntity.ok((Page<OrderDTO>) orderService.findAllByUserId(jwtContextUtils.getUserLoggedFromContext().getId(), pageable));
+    public ResponseEntity<Page<OrderDTO>> getAllOrdersOfUser(@RequestParam(defaultValue = "0", required = false) int page,
+                                                             @RequestParam(defaultValue = "10", required = false) int sizePage) {
+        return ResponseEntity.ok((Page<OrderDTO>) orderService.findAllByUserId(PageRequest.of(page, sizePage)));
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")

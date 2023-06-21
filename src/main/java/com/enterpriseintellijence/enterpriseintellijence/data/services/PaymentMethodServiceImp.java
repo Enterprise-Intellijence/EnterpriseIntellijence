@@ -147,7 +147,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         Page<PaymentMethod> paymentMethods = new PageImpl<PaymentMethod>(user.getPaymentMethods(), PageRequest.of(page,size),user.getPaymentMethods().size());
         List<PaymentMethodBasicDTO> collect = paymentMethods.stream().map(s->modelMapper.map(s, PaymentMethodBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size),paymentMethods.getTotalElements());
     }
 
     public PaymentMethod mapToEntity(PaymentMethodDTO paymentMethodDTO) {

@@ -35,7 +35,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         product.setLastUpdateDate(timeNow());
         offer.setProduct(product);
         // TODO: 25/05/2023 aggiungere un campo in user per i messaggi non letti?
-        offer.setMessage(notificationSystem.offerCreatedNotification(offer,product));
+        offer.setMessage(notificationSystem.offerCreatedNotification(offer));
 
         return offer;
     }

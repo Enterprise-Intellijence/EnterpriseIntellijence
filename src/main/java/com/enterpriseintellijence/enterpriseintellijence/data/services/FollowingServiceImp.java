@@ -97,7 +97,7 @@ public class FollowingServiceImp implements FollowingService{
             followingFollowersDTOS.add(setTheOnlyFollowing(following)) ;
         }
 
-        return new PageImpl<>(followingFollowersDTOS);
+        return new PageImpl<>(followingFollowersDTOS, PageRequest.of(page,sizePage),followingPage.getTotalElements());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class FollowingServiceImp implements FollowingService{
             followingFollowersDTOS.add(setTheOnlyFollowers(following)) ;
         }
 
-        return new PageImpl<>(followingFollowersDTOS);
+        return new PageImpl<>(followingFollowersDTOS, PageRequest.of(page,sizePage),followersPage.getTotalElements());
     }
 
     @Override

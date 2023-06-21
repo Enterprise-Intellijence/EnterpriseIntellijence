@@ -193,7 +193,7 @@ public class ProductServiceImp implements ProductService {
             products = productRepository.findAllBySellerAndVisibilityEquals(user, Visibility.PUBLIC,PageRequest.of(page, size));
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, products.getPageable(), products.getTotalElements());
     }
 
     private Product mapToEntity(ProductDTO productDTO) {
@@ -268,7 +268,7 @@ public class ProductServiceImp implements ProductService {
         Page<Offer> offers = new PageImpl<Offer>(product.getOffers(),PageRequest.of(page,size),product.getOffers().size());
         List<OfferBasicDTO> collect = offers.stream().map(s->modelMapper.map(s, OfferBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size),offers.getTotalElements());
     }
 
     @Override
@@ -280,7 +280,7 @@ public class ProductServiceImp implements ProductService {
         Page<Message> messages = new PageImpl<Message>(product.getMessages(), PageRequest.of(page,size),product.getMessages().size());
         List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size),messages.getTotalElements());
     }
 
     @Override
