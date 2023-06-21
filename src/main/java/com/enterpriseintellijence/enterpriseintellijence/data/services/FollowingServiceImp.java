@@ -112,14 +112,11 @@ public class FollowingServiceImp implements FollowingService{
     }
 
     @Override
-    public ResponseEntity<FollowingFollowersDTO> imFollowingThisUser(String userId) {
+    public ResponseEntity<Boolean> imFollowingThisUser(String userId) {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         User followingUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        Optional<Following> following = followingRepository.findByFollowerEqualsAndFollowingEquals(loggedUser,followingUser);
-        if(!following.isPresent())
-            return ResponseEntity.noContent().build();
-        else
-            return ResponseEntity.ok(modelMapper.map(following.get(),FollowingFollowersDTO.class));
+        return ResponseEntity.ok( followingRepository.existsFollowingByFollowerEqualsAndFollowingEquals(loggedUser,followingUser));
+        
     }
 
     private FollowingFollowersDTO setTheOnlyFollowing(Following following){

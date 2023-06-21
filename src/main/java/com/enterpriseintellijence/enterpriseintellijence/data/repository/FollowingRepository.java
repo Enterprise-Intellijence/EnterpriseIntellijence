@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface FollowingRepository extends JpaRepositoryImplementation<Following, String>, JpaSpecificationExecutor<Following> {
     Following findByFollowingEquals(User following);
-    Optional<Following> findByFollowerEqualsAndFollowingEquals(User follower,User following);
+    Boolean existsFollowingByFollowerEqualsAndFollowingEquals(User follower,User following);
 
 }
