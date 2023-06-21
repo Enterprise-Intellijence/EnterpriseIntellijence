@@ -180,11 +180,8 @@ public class ProductController {
 
         //Specification<Product> specification = ProductSpecification.withFilters(filter);
 
-        //if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getProductFilteredPage(
-                    ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
-        //}
-        //return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        return ResponseEntity.ok(productService.getProductFilteredPage(
+                ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
     }
 
 }

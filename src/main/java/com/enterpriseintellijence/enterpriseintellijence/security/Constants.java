@@ -7,12 +7,12 @@ public class Constants {
     public static final int JWT_REFRESH_EXPIRATION_TIME = 24;  // in hours
     public static final int JWT_CAPABILITY_EXPIRATION_TIME = 1;  // in hours
     public static final int EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME = 24;  // in hours
-    public static final int BASIC_USER_RATE_LIMIT_BANDWIDTH = 50;
-    public static final int BASIC_USER_RATE_LIMIT_REFILL = 23;
+    public static final int BASIC_USER_RATE_LIMIT_BANDWIDTH = 250;
+    public static final int BASIC_USER_RATE_LIMIT_REFILL = 115;
     public static final int BASIC_USER_RATE_LIMIT_REFILL_DURATION = 1; // in minutes
 
-    public static final int ADMIN_RATE_LIMIT_BANDWIDTH = 100;
-    public static final int ADMIN_RATE_LIMIT_REFILL = 100;
+    public static final int ADMIN_RATE_LIMIT_BANDWIDTH = 500;
+    public static final int ADMIN_RATE_LIMIT_REFILL = 500;
     public static final int ADMIN_RATE_LIMIT_REFILL_DURATION = 1; // in seconds
     public static final String VERIFICATION_EMAIL_SUBJECT = "Enterprise Intelligence - Email Verification";
     public static final String VERIFICATION_EMAIL_TEXT = "Please click the link below to verify your email address and complete your registration.\n";

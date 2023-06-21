@@ -37,9 +37,15 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             userTypeKey = "BASIC-" + ipAddress;
         }
 
+        int cost = 5;
+        String URI = request.getRequestURI();
+        switch (URI) {
+            case "/api/v1/images/users/photo-profile/**", "/api/v1/images/product/**" -> cost = 1;
+        }
 
         Bucket tokenBucket = userTypePlanService.resolveBucket(userTypeKey);
-        ConsumptionProbe probe = tokenBucket.tryConsumeAndReturnRemaining(1);
+
+        ConsumptionProbe probe = tokenBucket.tryConsumeAndReturnRemaining(cost);
         if (probe.isConsumed()) {
             response.addHeader("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
             return true;
