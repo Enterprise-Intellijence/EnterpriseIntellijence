@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Product
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.SizeRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.SizeDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,11 @@ public class AdministrationServiceImp implements AdministrationService{
 
     @Override
     public ProductCategoryDTO createNewCategory(ProductCategoryDTO productCategoryDTO) {
+        productCategoryRepository.findAllByPrimaryCat(productCategoryDTO.getPrimaryCat()).forEach(productCategory -> {
+            if (productCategory.getSecondaryCat().equals(productCategoryDTO.getSecondaryCat()) && productCategory.getTertiaryCat().equals(productCategoryDTO.getTertiaryCat())){
+                throw new RuntimeException("Category already exists");
+            }
+        });
         return mapToDTO(productCategoryRepository.save(mapToEntity(productCategoryDTO)));
     }
 
@@ -37,6 +43,11 @@ public class AdministrationServiceImp implements AdministrationService{
 
     @Override
     public SizeDTO createNewSize(SizeDTO sizeDTO) {
+        sizeRepository.findAllBySizeName(sizeDTO.getSizeName()).forEach(size -> {
+            if (size.getType().equals(sizeDTO.getType())){
+                throw new RuntimeException("Size already exists");
+            }
+        });
         return mapToDTO(sizeRepository.save(mapToEntity(sizeDTO)));
     }
 
@@ -54,7 +65,13 @@ public class AdministrationServiceImp implements AdministrationService{
 
     @Override
     public void productCategoryEnableOrDisable(String catId) {
-
+        ProductCategory productCategory = productCategoryRepository.findById(catId).orElseThrow();
+        if(productCategory.getVisibility().equals(Visibility.PRIVATE)){
+            productCategory.setVisibility(Visibility.PUBLIC);
+        }else{
+            productCategory.setVisibility(Visibility.PRIVATE);
+        }
+        productCategoryRepository.save(productCategory);
     }
 
     ProductCategory mapToEntity(ProductCategoryDTO productCategoryDTO){
