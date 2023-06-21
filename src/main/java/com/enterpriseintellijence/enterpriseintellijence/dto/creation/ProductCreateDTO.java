@@ -1,13 +1,13 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +22,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-@Builder
-@AllArgsConstructor
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "productCategory", visible = true, defaultImpl = ProductCreateDTO.class)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ClothingCreateDTO.class, name = "Clothing"),
+        @JsonSubTypes.Type(value = EntertainmentCreateDTO.class, name = "Entertainment"),
+        @JsonSubTypes.Type(value = HomeCreateDTO.class, name = "Home"),
+})
 public class ProductCreateDTO {
 
     @Length(max = 100)
