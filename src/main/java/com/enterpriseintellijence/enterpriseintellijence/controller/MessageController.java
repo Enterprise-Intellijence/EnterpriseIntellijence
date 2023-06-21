@@ -8,6 +8,12 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.MessageCre
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,24 +61,35 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getMessage(id));
     }
 
-    @PostMapping(path="/read")
+    @PostMapping(path = "/read")
     @ResponseStatus(HttpStatus.OK)
-    public void setReadMessages(@RequestBody List<String> idList){
+    public void setReadMessages(@RequestBody List<String> idList) {
         messageService.setReadMessages(idList);
     }
+
+
 
     @GetMapping("/conversations/{conversationId}")
     public ResponseEntity<Page<MessageDTO>> getConversation(
             @PathVariable("conversationId") String conversationId,
-            @RequestParam(defaultValue = "0",required = false) int page,
-            @RequestParam(defaultValue = "10",required = false) int sizePage){
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int sizePage) {
 
-        return ResponseEntity.ok(messageService.getConversation(conversationId,page,sizePage));
+        return ResponseEntity.ok(messageService.getConversation(conversationId, page, sizePage));
 
     }
 
+
+    @ApiResponses(value = {
+        @ApiResponse(content = {
+            @Content(
+                mediaType = "application/json",
+                array = @ArraySchema(schema = @Schema(implementation = ConversationDTO.class))
+            )
+        })
+    })
     @GetMapping("/conversations")
-    public ResponseEntity<Iterable<ConversationDTO>> getAllMyConversations(){
+    public ResponseEntity<Iterable<ConversationDTO>> getAllMyConversations() {
 
         return ResponseEntity.ok(messageService.getAllMyConversations());
 
