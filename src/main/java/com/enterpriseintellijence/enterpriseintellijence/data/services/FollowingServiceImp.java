@@ -40,21 +40,25 @@ public class FollowingServiceImp implements FollowingService{
             throw new IllegalAccessException("can't follow yourself");
 
         User followingUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Following following= Following.builder()
-                .followingFrom(LocalDateTime.now(clock))
-                .follower(loggedUser)
-                .following(followingUser)
-                .build();
+        if(!followingRepository.existsFollowingByFollowerEqualsAndFollowingEquals(loggedUser,followingUser)){
+            Following following= Following.builder()
+                    .followingFrom(LocalDateTime.now(clock))
+                    .follower(loggedUser)
+                    .following(followingUser)
+                    .build();
 
-        followingRepository.save(following);
+            followingRepository.save(following);
 
-        loggedUser.setFollowing_number(loggedUser.getFollowing_number()+1);
-        userRepository.save(loggedUser);
+            loggedUser.setFollowing_number(loggedUser.getFollowing_number()+1);
+            userRepository.save(loggedUser);
 
-        followingUser.setFollowers_number(followingUser.getFollowers_number()+1);
-        userRepository.save(followingUser);
+            followingUser.setFollowers_number(followingUser.getFollowers_number()+1);
+            userRepository.save(followingUser);
 
-        return setTheOnlyFollowing(following);
+            return setTheOnlyFollowing(following);
+        }
+        else
+            throw new IllegalAccessException("You are already following this user");
     }
 
     @Override
@@ -66,10 +70,10 @@ public class FollowingServiceImp implements FollowingService{
 
         User followingUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        Following following = followingRepository.findByFollowingEquals(followingUser);
+        Following following = followingRepository.findByFollowerEqualsAndFollowingEquals(loggedUser, followingUser);
 
         if(following==null)
-            throw new IllegalArgumentException("Non sei un suo follower");
+            throw new IllegalArgumentException("Can't find following relationship");
 
         followingRepository.delete(following);
 
@@ -116,7 +120,7 @@ public class FollowingServiceImp implements FollowingService{
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         User followingUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         return ResponseEntity.ok( followingRepository.existsFollowingByFollowerEqualsAndFollowingEquals(loggedUser,followingUser));
-        
+
     }
 
     private FollowingFollowersDTO setTheOnlyFollowing(Following following){
