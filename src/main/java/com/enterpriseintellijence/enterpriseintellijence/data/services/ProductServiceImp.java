@@ -166,6 +166,7 @@ public class ProductServiceImp implements ProductService {
             .orElseThrow((() ->
                 new EntityNotFoundException("Product not found")
             ));
+
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
         if(username.isPresent()) {
             User userRequesting = userRepository.findByUsername(username.get());
@@ -175,6 +176,7 @@ public class ProductServiceImp implements ProductService {
 
         if (product.getVisibility().equals(Visibility.PRIVATE) && !capability)
             throw new EntityNotFoundException("Product not found");
+
         product.setViews(product.getViews()+1);
         productRepository.save(product);
         return mapToProductDetailsDTO(product);
