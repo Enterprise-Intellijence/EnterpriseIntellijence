@@ -16,5 +16,5 @@ public interface FollowingService {
 
     Page<FollowingFollowersDTO> getFollowersOfUser(String id, int page, int sizePage);
 
-    ResponseEntity<FollowingFollowersDTO> imFollowingThisUser(String userId);
+    ResponseEntity<Boolean> imFollowingThisUser(String userId);
 }
