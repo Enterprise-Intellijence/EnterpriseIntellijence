@@ -4,6 +4,8 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.ImageServ
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +40,11 @@ public class ImageController {
         imageService.deletePhotoUser(id);
     }
 
-    @GetMapping(path = "/users/photo-profile/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getUserProfilePhoto(@PathVariable("id") String id) throws IOException {
-        return ResponseEntity.ok(imageService.getUserProfilePhoto(id));
+    @GetMapping(path = "/{type}/{folder_name}/{file_name:.*}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> getImage(@PathVariable("type" )String type, @PathVariable("folder_name")String folder_name ,@PathVariable("file_name") String file_name) throws IOException {
+
+        Resource resource = imageService.getUserProfilePhoto(type+"/"+folder_name+"/"+file_name);
+        return ResponseEntity.ok(resource);
     }
 
     @PostMapping("/product")
@@ -61,10 +65,10 @@ public class ImageController {
         imageService.deleteImageProduct(id);
     }
 
-    @GetMapping(value = "/product/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getImageProduct(@PathVariable("id") String id) {
-        return ResponseEntity.ok(imageService.getImageProduct(id));
-    }
+/*    @GetMapping(value = "/product/{folder_name}/{file_name:.*}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> getImageProduct(@PathVariable("folder_name")String folder_name ,@PathVariable("file_name") String file_name) {
+        return ResponseEntity.ok(imageService.getImageProduct(folder_name+"/"+file_name));
+    }*/
 
 
 

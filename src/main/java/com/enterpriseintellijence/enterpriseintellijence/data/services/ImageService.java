@@ -3,14 +3,15 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public interface ImageService {
-    byte[] getUserProfilePhoto(String id) throws IOException;
+    Resource getUserProfilePhoto(String url) throws IOException;
 
-    byte[] getImageProduct(String id);
+    Resource getImageProduct(String url);
 
 
     UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException;
