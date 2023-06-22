@@ -73,9 +73,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
 
-    @GetMapping("/wardrobe")
-    public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
-        return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
+    @GetMapping("/me")
+    public ResponseEntity<Page<ProductBasicDTO>> getMyProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.getMyProducts(page,size));
     }
 
     @GetMapping("/{id}/offers")

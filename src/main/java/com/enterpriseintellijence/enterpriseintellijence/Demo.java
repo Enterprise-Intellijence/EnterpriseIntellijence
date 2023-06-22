@@ -551,8 +551,8 @@ public class Demo {
                                 .title(buyer.getUsername() +" recensisce "+seller.getUsername())
                                 .description("Questa è una recensione finta, e serve come placeholder")
                                 .vote(voto)
-                                .reviewed(buyer)
                                 .reviewed(seller)
+                                .reviewer(buyer)
                                 .build();
 
                         reviewRepository.save(review);

@@ -49,21 +49,21 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.reviewById(id));
     }
 
-    // TODO: avrebbe più senso fare un metodo allReviewsByUser, che restituisce tutte le recensioni riferite ad uno stesso utente
-    // forse è meglio parlarne quando si ha il frontend
-    @GetMapping("/received")
+    @GetMapping("/{userId}/received")
     public Page<ReviewDTO> allReviewReceived(
+            @PathVariable("userId") String userID,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int sizePage)
     {
-    return reviewService.allReviewReceived(page,sizePage);
+    return reviewService.allReviewReceived(userID, page,sizePage);
     }
 
-    @GetMapping("/sent")
+    @GetMapping("/{userId}/sent")
     public Page<ReviewDTO> allReviewSent(
+            @PathVariable("userId") String userID,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int sizePage)
     {
-        return reviewService.allReviewSent(page,sizePage);
+        return reviewService.allReviewSent(userID, page,sizePage);
     }
 }

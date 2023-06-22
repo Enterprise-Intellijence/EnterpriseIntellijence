@@ -6,11 +6,11 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductGender
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
+
 @Data
 @NoArgsConstructor
 @ToString
-@Builder
-@AllArgsConstructor
 public class ClothingCreateDTO extends ProductCreateDTO {
     @NotNull
     private ProductGender productGender;
