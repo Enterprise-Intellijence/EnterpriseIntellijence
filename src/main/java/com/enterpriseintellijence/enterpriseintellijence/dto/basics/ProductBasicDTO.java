@@ -17,19 +17,6 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @Builder
-/*@JsonTypeInfo(
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "productCategory",
-        use = JsonTypeInfo.Id.NAME,
-        visible = true
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ProductBasicDTO.class, name = "OTHER"),
-        @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING"),
-        @JsonSubTypes.Type(value = HomeDTO.class, name = "HOME"),
-        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT")
-
-})*/
 public class ProductBasicDTO {
 
     private String id;

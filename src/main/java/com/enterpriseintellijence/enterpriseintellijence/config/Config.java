@@ -1,7 +1,10 @@
 package com.enterpriseintellijence.enterpriseintellijence.config;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -77,20 +80,17 @@ public class Config {
             }
         });*/
 
-        /*Converter<List<ProductImage>,ProductImageDTO> defaultImageConverter = new AbstractConverter<List<ProductImage>, ProductImageDTO>() {
+        Converter<CustomMoneyDTO, CustomMoney> defaultCustomMoneyConverter = new AbstractConverter<CustomMoneyDTO, CustomMoney>() {
             @Override
-            protected ProductImageDTO convert(List<ProductImage> productImages) {
-                return ProductImageDTO.builder()
-                        .id(productImages.get(0).getId())
-                        .description(productImages.get(0).getDescription())
-                        .photo(null)
-                        .build();
+            protected CustomMoney convert(CustomMoneyDTO customMoneyDTO) {
+                CustomMoney customMoney = new CustomMoney(customMoneyDTO.getPrice(),customMoneyDTO.getCurrency());
+                return customMoney;
             }
         };
 
-        modelMapper.addConverter(defaultImageConverter);
+        modelMapper.addConverter(defaultCustomMoneyConverter);
 
-        Converter<List<ProductImage>,List<ProductImageDTO>> imageListConverter = new AbstractConverter<List<ProductImage>, List<ProductImageDTO>>() {
+        /*Converter<List<ProductImage>,List<ProductImageDTO>> imageListConverter = new AbstractConverter<List<ProductImage>, List<ProductImageDTO>>() {
             @Override
             protected List<ProductImageDTO> convert(List<ProductImage> productImages) {
                 List<ProductImageDTO> productImageDTOS = new ArrayList<>();

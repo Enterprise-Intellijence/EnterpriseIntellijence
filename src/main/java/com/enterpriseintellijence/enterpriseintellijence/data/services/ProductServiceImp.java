@@ -63,7 +63,15 @@ public class ProductServiceImp implements ProductService {
             product.setLikesNumber(0);
             product.setViews(0);
             product.setSeller(loggedUser);
-            // TODO: 19/06/2023 controlli sulla size 
+            product.setAvailability(Availability.AVAILABLE);
+            if(!productCatRepository.existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(
+                    productCreateDTO.getProductCategory().getId(),
+                    productCreateDTO.getProductCategory().getPrimaryCat(),
+                    productCreateDTO.getProductCategory().getSecondaryCat(),
+                    productCreateDTO.getProductCategory().getTertiaryCat()))
+                throw new IllegalArgumentException("Category not found");
+
+            // TODO: 22/06/2023 controllo sulla size
             productRepository.save(product);
             for(MultipartFile multipartFile: productCreateDTO.getProductImages()){
                 imageServiceImp.localProductImageSave(product,multipartFile,new ProductImage(),"ciao");
@@ -71,6 +79,8 @@ public class ProductServiceImp implements ProductService {
 
             return mapToProductDetailsDTO(product);
         }catch (Exception e){
+
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -263,6 +273,18 @@ public class ProductServiceImp implements ProductService {
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect,pageable, products.getTotalElements());
+    }
+
+    @Override
+    public Page<ProductBasicDTO> getMyProducts(int page, int size) {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getSellingProducts()!=null)
+            return new PageImpl<>(
+                    loggedUser.getSellingProducts().stream().map(s->modelMapper.map(s,ProductBasicDTO.class)).collect(Collectors.toList()),
+                    PageRequest.of(page,size),
+                    loggedUser.getSellingProducts().size());
+        else
+            return new PageImpl<>(null,PageRequest.of(page,size),0);
     }
 
     @Override

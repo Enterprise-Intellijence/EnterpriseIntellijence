@@ -19,7 +19,7 @@ public interface ReviewService {
 
 
 
-    Page<ReviewDTO> allReviewSent(int page, int sizePage);
+    Page<ReviewDTO> allReviewSent(String userId, int page, int sizePage);
 
-    Page<ReviewDTO> allReviewReceived(int page, int sizePage);
+    Page<ReviewDTO> allReviewReceived(String userId, int page, int sizePage);
 }

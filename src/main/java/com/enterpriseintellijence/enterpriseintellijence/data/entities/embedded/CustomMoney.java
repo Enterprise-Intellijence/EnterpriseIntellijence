@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.money.CurrencyUnit;
@@ -24,11 +25,13 @@ public class CustomMoney {
     private Money money;
 
     public CustomMoney(Double price, Currency currency){
+        System.out.println("1");
         this.price=price;
         this.currency=currency;
         money=Money.of(CurrencyUnit.of(currency.toString()),price);
     }
     public CustomMoney(Money money){
+        System.out.println("2");
         this.price = Double.valueOf(String.valueOf(money.getAmount())) ;
         this.currency = Currency.valueOf(String.valueOf(money.getCurrencyUnit()));
     }

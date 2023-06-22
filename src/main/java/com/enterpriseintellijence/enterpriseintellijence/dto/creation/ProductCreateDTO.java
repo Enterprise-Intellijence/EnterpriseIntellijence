@@ -8,11 +8,9 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +20,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "productCategory", visible = true, defaultImpl = ProductCreateDTO.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ClothingCreateDTO.class, name = "Clothing"),
         @JsonSubTypes.Type(value = EntertainmentCreateDTO.class, name = "Entertainment"),
         @JsonSubTypes.Type(value = HomeCreateDTO.class, name = "Home"),
+        @JsonSubTypes.Type(value = ProductCreateDTO.class,name = "Other")
 })
 public class ProductCreateDTO {
 
@@ -53,7 +52,5 @@ public class ProductCreateDTO {
 
     private ProductCategoryDTO productCategory;
 
-    @Max(5)
-    @Min(1)
-    private List<MultipartFile> productImages;
+    private List<@Size(min = 1, max = 5)MultipartFile> productImages;
 }
