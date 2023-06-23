@@ -32,14 +32,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,10 +54,10 @@ public class UserController {
     }
 
     @PostMapping(path= "/register" )
-    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
+    @ResponseStatus(HttpStatus.OK)
+    public void register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
         userService.registerUser(username, email, password);
         userService.sendVerificationEmail(username);
-        return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/activate")

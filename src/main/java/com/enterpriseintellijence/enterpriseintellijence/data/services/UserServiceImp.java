@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.NotificationsRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
@@ -58,6 +59,7 @@ public class UserServiceImp implements UserService{
     private final AuthenticationManager authenticationManager;
     private final TokenStore tokenStore;
     private final EmailService emailService;
+    private final NotificationsRepository notificationsRepository;
 
 
 
@@ -240,6 +242,7 @@ public class UserServiceImp implements UserService{
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring("Bearer ".length());
             tokenStore.logout(accessToken);
+            notificationsRepository.deleteAllByUserAndReadIsTrue(jwtContextUtils.getUserLoggedFromContext());
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
