@@ -25,13 +25,11 @@ public class CustomMoney {
     private Money money;
 
     public CustomMoney(Double price, Currency currency){
-        System.out.println("1");
         this.price=price;
         this.currency=currency;
         money=Money.of(CurrencyUnit.of(currency.toString()),price);
     }
     public CustomMoney(Money money){
-        System.out.println("2");
         this.price = Double.valueOf(String.valueOf(money.getAmount())) ;
         this.currency = Currency.valueOf(String.valueOf(money.getCurrencyUnit()));
     }

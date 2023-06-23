@@ -161,12 +161,13 @@ public class MessageServiceImp implements MessageService{
 
     @Override
     public String getConversationId(User user1, User user2, @Nullable Product product){
+        // TODO: 22/06/2023 why?? senza la query? 
         List<Message> messages = messageRepository.findAllMyConversation(jwtContextUtils.getUserLoggedFromContext().getId());
 
         for(Message message : messages){
             if((message.getSendUser().equals(user1) && message.getReceivedUser().equals(user2)) ||
                     (message.getSendUser().equals(user2) && message.getReceivedUser().equals(user1)))
-                if(message.getProduct().equals(product))
+                if(message.getProduct()!=null && message.getProduct().equals(product))
                     return message.getConversationId();
         }
         String convID = UUID.randomUUID().toString();
