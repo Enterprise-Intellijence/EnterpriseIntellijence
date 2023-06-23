@@ -68,6 +68,6 @@ public class ProductDTO {
     private List<UserBasicDTO> usersThatLiked;
 
 
-    private List<@Size(min = 1, max = 5) MultipartFile> productImages;
+    private List<ProductImageDTO> productImages;
 
 }
