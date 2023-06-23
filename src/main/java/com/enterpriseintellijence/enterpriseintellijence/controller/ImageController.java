@@ -5,7 +5,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,13 @@ import java.io.IOException;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ImageController {
     private final ImageService imageService;
+
+    @GetMapping(path = "/{type}/{folder_name}/{file_name:.*}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> getImage(@PathVariable("type" )String type, @PathVariable("folder_name")String folder_name ,@PathVariable("file_name") String file_name) throws IOException {
+
+        Resource resource = imageService.getImage(type+"/"+folder_name+"/"+file_name);
+        return ResponseEntity.ok(resource);
+    }
 
     @PostMapping("/users/photo-profile")
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,12 +46,6 @@ public class ImageController {
         imageService.deletePhotoUser(id);
     }
 
-    @GetMapping(path = "/{type}/{folder_name}/{file_name:.*}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<Resource> getImage(@PathVariable("type" )String type, @PathVariable("folder_name")String folder_name ,@PathVariable("file_name") String file_name) throws IOException {
-
-        Resource resource = imageService.getUserProfilePhoto(type+"/"+folder_name+"/"+file_name);
-        return ResponseEntity.ok(resource);
-    }
 
     @PostMapping("/product")
     @ResponseStatus(HttpStatus.CREATED)

@@ -28,4 +28,6 @@ public interface MessageRepository extends JpaRepository<Message, String>, JpaSp
     @Query("select distinct p from Message p where (p.sendUser.id= :user or p.receivedUser.id= :user) AND p.messageDate = (SELECT MAX(m.messageDate) FROM Message m WHERE m.conversationId = p.conversationId) ")
     List<Message> findAllMyConversation(@Param("user") String loggedUser);
 
+
+
 }

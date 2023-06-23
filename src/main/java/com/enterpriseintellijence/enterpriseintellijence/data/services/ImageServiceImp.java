@@ -45,7 +45,24 @@ public class ImageServiceImp implements ImageService{
     private final JwtContextUtils jwtContextUtils;
     private final ModelMapper modelMapper;
 
-    // TODO: 25/05/2023 gestire massimo 5 immagini
+    @Override
+    public Resource getImage(String url) throws IOException {
+
+        try{
+            String myPath=imagesGetDir+url;
+
+            System.out.println(myPath);
+            Path filePath = Paths.get(myPath);
+
+            Resource resource  = new FileSystemResource(filePath);
+            return resource;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new IOException("Something gone wrong, try again.");
+        }
+    }
+
+
 
     @Override
     public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
@@ -55,13 +72,15 @@ public class ImageServiceImp implements ImageService{
         String localStorageDir = userDir + loggedUser.getUsername();
         UserImage userImage = new UserImage();
         userImage.setDescription(description);
-        userImage.setUrlPhoto("user_photos/"+loggedUser.getUsername()+"/"+fileName);
+        userImage.setUrlPhoto("images/user_photos/"+loggedUser.getUsername()+"/"+fileName);
         userImage.setUser(loggedUser);
         loggedUser.setPhotoProfile(userImage);
 
         // TODO: 24/05/2023 boolean for check save
 
         userImage= userImageRepository.save(userImage);
+        System.out.println("File type: " + multipartFile.getContentType());
+
 
 
         FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);
@@ -98,24 +117,7 @@ public class ImageServiceImp implements ImageService{
         userImageRepository.delete(userImage);
     }
 
-    @Override
-    public Resource getUserProfilePhoto(String url) throws IOException {
 
-        try{
-            String myPath=imagesGetDir+url;
-
-            System.out.println(myPath);
-            Path filePath = Paths.get(myPath);
-
-            Resource resource  = new FileSystemResource(filePath);
-            return resource;
-        }catch (Exception e){
-            e.printStackTrace();
-            // TODO: 24/05/2023 gestione errore
-
-            return null;
-        }
-    }
 
     @Override
     public ProductImageDTO saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {
@@ -140,7 +142,7 @@ public class ImageServiceImp implements ImageService{
         try{
         String localStorageDir = prodDir +product.getId();
         productImage.setDescription(description);
-        productImage.setUrlPhoto("product_photos/"+product.getId()+"/"+fileName);
+        productImage.setUrlPhoto("images/product_photos/"+product.getId()+"/"+fileName);
         productImage.setProduct(product);
         productImageRepository.save(productImage);
         FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);
@@ -182,29 +184,5 @@ public class ImageServiceImp implements ImageService{
         productImageRepository.delete(productImage);
 
     }
-
-    @Override
-    public Resource getImageProduct(String url) {
-        try{
-            String myPath=prodDir+url;
-
-            Path filePath = Paths.get(myPath);
-
-            Resource resource  = new FileSystemResource(filePath);
-
-            return resource;
-        }catch (Exception e){
-            e.printStackTrace();
-            // TODO: 24/05/2023 gestione errore
-
-            return null;
-        }
-    }
-
-
-
-
-
-
 
 }

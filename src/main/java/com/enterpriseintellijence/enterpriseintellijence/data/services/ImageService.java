@@ -9,10 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface ImageService {
-    Resource getUserProfilePhoto(String url) throws IOException;
-
-    Resource getImageProduct(String url);
-
+    Resource getImage(String url) throws IOException;
 
     UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException;
 

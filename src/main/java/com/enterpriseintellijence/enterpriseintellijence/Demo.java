@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -27,33 +28,40 @@ public class Demo {
     private ArrayList<Product> productArrayList =new ArrayList<>();;
     private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" ;
     private ArrayList<String> brand =new ArrayList<>();
-    private ArrayList<String> urlImageList = new ArrayList<>(Arrays.asList("src/main/resources/tempFileDemo/product/1.jpeg",
-            "src/main/resources/tempFileDemo/product/2.jpeg",
-            "src/main/resources/tempFileDemo/product/3.jpeg",
-            "src/main/resources/tempFileDemo/product/4.jpeg",
-            "src/main/resources/tempFileDemo/product/5.jpeg",
-            "src/main/resources/tempFileDemo/product/6.jpeg",
-            "src/main/resources/tempFileDemo/product/7.jpeg",
-            "src/main/resources/tempFileDemo/product/8.jpeg",
-            "src/main/resources/tempFileDemo/product/9.jpeg",
-            "src/main/resources/tempFileDemo/product/10.jpeg",
-            "src/main/resources/tempFileDemo/product/11.jpeg",
-            "src/main/resources/tempFileDemo/product/12.jpeg",
-            "src/main/resources/tempFileDemo/product/13.jpeg",
-            "src/main/resources/tempFileDemo/product/14.jpeg",
-            "src/main/resources/tempFileDemo/product/15.jpeg",
-            "src/main/resources/tempFileDemo/product/16.jpeg",
-            "src/main/resources/tempFileDemo/product/17.jpeg",
-            "src/main/resources/tempFileDemo/product/18.jpeg",
-            "src/main/resources/tempFileDemo/product/19.jpeg",
-            "src/main/resources/tempFileDemo/product/20.jpeg",
-            "src/main/resources/tempFileDemo/product/21.jpeg",
-            "src/main/resources/tempFileDemo/product/22.jpeg",
-            "src/main/resources/tempFileDemo/product/23.jpeg",
-            "src/main/resources/tempFileDemo/product/24.jpeg",
-            "src/main/resources/tempFileDemo/product/25.jpeg",
-            "src/main/resources/tempFileDemo/product/26.jpeg",
-            "src/main/resources/tempFileDemo/product/27.jpeg"));
+    private ArrayList<String> urlImageUserList = new ArrayList<>(Arrays.asList(
+            "images/user_photos/examples/foto_profilo1.jpg",
+            "images/user_photos/examples/foto_profilo2.jpg",
+            "images/user_photos/examples/foto_profilo3.jpg",
+            "images/user_photos/examples/foto_profilo4.jpg",
+            "images/user_photos/examples/foto_profilo5.jpg"
+    ));
+    private ArrayList<String> urlImageList = new ArrayList<>(Arrays.asList("images/product_photos/examples/1.jpeg",
+            "images/product_photos/examples/2.jpeg",
+            "images/product_photos/examples/3.jpeg",
+            "images/product_photos/examples/4.jpeg",
+            "images/product_photos/examples/5.jpeg",
+            "images/product_photos/examples/6.jpeg",
+            "images/product_photos/examples/7.jpeg",
+            "images/product_photos/examples/8.jpeg",
+            "images/product_photos/examples/9.jpeg",
+            "images/product_photos/examples/10.jpeg",
+            "images/product_photos/examples/11.jpeg",
+            "images/product_photos/examples/12.jpeg",
+            "images/product_photos/examples/13.jpeg",
+            "images/product_photos/examples/14.jpeg",
+            "images/product_photos/examples/15.jpeg",
+            "images/product_photos/examples/16.jpeg",
+            "images/product_photos/examples/17.jpeg",
+            "images/product_photos/examples/18.jpeg",
+            "images/product_photos/examples/19.jpeg",
+            "images/product_photos/examples/20.jpeg",
+            "images/product_photos/examples/21.jpeg",
+            "images/product_photos/examples/22.jpeg",
+            "images/product_photos/examples/23.jpeg",
+            "images/product_photos/examples/24.jpeg",
+            "images/product_photos/examples/25.jpeg",
+            "images/product_photos/examples/26.jpeg",
+            "images/product_photos/examples/27.jpeg"));
     private ArrayList<Product> tempProduct;
     private ArrayList<ProductCategory> categories;
     private ArrayList<Size> sizes;
@@ -117,7 +125,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=0; i<100;i++){
+        for (int i=0; i<80;i++){
             User user = new User();
             if(i==0) {
                 user.setUsername("superadmin");
@@ -145,10 +153,11 @@ public class Demo {
     }
 
     private void setUserImage(User user){
+        Random random = new Random();
         UserImage userImage = new UserImage();
         userImage.setUser(user);
         userImage.setDescription("No description avalaible");
-        userImage.setUrlPhoto("src/main/resources/tempFileDemo/foto_profilo.png");
+        userImage.setUrlPhoto(urlImageUserList.get(random.nextInt(urlImageUserList.size())));
         userImageRepository.save(userImage);
 
     }
@@ -186,7 +195,7 @@ public class Demo {
         List<Message> messages;
         for (User user : userArrays) {
             messages = new ArrayList<>();
-            int n = rand.nextInt(1, 15);
+            int n = rand.nextInt(1, 10);
             for (int i = 0; i < n; i++) {
                 Message message = new Message();
                 User receiver = userArrays.get(rand.nextInt(userArrays.size()));
@@ -255,7 +264,7 @@ public class Demo {
     private void setFollower(User user) {
         try{
             Random random = new Random();
-            int n= random.nextInt(15);
+            int n= random.nextInt(20);
             for (int i=0;i<n;i++){
 
                 User user2= userArrays.get(random.nextInt(userArrays.size())) ;
@@ -449,7 +458,7 @@ public class Demo {
             productImageRepository.save(productImage);
         }
     }
-    @Transactional
+
     private void setLikeProduct(Product product){
 
         Random random = new Random();
@@ -473,7 +482,6 @@ public class Demo {
         }
     }
 
-    @Transactional
     private void processSaleExampleData(){
 
         for (User user: userArrays){
@@ -658,18 +666,34 @@ public class Demo {
         }
         else
             offer.setState(OfferState.REJECTED);
-        offerRepository.save(offer);
+        //offerRepository.save(offer);
+        String basic = "Your offer for product " +offer.getProduct().getTitle();
+        if (isAccepted)
+            basic = basic + " is accepted. Please check your profile and complete the order";
+        else
+            basic = basic + "was rejected. Sorry, try again.";
 
-/*            Message message = notificationSystem.offerAcceptedOrRejectedNotification(offer,isAccepted);
+
+        Message message= Message.builder()
+                .text(basic)
+                .messageDate(LocalDateTime.now())
+                .messageStatus(MessageStatus.UNREAD)
+                .conversationId(offer.getMessage().getConversationId())
+                .product(offer.getProduct())
+                .sendUser(offer.getOfferer())
+                .receivedUser(offer.getProduct().getSeller())
+                .offer(offer)
+                .build();
+
         offer.setMessage(message);
-        messageRepository.save(message);*/
+        messageRepository.save(message);
 
 
     }
 
     private void madeAnOffer(User user) {
         Random random = new Random();
-        int n = random.nextInt(0,8);
+        int n = random.nextInt(0,13);
         for(int i=0; i<n;i++){
             Product product = productArrayList.get(random.nextInt(1, productArrayList.size()));
             if(!product.getSeller().getId().equals(user.getId())){
@@ -684,8 +708,21 @@ public class Demo {
                         .offerer(user)
                         .product(product)
                         .build();
-                offerRepository.save(offer);
-                Message message = notificationSystem.offerCreatedNotification(offer);
+                //offerRepository.save(offer);
+
+                String convID =getConversationId(offer.getOfferer(), product.getSeller(), product);
+                Message message = Message.builder()
+                        .text("Hi, here is my offer for " + product.getTitle() + ".")
+                        .messageDate(LocalDateTime.now())
+                        .messageStatus(MessageStatus.UNREAD)
+                        .product(product)
+                        .conversationId(convID)
+                        .sendUser(offer.getOfferer())
+                        .receivedUser(product.getSeller())
+                        .offer(offer)
+                        .build();
+
+                offer.setMessage(message);
                 messageRepository.save(message);
             }
 
@@ -818,6 +855,22 @@ public class Demo {
 
         sizeRepository.saveAll(sizes);
 
+    }
+
+
+    public String getConversationId(User user1, User user2, @Nullable Product product){
+        List<Message> messages = messageRepository.findAllMyConversation(user1.getId());
+
+        for(Message message : messages){
+            if((message.getSendUser().equals(user1) && message.getReceivedUser().equals(user2)) ||
+                    (message.getSendUser().equals(user2) && message.getReceivedUser().equals(user1)))
+                if(message.getProduct()!=null && message.getProduct().equals(product) && message.getConversationId()!=null)
+                    return message.getConversationId();
+        }
+        String convID = UUID.randomUUID().toString();
+        while(!messageRepository.canUseConversationId(convID))
+            convID = UUID.randomUUID().toString();
+        return convID;
     }
 
 
