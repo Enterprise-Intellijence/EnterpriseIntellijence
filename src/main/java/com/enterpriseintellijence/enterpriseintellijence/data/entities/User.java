@@ -128,6 +128,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "reportedUser",fetch = FetchType.LAZY)
     private List<Report> reported;
 
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private List<Notification> notifications;
+
     public Boolean isAdministrator() {
         return role.equals(UserRole.ADMIN) || role.equals(UserRole.SUPER_ADMIN);
     }
