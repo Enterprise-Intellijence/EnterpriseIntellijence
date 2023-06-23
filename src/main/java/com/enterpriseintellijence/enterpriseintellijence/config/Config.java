@@ -83,8 +83,7 @@ public class Config {
         Converter<CustomMoneyDTO, CustomMoney> defaultCustomMoneyConverter = new AbstractConverter<CustomMoneyDTO, CustomMoney>() {
             @Override
             protected CustomMoney convert(CustomMoneyDTO customMoneyDTO) {
-                CustomMoney customMoney = new CustomMoney(customMoneyDTO.getPrice(),customMoneyDTO.getCurrency());
-                return customMoney;
+                return new CustomMoney(customMoneyDTO.getPrice(),customMoneyDTO.getCurrency());
             }
         };
 
