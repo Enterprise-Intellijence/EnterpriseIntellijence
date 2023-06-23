@@ -49,7 +49,7 @@ public class AdminController {
     }
 
     @PostMapping("/products/")
-    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO) throws IllegalAccessException {
         return ResponseEntity.ok(productService.replaceProduct(productDTO.getId(), productDTO));
     }
 
