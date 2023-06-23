@@ -54,10 +54,10 @@ public class UserController {
     }
 
     @PostMapping(path= "/register" )
-    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
+    @ResponseStatus(HttpStatus.OK)
+    public void register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
         userService.registerUser(username, email, password);
         userService.sendVerificationEmail(username);
-        return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/activate")
