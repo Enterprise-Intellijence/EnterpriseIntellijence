@@ -193,6 +193,11 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public ProductBasicDTO getProductBasicById(String id, boolean capability) {
+        return mapToProductBasicDTO(mapToEntity(getProductById(id,capability)));
+    }
+
+    @Override
     public Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size) {
         User user=modelMapper.map(userBasicDTO,User.class);
         Page<Product> products = null;
@@ -240,6 +245,7 @@ public class ProductServiceImp implements ProductService {
 
         return new PageImpl<>(collect, PageRequest.of(page,size),messages.getTotalElements());
     }
+
 
     @Override
     public OrderBasicDTO getProductOrder(String id) throws IllegalAccessException {
@@ -362,6 +368,9 @@ public class ProductServiceImp implements ProductService {
         return products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
     }
 
+    private ProductBasicDTO mapToProductBasicDTO(Product product) {
+        return modelMapper.map(product, ProductBasicDTO.class);
+    }
 
 
     private void throwOnIdMismatch(String id, ProductDTO productDTO) {

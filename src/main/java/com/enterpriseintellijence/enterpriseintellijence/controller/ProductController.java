@@ -72,7 +72,10 @@ public class ProductController {
     public ResponseEntity<ProductDTO> productById(@PathVariable("id") String id){
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
-
+    @GetMapping("/basic/{id}")
+    public ResponseEntity<ProductBasicDTO> productBasicById(@PathVariable("id") String id){
+        return ResponseEntity.ok(productService.getProductBasicById(id, false));
+    }
     @GetMapping("/me")
     public ResponseEntity<Page<ProductBasicDTO>> getMyProducts(
             @RequestParam(defaultValue = "0") int page,
