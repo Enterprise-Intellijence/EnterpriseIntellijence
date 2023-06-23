@@ -88,18 +88,10 @@ public class ProductServiceImp implements ProductService {
 
 
     @Override
-    public ProductDTO replaceProduct(String id, ProductDTO productDTO) {
+    public ProductDTO replaceProduct(String id, ProductDTO productDTO) throws IllegalAccessException {
         throwOnIdMismatch(id, productDTO);
-        Product oldProduct = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Product product = mapToEntity(productDTO);
 
-        User userRequesting = jwtContextUtils.getUserLoggedFromContext();
-        if (!oldProduct.getSeller().getUsername().equals(userRequesting.getUsername())
-                && userRequesting.getRole().equals(UserRole.USER))
-            throw new EntityNotFoundException("Product not found");
-
-        product = productRepository.save(product);
-        return mapToProductDetailsDTO(product);
+        return updateProduct(id,productDTO);
     }
 
     @Override
@@ -131,10 +123,6 @@ public class ProductServiceImp implements ProductService {
         if(patch.getDeliveryCost()!=null)
             product.setDeliveryCost(checkAndChangeCustomMoney(product.getDeliveryCost(),patch.getDeliveryCost()));
 
-
-
-/*        if(patch.getAddress()!=null && !product.getAddress().equals(patch.getAddress()) )
-            product.setAddress(modelMapper.map(patch.getAddress(), Address.class) );*/
         if(patch.getBrand()!=null && !product.getBrand().equals(patch.getBrand()))
             product.setBrand(patch.getBrand());
         if(patch.getProductSize()!=null && !product.getProductSize().equals(patch.getProductSize()))

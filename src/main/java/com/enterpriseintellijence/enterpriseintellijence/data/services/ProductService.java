@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface ProductService {
     ProductDTO createProduct(ProductCreateDTO productCreateDTO) throws IllegalAccessException;
-    ProductDTO replaceProduct(String id, ProductDTO productDTO);
+    ProductDTO replaceProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     ProductDTO updateProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     void deleteProduct(String id) throws IllegalAccessException;
 
