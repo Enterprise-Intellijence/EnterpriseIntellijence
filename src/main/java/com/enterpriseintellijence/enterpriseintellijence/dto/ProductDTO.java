@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -68,6 +69,6 @@ public class ProductDTO {
     private List<UserBasicDTO> usersThatLiked;
 
 
-    private List<@Size(min = 1, max = 5) MultipartFile> productImages;
+    private List<ProductImageDTO> productImages;
 
 }
