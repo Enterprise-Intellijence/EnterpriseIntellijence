@@ -51,7 +51,6 @@ public class ImageServiceImp implements ImageService{
         try{
             String myPath=imagesGetDir+url;
 
-            System.out.println(myPath);
             Path filePath = Paths.get(myPath);
 
             Resource resource  = new FileSystemResource(filePath);

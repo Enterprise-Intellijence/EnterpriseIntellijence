@@ -5,11 +5,13 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -43,23 +45,10 @@ public class ProductBasicDTO {
     private ProductImageDTO productImages;
 /*    private ProductCategoryOld productCategory;*/
     private ProductCategoryDTO productCategory;
-/*
 
-    private AddressDTO address;
-    private ProductSize productSize;
-
-    @PositiveOrZero
-    private Integer views;
-    private LocalDateTime uploadDate;
-    private Visibility visibility;
-    private Availability availability;
-
-
-    private List<UserDTO> usersThatLiked;
-    private List<OfferDTO> offers;
-    private List<MessageDTO> messages;
-    private OrderDTO order;
-    private List<ProductImageDTO> productImages;
-*/
+    @JsonSetter
+    public void setProductImages(List<ProductImageDTO> productImages) {
+        this.productImages = productImages.get(0);
+    }
 
 }

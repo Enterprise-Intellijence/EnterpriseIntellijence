@@ -65,7 +65,7 @@ public class AppSecurityConfig  {
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/v1/demo","/api/v1/users/register", "/api/v1/users/authenticate",
                         "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**",/*"/api/v1/images/users/photo-profile","/api/v1/images/product",*/"/api/v1/products/categories","/api/v1/products/sizes",
-                        "/api/v1/products","user_photos/**","/api/v1/reviews/{userId}/received","/api/v1/reviews/{userId}/sent","images/**"
+                        "user_photos/**","/api/v1/reviews/{userId}/received","/api/v1/reviews/{userId}/sent","images/**"
 
         /*"/api/v1/products/categories/**", "/api/v1/products/colour", "/api/v1/products/capability/**"*/).permitAll()
                 .and()

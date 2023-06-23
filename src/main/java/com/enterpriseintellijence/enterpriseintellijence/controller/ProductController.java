@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO) throws IllegalAccessException {
         return ResponseEntity.ok(productService.replaceProduct(id, productDTO));
     }
 
