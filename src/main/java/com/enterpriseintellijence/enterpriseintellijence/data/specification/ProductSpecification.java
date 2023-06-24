@@ -92,7 +92,7 @@ public class ProductSpecification {
                     }
 
                     if(filter.getProductCategory()!=null)
-                        predicates.add(criteriaBuilder.equal(root.get("productCategory"),filter.getPrimaryCat()));
+                        predicates.add(criteriaBuilder.equal(root.get("productCategory"),filter.getProductCategory()));
 
                     if (filter.getPrimaryCat() != null && !filter.getPrimaryCat().isEmpty()) {
                         predicates.add(criteriaBuilder.equal(root.get("productCategory").get("primaryCat"), filter.getPrimaryCat()));
