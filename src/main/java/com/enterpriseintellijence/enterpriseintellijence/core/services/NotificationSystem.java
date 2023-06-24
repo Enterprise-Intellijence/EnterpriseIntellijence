@@ -20,6 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class NotificationSystem {
+
     private final MessageRepository messageRepository;
     private final MessageService messageService;
     private final JwtContextUtils jwtContextUtils;

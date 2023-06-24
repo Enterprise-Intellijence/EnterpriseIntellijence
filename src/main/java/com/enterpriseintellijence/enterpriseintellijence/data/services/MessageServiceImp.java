@@ -38,7 +38,7 @@ public class MessageServiceImp implements MessageService{
     private final MessageRepository messageRepository;
     private final JwtContextUtils jwtContextUtils;
     private final ProductRepository productRepository;
-
+    private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final UserService userService;
     private final Clock clock;
@@ -81,6 +81,8 @@ public class MessageServiceImp implements MessageService{
         message.setSendUser(loggedUser);
         message.setReceivedUser(receivedUser);
         message = messageRepository.save(message);
+
+        notificationService.notifyMessage(message.getReceivedUser());
 
         return mapToDTO(message);
     }

@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.core.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.NotificationService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
@@ -23,6 +24,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     private final Clock clock;
     private final ModelMapper modelMapper;
     private final NotificationSystem notificationSystem;
+    private final NotificationService notificationService;
 
     @Override
     public Offer madeAnOffer(OfferCreateDTO offerCreateDTO, Product product, User loggedUser) {

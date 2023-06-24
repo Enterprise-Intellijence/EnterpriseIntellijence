@@ -42,6 +42,7 @@ public class OfferServiceImp implements OfferService {
     private final Clock clock;
     private final NotificationSystem notificationSystem;
     private final ProcessSaleServiceImp processSaleServiceImp;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -56,6 +57,8 @@ public class OfferServiceImp implements OfferService {
         Offer offer = processSaleServiceImp.madeAnOffer(offerCreateDTO,product,loggedUser);
 
         Offer savedOffer = offerRepository.save(offer);
+
+        notificationService.notifyOffer(savedOffer);
 
         return mapToDTO(savedOffer);
     }
@@ -111,6 +114,7 @@ public class OfferServiceImp implements OfferService {
         }
 
         offerRepository.save(offer);
+        notificationService.notifyOffer(offer);
         return mapToDTO(offer);
     }
 
