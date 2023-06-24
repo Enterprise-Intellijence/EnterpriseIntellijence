@@ -157,19 +157,23 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public Page<ReviewDTO> allReviewReceived(int page, int sizePage) {
-        User user = jwtContextUtils.getUserLoggedFromContext();
-        Page<Review> reviews = reviewRepository.findAllByReviewedEquals(user,PageRequest.of(page,sizePage));
-        List<ReviewDTO> collect =reviews.stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect,PageRequest.of(page,sizePage),reviews.getTotalElements());
+    public Page<ReviewDTO> allReviewReceived(String userId, int page, int sizePage) {
+        //User user = jwtContextUtils.getUserLoggedFromContext();
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        if(user.getReceivedReviews()!=null)
+            return new PageImpl<>(user.getReceivedReviews().stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList()),PageRequest.of(page,sizePage),user.getReceivedReviews().size());
+        else
+            return new PageImpl<>(null,PageRequest.of(page,sizePage),0);
     }
 
     @Override
-    public Page<ReviewDTO> allReviewSent(int page, int sizePage) {
-        User user = jwtContextUtils.getUserLoggedFromContext();
-        Page<Review> reviews = reviewRepository.findAllByReviewerEquals(user,PageRequest.of(page,sizePage));
-        List<ReviewDTO> collect =reviews.stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList());
-        return new PageImpl<>(collect,PageRequest.of(page,sizePage),reviews.getTotalElements());
+    public Page<ReviewDTO> allReviewSent(String userId, int page, int sizePage) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        if(user.getSentReviews()!=null)
+            return new PageImpl<>(user.getSentReviews().stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList()),PageRequest.of(page,sizePage),user.getSentReviews().size());
+        else
+            return new PageImpl<>(null,PageRequest.of(page,sizePage),0);
+
     }
 
     // TODO: VA TESTATA ASSOLUTAMENTE

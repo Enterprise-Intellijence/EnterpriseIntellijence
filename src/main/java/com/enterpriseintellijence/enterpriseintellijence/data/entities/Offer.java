@@ -38,7 +38,7 @@ public class Offer {
     @JoinColumn(name = "user_id")
     private User offerer;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 

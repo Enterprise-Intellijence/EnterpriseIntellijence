@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface ProductService {
     ProductDTO createProduct(ProductCreateDTO productCreateDTO) throws IllegalAccessException;
-    ProductDTO replaceProduct(String id, ProductDTO productDTO);
+    ProductDTO replaceProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     ProductDTO updateProduct(String id, ProductDTO productDTO) throws IllegalAccessException;
     void deleteProduct(String id) throws IllegalAccessException;
 
@@ -25,6 +25,7 @@ public interface ProductService {
     String getCapabilityUrl(String id);
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
+    
 
     Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
 
@@ -41,4 +42,7 @@ public interface ProductService {
 
     Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
 
+    Page<ProductBasicDTO> getMyProducts(int page, int size);
+
+    ProductBasicDTO getProductBasicById(String id, boolean capability);
 }

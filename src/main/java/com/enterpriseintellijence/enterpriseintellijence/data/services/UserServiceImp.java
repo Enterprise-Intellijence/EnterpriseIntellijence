@@ -1,9 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.NotificationsRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
@@ -57,6 +59,7 @@ public class UserServiceImp implements UserService{
     private final AuthenticationManager authenticationManager;
     private final TokenStore tokenStore;
     private final EmailService emailService;
+    private final NotificationsRepository notificationsRepository;
 
 
 
@@ -239,6 +242,7 @@ public class UserServiceImp implements UserService{
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring("Bearer ".length());
             tokenStore.logout(accessToken);
+            notificationsRepository.deleteAllByUserAndReadIsTrue(jwtContextUtils.getUserLoggedFromContext());
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
@@ -447,7 +451,7 @@ public class UserServiceImp implements UserService{
 
         }
 
-/*        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+/*      userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
 
         userRepository.removeLikeToProduct(userId, productId);
@@ -473,7 +477,7 @@ public class UserServiceImp implements UserService{
         Page<Order> orders = new PageImpl<Order>(user.getOrders(),PageRequest.of(page,size),user.getOrders().size());
         List<OrderBasicDTO> collect = orders.stream().map(s->modelMapper.map(s, OrderBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size), orders.getTotalElements());
     }
 
     @Override
@@ -528,13 +532,20 @@ public class UserServiceImp implements UserService{
         Page<Offer> offers = new PageImpl<Offer>(loggedUser.getOffersMade(),PageRequest.of(page,size),loggedUser.getOffersMade().size());
         List<OfferBasicDTO> collect = offers.stream().map(s->modelMapper.map(s, OfferBasicDTO.class)).collect(Collectors.toList());
 
-        return new PageImpl<>(collect);
+        return new PageImpl<>(collect, PageRequest.of(page,size),offers.getTotalElements());
+    }
+
+    @Override
+    public AddressDTO getDefaultAddress(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        return mapToDto(user.getAddresses().stream().filter(Address::isDefault).findFirst().orElseThrow(EntityNotFoundException::new));
     }
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user, UserDTO.class);}
     public UserBasicDTO mapToBasicDto(User user){return modelMapper.map(user,UserBasicDTO.class);}
-
+    public AddressDTO mapToDto(Address address){return modelMapper.map(address, AddressDTO.class);}
+    public Address mapToEntity(AddressDTO addressDTO){return modelMapper.map(addressDTO, Address.class);}
 
 
 }

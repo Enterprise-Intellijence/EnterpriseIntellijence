@@ -5,11 +5,13 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -17,19 +19,6 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @Builder
-/*@JsonTypeInfo(
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "productCategory",
-        use = JsonTypeInfo.Id.NAME,
-        visible = true
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ProductBasicDTO.class, name = "OTHER"),
-        @JsonSubTypes.Type(value = ClothingDTO.class, name = "CLOTHING"),
-        @JsonSubTypes.Type(value = HomeDTO.class, name = "HOME"),
-        @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "ENTERTAINMENT")
-
-})*/
 public class ProductBasicDTO {
 
     private String id;
@@ -56,23 +45,10 @@ public class ProductBasicDTO {
     private ProductImageDTO productImages;
 /*    private ProductCategoryOld productCategory;*/
     private ProductCategoryDTO productCategory;
-/*
 
-    private AddressDTO address;
-    private ProductSize productSize;
-
-    @PositiveOrZero
-    private Integer views;
-    private LocalDateTime uploadDate;
-    private Visibility visibility;
-    private Availability availability;
-
-
-    private List<UserDTO> usersThatLiked;
-    private List<OfferDTO> offers;
-    private List<MessageDTO> messages;
-    private OrderDTO order;
-    private List<ProductImageDTO> productImages;
-*/
+    @JsonSetter
+    public void setProductImages(List<ProductImageDTO> productImages) {
+        this.productImages = productImages.get(0);
+    }
 
 }

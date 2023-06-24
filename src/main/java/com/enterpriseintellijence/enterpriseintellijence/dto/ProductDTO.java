@@ -1,15 +1,18 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "productCategory", visible = true, defaultImpl = ProductDTO.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ClothingDTO.class, name = "Clothing"),
         @JsonSubTypes.Type(value = EntertainmentDTO.class, name = "Entertainment"),
@@ -63,26 +66,9 @@ public class ProductDTO {
     private ProductCategoryDTO productCategory;
 
 
-/*    @NotNull
-    private ProductCategoryChild productCategoryChild;
-
-    private ProductCategoryParent productCategoryParent;
-
-    @NotNull
-    private ProductCategoryOld productCategory;*/
-
     private List<UserBasicDTO> usersThatLiked;
 
 
     private List<ProductImageDTO> productImages;
 
-/*    @JsonSetter("productCategoryChild")
-    public void setProductCategoryChild(ProductCategoryChild productCategoryChild) {
-        this.productCategoryChild = productCategoryChild;
-        this.productCategoryParent = productCategoryChild.getSubCategoryType();
-        ProductCategoryOld temp = productCategoryChild.getSubCategoryType().getProductCategory();
-        if (!temp.equals(productCategory))
-            throw new IllegalArgumentException("Error of main category and sub category");
-        this.productCategory = temp;
-    }*/
 }

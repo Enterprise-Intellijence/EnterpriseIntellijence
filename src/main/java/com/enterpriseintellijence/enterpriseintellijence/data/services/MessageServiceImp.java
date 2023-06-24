@@ -16,15 +16,13 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -154,13 +152,29 @@ public class MessageServiceImp implements MessageService{
 
             List<MessageDTO> collect=messages.stream().map(s->modelMapper.map(s,MessageDTO.class)).collect(Collectors.toList());
 
-            return new PageImpl<>(collect);
+            return new PageImpl<>(collect, PageRequest.of(page,sizePage),messages.getTotalElements());
         }catch (Exception e){
             e.printStackTrace();
             return null;
         }
     }
 
+    @Override
+    public String getConversationId(User user1, User user2, @Nullable Product product){
+        // TODO: 22/06/2023 why?? senza la query? 
+        List<Message> messages = messageRepository.findAllMyConversation(jwtContextUtils.getUserLoggedFromContext().getId());
+
+        for(Message message : messages){
+            if((message.getSendUser().equals(user1) && message.getReceivedUser().equals(user2)) ||
+                    (message.getSendUser().equals(user2) && message.getReceivedUser().equals(user1)))
+                if(message.getProduct()!=null && message.getProduct().equals(product))
+                    return message.getConversationId();
+        }
+        String convID = UUID.randomUUID().toString();
+        while(!messageRepository.canUseConversationId(convID))
+            convID = UUID.randomUUID().toString();
+        return convID;
+    }
     @Override
     public Iterable<ConversationDTO> getAllMyConversations() {
 /*

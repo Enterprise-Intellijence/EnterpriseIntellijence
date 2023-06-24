@@ -103,7 +103,7 @@ public class OfferServiceImp implements OfferService {
             if(patch.getAmount()!= null && (!patch.getAmount().getPrice().equals(offer.getAmount().getPrice()) || !patch.getAmount().getCurrency().equals(offer.getAmount().getCurrency()) )){
                 offer.setAmount(modelMapper.map(patch.getAmount(),CustomMoney.class));
                 offer.setState(OfferState.PENDING);
-                offer.setMessage(notificationSystem.offerCreatedNotification(offer,product));
+                offer.setMessage(notificationSystem.offerCreatedNotification(offer));
             }
         }
         else if(!isOffer){

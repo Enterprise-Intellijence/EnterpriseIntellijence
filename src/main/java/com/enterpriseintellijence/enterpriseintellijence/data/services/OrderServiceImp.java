@@ -147,18 +147,12 @@ public class OrderServiceImp implements OrderService {
             throw new IllegalAccessException("User cannot read other's orders");
     }
 
-    @Override
-    public Iterable<OrderDTO> findAllByUserId(String userId, Pageable pageable) {
-        // TODO: 22/05/2023  
-        return null;
-    }
 
     public Page<OrderDTO> findAllByUserId(Pageable pageable) {
 
-        UserDTO userDTO = userService.findUserFromContext()
-            .orElseThrow(EntityNotFoundException::new);
+        User user = jwtContextUtils.getUserLoggedFromContext();
 
-        return orderRepository.findAllByUserId(userDTO.getId(), pageable).map(this::mapToDTO);
+        return orderRepository.findAllByUser(user, pageable).map(this::mapToDTO);
     }
 
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {

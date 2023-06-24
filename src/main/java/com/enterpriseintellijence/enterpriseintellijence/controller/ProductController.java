@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO) throws IllegalAccessException {
         return ResponseEntity.ok(productService.replaceProduct(id, productDTO));
     }
 
@@ -72,10 +72,15 @@ public class ProductController {
     public ResponseEntity<ProductDTO> productById(@PathVariable("id") String id){
         return ResponseEntity.ok(productService.getProductById(id, false));
     }
-
-    @GetMapping("/wardrobe")
-    public ResponseEntity<Page<ProductBasicDTO>> getAllPagedBySellerId(@RequestBody UserBasicDTO userBasicDTO, @RequestParam int page, @RequestParam int size){
-        return ResponseEntity.ok(productService.getAllPagedBySellerId(userBasicDTO,page,size));
+    @GetMapping("/basic/{id}")
+    public ResponseEntity<ProductBasicDTO> productBasicById(@PathVariable("id") String id){
+        return ResponseEntity.ok(productService.getProductBasicById(id, false));
+    }
+    @GetMapping("/me")
+    public ResponseEntity<Page<ProductBasicDTO>> getMyProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.getMyProducts(page,size));
     }
 
     @GetMapping("/{id}/offers")
@@ -180,11 +185,8 @@ public class ProductController {
 
         //Specification<Product> specification = ProductSpecification.withFilters(filter);
 
-        //if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getProductFilteredPage(
-                    ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
-        //}
-        //return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        return ResponseEntity.ok(productService.getProductFilteredPage(
+                ProductSpecification.withFilters(filter),page, sizePage,sortBy,sortDirection));
     }
 
 }

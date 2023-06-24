@@ -15,6 +15,10 @@ import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtil
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,16 +28,15 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImp implements ImageService{
-    private static String userDir = System.getProperty("user.dir") + "/user_photos/";
-    private static String prodDir = System.getProperty("user.dir") + "/product_photos/";
-/*
-    private static String userDir="src/main/resources/user_photos/";
-    private static String prodDir="src/main/resources/product_photos/";
-*/
+    private static String userDir = System.getProperty("user.dir") + "/images/user_photos/";
+    private static String prodDir = System.getProperty("user.dir") + "/images/product_photos/";
+    private static String imagesGetDir = System.getProperty("user.dir")+"/images/";
 
 
     private final ProductImageRepository productImageRepository;
@@ -42,26 +45,44 @@ public class ImageServiceImp implements ImageService{
     private final JwtContextUtils jwtContextUtils;
     private final ModelMapper modelMapper;
 
-    // TODO: 25/05/2023 gestire massimo 5 immagini
+    @Override
+    public Resource getImage(String url) throws IOException {
+
+        try{
+            String myPath=imagesGetDir+url;
+
+            Path filePath = Paths.get(myPath);
+
+            Resource resource  = new FileSystemResource(filePath);
+            return resource;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new IOException("Something gone wrong, try again.");
+        }
+    }
+
+
 
     @Override
     public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-        String uploadDir = userDir + loggedUser.getUsername();
+        String localStorageDir = userDir + loggedUser.getUsername();
         UserImage userImage = new UserImage();
         userImage.setDescription(description);
-        userImage.setUrlPhoto(uploadDir+"/"+fileName);
+        userImage.setUrlPhoto("images/user_photos/"+loggedUser.getUsername()+"/"+fileName);
         userImage.setUser(loggedUser);
         loggedUser.setPhotoProfile(userImage);
 
         // TODO: 24/05/2023 boolean for check save
 
         userImage= userImageRepository.save(userImage);
+        System.out.println("File type: " + multipartFile.getContentType());
 
 
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+
+        FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);
 
         return modelMapper.map(userImage,UserImageDTO.class);
     }
@@ -95,22 +116,7 @@ public class ImageServiceImp implements ImageService{
         userImageRepository.delete(userImage);
     }
 
-    @Override
-    public byte[] getUserProfilePhoto(String id) throws IOException {
-        UserImage temp = userImageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        try{
-            BufferedImage bufferedImage = ImageIO.read(new File(temp.getUrlPhoto()));
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage,"png",bos);
-            return (bos.toByteArray());
-        }catch (Exception e){
-            e.printStackTrace();
-            // TODO: 24/05/2023 gestione errore
-
-            return null;
-        }
-    }
 
     @Override
     public ProductImageDTO saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {
@@ -133,12 +139,12 @@ public class ImageServiceImp implements ImageService{
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
         try{
-        String uploadDir = prodDir +product.getId();
+        String localStorageDir = prodDir +product.getId();
         productImage.setDescription(description);
-        productImage.setUrlPhoto(uploadDir+"/"+fileName);
+        productImage.setUrlPhoto("images/product_photos/"+product.getId()+"/"+fileName);
         productImage.setProduct(product);
         productImageRepository.save(productImage);
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);
 
         return modelMapper.map(productImage,ProductImageDTO.class);
         }catch (Exception e){
@@ -177,29 +183,5 @@ public class ImageServiceImp implements ImageService{
         productImageRepository.delete(productImage);
 
     }
-
-
-
-    @Override
-    public byte[] getImageProduct(String id) {
-        ProductImage temp = productImageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        try{
-            BufferedImage bufferedImage = ImageIO.read(new File(temp.getUrlPhoto()));
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage,"png",bos);
-            return (bos.toByteArray());
-        }catch (Exception e){
-            e.printStackTrace();
-            // TODO: 24/05/2023 gestione errore
-
-            return null;
-        }
-    }
-
-
-
-
-
-
 
 }

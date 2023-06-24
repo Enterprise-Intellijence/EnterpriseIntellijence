@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
@@ -31,14 +32,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,10 +54,10 @@ public class UserController {
     }
 
     @PostMapping(path= "/register" )
-    public ResponseEntity<String> register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
+    @ResponseStatus(HttpStatus.OK)
+    public void register( @RequestParam( "username" ) String username, @RequestParam("email") String email, @RequestParam( "password" ) String password) throws MessagingException {
         userService.registerUser(username, email, password);
         userService.sendVerificationEmail(username);
-        return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/activate")
@@ -166,34 +162,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    /*@GetMapping("/followers/{id}")
-    public ResponseEntity<Page<UserBasicDTO>> getFollowers(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        if (userService.findUserById(id) == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(userService.getFollowersByUserId(id, page, size));
-    }
-
-    @GetMapping("/following/{id}")
-    public ResponseEntity<Page<UserBasicDTO>> getFollowing(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size){
-        if (userService.findUserById(id) == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(userService.getFollowingByUserId(id, page, size));
-    }
-
-    @PostMapping("/follow/{id}")
-    public ResponseEntity<Void> follow(@PathVariable("id") String id) throws EntityNotFoundException {
-        userService.followUser(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/unfollow/{id}")
-    public ResponseEntity<Void> unfollow(@PathVariable("id") String id) throws EntityNotFoundException {
-        userService.unfollowUser(id);
-        return ResponseEntity.ok().build();
-    }*/
-
     @PostMapping("/like/{id}")
     public ResponseEntity<Void> like(@PathVariable("id") String id) throws EntityNotFoundException {
         userService.addLikeToProduct(id);
@@ -217,23 +185,14 @@ public class UserController {
     }
 
 
-
-/*    // TODO: 01/06/2023 commentare
-    @GetMapping("/me/inbox")
-    public ResponseEntity<Page<MessageDTO>> getMyInBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        return ResponseEntity.ok(userService.getMyInBoxMessage(page, size));
-    }*/
-
-
-/*    // TODO: 01/06/2023 commentare
-    @GetMapping("/me/outbox")
-    public ResponseEntity<Page<MessageDTO>> getMyOutBoxMessage(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
-        return ResponseEntity.ok(userService.getMyOutBoxMessage(page, size));
-    }*/
-
     @GetMapping("/me/offers")
     public ResponseEntity<Page<OfferBasicDTO>> getMyOffers(@RequestParam int page, @RequestParam int size) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.getMyOffers(page, size));
+    }
+
+    @GetMapping("/default-address")
+    public ResponseEntity<AddressDTO> getDefaultAddress(@RequestParam String userId) throws EntityNotFoundException {
+        return ResponseEntity.ok(userService.getDefaultAddress(userId));
     }
 
 

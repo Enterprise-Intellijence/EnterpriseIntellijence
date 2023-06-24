@@ -1,18 +1,16 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,8 +20,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @ToString
-@Builder
-@AllArgsConstructor
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ClothingCreateDTO.class, name = "Clothing"),
+        @JsonSubTypes.Type(value = EntertainmentCreateDTO.class, name = "Entertainment"),
+        @JsonSubTypes.Type(value = HomeCreateDTO.class, name = "Home"),
+        @JsonSubTypes.Type(value = ProductCreateDTO.class,name = "Other")
+})
 public class ProductCreateDTO {
 
     @Length(max = 100)
@@ -49,7 +52,5 @@ public class ProductCreateDTO {
 
     private ProductCategoryDTO productCategory;
 
-    @Max(5)
-    @Min(1)
-    private List<MultipartFile> productImages;
+    private List<@Size(max = 5)MultipartFile> productImages;
 }

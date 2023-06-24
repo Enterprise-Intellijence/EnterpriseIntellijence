@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
@@ -82,4 +83,6 @@ public interface UserService {
     void resetPassword(String email) throws MessagingException;
 
     UserDTO findMyProfile();
+
+    AddressDTO getDefaultAddress(String userId);
 }

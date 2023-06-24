@@ -5,28 +5,36 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Offer;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Product;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.services.MessageService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.MessageStatus;
+import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationSystem {
     private final MessageRepository messageRepository;
+    private final MessageService messageService;
+    private final JwtContextUtils jwtContextUtils;
     private final Clock clock;
 
-    public Message offerCreatedNotification(Offer offer , Product product){
-        String convID = UUID.randomUUID().toString();
-        while(!messageRepository.canUseConversationId(convID))
-            convID = UUID.randomUUID().toString();
+    public Message offerCreatedNotification(Offer offer){
+
+        Product product = offer.getProduct();
+
+
+        String convID = messageService.getConversationId(offer.getOfferer(), product.getSeller(), product);
 
 
         return Message.builder()
-                .text("A new Offer is available for product: "+product.getTitle())
+                .text("Hi, here is my offer for " + product.getTitle() + ".")
                 .messageDate(LocalDateTime.now(clock))
                 .messageStatus(MessageStatus.UNREAD)
                 .product(product)
@@ -35,7 +43,6 @@ public class NotificationSystem {
                 .receivedUser(product.getSeller())
                 .offer(offer)
                 .build();
-
     }
 
     public Message offerAcceptedOrRejectedNotification(Offer offer, boolean isAccepted) {
