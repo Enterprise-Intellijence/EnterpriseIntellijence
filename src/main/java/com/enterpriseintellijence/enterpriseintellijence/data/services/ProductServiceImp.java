@@ -36,6 +36,7 @@ public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
     private final ClothingRepository clothingRepository;
+    private final NotificationService notificationService;
     private final EntertainmentRepository entertainmentRepository;
     private final HomeRepository homeRepository;
     private final ModelMapper modelMapper;
@@ -77,6 +78,7 @@ public class ProductServiceImp implements ProductService {
                 imageServiceImp.localProductImageSave(product,multipartFile,new ProductImage(),"ciao");
             }
 
+            notificationService.notifyNewProduct(product);
             return mapToProductDetailsDTO(product);
         }catch (Exception e){
 
@@ -155,6 +157,7 @@ public class ProductServiceImp implements ProductService {
             throw new IllegalAccessException("Cannot delete product with order active");
 
         // TODO: 25/05/2023 controllare che cosa cancella
+        notificationService.notifyProductSold(product);
         productRepository.delete(product);
     }
 

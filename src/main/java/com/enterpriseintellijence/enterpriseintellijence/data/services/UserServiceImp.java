@@ -54,6 +54,7 @@ public class UserServiceImp implements UserService{
     private final ModelMapper modelMapper;
     private final JwtContextUtils jwtContextUtils;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final NotificationService notificationService;
     private final ProductRepository productRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -431,6 +432,8 @@ public class UserServiceImp implements UserService{
         
         productRepository.save(product);
         userRepository.save(user);
+        notificationService.notifyNewFavorite(product);
+
     }
 
     @Override
