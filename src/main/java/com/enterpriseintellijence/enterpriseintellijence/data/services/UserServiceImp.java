@@ -242,7 +242,7 @@ public class UserServiceImp implements UserService{
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring("Bearer ".length());
             tokenStore.logout(accessToken);
-            notificationsRepository.deleteAllByUserAndReadIsTrue(jwtContextUtils.getUserLoggedFromContext());
+            notificationsRepository.deleteAllByReceiverAndReadIsTrue(jwtContextUtils.getUserLoggedFromContext());
         } else {
             throw new RuntimeException("Refresh token is missing");
         }

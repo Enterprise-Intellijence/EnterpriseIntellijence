@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface NotificationsRepository extends JpaRepository<Notification, String>, JpaSpecificationExecutor<Notification> {
 
     Page<Notification> findAllByReceiver(User receiver, Pageable pageable);
-    void deleteAllByUserAndReadIsTrue(User userLoggedFromContext);
+    void deleteAllByReceiverAndReadIsTrue(User userLoggedFromContext);
 }
