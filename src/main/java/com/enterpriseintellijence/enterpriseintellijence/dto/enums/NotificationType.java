@@ -1,11 +1,16 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.enums;
 
 public enum NotificationType {
-    OFFER,
+    NEW_OFFER,
+    OFFER_REJECTED,
+    OFFER_ACCEPTED,
     REVIEW,
     MESSAGE,
     SALE,
     PURCHASE,
-    PRODUCT,
-    USER
+    PRODUCT_SOLD,
+    NEW_PRODUCT,
+    FOLLOW,
+    USER,
+    NEW_FAVORITE
 }

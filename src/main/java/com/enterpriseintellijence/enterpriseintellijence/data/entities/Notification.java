@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.NotificationType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "notifications")
+@Builder
+@AllArgsConstructor
 public class Notification {
 
     @Id
@@ -28,6 +32,10 @@ public class Notification {
     private String productTarget;
 
     private String offerTarget;
+
+    private String reviewTarget;
+
+    private String text;
 
     @Column(name = "read",nullable = false)
     private Boolean read;

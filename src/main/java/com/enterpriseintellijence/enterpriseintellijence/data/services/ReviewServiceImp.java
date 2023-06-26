@@ -9,6 +9,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRe
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReviewRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.NotificationDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ReviewCreateDTO;
@@ -39,11 +40,8 @@ public class ReviewServiceImp implements ReviewService {
     private final OrderRepository orderRepository;
     private final JwtContextUtils jwtContextUtils;
     private final ProcessSaleServiceImp processSaleServiceImp;
-
-
+    private final NotificationService notificationService;
     private final ModelMapper modelMapper;
-
-    private final UserService userService;
     private final UserRepository userRepository;
 
     @Override
@@ -77,6 +75,7 @@ public class ReviewServiceImp implements ReviewService {
         review = reviewRepository.save(review);
         userRepository.save(loggedUser);
         orderRepository.save(order);
+        notificationService.notifyReview(review);
         return mapToDTO(review);
     }
 

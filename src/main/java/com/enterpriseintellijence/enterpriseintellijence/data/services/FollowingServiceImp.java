@@ -28,6 +28,7 @@ public class FollowingServiceImp implements FollowingService{
     private final JwtContextUtils jwtContextUtils;
     private final UserRepository userRepository;
     private final FollowingRepository followingRepository;
+    private final NotificationService notificationService;
     private final ModelMapper modelMapper;
     private final Clock clock;
 
@@ -54,6 +55,8 @@ public class FollowingServiceImp implements FollowingService{
 
             followingUser.setFollowers_number(followingUser.getFollowers_number()+1);
             userRepository.save(followingUser);
+
+            notificationService.notifyFollow(followingUser);
 
             return setTheOnlyFollowing(following);
         }
