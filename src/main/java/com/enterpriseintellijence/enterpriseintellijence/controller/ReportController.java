@@ -31,10 +31,10 @@ public class ReportController {
         return ResponseEntity.ok(reportService.getReportsByStatus(status, page, size));
     }
 
-    @GetMapping("/admin/{adminId}")
+    @GetMapping("/working")
     public ResponseEntity<Page<ReportDTO>> getReportsMeManaging(
             @RequestParam(required = false,defaultValue = "0") int page,
-            @RequestParam(required = false,defaultValue = "10")int size) throws IllegalAccessException {
+            @RequestParam(required = false,defaultValue = "10")int size)throws IllegalAccessException {
         return ResponseEntity.ok(reportService.getReportsMeManaging(page,size));
     }
 
