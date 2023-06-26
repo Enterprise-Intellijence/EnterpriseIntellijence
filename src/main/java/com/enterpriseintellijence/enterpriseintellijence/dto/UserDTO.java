@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
@@ -47,11 +46,11 @@ public class UserDTO {
 
     //private PaymentMethodBasicDTO defaultPaymentMethod;
 
-    private int reviews_total_sum;
-    private int reviews_number;
+    private int reviewsTotalSum;
+    private int reviewsNumber;
 
-    private Integer followers_number;
-    private Integer following_number;
+    private Integer followersNumber;
+    private Integer followingNumber;
 
     //private List<ReviewDTO> receivedReviews;
     //private List<ReviewDTO> sentReviews;

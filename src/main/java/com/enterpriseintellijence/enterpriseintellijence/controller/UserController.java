@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
+import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -45,6 +47,7 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final Oauth2GoogleValidation oauth2GoogleValidation;
   
     @PostMapping(path = "/authenticate" )
     @ResponseStatus(HttpStatus.OK)
@@ -98,33 +101,15 @@ public class UserController {
 
     @GetMapping("/find-by-username")
     public ResponseEntity<UserBasicDTO> findByUsername(@RequestParam("username") String username){
-        // TODO: 28/05/2023
-        return null;
+        Optional<UserBasicDTO> userBasicDTO = userService.findBasicByUsername(username);
+        return userBasicDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(null));
     }
 
-/*
-    @GetMapping("/google_auth")
-    public ResponseEntity<UserDTO> googleAuth(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @AuthenticationPrincipal OAuth2User oauth2User) {
-         model.addAttribute( "userName" , oauth2User.getName());
-        model.addAttribute( "clientName" , authorizedClient.getClientRegistration().getClientName());
-        model.addAttribute( "userAttributes" , oauth2User.getAttributes());
-       UserDTO user = userService.findByUsername(oauth2User.getName());
-        if(user == null) {
-            user = new UserDTO();
-            user.setEmail(oauth2User.getAttributes().get( "email" ).toString());
-            user.setUsername(oauth2User.getName());
+    @PostMapping("/google_auth")
+    public ResponseEntity<Map<String, String>> googleAuth(@RequestParam String idTokenString) throws Exception {
+        return ResponseEntity.ok(userService.googleAuth(idTokenString));
+    }
 
-            userService.createUser(user);
-        }
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }*/
-
-/*    @GetMapping("/{username}" )
-    @PreAuthorize( "#username.equals(authentication.name)")
-    public ResponseEntity<Optional<UserDTO>> getUser(@PathVariable( "username" ) String username) {
-        var user = userService.findByUsername(username);
-        return ResponseEntity.ok(user);
-    }*/
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me() throws EntityNotFoundException {

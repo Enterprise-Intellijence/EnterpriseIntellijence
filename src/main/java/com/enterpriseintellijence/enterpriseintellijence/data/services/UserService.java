@@ -23,12 +23,14 @@ public interface UserService {
     UserDTO updateUser(String id, UserDTO patch) throws IllegalAccessException;
     void deleteUser(String id);
     UserBasicDTO findUserById(String id);
+
+    Optional<UserBasicDTO> findBasicByUsername(String username);
+
     Page<UserDTO> findAll(int page, int size);
 
     Optional<UserDTO> findByUsername(String username);
 
-
-    void processOAuthPostLogin(String username, String email);
+    Map<String, String> googleAuth(String code) throws Exception;
 
     Map<String, String> authenticateUser(String username, String password) throws JOSEException;
 
