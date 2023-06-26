@@ -128,6 +128,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "reportedUser",fetch = FetchType.LAZY)
     private List<Report> reported;
 
+    @OneToMany(mappedBy = "adminFollowedReport",fetch = FetchType.LAZY)
+    private List<Report> adminFollowedMyReport;
+
     @OneToMany(mappedBy = "receiver",fetch = FetchType.LAZY)
     private List<Notification> notifications;
 

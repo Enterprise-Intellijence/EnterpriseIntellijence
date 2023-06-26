@@ -83,6 +83,7 @@ public class Demo {
     private final ReviewRepository reviewRepository;
     private final ProductCatRepository productCatRepository;
     private final SizeRepository sizeRepository;
+    private final ReportRepository reportRepository;
     private int globalPurchased=0;
     private int limitPurchasing;
 
@@ -97,15 +98,12 @@ public class Demo {
         sizes.clear();
         sizes.addAll(sizeRepository.findAll());
         createUser();
-        //System.out.println(userArrays);
         setAddress();
         try{
             for(User user:userArrays){
                 createProduct(user);
-                //createPayment(user);
                 setFollower(user);
             }
-            //userRepository.saveAll(userArrays);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -118,9 +116,43 @@ public class Demo {
         userArrays.addAll(userRepository.findAll());
         productArrayList.addAll(productRepository.findAll());
         processSaleExampleData();
+        //userArrays.clear();
+        //userArrays.addAll(userRepository.findAll());
+        reportSomeUser();
     }
 
+    private void reportSomeUser() {
+        userArrays.clear();
+        userArrays.addAll(userRepository.findAll());
+        Random random = new Random();
+        for (User user: userArrays){
+           int m= random.nextInt(100);
+           int n= random.nextInt(1,5);
 
+            if(m<12){
+               for(int l=0;l<n;l++){
+                   Report report = new Report();
+                   report.setReporterUser(user);
+                   report.setDescription("questo è un test per la descrizione");
+                   User reported = userArrays.get(random.nextInt(userArrays.size()));
+                   while(reported.equals(user)){
+                       reported = userArrays.get(random.nextInt(userArrays.size()));
+                   }
+                   report.setReportedUser(reported);
+                   report.setDate(LocalDateTime.now());
+                   report.setLastUpdate(LocalDateTime.now());
+                   report.setStatus(ReportStatus.PENDING);
+                   int x = random.nextInt(10);
+                   if(x%2==0){
+                       if(reported.getSellingProducts()!=null)
+                           report.setReportedProduct(reported.getSellingProducts().get(random.nextInt(reported.getSellingProducts().size())));
+                   }
+                   reportRepository.save(report);
+               }
+
+           }
+        }
+    }
 
 
     public void createUser() throws IOException {

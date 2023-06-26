@@ -38,6 +38,14 @@ public class Report {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
+    @Column(nullable = false)
+    private LocalDateTime lastUpdate;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ReportStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="admin",nullable = true)
+    private User adminFollowedReport;
 }

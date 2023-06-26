@@ -1,5 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ReportStatus;
@@ -26,5 +27,9 @@ public class ReportDTO {
 
     private LocalDateTime date;
 
+    private LocalDateTime lastUpdate;
+
     private ReportStatus status;
+
+    private UserBasicDTO adminFollowedReport;
 }
