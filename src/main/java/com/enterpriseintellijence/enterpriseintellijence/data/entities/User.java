@@ -12,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.swing.text.StyledEditorKit;
 import java.util.*;
 
 @Data
@@ -84,16 +83,16 @@ public class User implements UserDetails {
     private List<Following> following;
 
     @Column(name = "followers_number", nullable = false)
-    private int followers_number;
+    private int followersNumber;
 
     @Column(name = "following_number", nullable = false)
-    private int following_number;
+    private int followingNumber;
 
     @Column(name = "reviews_total_sum", nullable = false)
-    private int reviews_total_sum;
+    private int reviewsTotalSum;
 
     @Column(name = "reviews_number", nullable = false)
-    private int reviews_number;
+    private int reviewsNumber;
 
     @ManyToMany(mappedBy = "usersThatLiked",fetch = FetchType.LAZY)
 /*    @JoinTable(
@@ -155,18 +154,18 @@ public class User implements UserDetails {
     }
 
     public void addReview(int vote) {
-        reviews_number++;
-        reviews_total_sum += vote;
+        reviewsNumber++;
+        reviewsTotalSum += vote;
     }
 
     public void removeReview(int vote) {
-        reviews_number--;
-        reviews_total_sum -= vote;
+        reviewsNumber--;
+        reviewsTotalSum -= vote;
     }
 
     public void editReview(int oldVote, int newVote) {
-        reviews_total_sum -= oldVote;
-        reviews_total_sum += newVote;
+        reviewsTotalSum -= oldVote;
+        reviewsTotalSum += newVote;
     }
 
     @Override

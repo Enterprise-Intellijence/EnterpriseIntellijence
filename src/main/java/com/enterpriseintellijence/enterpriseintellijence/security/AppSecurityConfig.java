@@ -31,7 +31,6 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class AppSecurityConfig  {
 
-    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -74,8 +73,7 @@ public class AppSecurityConfig  {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new CustomAuthenticationFilter(authenticationManager, tokenStore))
-                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login();
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();
     return http.build();
 
@@ -95,28 +93,7 @@ public class AppSecurityConfig  {
     }
 
 
-/*
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        return http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/api/v1/users/register", "/api/v1/users/authenticate",
-                        "/api/v1/users/refreshToken", "/api/v1/users/google_auth","swagger-ui/**","/v3/api-docs/**",
-                        "/api/v1/products/categories/**", "/api/v1/products/colour", "/api/v1/products/capability/**").permitAll()
-                .and()
-                .authorizeHttpRequests().anyRequest().authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(new CustomAuthenticationFilter(authenticationManager))
-                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login()
-                .and()
-                .oauth2Client()
-                .and()
-                .build();
 
-    }
-*/
 
 
 }

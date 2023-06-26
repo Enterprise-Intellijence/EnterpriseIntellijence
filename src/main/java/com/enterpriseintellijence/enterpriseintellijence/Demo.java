@@ -7,7 +7,6 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Currency;
 import jakarta.annotation.Nullable;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -175,8 +174,8 @@ public class Demo {
             user.setProvider(Provider.LOCAL);
             user.setStatus(UserStatus.ACTIVE);
             user.setEmailVerified(true);
-            user.setFollowers_number(0);
-            user.setFollowing_number(0);
+            user.setFollowersNumber(0);
+            user.setFollowingNumber(0);
             user = userRepository.save(user);
             userArrays.add(user);
             createPayment(user);
@@ -307,8 +306,8 @@ public class Demo {
                             .follower(user)
                             .following(user2)
                             .build());
-                        user.setFollowing_number(user.getFollowing_number()+1);
-                        user2.setFollowers_number(user2.getFollowers_number()+1);
+                        user.setFollowingNumber(user.getFollowingNumber()+1);
+                        user2.setFollowersNumber(user2.getFollowersNumber()+1);
                 }
             }
         }catch (Exception e){
@@ -596,8 +595,8 @@ public class Demo {
                                 .build();
 
                         reviewRepository.save(review);
-                        seller.setReviews_number(seller.getReviews_number()+1);
-                        seller.setReviews_total_sum(seller.getReviews_total_sum()+voto);
+                        seller.setReviewsNumber(seller.getReviewsNumber()+1);
+                        seller.setReviewsTotalSum(seller.getReviewsTotalSum()+voto);
                         userRepository.save(seller);
                     }
 
