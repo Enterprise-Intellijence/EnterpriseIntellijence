@@ -1,10 +1,12 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Report;
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ReportRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReportDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ReportStatus;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,12 +20,12 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ReportServiceImp implements ReportService {
 
-    private static ReportRepository reportRepository;
-    private static JwtContextUtils jwtContextUtils;
+    private final ReportRepository reportRepository;
+    private final JwtContextUtils jwtContextUtils;
 
-    private static ProductService productService;
-    private static UserService userService;
-    private static ModelMapper modelMapper;
+    private final ProductService productService;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @Override
     public ReportDTO createReport(ReportDTO reportDTO) {
@@ -60,9 +62,16 @@ public class ReportServiceImp implements ReportService {
 
     @Override
     public Page<ReportDTO> getReportsByStatus(ReportStatus status, int page, int size) {
-        return reportRepository.findByStatus(status, PageRequest.of(page, size)).map(this::mapToDto);
+        return reportRepository.findByStatusOrderByLastUpdate(status, PageRequest.of(page, size)).map(this::mapToDto);
     }
 
+    @Override
+    public Page<ReportDTO> getReportsMeManaging(int page, int size) throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getRole().equals(UserRole.USER))
+            throw new IllegalAccessException("You can't access this page");
+        return reportRepository.findByStatusAndAdminFollowedReportOrderByLastUpdate(ReportStatus.PENDING,loggedUser,PageRequest.of(page,size)).map(this::mapToDto);
+    }
 
 
     public ReportDTO mapToDto(Report report) { return modelMapper.map(report, ReportDTO.class); }

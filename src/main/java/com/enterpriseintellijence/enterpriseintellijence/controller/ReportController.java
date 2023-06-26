@@ -14,21 +14,29 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReportController {
 
-    private static ReportService reportService;
+    private final ReportService reportService;
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ReportDTO> createReport(@RequestBody ReportDTO reportDTO) {
         return ResponseEntity.ok(reportService.createReport(reportDTO));
     }
 
-    @PostMapping(path = "/close/{id}", consumes = "application/json")
+    @PostMapping(path = "/close/{id}")
     public ResponseEntity<ReportDTO> closeReport(@PathVariable String id) {
         return ResponseEntity.ok(reportService.closeReport(id));
     }
 
-    @GetMapping(path = "", consumes = "application/json")
+    @GetMapping(path = "")
     public ResponseEntity<Page<ReportDTO>> getReportsByStatus(@RequestParam ReportStatus status, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(reportService.getReportsByStatus(status, page, size));
     }
+
+    @GetMapping("/admin/{adminId}")
+    public ResponseEntity<Page<ReportDTO>> getReportsMeManaging(
+            @RequestParam(required = false,defaultValue = "0") int page,
+            @RequestParam(required = false,defaultValue = "10")int size) throws IllegalAccessException {
+        return ResponseEntity.ok(reportService.getReportsMeManaging(page,size));
+    }
+
 
 }

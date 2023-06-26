@@ -11,4 +11,6 @@ public interface ReportService {
     ReportDTO closeReport(String reportId);
 
     Page<ReportDTO> getReportsByStatus(ReportStatus status, int page, int size);
+
+    Page<ReportDTO> getReportsMeManaging(int page, int size) throws IllegalAccessException;
 }
