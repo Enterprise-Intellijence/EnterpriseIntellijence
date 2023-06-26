@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -109,6 +110,13 @@ public class UserController {
     public ResponseEntity<Map<String, String>> googleAuth(@RequestParam String idTokenString) throws Exception {
         return ResponseEntity.ok(userService.googleAuth(idTokenString));
     }
+    @PostMapping("/login-with-google")
+    public void loginWithGoogle(@RequestBody String body) throws ParseException, JOSEException {
+        System.out.println("Body received in login-with-google:\n" +  body);
+//        System.out.println("headers received in login-with-google:\n" +  request.getHeaders().toSingleValueMap());
+
+    }
+
 
 
     @GetMapping("/me")
