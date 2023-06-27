@@ -18,6 +18,6 @@ import java.util.Optional;
 public interface ReportRepository extends JpaRepository<Report,String>, JpaSpecificationExecutor<Report> {
     Page<Report> findAll(Pageable pageable);
 
-    Page<Report> findByStatusOrderByLastUpdate(ReportStatus status, Pageable pageable);
-    Page<Report> findByStatusAndAdminFollowedReportOrderByLastUpdate(ReportStatus status, User user, Pageable pageable);
+    Page<Report> findByStatusOrderByDateAsc(ReportStatus status, Pageable pageable);
+    Page<Report> findByStatusAndAdminFollowedReportOrderByLastUpdateDesc(ReportStatus status, User user, Pageable pageable);
 }

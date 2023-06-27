@@ -153,10 +153,10 @@ public class ProductServiceImp implements ProductService {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot delete product of others");
-        if(product.getOrder()!=null)
+        if(product.getOrder()!=null || !product.getAvailability().equals(Availability.AVAILABLE))
             throw new IllegalAccessException("Cannot delete product with order active");
 
-        // TODO: 25/05/2023 controllare che cosa cancella
+        // TODO: 26/06/2023 perchè product sold in una delete?
         notificationService.notifyProductSold(product);
         productRepository.delete(product);
     }
