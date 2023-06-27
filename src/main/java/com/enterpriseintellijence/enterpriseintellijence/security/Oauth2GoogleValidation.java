@@ -8,6 +8,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Clock;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,19 +30,19 @@ public class Oauth2GoogleValidation {
 
 
 
-    private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singleton(clientId))
-                .build();
+    private GoogleIdTokenVerifier verifier;
 
     public Map<String, String> validate(String idTokenString) throws Exception {
-
-        System.out.println("idTokenString: " + idTokenString);
-        System.out.println("clientId: " + clientId);
-
+        if(verifier == null) {
+            verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+                .setAudience(Collections.singleton(clientId))
+                .setIssuer("https://accounts.google.com")
+                .setClock(Clock.SYSTEM)
+                .build();
+        }
 
         GoogleIdToken idToken = verifier.verify(idTokenString);
 
-        System.out.println("idToken: " + idToken);
 
         if (idToken != null) {
             GoogleIdToken.Payload payload = idToken.getPayload();
@@ -53,7 +54,6 @@ public class Oauth2GoogleValidation {
             boolean emailVerified = payload.getEmailVerified();
             String name = (String) payload.get("name");
             String pictureUrl = (String) payload.get("picture");
-            String locale = (String) payload.get("locale");
             String familyName = (String) payload.get("family_name");
             String givenName = (String) payload.get("given_name");
 
@@ -61,11 +61,10 @@ public class Oauth2GoogleValidation {
             System.out.println("Email verified: " + emailVerified);
             System.out.println("Name: " + name);
             System.out.println("Picture URL: " + pictureUrl);
-            System.out.println("Locale: " + locale);
             System.out.println("Family Name: " + familyName);
             System.out.println("Given Name: " + givenName);
 
-            return Map.of("email", email, "name", name, "pictureUrl", pictureUrl, "locale", locale, "familyName", familyName, "givenName", givenName);
+            return Map.of("email", email, "name", name, "pictureUrl", pictureUrl, "familyName", familyName, "givenName", givenName);
 
 
         } else {
