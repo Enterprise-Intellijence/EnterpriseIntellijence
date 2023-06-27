@@ -113,7 +113,6 @@ public class UserServiceImp implements UserService{
         if(!id.equals(loggedUser.getId()) && (!loggedUser.getRole().equals(UserRole.ADMIN)) )
             throw new IllegalAccessException("User cannot change another user");
 
-        // TODO: 21/05/2023 testare se controlla da solo se username/email sono disponibili e se restituisce errore
         if(!oldUser.getUsername().equals(userDTO.getUsername()))
             oldUser.setUsername(userDTO.getUsername());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
@@ -129,7 +128,7 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        if(userDTO.getBio() != null && (oldUser.getBio()==null || !oldUser.getBio().equals(userDTO.getBio())))
+        if(userDTO.getBio() != null && !oldUser.getBio().equals(userDTO.getBio()))
             oldUser.setBio(userDTO.getBio());
 /*        if(userDTO.getDefaultAddress()!=null){
             Address address
