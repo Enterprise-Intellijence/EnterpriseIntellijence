@@ -27,15 +27,22 @@ public class Oauth2GoogleValidation {
     @Value("${spring.security.oauth2.client.registration.google.clientId}")
     private String clientId;
 
-    private GoogleIdTokenVerifier verifier;
-    {
-        new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+
+
+    private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
                 .setAudience(Collections.singleton(clientId))
                 .build();
-    }
 
     public Map<String, String> validate(String idTokenString) throws Exception {
+
+        System.out.println("idTokenString: " + idTokenString);
+        System.out.println("clientId: " + clientId);
+
+
         GoogleIdToken idToken = verifier.verify(idTokenString);
+
+        System.out.println("idToken: " + idToken);
+
         if (idToken != null) {
             GoogleIdToken.Payload payload = idToken.getPayload();
 
@@ -63,7 +70,7 @@ public class Oauth2GoogleValidation {
 
         } else {
             System.out.println("Invalid ID token.");
+            throw new Exception("Invalid ID token.");
         }
-        return null;
     }
 }

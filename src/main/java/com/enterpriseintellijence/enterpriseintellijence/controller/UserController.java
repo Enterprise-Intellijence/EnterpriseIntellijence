@@ -1,34 +1,25 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
+import com.enterpriseintellijence.enterpriseintellijence.security.LoginWithGoogleBody;
 import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
-import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,16 +97,19 @@ public class UserController {
         return userBasicDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(null));
     }
 
-    @PostMapping("/google_auth")
+    @PostMapping("/google-auth")
     public ResponseEntity<Map<String, String>> googleAuth(@RequestParam String idTokenString) throws Exception {
         return ResponseEntity.ok(userService.googleAuth(idTokenString));
     }
-    @PostMapping("/login-with-google")
-    public void loginWithGoogle(@RequestBody String body) throws ParseException, JOSEException {
-        System.out.println("Body received in login-with-google:\n" +  body);
-//        System.out.println("headers received in login-with-google:\n" +  request.getHeaders().toSingleValueMap());
 
+    @PostMapping(value = "/login-with-google", consumes = "application/x-www-form-urlencoded;charset=UTF-8")
+    public ResponseEntity<Map<String, String>> loginWithGoogle(LoginWithGoogleBody body) throws Exception {
+        System.out.println("credentials in body (login-with-google):\n" +  body.getCredential());
+        System.out.println("g_csrf_token in body (login-with-google):\n" +  body.getG_csrf_token());
+
+        return ResponseEntity.ok(userService.googleAuth(body.getCredential()));
     }
+
 
 
 

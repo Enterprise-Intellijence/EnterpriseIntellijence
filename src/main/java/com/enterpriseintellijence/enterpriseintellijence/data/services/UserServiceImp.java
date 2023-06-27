@@ -198,9 +198,16 @@ public class UserServiceImp implements UserService{
 
     @Override
     public Map<String, String> googleAuth(String code) throws Exception {
-        Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
-        UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
-        return authenticateUser(user.getUsername(), null);
+        try {
+
+            Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
+            UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+            return authenticateUser(user.getUsername(), null);
+        }
+        catch (Exception e) {
+            log.error("Error validating google code: " + e.getMessage());
+            throw new Exception("Error validating google code");
+        }
     }
 
     @Override
