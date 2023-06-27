@@ -162,7 +162,7 @@ public class ReviewServiceImp implements ReviewService {
         if(user.getReceivedReviews()!=null)
             return new PageImpl<>(user.getReceivedReviews().stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList()),PageRequest.of(page,sizePage),user.getReceivedReviews().size());
         else
-            return new PageImpl<>(null,PageRequest.of(page,sizePage),0);
+            return new PageImpl<>(List.of(),PageRequest.of(page,sizePage),0);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class ReviewServiceImp implements ReviewService {
         if(user.getSentReviews()!=null)
             return new PageImpl<>(user.getSentReviews().stream().map(s->modelMapper.map(s,ReviewDTO.class)).collect(Collectors.toList()),PageRequest.of(page,sizePage),user.getSentReviews().size());
         else
-            return new PageImpl<>(null,PageRequest.of(page,sizePage),0);
+            return new PageImpl<>(List.of() ,PageRequest.of(page,sizePage),0);
 
     }
 

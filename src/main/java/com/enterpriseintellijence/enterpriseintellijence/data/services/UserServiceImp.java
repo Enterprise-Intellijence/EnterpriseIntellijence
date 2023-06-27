@@ -16,6 +16,7 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.ProductAlread
 import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -61,13 +62,14 @@ public class UserServiceImp implements UserService{
     private final TokenStore tokenStore;
     private final EmailService emailService;
     private final NotificationsRepository notificationsRepository;
+    private final Oauth2GoogleValidation oauth2GoogleValidation;
 
 
 
     public UserDTO createUser(User user) {
         user.setStatus(UserStatus.ACTIVE);
         user = userRepository.save(user);
-        System.out.println("createddd user"+ user.getUsername());
+
         return mapToDto(user);
     }
 
@@ -160,6 +162,14 @@ public class UserServiceImp implements UserService{
         return Optional.of(mapToDto(user));
     }
 
+    @Override
+    public Optional<UserBasicDTO> findBasicByUsername(String username) {
+        User user= userRepository.findByUsername(username);
+        if (user==null)
+            return Optional.empty();
+        return Optional.of(mapToBasicDto(user));
+    }
+
     public Page<UserDTO> findAll(int page, int size) {
         // TODO: Da implementare quando abbiamo l'admin
         return userRepository.findAll(PageRequest.of(page, size))
@@ -167,17 +177,37 @@ public class UserServiceImp implements UserService{
     }
 
 
-    public void processOAuthPostLogin(String username, String email) {
-        var existUser = findByUsername(username);
+    private UserDTO processOAuthPostLogin(String username, String email) {
+        User existUser = userRepository.findByEmail(email);
 
-        if (existUser.isEmpty()) {
+        if (existUser == null) {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
             newUser.setEmail(email);
-            createUser(newUser);
+            newUser.setRole(UserRole.USER);
+            newUser.setFollowersNumber(0);
+            newUser.setFollowingNumber(0);
+            newUser.setReviewsTotalSum(0);
+            newUser.setReviewsNumber(0);
+            newUser.setEmailVerified(true);
+            return createUser(newUser);
         }
+        return mapToDto(existUser);
+    }
 
+    @Override
+    public Map<String, String> googleAuth(String code) throws Exception {
+        try {
+
+            Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
+            UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+            return authenticateUser(user.getUsername(), null);
+        }
+        catch (Exception e) {
+            log.error("Error validating google code: " + e.getMessage());
+            throw new Exception("Error validating google code");
+        }
     }
 
     @Override
@@ -190,7 +220,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<String> registerUser(String username, String email, String password) {
-        System.out.println("registerUser");
+
         if(findByUsername(username).isPresent())
             throw new IllegalArgumentException("username already exists");
         createUser(username, passwordEncoder.encode(password), email);
@@ -318,17 +348,17 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void createUser(String username, String password, String email) {
-        System.out.println("createUser");
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
         user.setRole(UserRole.USER);
         user.setProvider(Provider.LOCAL);
-        user.setFollowers_number(0);
-        user.setFollowing_number(0);
-        user.setReviews_total_sum(0);
-        user.setReviews_number(0);
+        user.setFollowersNumber(0);
+        user.setFollowingNumber(0);
+        user.setReviewsTotalSum(0);
+        user.setReviewsNumber(0);
         user.setEmailVerified(false);
         createUser(user);
     }
@@ -543,6 +573,8 @@ public class UserServiceImp implements UserService{
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         return mapToDto(user.getAddresses().stream().filter(Address::isDefault).findFirst().orElseThrow(EntityNotFoundException::new));
     }
+
+
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user, UserDTO.class);}

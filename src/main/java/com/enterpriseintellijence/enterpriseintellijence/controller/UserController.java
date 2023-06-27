@@ -1,38 +1,32 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
-import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
+import com.enterpriseintellijence.enterpriseintellijence.security.LoginWithGoogleBody;
+import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -45,6 +39,7 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final Oauth2GoogleValidation oauth2GoogleValidation;
   
     @PostMapping(path = "/authenticate" )
     @ResponseStatus(HttpStatus.OK)
@@ -98,33 +93,25 @@ public class UserController {
 
     @GetMapping("/find-by-username")
     public ResponseEntity<UserBasicDTO> findByUsername(@RequestParam("username") String username){
-        // TODO: 28/05/2023
-        return null;
+        Optional<UserBasicDTO> userBasicDTO = userService.findBasicByUsername(username);
+        return userBasicDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(null));
     }
 
-/*
-    @GetMapping("/google_auth")
-    public ResponseEntity<UserDTO> googleAuth(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient, @AuthenticationPrincipal OAuth2User oauth2User) {
-         model.addAttribute( "userName" , oauth2User.getName());
-        model.addAttribute( "clientName" , authorizedClient.getClientRegistration().getClientName());
-        model.addAttribute( "userAttributes" , oauth2User.getAttributes());
-       UserDTO user = userService.findByUsername(oauth2User.getName());
-        if(user == null) {
-            user = new UserDTO();
-            user.setEmail(oauth2User.getAttributes().get( "email" ).toString());
-            user.setUsername(oauth2User.getName());
+    @PostMapping("/google-auth")
+    public ResponseEntity<Map<String, String>> googleAuth(@RequestParam String idTokenString) throws Exception {
+        return ResponseEntity.ok(userService.googleAuth(idTokenString));
+    }
 
-            userService.createUser(user);
-        }
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }*/
+    @PostMapping(value = "/login-with-google", consumes = "application/x-www-form-urlencoded;charset=UTF-8")
+    public ResponseEntity<Map<String, String>> loginWithGoogle(LoginWithGoogleBody body) throws Exception {
+        System.out.println("credentials in body (login-with-google):\n" +  body.getCredential());
+        System.out.println("g_csrf_token in body (login-with-google):\n" +  body.getG_csrf_token());
 
-/*    @GetMapping("/{username}" )
-    @PreAuthorize( "#username.equals(authentication.name)")
-    public ResponseEntity<Optional<UserDTO>> getUser(@PathVariable( "username" ) String username) {
-        var user = userService.findByUsername(username);
-        return ResponseEntity.ok(user);
-    }*/
+        return ResponseEntity.ok(userService.googleAuth(body.getCredential()));
+    }
+
+
+
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me() throws EntityNotFoundException {

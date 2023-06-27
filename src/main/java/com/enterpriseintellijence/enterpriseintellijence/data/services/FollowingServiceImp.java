@@ -20,7 +20,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,10 +49,10 @@ public class FollowingServiceImp implements FollowingService{
 
             followingRepository.save(following);
 
-            loggedUser.setFollowing_number(loggedUser.getFollowing_number()+1);
+            loggedUser.setFollowingNumber(loggedUser.getFollowingNumber()+1);
             userRepository.save(loggedUser);
 
-            followingUser.setFollowers_number(followingUser.getFollowers_number()+1);
+            followingUser.setFollowersNumber(followingUser.getFollowersNumber()+1);
             userRepository.save(followingUser);
 
             notificationService.notifyFollow(followingUser);
@@ -80,10 +79,10 @@ public class FollowingServiceImp implements FollowingService{
 
         followingRepository.delete(following);
 
-        followingUser.setFollowers_number(followingUser.getFollowers_number()-1);
+        followingUser.setFollowersNumber(followingUser.getFollowersNumber()-1);
         userRepository.save(followingUser);
 
-        loggedUser.setFollowing_number(loggedUser.getFollowing_number()-1);
+        loggedUser.setFollowingNumber(loggedUser.getFollowingNumber()-1);
         userRepository.save(loggedUser);
     }
 
