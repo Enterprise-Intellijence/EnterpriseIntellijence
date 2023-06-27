@@ -89,7 +89,7 @@ public class Demo {
 
 
     public void initialize() throws IOException {
-/*        initializeBrandList();
+        initializeBrandList();
         createCategory();
         categories.clear();
         categories.addAll(productCatRepository.findAll());
@@ -114,7 +114,7 @@ public class Demo {
         productArrayList.clear();
         userArrays.addAll(userRepository.findAll());
         productArrayList.addAll(productRepository.findAll());
-        processSaleExampleData();*/
+        processSaleExampleData();
         //userArrays.clear();
         //userArrays.addAll(userRepository.findAll());
         reportSomeUser();
@@ -126,7 +126,7 @@ public class Demo {
         Random random = new Random();
         for (User user: userArrays){
            int m= random.nextInt(100);
-           int n= random.nextInt(1,5);
+           int n= random.nextInt(5);
 
             if(m<12){
                for(int l=0;l<n;l++){
@@ -422,6 +422,7 @@ public class Demo {
             }
 
         }
+
         setBasicProduct(user);
     }
 
@@ -443,6 +444,7 @@ public class Demo {
         List<Visibility> visibilities = List.of(Visibility.class.getEnumConstants());
 
         for (Product product: tempProduct){
+            productArrayList.add(product);
 
             int n = productArrayList.indexOf(product);
             product.setTitle("Title product "+n);
@@ -473,7 +475,6 @@ public class Demo {
             //user.getSellingProducts().add(product);
             productRepository.save(product);
             setImageToProduct(product);
-            productArrayList.add(product);
         }
         tempProduct.clear();
     }
