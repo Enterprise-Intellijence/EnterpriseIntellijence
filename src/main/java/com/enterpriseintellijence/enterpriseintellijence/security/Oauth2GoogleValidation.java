@@ -35,13 +35,8 @@ public class Oauth2GoogleValidation {
 
     public Map<String, String> validate(String idTokenString) throws Exception {
 
-        System.out.println("idTokenString: " + idTokenString);
-        System.out.println("clientId: " + clientId);
-
-
         GoogleIdToken idToken = verifier.verify(idTokenString);
 
-        System.out.println("idToken: " + idToken);
 
         if (idToken != null) {
             GoogleIdToken.Payload payload = idToken.getPayload();
