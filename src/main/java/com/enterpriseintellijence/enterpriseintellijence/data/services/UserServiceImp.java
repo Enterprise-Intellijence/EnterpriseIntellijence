@@ -145,7 +145,8 @@ public class UserServiceImp implements UserService{
 
     public void  deleteUser(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        userRepository.deleteById(id);
+        user.setStatus(UserStatus.CANCELLED);
+        userRepository.save(user);
     }
 
     public UserBasicDTO findUserById(String id) {
