@@ -8,6 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.ReportDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ReportStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -62,7 +63,7 @@ public class ReportServiceImp implements ReportService {
 
     @Override
     public Page<ReportDTO> getReportsByStatus(ReportStatus status, int page, int size) {
-        return reportRepository.findByStatusOrderByLastUpdate(status, PageRequest.of(page, size)).map(this::mapToDto);
+        return reportRepository.findByStatusOrderByDateAsc(status, PageRequest.of(page, size)).map(this::mapToDto);
     }
 
     @Override
@@ -70,7 +71,19 @@ public class ReportServiceImp implements ReportService {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         if(loggedUser.getRole().equals(UserRole.USER))
             throw new IllegalAccessException("You can't access this page");
-        return reportRepository.findByStatusAndAdminFollowedReportOrderByLastUpdate(ReportStatus.PENDING,loggedUser,PageRequest.of(page,size)).map(this::mapToDto);
+        return reportRepository.findByStatusAndAdminFollowedReportOrderByLastUpdateDesc(ReportStatus.PENDING,loggedUser,PageRequest.of(page,size)).map(this::mapToDto);
+    }
+
+    @Override
+    public ReportDTO updateReport(String id) throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getRole().equals(UserRole.USER))
+            throw new IllegalAccessException("You can't modify report");
+
+        Report report = reportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        report.setLastUpdate(LocalDateTime.now());
+        report.setAdminFollowedReport(loggedUser);
+        return modelMapper.map(reportRepository.save(report),ReportDTO.class) ;
     }
 
 

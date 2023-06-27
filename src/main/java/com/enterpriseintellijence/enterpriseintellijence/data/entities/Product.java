@@ -125,12 +125,23 @@ public class Product {
     @JoinColumn(name = "default_image")
     private ProductImage defaultImage;*/
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
     @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY)
     private List<Report> reports;
 
-
+    @PreRemove
+    private void preRemove(){
+        this.usersThatLiked.clear();
+        this.offers.clear();
+        this.messages.clear();
+        this.order = null;
+        // TODO: 26/06/2023 rimuovere le immagini prima della consegna
+        //this.productImages.clear();
+        for(Report report:this.reports){
+            report.setReportedProduct(null);
+        }
+    }
 
 }

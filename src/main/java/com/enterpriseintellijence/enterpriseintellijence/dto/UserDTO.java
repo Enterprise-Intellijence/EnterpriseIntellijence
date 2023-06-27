@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMetho
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.Email;
@@ -36,6 +37,9 @@ public class UserDTO {
     private UserImageDTO photoProfile;
     @NotNull
     private Provider provider;
+
+    private UserStatus status;
+
 
     //private AddressDTO defaultAddress;
 

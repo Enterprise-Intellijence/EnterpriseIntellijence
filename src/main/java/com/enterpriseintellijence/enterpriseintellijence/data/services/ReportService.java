@@ -13,4 +13,6 @@ public interface ReportService {
     Page<ReportDTO> getReportsByStatus(ReportStatus status, int page, int size);
 
     Page<ReportDTO> getReportsMeManaging(int page, int size) throws IllegalAccessException;
+
+    ReportDTO updateReport(String id) throws IllegalAccessException;
 }

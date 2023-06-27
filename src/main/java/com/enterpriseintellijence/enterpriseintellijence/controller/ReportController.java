@@ -26,6 +26,12 @@ public class ReportController {
         return ResponseEntity.ok(reportService.closeReport(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ReportDTO> updateReport(@PathVariable("id")String id) throws IllegalAccessException {
+        return ResponseEntity.ok(reportService.updateReport(id));
+    }
+
+
     @GetMapping(path = "")
     public ResponseEntity<Page<ReportDTO>> getReportsByStatus(@RequestParam ReportStatus status, @RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(reportService.getReportsByStatus(status, page, size));

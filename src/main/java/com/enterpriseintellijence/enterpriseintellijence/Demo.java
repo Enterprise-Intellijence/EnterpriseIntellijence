@@ -90,7 +90,7 @@ public class Demo {
 
 
     public void initialize() throws IOException {
-        initializeBrandList();
+/*        initializeBrandList();
         createCategory();
         categories.clear();
         categories.addAll(productCatRepository.findAll());
@@ -115,7 +115,7 @@ public class Demo {
         productArrayList.clear();
         userArrays.addAll(userRepository.findAll());
         productArrayList.addAll(productRepository.findAll());
-        processSaleExampleData();
+        processSaleExampleData();*/
         //userArrays.clear();
         //userArrays.addAll(userRepository.findAll());
         reportSomeUser();
