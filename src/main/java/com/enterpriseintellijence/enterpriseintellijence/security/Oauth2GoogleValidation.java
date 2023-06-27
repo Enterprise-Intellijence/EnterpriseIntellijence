@@ -8,6 +8,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Clock;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,13 +25,15 @@ import java.util.Properties;
 public class Oauth2GoogleValidation {
 
 
-    @Value("${spring.security.oauth2.client.registration.google.clientId}")
-    private String clientId;
+//    @Value("${spring.security.oauth2.client.registration.google.clientId}")
+    private String clientId = "1049827257011-ete5d6u7kjq601i6ra2ukaus5nsd3het.apps.googleusercontent.com";
 
 
 
     private final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
                 .setAudience(Collections.singleton(clientId))
+                .setIssuer("https://accounts.google.com")
+                .setClock(Clock.SYSTEM)
                 .build();
 
     public Map<String, String> validate(String idTokenString) throws Exception {
@@ -60,7 +63,7 @@ public class Oauth2GoogleValidation {
             System.out.println("Family Name: " + familyName);
             System.out.println("Given Name: " + givenName);
 
-            return Map.of("email", email, "name", name, "pictureUrl", pictureUrl, "locale", locale, "familyName", familyName, "givenName", givenName);
+            return Map.of("email", email, "name", name, "pictureUrl", pictureUrl, "familyName", familyName, "givenName", givenName);
 
 
         } else {
