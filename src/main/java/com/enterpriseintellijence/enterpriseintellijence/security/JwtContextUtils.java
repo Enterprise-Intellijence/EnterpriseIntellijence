@@ -28,8 +28,6 @@ public class JwtContextUtils {
 
         if(authentication.getPrincipal() instanceof UserDetails userDetails) {
             return Optional.of(userDetails.getUsername());
-        } else if(authentication.getPrincipal() instanceof CustomOAuth2User customOAuth2User) {
-            return Optional.of(customOAuth2User.getUsername());
         }
 
         return Optional.empty();
@@ -42,9 +40,6 @@ public class JwtContextUtils {
             return null;
         if(authentication.getPrincipal() instanceof UserDetails userDetails){
             return userRepository.findByUsername(userDetails.getUsername());
-        }
-        else if(authentication.getPrincipal() instanceof CustomOAuth2User customOAuth2User) {
-            return userRepository.findByUsername(customOAuth2User.getUsername());
         }
         return null;
     }
