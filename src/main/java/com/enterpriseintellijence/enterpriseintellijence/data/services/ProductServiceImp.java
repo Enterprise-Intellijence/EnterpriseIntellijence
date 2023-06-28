@@ -151,14 +151,21 @@ public class ProductServiceImp implements ProductService {
     public void deleteProduct(String id) throws IllegalAccessException {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+
         if(loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot delete product of others");
-        if(product.getOrder()!=null || !product.getAvailability().equals(Availability.AVAILABLE))
+
+        if(loggedUser.getRole().equals(UserRole.USER) && product.getOrder()!=null)
             throw new IllegalAccessException("Cannot delete product with order active");
 
         // TODO: 26/06/2023 perchè product sold in una delete?
         notificationService.notifyProductSold(product);
-        productRepository.delete(product);
+        try{
+            productRepository.delete(product);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
