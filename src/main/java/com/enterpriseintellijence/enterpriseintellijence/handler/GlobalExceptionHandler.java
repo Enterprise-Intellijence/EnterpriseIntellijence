@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseStatusException defaultErrorHandler(WebRequest req, Exception ex) {
-        log.error(ex.getMessage());
-        return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong :(\ncall Ciccio Gallo or Ernesto Rapisarda");
+        log.error(ex.getMessage(), ex);
+        return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong :( \ncall Ciccio Gallo or Ernesto Rapisarda");
     }
 
     @ExceptionHandler(ManyRequestException.class)
