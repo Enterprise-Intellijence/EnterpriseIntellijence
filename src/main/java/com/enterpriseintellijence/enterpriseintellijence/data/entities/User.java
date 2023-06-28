@@ -170,7 +170,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !status.equals(UserStatus.CANCELLED);
     }
 
     @Override
