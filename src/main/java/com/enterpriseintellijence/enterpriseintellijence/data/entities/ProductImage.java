@@ -39,9 +39,4 @@ public class ProductImage {
 /*    @OneToOne(mappedBy = "defaultImage",fetch = FetchType.LAZY)
     private Product defaultProduct;*/
 
-    @JsonSetter
-    public void setUrlPhoto(String url) {
-        this.urlPhoto = Constants.BASE_PATH + url;
-    }
-
 }

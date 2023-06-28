@@ -28,9 +28,4 @@ public class UserImage {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonSetter
-    public void setUrlPhoto(String url) {
-        this.urlPhoto = Constants.BASE_PATH + url;
-    }
-
 }
