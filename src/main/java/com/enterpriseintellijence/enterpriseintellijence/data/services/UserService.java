@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
@@ -32,7 +33,7 @@ public interface UserService {
 
     Map<String, String> googleAuth(String code) throws Exception;
 
-    Map<String, String> authenticateUser(String username, String password) throws JOSEException;
+    Map<String, String> authenticateUser(String username, String password, Provider provider) throws JOSEException;
 
     ResponseEntity<String> registerUser(String username, String email, String password);
 

@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.LoginWithGoogleBody;
 import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
 
@@ -45,7 +46,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, String>> authenticate( @RequestParam( "username" ) String username, @RequestParam( "password" ) String password, HttpServletResponse
             response) throws JOSEException {
-        return ResponseEntity.ok(userService.authenticateUser(username, password));
+        return ResponseEntity.ok(userService.authenticateUser(username, password, Provider.LOCAL));
     }
 
     @PostMapping(path= "/register" )

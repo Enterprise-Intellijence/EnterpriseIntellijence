@@ -188,6 +188,7 @@ public class UserServiceImp implements UserService{
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
+            newUser.setPassword(passwordEncoder.encode(Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD));
             newUser.setEmail(email);
             newUser.setRole(UserRole.USER);
             newUser.setFollowersNumber(0);
@@ -206,7 +207,7 @@ public class UserServiceImp implements UserService{
 
             Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
             UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
-            return authenticateUser(user.getUsername(), null);
+            return authenticateUser(user.getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
         }
         catch (Exception e) {
             log.error("Error validating google code: " + e.getMessage());
@@ -215,7 +216,10 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public Map<String, String> authenticateUser(String username, String password) throws JOSEException {
+    public Map<String, String> authenticateUser(String username, String password, Provider provider) throws JOSEException {
+        if(!provider.equals(Provider.GOOGLE) && password.equals(Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD)
+            && userRepository.findByUsername(username).getProvider().equals(Provider.GOOGLE))
+            throw new IllegalArgumentException("You cannot login with password with a google linked account");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         String accessToken = tokenStore.createAccessToken(Map.of("username", username, "role", "user"));
         String refreshToken = tokenStore.createRefreshToken(username);
