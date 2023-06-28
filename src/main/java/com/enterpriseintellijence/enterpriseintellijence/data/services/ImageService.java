@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 
+import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import org.springframework.core.io.Resource;
@@ -22,4 +23,6 @@ public interface ImageService {
     void replaceImageProduct(String id, MultipartFile multipartFile) throws IOException;
 
     void deleteImageProduct(String id) throws IllegalAccessException;
+
+    void saveUserImage(UserImage userImage);
 }

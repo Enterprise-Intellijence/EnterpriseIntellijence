@@ -19,6 +19,9 @@ public class UserImageDTO {
 
     @JsonSetter
     public void setUrlPhoto(String url) {
-        this.urlPhoto = Constants.BASE_PATH + url;
+        if(url.contains("localhost"))
+            this.urlPhoto = Constants.BASE_PATH + url;
+        else
+            this.urlPhoto = url;
     }
 }

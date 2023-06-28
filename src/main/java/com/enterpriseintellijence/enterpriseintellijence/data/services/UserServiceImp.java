@@ -1,10 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.NotificationsRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
@@ -63,6 +60,7 @@ public class UserServiceImp implements UserService{
     private final EmailService emailService;
     private final NotificationsRepository notificationsRepository;
     private final Oauth2GoogleValidation oauth2GoogleValidation;
+    private final ImageService imageService;
 
 
 
@@ -214,6 +212,12 @@ public class UserServiceImp implements UserService{
 
             Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
             UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+
+            UserImage userImage = new UserImage();
+            userImage.setUrlPhoto(userInfo.get("picture"));
+            userImage.setUser(mapToEntity(user));
+            imageService.saveUserImage(userImage);
+
             return authenticateUser(user.getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
         }
         catch (Exception e) {
