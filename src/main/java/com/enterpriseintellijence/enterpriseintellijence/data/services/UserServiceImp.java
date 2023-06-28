@@ -72,28 +72,7 @@ public class UserServiceImp implements UserService{
     }
 
     public UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException {
-        /*//throwOnIdMismatch(id, userDTO);
-        User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
 
-        if(!id.equals(userDTO.getId()) || !id.equals(loggedUser.getId()) || !userDTO.getId().equals(loggedUser.getId()))
-            throw new IllegalAccessException("User cannot change another user");
-
-        User oldUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        User newUser = mapToEntity(userDTO);
-
-       User requestingUser = new User();
-
-        if(!requestingUser.getId().equals(oldUser.getId())) {
-            throw new IllegalAccessException("same User");
-        }
-        if(!requestingUser.getId().equals(newUser.getId())) {
-            throw new IllegalAccessException("same user");
-        }
-
-
-        newUser = userRepository.save(newUser);
-        return mapToDto(newUser);*/
         return updateUser(id,userDTO);
     }
 
@@ -114,6 +93,7 @@ public class UserServiceImp implements UserService{
             throw new IllegalAccessException("Email already exists");
 
 
+
         if(!oldUser.getUsername().equals(userDTO.getUsername()))
             oldUser.setUsername(userDTO.getUsername());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
@@ -129,7 +109,7 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        if(userDTO.getBio() != null && (oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())))
+        if(userDTO.getBio() != null && userDTO.getBio().equals(oldUser.getBio())/* oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())*/)
             oldUser.setBio(userDTO.getBio());
 /*        if(userDTO.getDefaultAddress()!=null){
             Address address
@@ -501,25 +481,6 @@ public class UserServiceImp implements UserService{
     }
 
 
-    /*@Override
-    public Page<MessageDTO> getMyInBoxMessage(int page, int size) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User user = userRepository.findByUsername(username);
-        Page<Message> messages = new PageImpl<Message>(user.getReceivedMessages(),PageRequest.of(page,size),user.getReceivedMessages().size());
-        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
-
-        return new PageImpl<>(collect);
-    }
-
-    @Override
-    public Page<MessageDTO> getMyOutBoxMessage(int page, int size) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User user = userRepository.findByUsername(username);
-        Page<Message> messages = new PageImpl<Message>(user.getSentMessages(),PageRequest.of(page,size),user.getSentMessages().size());
-        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
-
-        return new PageImpl<>(collect);
-    }*/
 
     @Override
     public Page<OfferBasicDTO> getMyOffers(int page, int size) {
