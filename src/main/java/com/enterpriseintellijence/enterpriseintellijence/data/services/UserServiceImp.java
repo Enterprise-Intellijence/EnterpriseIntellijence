@@ -214,7 +214,7 @@ public class UserServiceImp implements UserService{
             UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
 
             UserImage userImage = new UserImage();
-            userImage.setUrlPhoto(userInfo.get("picture"));
+            userImage.setUrlPhoto(userInfo.get("pictureUrl"));
             userImage.setUser(mapToEntity(user));
             imageService.saveUserImage(userImage);
 

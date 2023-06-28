@@ -47,6 +47,8 @@ public class Oauth2GoogleValidation {
         if (idToken != null) {
             GoogleIdToken.Payload payload = idToken.getPayload();
 
+            System.out.println(payload);
+
             String userId = payload.getSubject();
             String email = payload.getEmail();
             boolean emailVerified = payload.getEmailVerified();
