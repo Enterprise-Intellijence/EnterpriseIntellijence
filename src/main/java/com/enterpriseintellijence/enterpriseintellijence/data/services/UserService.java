@@ -2,7 +2,6 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
@@ -27,7 +26,7 @@ public interface UserService {
 
     Optional<UserBasicDTO> findBasicByUsername(String username);
 
-    Page<UserDTO> findAll(int page, int size);
+    Page<UserDTO> findAll(int page, int size, UserRole userRole, String username) throws IllegalAccessException;
 
     Optional<UserDTO> findByUsername(String username);
 

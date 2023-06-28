@@ -23,8 +23,8 @@ public class AdminController {
     private final ProductService productService;
 
     @GetMapping("/users")
-    public ResponseEntity<Page<UserDTO>> getUsers(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(userService.findAll(page, size));
+    public ResponseEntity<Page<UserDTO>> getUsers(@RequestParam int page, @RequestParam int size, @RequestParam UserRole userRole,@RequestParam(required = false) String username) throws IllegalAccessException {
+        return ResponseEntity.ok(userService.findAll(page, size,userRole,username));
     }
 
     @PostMapping("/users/ban/{userId}")

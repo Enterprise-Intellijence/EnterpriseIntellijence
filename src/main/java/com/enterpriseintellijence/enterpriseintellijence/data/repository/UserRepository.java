@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.data.repository;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,9 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
     User findByEmail(String email);
 
-    Page<User> findAll(Pageable pageable);
+    Page<User> findAllByRoleEqualsAndUsernameContains(Pageable pageable, UserRole userRole,String username);
+
+    Page<User> findAllByRoleEqualsOrRoleEquals(Pageable pageable, UserRole userRole, UserRole userRole1);
 
 /*    Page<User> findAllByFollowingId(String userId, Pageable pageable);
 

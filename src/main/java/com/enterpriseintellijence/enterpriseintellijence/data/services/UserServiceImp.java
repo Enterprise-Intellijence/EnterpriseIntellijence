@@ -175,10 +175,20 @@ public class UserServiceImp implements UserService{
         return Optional.of(mapToBasicDto(user));
     }
 
-    public Page<UserDTO> findAll(int page, int size) {
-        // TODO: Da implementare quando abbiamo l'admin
-        return userRepository.findAll(PageRequest.of(page, size))
+    public Page<UserDTO> findAll(int page, int size, UserRole userRole, String username) throws IllegalAccessException {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(!loggedUser.getRole().equals(UserRole.ADMIN) && !loggedUser.getRole().equals(UserRole.SUPER_ADMIN))
+            throw new IllegalAccessException("You can't access this list");
+
+        if(username==null)
+            username="";
+
+        if(userRole.equals(UserRole.USER))
+            return userRepository.findAllByRoleEqualsAndUsernameContains(PageRequest.of(page, size ),userRole,username)
                 .map(this::mapToDto);
+        else
+            return userRepository.findAllByRoleEqualsOrRoleEquals(PageRequest.of(page, size ),UserRole.ADMIN,UserRole.SUPER_ADMIN)
+                    .map(this::mapToDto);
     }
 
 
