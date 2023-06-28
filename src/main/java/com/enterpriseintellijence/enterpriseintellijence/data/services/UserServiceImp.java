@@ -213,8 +213,8 @@ public class UserServiceImp implements UserService{
             return authenticateUser(user.getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
         }
         catch (Exception e) {
-            log.error("Error validating google code: " + e.getMessage());
-            throw new Exception("Error validating google code");
+            log.error("Error validating google code: " + e.getMessage(), e);
+            throw new Exception("Error validating google code", e);
         }
     }
 
