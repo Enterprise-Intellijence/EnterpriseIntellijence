@@ -186,6 +186,9 @@ public class UserServiceImp implements UserService{
 
         if (existUser == null) {
             User newUser = new User();
+            findBasicByUsername(username).ifPresentOrElse(
+                    user -> newUser.setUsername(username + "_" + UUID.randomUUID().toString().substring(0, 7)),
+                    () -> newUser.setUsername(username));
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
             newUser.setPassword(passwordEncoder.encode(Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD));
