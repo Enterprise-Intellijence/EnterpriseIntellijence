@@ -234,6 +234,8 @@ public class UserServiceImp implements UserService{
 
         if(findByUsername(username).isPresent())
             throw new IllegalArgumentException("username already exists");
+        if(userRepository.findByEmail(email) != null)
+            throw new IllegalArgumentException("email already exists");
         createUser(username, passwordEncoder.encode(password), email);
         log.info("User created: " + username);
         return new ResponseEntity<>( "user created" , HttpStatus.CREATED);
@@ -385,75 +387,6 @@ public class UserServiceImp implements UserService{
 
         new ResponseEntity<>("user activated", HttpStatus.OK);
     }
-
- /*   @Override
-    public Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size) {
-        return userRepository.findAllByFollowingId(userId, PageRequest.of(page, size))
-                .map(user -> modelMapper.map(user, UserBasicDTO.class));
-    }
-
-    @Override
-    public Page<UserBasicDTO> getFollowingByUserId(String userId, int page, int size) {
-        return userRepository.findAllByFollowersId(userId, PageRequest.of(page, size))
-                .map(user -> modelMapper.map(user, UserBasicDTO.class));
-    }
-
-    @Override
-    public void followUser(String userIdToFollow) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        String userId = userRepository.findByUsername(username).getId();
-
-        User actualUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-
-        //userRepository.addFollow(userId, userIdToFollow);
-
-        User userToFollow = userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
-
-        userToFollow.getFollowers().add(actualUser);
-        userToFollow.setFollowers_number(userToFollow.getFollowers_number()+1);
-
-        actualUser.getFollowing().add(userToFollow);
-        actualUser.setFollowing_number(actualUser.getFollowing_number()+1);
-        userRepository.save(actualUser);
-        //userRepository.save(userToFollow);
-
-        *//*
-        userRepository.increaseFollowersNumber(userIdToFollow);
-        userRepository.increaseFollowingNumber(userId);
-        *//*
-    }
-
-    @Override
-    public void unfollowUser(String userIdToUnfollow) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User actualUser = userRepository.findByUsername(username);
-
-        User userToUnfollow = userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
-
-        if(userToUnfollow.getFollowers().contains(actualUser)){
-            userToUnfollow.getFollowers().remove(actualUser);
-            userToUnfollow.setFollowers_number(userToUnfollow.getFollowers_number()-1);
-        }
-
-        if(actualUser.getFollowing().contains(userToUnfollow)){
-            actualUser.getFollowing().remove(userToUnfollow);
-            actualUser.setFollowing_number(actualUser.getFollowing_number()-1);
-        }
-
-
-        //userRepository.save(userToUnfollow);
-        userRepository.save(actualUser);
-
-        *//*
-        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
-
-        userRepository.removeFollow(userId, userIdToUnfollow);*//*
-*//*
-        userRepository.decreaseFollowingNumbers(userId);
-        userRepository.decreaseFollowersNumbers(userIdToUnfollow);
-        *//*
-    }*/
 
     @Override
     public void addLikeToProduct(String productId) {
