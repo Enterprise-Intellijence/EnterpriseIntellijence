@@ -275,7 +275,7 @@ public class Demo {
                                 user2 = receiver;
                             }
                             message.setText("Random text from " + user1.getUsername() + " to " + user2.getUsername());
-                            message.setMessageDate(LocalDateTime.now());
+                            message.setMessageDate(LocalDateTime.now().minusMinutes(rand.nextInt(1, 10000)));
                             message.setConversationId(convID);
                             message.setMessageStatus(MessageStatus.UNREAD);
                             message.setOffer(null);
