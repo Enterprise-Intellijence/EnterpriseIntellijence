@@ -48,8 +48,6 @@ public class Oauth2GoogleValidation {
             GoogleIdToken.Payload payload = idToken.getPayload();
 
             String userId = payload.getSubject();
-            System.out.println("User ID: " + userId);
-
             String email = payload.getEmail();
             boolean emailVerified = payload.getEmailVerified();
             String name = (String) payload.get("name");
@@ -57,12 +55,6 @@ public class Oauth2GoogleValidation {
             String familyName = (String) payload.get("family_name");
             String givenName = (String) payload.get("given_name");
 
-            System.out.println("Email: " + email);
-            System.out.println("Email verified: " + emailVerified);
-            System.out.println("Name: " + name);
-            System.out.println("Picture URL: " + pictureUrl);
-            System.out.println("Family Name: " + familyName);
-            System.out.println("Given Name: " + givenName);
 
             return Map.of("email", email, "name", name, "pictureUrl", pictureUrl, "familyName", familyName, "givenName", givenName);
 
