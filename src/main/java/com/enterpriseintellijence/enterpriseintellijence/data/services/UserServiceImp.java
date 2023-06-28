@@ -102,16 +102,19 @@ public class UserServiceImp implements UserService{
     public UserDTO updateUser(String id, UserDTO userDTO) throws IllegalAccessException {
         User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
         User oldUser = userRepository.findById(id).orElseThrow();
-        if(userRepository.findByUsername(userDTO.getUsername()) != null)
-            throw new IllegalAccessException("Username already exists");
-        if(userDTO.getEmail() != null && userRepository.findByEmail(userDTO.getEmail()) != null)
-            throw new IllegalAccessException("Email already exists");
 
         if(!id.equals(userDTO.getId()))
             throw new IllegalAccessException("User cannot change another user");
 
         if(!id.equals(loggedUser.getId()) && (!loggedUser.getRole().equals(UserRole.ADMIN)) )
             throw new IllegalAccessException("User cannot change another user");
+
+
+        if(!oldUser.getUsername().equals(userDTO.getUsername()) && userRepository.findByUsername(userDTO.getUsername()) != null)
+            throw new IllegalAccessException("Username already exists");
+        if(!oldUser.getEmail().equals(userDTO.getEmail()) && userDTO.getEmail() != null && userRepository.findByEmail(userDTO.getEmail()) != null)
+            throw new IllegalAccessException("Email already exists");
+
 
         if(!oldUser.getUsername().equals(userDTO.getUsername()))
             oldUser.setUsername(userDTO.getUsername());
@@ -182,6 +185,7 @@ public class UserServiceImp implements UserService{
 
 
     private UserDTO processOAuthPostLogin(String username, String email) {
+
         User existUser = userRepository.findByEmail(email);
 
         if (existUser == null) {
