@@ -131,7 +131,7 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        if(userDTO.getBio() != null && !oldUser.getBio().equals(userDTO.getBio()))
+        if(userDTO.getBio() != null && (oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())))
             oldUser.setBio(userDTO.getBio());
 /*        if(userDTO.getDefaultAddress()!=null){
             Address address
