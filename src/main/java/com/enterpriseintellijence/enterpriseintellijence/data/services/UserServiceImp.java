@@ -1,10 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.NotificationsRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.*;
@@ -63,6 +60,7 @@ public class UserServiceImp implements UserService{
     private final EmailService emailService;
     private final NotificationsRepository notificationsRepository;
     private final Oauth2GoogleValidation oauth2GoogleValidation;
+    private final ImageService imageService;
 
 
 
@@ -102,16 +100,19 @@ public class UserServiceImp implements UserService{
     public UserDTO updateUser(String id, UserDTO userDTO) throws IllegalAccessException {
         User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
         User oldUser = userRepository.findById(id).orElseThrow();
-        if(userRepository.findByUsername(userDTO.getUsername()) != null)
-            throw new IllegalAccessException("Username already exists");
-        if(userDTO.getEmail() != null && userRepository.findByEmail(userDTO.getEmail()) != null)
-            throw new IllegalAccessException("Email already exists");
 
         if(!id.equals(userDTO.getId()))
             throw new IllegalAccessException("User cannot change another user");
 
         if(!id.equals(loggedUser.getId()) && (!loggedUser.getRole().equals(UserRole.ADMIN)) )
             throw new IllegalAccessException("User cannot change another user");
+
+
+        if(!oldUser.getUsername().equals(userDTO.getUsername()) && userRepository.findByUsername(userDTO.getUsername()) != null)
+            throw new IllegalAccessException("Username already exists");
+        if(!oldUser.getEmail().equals(userDTO.getEmail()) && userDTO.getEmail() != null && userRepository.findByEmail(userDTO.getEmail()) != null)
+            throw new IllegalAccessException("Email already exists");
+
 
         if(!oldUser.getUsername().equals(userDTO.getUsername()))
             oldUser.setUsername(userDTO.getUsername());
@@ -128,7 +129,7 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        if(userDTO.getBio() != null && !oldUser.getBio().equals(userDTO.getBio()))
+        if(userDTO.getBio() != null && (oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())))
             oldUser.setBio(userDTO.getBio());
 /*        if(userDTO.getDefaultAddress()!=null){
             Address address
@@ -182,10 +183,14 @@ public class UserServiceImp implements UserService{
 
 
     private UserDTO processOAuthPostLogin(String username, String email) {
+
         User existUser = userRepository.findByEmail(email);
 
         if (existUser == null) {
             User newUser = new User();
+            findBasicByUsername(username).ifPresentOrElse(
+                    user -> newUser.setUsername(username + "_" + UUID.randomUUID().toString().substring(0, 7)),
+                    () -> newUser.setUsername(username));
             newUser.setUsername(username);
             newUser.setProvider(Provider.GOOGLE);
             newUser.setPassword(passwordEncoder.encode(Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD));
@@ -207,11 +212,17 @@ public class UserServiceImp implements UserService{
 
             Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
             UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+
+            UserImage userImage = new UserImage();
+            userImage.setUrlPhoto(userInfo.get("pictureUrl"));
+            userImage.setUser(mapToEntity(user));
+            imageService.saveUserImage(userImage);
+
             return authenticateUser(user.getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
         }
         catch (Exception e) {
-            log.error("Error validating google code: " + e.getMessage());
-            throw new Exception("Error validating google code");
+            log.error("Error validating google code: " + e.getMessage(), e);
+            throw new Exception("Error validating google code", e);
         }
     }
 
@@ -231,6 +242,8 @@ public class UserServiceImp implements UserService{
 
         if(findByUsername(username).isPresent())
             throw new IllegalArgumentException("username already exists");
+        if(userRepository.findByEmail(email) != null)
+            throw new IllegalArgumentException("email already exists");
         createUser(username, passwordEncoder.encode(password), email);
         log.info("User created: " + username);
         return new ResponseEntity<>( "user created" , HttpStatus.CREATED);
@@ -382,75 +395,6 @@ public class UserServiceImp implements UserService{
 
         new ResponseEntity<>("user activated", HttpStatus.OK);
     }
-
- /*   @Override
-    public Page<UserBasicDTO> getFollowersByUserId(String userId, int page, int size) {
-        return userRepository.findAllByFollowingId(userId, PageRequest.of(page, size))
-                .map(user -> modelMapper.map(user, UserBasicDTO.class));
-    }
-
-    @Override
-    public Page<UserBasicDTO> getFollowingByUserId(String userId, int page, int size) {
-        return userRepository.findAllByFollowersId(userId, PageRequest.of(page, size))
-                .map(user -> modelMapper.map(user, UserBasicDTO.class));
-    }
-
-    @Override
-    public void followUser(String userIdToFollow) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        String userId = userRepository.findByUsername(username).getId();
-
-        User actualUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-
-        //userRepository.addFollow(userId, userIdToFollow);
-
-        User userToFollow = userRepository.findById(userIdToFollow).orElseThrow(EntityNotFoundException::new);
-
-        userToFollow.getFollowers().add(actualUser);
-        userToFollow.setFollowers_number(userToFollow.getFollowers_number()+1);
-
-        actualUser.getFollowing().add(userToFollow);
-        actualUser.setFollowing_number(actualUser.getFollowing_number()+1);
-        userRepository.save(actualUser);
-        //userRepository.save(userToFollow);
-
-        *//*
-        userRepository.increaseFollowersNumber(userIdToFollow);
-        userRepository.increaseFollowingNumber(userId);
-        *//*
-    }
-
-    @Override
-    public void unfollowUser(String userIdToUnfollow) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User actualUser = userRepository.findByUsername(username);
-
-        User userToUnfollow = userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
-
-        if(userToUnfollow.getFollowers().contains(actualUser)){
-            userToUnfollow.getFollowers().remove(actualUser);
-            userToUnfollow.setFollowers_number(userToUnfollow.getFollowers_number()-1);
-        }
-
-        if(actualUser.getFollowing().contains(userToUnfollow)){
-            actualUser.getFollowing().remove(userToUnfollow);
-            actualUser.setFollowing_number(actualUser.getFollowing_number()-1);
-        }
-
-
-        //userRepository.save(userToUnfollow);
-        userRepository.save(actualUser);
-
-        *//*
-        userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        userRepository.findById(userIdToUnfollow).orElseThrow(EntityNotFoundException::new);
-
-        userRepository.removeFollow(userId, userIdToUnfollow);*//*
-*//*
-        userRepository.decreaseFollowingNumbers(userId);
-        userRepository.decreaseFollowersNumbers(userIdToUnfollow);
-        *//*
-    }*/
 
     @Override
     public void addLikeToProduct(String productId) {

@@ -17,16 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -182,6 +176,11 @@ public class ImageServiceImp implements ImageService{
         // TODO: 24/05/2023 remove from system
         productImageRepository.delete(productImage);
 
+    }
+
+    @Override
+    public void saveUserImage(UserImage userImage) {
+        userImageRepository.save(userImage);
     }
 
 }

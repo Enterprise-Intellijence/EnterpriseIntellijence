@@ -2,6 +2,8 @@ package com.enterpriseintellijence.enterpriseintellijence.security;
 
 public class Constants {
 
+    public static final String BASE_PATH = "https://localhost:8443/api/v1/";
+
     public static final String TOKEN_SECRET_KEY = "KEcrS2JQZVNoVm1ZcTN0Nnc5eiRDJkYpSEBNY1FmVGo=";
 
     public static final String STANDARD_GOOGLE_ACCOUNT_PASSWORD = "BallSoHard-MotherfuckersWannaFineMe";

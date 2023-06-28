@@ -23,10 +23,10 @@ public class UserBasicDTO {
     private String bio;
 
     private UserImageDTO photoProfile;
-    private int reviews_total_sum;
-    private int reviews_number;
+    private int reviewsTotalSum;
+    private int reviewsNumber;
 
-    private int followers_number;
-    private int following_number;
+    private int followersNumber;
+    private int followingNumber;
 
 }
