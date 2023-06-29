@@ -34,6 +34,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -172,7 +173,7 @@ public class UserServiceImp implements UserService{
     }
 
 
-    private UserDTO processOAuthPostLogin(String username, String email) {
+    private Pair<Boolean,UserDTO> processOAuthPostLogin(String username, String email) {
 
         User existUser = userRepository.findByEmail(email);
 
@@ -191,9 +192,9 @@ public class UserServiceImp implements UserService{
             newUser.setReviewsTotalSum(0);
             newUser.setReviewsNumber(0);
             newUser.setEmailVerified(true);
-            return createUser(newUser);
+            return new Pair<>(false, createUser(newUser));
         }
-        return mapToDto(existUser);
+        return new Pair<>(true, mapToDto(existUser));
     }
 
     @Override
@@ -201,14 +202,16 @@ public class UserServiceImp implements UserService{
         try {
 
             Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
-            UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+            Pair<Boolean, UserDTO> pair = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
 
-            UserImage userImage = new UserImage();
-            userImage.setUrlPhoto(userInfo.get("pictureUrl"));
-            userImage.setUser(mapToEntity(user));
-            imageService.saveUserImage(userImage);
+            if(!pair.getUserExists()) {
+                UserImage userImage = new UserImage();
+                userImage.setUrlPhoto(userInfo.get("pictureUrl"));
+                userImage.setUser(mapToEntity(pair.getUser()));
+                imageService.saveUserImage(userImage);
+            }
 
-            return authenticateUser(user.getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
+            return authenticateUser(pair.getUser().getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
         }
         catch (Exception e) {
             log.error("Error validating google code: " + e.getMessage(), e);
@@ -505,5 +508,26 @@ public class UserServiceImp implements UserService{
     public AddressDTO mapToDto(Address address){return modelMapper.map(address, AddressDTO.class);}
     public Address mapToEntity(AddressDTO addressDTO){return modelMapper.map(addressDTO, Address.class);}
 
+    class Pair<T, U> {
+        private T userExists;
+        private U user;
+
+        public Pair(T userExists, U user) {
+            this.userExists = userExists;
+            this.user = user;
+        }
+
+        public Pair() {
+        }
+
+        public T getUserExists() {
+            return userExists;
+        }
+
+        public U getUser() {
+            return user;
+        }
+
+    }
 
 }
