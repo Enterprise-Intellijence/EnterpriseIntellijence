@@ -260,11 +260,17 @@ public class MessageServiceImp implements MessageService{
             if (message.getProduct() != null) {
                 productBasicDTO = modelMapper.map(message.getProduct(), ProductBasicDTO.class);
             }
+
+            boolean isUnread = false;
+
+            if(message.getReceivedUser().equals(loggedUser) && message.getMessageStatus().equals(MessageStatus.UNREAD))
+                isUnread = true;
+
             conversationDTOS.add(ConversationDTO.builder()
                     .otherUser(userBasicDTO)
                     .lastMessage(modelMapper.map(message,MessageDTO.class))
                     .productBasicDTO(productBasicDTO)
-                    .unreadMessages(message.getMessageStatus().equals(MessageStatus.UNREAD))
+                    .unreadMessages(isUnread)
                     .conversationId(message.getConversationId())
                     .build());
         }
