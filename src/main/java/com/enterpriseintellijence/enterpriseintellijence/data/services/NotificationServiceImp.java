@@ -30,7 +30,8 @@ public class NotificationServiceImp implements NotificationService {
     private NotificationDTO createNotification(Notification notification) {
         User receiver = userRepository.findById(notification.getReceiver().getId()).orElseThrow(() -> new IllegalArgumentException("Receiver not found"));
         if (notification.getType() == null) throw new IllegalArgumentException("Invalid notification");
-        if (notification.getUserTarget() == null && notification.getProductTarget() == null && notification.getOfferTarget() == null) throw new IllegalArgumentException("Invalid notification");
+        if (!notification.getType().equals(NotificationType.MESSAGE) &&
+                (notification.getUserTarget() == null && notification.getProductTarget() == null && notification.getOfferTarget() == null)) throw new IllegalArgumentException("Invalid notification");
         if (notification.getUserTarget() != null && userRepository.findById(notification.getUserTarget()).isEmpty())
             throw new IllegalArgumentException("User target not found");
         if (notification.getProductTarget() != null && productRepository.findById(notification.getProductTarget()).isEmpty())
@@ -104,6 +105,7 @@ public class NotificationServiceImp implements NotificationService {
         Notification notification = Notification.builder()
                 .receiver(userFollowed)
                 .type(NotificationType.FOLLOW)
+                .userTarget(jwtContextUtils.getUserLoggedFromContext().getId())
                 .build();
         return createNotification(notification);
     }

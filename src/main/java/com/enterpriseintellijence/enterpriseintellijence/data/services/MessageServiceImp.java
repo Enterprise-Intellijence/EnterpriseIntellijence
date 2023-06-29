@@ -106,14 +106,10 @@ public class MessageServiceImp implements MessageService{
         if(message.getMessageStatus().equals(MessageStatus.READ))
             throw new IllegalAccessException("Cannot modify message readed");
 
-        if (patch.getText() != null) {
-            message.setText(patch.getText());
-        }
+        message.setText(patch.getText());
 
-        if (patch.getReceivedUser() != null) {
-            User receiver = userRepository.findById(patch.getId()).orElseThrow(EntityNotFoundException::new);
-            message.setReceivedUser(receiver);
-        }
+        User receiver = userRepository.findById(patch.getId()).orElseThrow(EntityNotFoundException::new);
+        message.setReceivedUser(receiver);
 
         messageRepository.save(message);
         return mapToDTO(message);
@@ -218,7 +214,7 @@ public class MessageServiceImp implements MessageService{
     public void setReadMessages(List<String> idList) {
         for (String id: idList){
             Optional<Message> message= messageRepository.findById(id);
-            if(message.isPresent() && message!=null){
+            if(message.isPresent() && message.get().getReceivedUser().equals(jwtContextUtils.getUserLoggedFromContext())){
                 message.get().setMessageStatus(MessageStatus.READ);
                 messageRepository.save(message.get());
             }
