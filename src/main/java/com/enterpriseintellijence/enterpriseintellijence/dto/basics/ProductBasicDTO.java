@@ -42,13 +42,13 @@ public class ProductBasicDTO {
     // TODO: 16/05/2023 mappare sul mappare
     private Integer likesNumber;
     private UserBasicDTO seller;
-    private ProductImageDTO productImages;
+    private List<ProductImageDTO> productImages;
 /*    private ProductCategoryOld productCategory;*/
     private ProductCategoryDTO productCategory;
 
     @JsonSetter
     public void setProductImages(List<ProductImageDTO> productImages) {
-        this.productImages = productImages.get(0);
+        this.productImages = List.of(productImages.get(0));
     }
 
 }
