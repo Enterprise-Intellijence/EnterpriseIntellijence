@@ -25,7 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,7 +36,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/users", produces="application/json")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins= "http://localhost:4200")
 @Slf4j
 public class UserController {
     private final UserService userService;
