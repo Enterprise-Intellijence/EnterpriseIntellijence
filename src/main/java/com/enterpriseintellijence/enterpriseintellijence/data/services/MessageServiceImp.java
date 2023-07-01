@@ -157,13 +157,20 @@ public class MessageServiceImp implements MessageService {
 
     @Override
     public Optional<ConversationDTO> getConversation(User loggedUser, User otherUser, @Nullable Product product) {
-        // TODO: 22/06/2023 why?? senza la query? 
-        List<Message> messages = messageRepository.findAllMyConversation(jwtContextUtils.getUserLoggedFromContext().getId());
+        // TODO: 22/06/2023 why?? senza la query?
+
+        if(loggedUser != jwtContextUtils.getUserLoggedFromContext())
+            throw new IllegalArgumentException("Logged user is not the same of the user passed");
+
+
+        List<Message> messages = messageRepository.findAllMyConversation(loggedUser.getId());
 
         for (Message message : messages) {
             if ((message.getSendUser().equals(loggedUser) && message.getReceivedUser().equals(otherUser)) ||
                 (message.getSendUser().equals(otherUser) && message.getReceivedUser().equals(loggedUser)))
-                if (message.getProduct() != null && message.getProduct().equals(product))
+                if (product == null && message.getProduct() == null)
+                    return Optional.of(convertToConversationDTO(message, loggedUser));
+                else if (message.getProduct() != null && message.getProduct().equals(product))
                     return Optional.of(convertToConversationDTO(message, loggedUser));
         }
 
