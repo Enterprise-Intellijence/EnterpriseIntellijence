@@ -2,7 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.security;
 
 public class Constants {
 
-    public static final String BASE_PATH = "https://localhost:8443/api/v1/";
+    public static final String BASE_PATH = "http://localhost:8080/api/v1/";
 
     public static final String TOKEN_SECRET_KEY = "KEcrS2JQZVNoVm1ZcTN0Nnc5eiRDJkYpSEBNY1FmVGo=";
 

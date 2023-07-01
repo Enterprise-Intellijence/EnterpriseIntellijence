@@ -3,12 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.MessageService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ConversationDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.MessageCreateDTO;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,8 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,6 +56,7 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getMessage(id));
     }
 
+
     @PostMapping(path = "/read")
     @ResponseStatus(HttpStatus.OK)
     public void setReadMessages(@RequestBody List<String> idList) {
@@ -68,15 +64,31 @@ public class MessageController {
     }
 
 
+    @GetMapping("/conversations/{conversationId}/messages")
+    public ResponseEntity<Page<MessageDTO>> getConversationMessages(
+        @PathVariable("conversationId") String conversationId,
+        @RequestParam(defaultValue = "0", required = false) int page,
+        @RequestParam(defaultValue = "10", required = false) int sizePage) {
 
-    @GetMapping("/conversations/{conversationId}")
-    public ResponseEntity<Page<MessageDTO>> getConversation(
-            @PathVariable("conversationId") String conversationId,
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "10", required = false) int sizePage) {
+        return ResponseEntity.ok(messageService.getConversationMessages(conversationId, page, sizePage));
 
-        return ResponseEntity.ok(messageService.getConversation(conversationId, page, sizePage));
+    }
 
+    @GetMapping(path = "/conversations/{conversationId}")
+    public ResponseEntity<ConversationDTO> getConversationById(
+        @PathVariable("conversationId") String conversationId) {
+
+        Optional<ConversationDTO> conversation = messageService.getConversationById(conversationId);
+        return conversation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(path = "/conversations/with/{userId}")
+    public ResponseEntity<ConversationDTO> getConversationWithUser(
+        @PathVariable("userId") String userId,
+        @RequestParam(value = "productId", required = false) String productId) {
+
+        Optional<ConversationDTO> conversation = messageService.getConversation(userId, productId);
+        return conversation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
