@@ -22,7 +22,7 @@ public interface ProductService {
 
     ProductDTO getProductById(String id, boolean capability);
 
-    String getCapabilityUrl(String id);
+    String getCapabilityUrl(String productId);
 
     Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
     
@@ -45,4 +45,6 @@ public interface ProductService {
     Page<ProductBasicDTO> getMyProducts(int page, int size);
 
     ProductBasicDTO getProductBasicById(String id, boolean capability);
+
+    String getCapabilityToken(String productId);
 }

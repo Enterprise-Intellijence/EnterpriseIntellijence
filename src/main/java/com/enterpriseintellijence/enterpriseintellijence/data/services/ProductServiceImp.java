@@ -369,24 +369,29 @@ public class ProductServiceImp implements ProductService {
     }
 
 
-    private void throwOnIdMismatch(String id, ProductDTO productDTO) {
-        if (productDTO.getId() != null && !productDTO.getId().equals(id)) {
+    private void throwOnIdMismatch(String productId, ProductDTO productDTO) {
+        if (productDTO.getId() != null && !productDTO.getId().equals(productId)) {
             throw new IdMismatchException();
         }
     }
 
-    public String getCapabilityUrl(String id) {
+    public String getCapabilityUrl(String productId) {
+        String token = getCapabilityToken(productId);
+        return  Constants.BASE_PATH + "products/capability/" + token;
+    }
 
+
+    @Override
+    public String getCapabilityToken(String productId) {
         Optional<String> username = jwtContextUtils.getUsernameFromContext();
         if (username.isEmpty()) {
             throw new RuntimeException("User not found");
         }
-        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
         if(!product.getSeller().getUsername().equals(username.get())){
             throw new RuntimeException("Unauthorized operation");
         }
-        String token = tokenStore.createCapabilityToken(id);
-        return  Constants.BASE_PATH + "products/capability/" + token;
+        return tokenStore.createCapabilityToken(productId);
     }
 
 }
