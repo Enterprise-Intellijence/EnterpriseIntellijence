@@ -171,7 +171,7 @@ public class ProductServiceImp implements ProductService {
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-        if (product.getSeller().getId().equals(loggedUser.getId()))
+        if (loggedUser != null && product.getSeller().getId().equals(loggedUser.getId()))
             return mapToProductDetailsDTO(product);
 
 
