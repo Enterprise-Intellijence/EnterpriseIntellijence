@@ -36,10 +36,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImp implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ClothingRepository clothingRepository;
     private final NotificationService notificationService;
-    private final EntertainmentRepository entertainmentRepository;
-    private final HomeRepository homeRepository;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final ProductCatRepository productCatRepository;
