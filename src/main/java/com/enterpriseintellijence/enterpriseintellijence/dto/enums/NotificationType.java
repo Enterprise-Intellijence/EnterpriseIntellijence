@@ -4,6 +4,7 @@ public enum NotificationType {
     NEW_OFFER,
     OFFER_REJECTED,
     OFFER_ACCEPTED,
+    OFFER_CANCELED,
     REVIEW,
     MESSAGE,
     SALE,

@@ -119,7 +119,10 @@ public class OfferServiceImp implements OfferService {
             } else {
                 // if Offer is For LoggedUser, then LoggedUser can only Accept or Reject the Offer
                 if (state.equals(OfferState.ACCEPTED))
+                {
                     offer.setState(state);
+
+                }
                 else if (state.equals(OfferState.REJECTED))
                     offer.setState(state);
             }

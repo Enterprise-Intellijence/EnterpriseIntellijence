@@ -33,15 +33,15 @@ public class OfferController {
         return offerService.replaceOffer(id, offerDTO);
     }
 
-    @PatchMapping(path = "/{id}/accept", consumes = "application/json")
+    @PatchMapping(path = "/{id}/accept")
     public OfferDTO acceptOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.ACCEPTED);
     }
-    @PatchMapping(path = "/{id}/reject", consumes = "application/json")
+    @PatchMapping(path = "/{id}/reject")
     public OfferDTO rejectOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.REJECTED);
     }
-    @PatchMapping(path = "/{id}/cancel", consumes = "application/json")
+    @PatchMapping(path = "/{id}/cancel")
     public OfferDTO cancelOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.CANCELLED);
     }
