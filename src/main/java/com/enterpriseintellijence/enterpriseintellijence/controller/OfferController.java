@@ -33,17 +33,22 @@ public class OfferController {
         return offerService.replaceOffer(id, offerDTO);
     }
 
-    @PutMapping(path = "/{id}/accept", consumes = "application/json")
-    public OfferDTO acceptOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
+    @PatchMapping(path = "/{id}/accept", consumes = "application/json")
+    public OfferDTO acceptOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.ACCEPTED);
     }
-    @PutMapping(path = "/{id}/reject", consumes = "application/json")
-    public OfferDTO rejectOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
+    @PatchMapping(path = "/{id}/reject", consumes = "application/json")
+    public OfferDTO rejectOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.REJECTED);
     }
-    @PutMapping(path = "/{id}/cancel", consumes = "application/json")
-    public OfferDTO cancelOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
+    @PatchMapping(path = "/{id}/cancel", consumes = "application/json")
+    public OfferDTO cancelOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.CANCELLED);
+    }
+
+    @PatchMapping(path = "/{id}/state", consumes = "application/json")
+    public OfferDTO setOfferState(@PathVariable("id") String id, @Valid @RequestBody OfferState state) throws IllegalAccessException {
+        return offerService.updateOfferState(id, state);
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
