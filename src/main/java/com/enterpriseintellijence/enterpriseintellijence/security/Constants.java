@@ -1,8 +1,20 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class Constants {
 
-    public static final String BASE_PATH = "http://localhost:8080/api/v1/";
+    public static String BASE_PATH = "";
+
+    static {
+        try {
+            BASE_PATH = "http://"+ InetAddress.getLocalHost().getHostAddress()+":8080/api/v1/";
+            System.out.println(BASE_PATH);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static final String TOKEN_SECRET_KEY = "KEcrS2JQZVNoVm1ZcTN0Nnc5eiRDJkYpSEBNY1FmVGo=";
 
