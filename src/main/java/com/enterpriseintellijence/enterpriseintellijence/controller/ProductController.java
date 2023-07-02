@@ -5,14 +5,11 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.SizeRep
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
 import com.enterpriseintellijence.enterpriseintellijence.data.specification.ProductSpecification;
-import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.SizeDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
@@ -96,14 +93,9 @@ public class ProductController {
     }
 
 
-    @PostMapping("/capability/url/{productId}")
-    public ResponseEntity<String> getCapabilityUrl(@PathVariable("productId") String productId) {
-        return ResponseEntity.ok(productService.getCapabilityUrl(productId));
-    }
-
-    @PostMapping("/capability/token/{productId}")
-    public ResponseEntity<String> getCapabilityToken(@PathVariable("productId") String productId) {
-        return ResponseEntity.ok(productService.getCapabilityToken(productId));
+    @PostMapping(value = "/capability/{productId}")
+    public ResponseEntity<CapabilityDTO> createCapability(@PathVariable("productId") String productId) {
+        return ResponseEntity.ok(productService.getCapability(productId));
     }
 
     @GetMapping("/capability/{token}")
@@ -119,7 +111,7 @@ public class ProductController {
 
 
     @GetMapping("/categories")
-    public ResponseEntity<Iterable<ProductCategoryDTO>> getCategoriesList() { 
+    public ResponseEntity<Iterable<ProductCategoryDTO>> getCategoriesList() {
         return ResponseEntity.ok(productService.getCategoriesList());
     }
 
