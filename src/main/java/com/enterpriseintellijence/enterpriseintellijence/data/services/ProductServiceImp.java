@@ -12,6 +12,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCre
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
+import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import jakarta.persistence.EntityNotFoundException;
@@ -388,7 +389,7 @@ public class ProductServiceImp implements ProductService {
             throw new RuntimeException("Unauthorized operation");
         }
         String token = tokenStore.createCapabilityToken(id);
-        return  "https://localhost:8443/api/v1/products/capability/" + token;
+        return  Constants.BASE_PATH + "products/capability/" + token;
     }
 
 }
