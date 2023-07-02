@@ -29,4 +29,6 @@ public class OfferDTO {
     private ProductBasicDTO product;
     private OrderBasicDTO order;
 
+
+
 }

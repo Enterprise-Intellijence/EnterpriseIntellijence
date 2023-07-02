@@ -5,16 +5,12 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.OfferServ
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OfferCreateDTO;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Duration;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,15 +33,24 @@ public class OfferController {
         return offerService.replaceOffer(id, offerDTO);
     }
 
-    @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO patch) throws IllegalAccessException {
-        return ResponseEntity.ok(offerService.updateOffer(id, patch,true,false));
+    @PutMapping(path = "/{id}/accept", consumes = "application/json")
+    public OfferDTO acceptOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
+        return offerService.updateOfferState(id, OfferState.ACCEPTED);
+    }
+    @PutMapping(path = "/{id}/reject", consumes = "application/json")
+    public OfferDTO rejectOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
+        return offerService.updateOfferState(id, OfferState.REJECTED);
+    }
+    @PutMapping(path = "/{id}/cancel", consumes = "application/json")
+    public OfferDTO cancelOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
+        return offerService.updateOfferState(id, OfferState.CANCELLED);
     }
 
-    @PatchMapping(path = "/accept/{id}", consumes = "application/json")
-    public ResponseEntity<OfferDTO> acceptOffer(@PathVariable("id") String id,@RequestParam("accepted")boolean accepted ,@Valid @RequestBody OfferDTO patch) throws IllegalAccessException {
-        return ResponseEntity.ok(offerService.updateOffer(id, patch,false,accepted));
+    @PatchMapping(path = "/{id}", consumes = "application/json")
+    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO patch) throws IllegalAccessException {
+        return ResponseEntity.ok(offerService.updateOffer(id, patch));
     }
+
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
