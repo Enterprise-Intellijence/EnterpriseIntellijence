@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductCategory;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Size;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.SizeRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductService;
@@ -19,9 +18,6 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCre
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.nimbusds.jose.JOSEException;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -108,9 +103,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getCapabilityUrl(id));
     }
 
-    @GetMapping("/likes/users/{id}")
-    public ResponseEntity<Iterable<UserBasicDTO>> getProductLikedByUser(@PathVariable("id") String id, @RequestParam int page, @RequestParam int size){
-        return ResponseEntity.ok(productService.getUserThatLikedProduct(id, page, size));
+    @GetMapping("/likes/users/{productId}")
+    public ResponseEntity<Iterable<UserBasicDTO>> getUsersThatLikedProduct(@PathVariable("productId") String productId, @RequestParam int page, @RequestParam int size){
+        return ResponseEntity.ok(productService.getUserThatLikedProduct(productId, page, size));
     }
 
     @GetMapping("/capability/{token}")
