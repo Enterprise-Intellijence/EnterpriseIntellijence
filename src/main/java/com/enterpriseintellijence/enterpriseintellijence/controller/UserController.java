@@ -8,6 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.security.LoginWithGoogleBody;
 import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
 
+import com.nimbusds.jose.Header;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,7 @@ import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +32,8 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
@@ -38,6 +41,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequestMapping(path="/api/v1/users", produces="application/json")
 @CrossOrigin(origins= "http://localhost:4200")
 @Slf4j
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -117,9 +121,7 @@ public class UserController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
-
-        //UserDTO userDTO = userService.findUserFromContext().orElseThrow(EntityNotFoundException::new);
+    public ResponseEntity<UserDTO> me(HttpServletRequest request) throws EntityNotFoundException {
         return ResponseEntity.ok(userService.findMyProfile());
     }
 

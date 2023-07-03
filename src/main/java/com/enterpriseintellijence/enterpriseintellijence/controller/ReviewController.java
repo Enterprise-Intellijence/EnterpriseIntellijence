@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ReviewCrea
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/reviews", produces="application/json")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class ReviewController {
     private final ReviewService reviewService;
 

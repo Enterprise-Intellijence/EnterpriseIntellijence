@@ -9,6 +9,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCr
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.List;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/deliveries", produces = "application/json")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class DeliveryController {
 
     private final DeliveryService deliveryService;

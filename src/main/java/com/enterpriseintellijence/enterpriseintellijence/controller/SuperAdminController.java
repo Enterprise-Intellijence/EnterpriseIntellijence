@@ -7,6 +7,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.SizeDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/superAdmin", produces="application/json")
 @CrossOrigin(origins="*")
 @Slf4j
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class SuperAdminController {
 
     private final UserService userService;

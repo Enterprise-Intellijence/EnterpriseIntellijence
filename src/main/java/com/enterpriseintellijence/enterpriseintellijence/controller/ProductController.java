@@ -21,7 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping(path="/api/v1/products", produces="application/json")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 @RequestMapping(path = "/api/v1/products", produces = "application/json")
 public class ProductController {
     private final ProductService productService;

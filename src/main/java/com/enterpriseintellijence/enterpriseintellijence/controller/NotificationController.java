@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.Notificat
 import com.enterpriseintellijence.enterpriseintellijence.data.services.NotificationService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.NotificationDTO;
 import com.nimbusds.jose.JOSEException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path="/api/v1/notifications", produces="application/json")
 @CrossOrigin(origins="http://localhost:4200")
 @Slf4j
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class NotificationController {
 
     private final NotificationService notificationService;

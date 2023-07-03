@@ -5,17 +5,28 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.OfferServ
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OfferCreateDTO;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/offers", produces = "application/json")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class OfferController {
     // TODO: 16/05/23 Erne
 
