@@ -121,7 +121,7 @@ public class UserController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> me(HttpServletRequest request) throws EntityNotFoundException {
+    public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
         return ResponseEntity.ok(userService.findMyProfile());
     }
 

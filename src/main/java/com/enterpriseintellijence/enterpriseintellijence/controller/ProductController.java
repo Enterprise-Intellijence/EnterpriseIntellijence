@@ -32,7 +32,6 @@ import java.util.Arrays;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(path="/api/v1/products", produces="application/json")
 @SecurityRequirement(name = SECURITY_CONFIG_NAME)
-@RequestMapping(path = "/api/v1/products", produces = "application/json")
 public class ProductController {
     private final ProductService productService;
     private final TokenStore tokenStore;
