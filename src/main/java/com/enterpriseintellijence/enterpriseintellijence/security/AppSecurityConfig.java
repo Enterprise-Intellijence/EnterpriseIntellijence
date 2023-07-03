@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.security;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+import static io.swagger.v3.oas.annotations.enums.SecuritySchemeIn.HEADER;
+import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@SecurityScheme(name = AppSecurityConfig.SECURITY_CONFIG_NAME,in = HEADER, type = HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class AppSecurityConfig  {
 
+    public static final String SECURITY_CONFIG_NAME = "App_Bearer_token";
 
     @Bean
     public PasswordEncoder passwordEncoder() {
