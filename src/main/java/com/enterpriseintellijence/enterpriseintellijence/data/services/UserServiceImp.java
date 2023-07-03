@@ -337,6 +337,8 @@ public class UserServiceImp implements UserService{
     public UserDTO findMyProfile() {
         try {
             User user = jwtContextUtils.getUserLoggedFromContext();
+            if (user == null)
+                return null;
             UserDTO userDTO = modelMapper.map(user,UserDTO.class);
             return userDTO;
         }catch (Exception e){

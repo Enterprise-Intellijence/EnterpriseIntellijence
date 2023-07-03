@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.Following;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.FollowingService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.FollowingFollowersDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1", produces = "application/json")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class FollowingController {
 
     private final FollowingService followingService;

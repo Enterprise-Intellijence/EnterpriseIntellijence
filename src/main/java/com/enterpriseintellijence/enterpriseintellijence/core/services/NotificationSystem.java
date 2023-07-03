@@ -45,6 +45,8 @@ public class NotificationSystem {
             .receivedUser(product.getSeller())
             .offer(offer)
             .build();
+
+
     }
 
     public Message offerAcceptedOrRejectedNotification(Offer offer, boolean isAccepted) {

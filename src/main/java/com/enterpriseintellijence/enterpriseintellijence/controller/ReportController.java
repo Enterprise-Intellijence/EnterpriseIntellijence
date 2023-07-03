@@ -3,15 +3,19 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.ReportService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ReportDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ReportStatus;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/reports", produces = "application/json")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class ReportController {
 
     private final ReportService reportService;

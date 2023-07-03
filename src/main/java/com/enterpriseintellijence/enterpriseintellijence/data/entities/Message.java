@@ -52,6 +52,4 @@ public class Message {
     private Offer offer;
 
 
-
-
 }
