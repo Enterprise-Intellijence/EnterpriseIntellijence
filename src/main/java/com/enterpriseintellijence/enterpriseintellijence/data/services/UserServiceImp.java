@@ -124,7 +124,6 @@ public class UserServiceImp implements UserService{
             //paymentMethod.setDefaultUser(oldUser);
             oldUser.setDefaultPaymentMethod(paymentMethod);
         }*/
-        System.out.println("ci arrivo e bio vale "+oldUser.getBio());
         userRepository.save(oldUser);
         return mapToDto(oldUser);
     }
