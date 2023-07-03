@@ -99,18 +99,18 @@ public class UserServiceImp implements UserService{
             oldUser.setUsername(userDTO.getUsername());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
             oldUser.setEmail(userDTO.getEmail());
-        if(userDTO.getPhotoProfile()!=null ){
+        /*if(userDTO.getPhotoProfile()!=null ){
             UserImage userImage = new UserImage();
             if(oldUser.getPhotoProfile().getId()!=null)
                 userImage.setId(oldUser.getId());
             if(userDTO.getPhotoProfile().getDescription()!=null && !oldUser.getPhotoProfile().getDescription().equals(userDTO.getPhotoProfile().getDescription()))
                 userImage.setDescription(userDTO.getPhotoProfile().getDescription());
-            /*if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
+            *//*if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
                 userImage.setPhoto(userDTO.getPhotoProfile().getPhoto());
-*/          userImage.setUser(oldUser);
+*//*          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
-        }
-        if(userDTO.getBio() != null && userDTO.getBio().equals(oldUser.getBio())/* oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())*/)
+        }*/
+        if(userDTO.getBio() != null && !userDTO.getBio().equals(oldUser.getBio())/* oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())*/)
             oldUser.setBio(userDTO.getBio());
 /*        if(userDTO.getDefaultAddress()!=null){
             Address address
