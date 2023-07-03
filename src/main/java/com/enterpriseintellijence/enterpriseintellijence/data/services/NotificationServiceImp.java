@@ -87,6 +87,9 @@ public class NotificationServiceImp implements NotificationService {
         } else if (offer.getState().equals(OfferState.REJECTED)) {
             type = NotificationType.OFFER_REJECTED;
             receiver = offer.getOfferer();
+        } else if (offer.getState().equals(OfferState.CANCELLED)) {
+            type = NotificationType.OFFER_CANCELED;
+            receiver = offer.getProduct().getSeller();
         } else {
             type = NotificationType.NEW_OFFER;
             receiver = offer.getProduct().getSeller();

@@ -27,23 +27,26 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     private final NotificationService notificationService;
 
     @Override
-    public Offer madeAnOffer(OfferCreateDTO offerCreateDTO, Product product, User loggedUser) {
+    public Offer CreateOffer(OfferCreateDTO offerCreateDTO, Product product, User loggedUser) {
         Offer offer = new Offer();
         offer.setAmount(modelMapper.map(offerCreateDTO.getAmount(), CustomMoney.class));
         offer.setCreationTime(timeNow());
         offer.setState(OfferState.PENDING);
-        loggedUser.getOffersMade().add(offer);
+//        loggedUser.getOffersMade().add(offer);
         offer.setOfferer(loggedUser);
         product.setLastUpdateDate(timeNow());
         offer.setProduct(product);
         // TODO: 25/05/2023 aggiungere un campo in user per i messaggi non letti?
-        offer.setMessage(notificationSystem.offerCreatedNotification(offer));
-
+//        offer.setMessage(notificationSystem.offerCreatedNotification(offer));
         return offer;
     }
 
     @Override
     public Offer acceptOrRejectAnOffer(Offer offer, OfferDTO offerDTO, Product product, User loggedUser, boolean isAccepted) {
+        if(!offer.getState().equals(OfferState.PENDING)) {
+            throw new EntityNotFoundException("Offer is not pending");
+        }
+
         if(isAccepted){
             offer.setState(OfferState.ACCEPTED);
             product.setAvailability(Availability.PENDING);

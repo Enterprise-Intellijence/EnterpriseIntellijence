@@ -34,6 +34,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -72,28 +73,7 @@ public class UserServiceImp implements UserService{
     }
 
     public UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException {
-        /*//throwOnIdMismatch(id, userDTO);
-        User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
 
-        if(!id.equals(userDTO.getId()) || !id.equals(loggedUser.getId()) || !userDTO.getId().equals(loggedUser.getId()))
-            throw new IllegalAccessException("User cannot change another user");
-
-        User oldUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        User newUser = mapToEntity(userDTO);
-
-       User requestingUser = new User();
-
-        if(!requestingUser.getId().equals(oldUser.getId())) {
-            throw new IllegalAccessException("same User");
-        }
-        if(!requestingUser.getId().equals(newUser.getId())) {
-            throw new IllegalAccessException("same user");
-        }
-
-
-        newUser = userRepository.save(newUser);
-        return mapToDto(newUser);*/
         return updateUser(id,userDTO);
     }
 
@@ -114,6 +94,7 @@ public class UserServiceImp implements UserService{
             throw new IllegalAccessException("Email already exists");
 
 
+
         if(!oldUser.getUsername().equals(userDTO.getUsername()))
             oldUser.setUsername(userDTO.getUsername());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
@@ -129,7 +110,7 @@ public class UserServiceImp implements UserService{
 */          userImage.setUser(oldUser);
             oldUser.setPhotoProfile(userImage);
         }
-        if(userDTO.getBio() != null && (oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())))
+        if(userDTO.getBio() != null && userDTO.getBio().equals(oldUser.getBio())/* oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())*/)
             oldUser.setBio(userDTO.getBio());
 /*        if(userDTO.getDefaultAddress()!=null){
             Address address
@@ -192,7 +173,7 @@ public class UserServiceImp implements UserService{
     }
 
 
-    private UserDTO processOAuthPostLogin(String username, String email) {
+    private Pair<Boolean,UserDTO> processOAuthPostLogin(String username, String email) {
 
         User existUser = userRepository.findByEmail(email);
 
@@ -211,9 +192,9 @@ public class UserServiceImp implements UserService{
             newUser.setReviewsTotalSum(0);
             newUser.setReviewsNumber(0);
             newUser.setEmailVerified(true);
-            return createUser(newUser);
+            return new Pair<>(false, createUser(newUser));
         }
-        return mapToDto(existUser);
+        return new Pair<>(true, mapToDto(existUser));
     }
 
     @Override
@@ -221,14 +202,16 @@ public class UserServiceImp implements UserService{
         try {
 
             Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
-            UserDTO user = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+            Pair<Boolean, UserDTO> pair = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
 
-            UserImage userImage = new UserImage();
-            userImage.setUrlPhoto(userInfo.get("pictureUrl"));
-            userImage.setUser(mapToEntity(user));
-            imageService.saveUserImage(userImage);
+            if(!pair.getUserExists()) {
+                UserImage userImage = new UserImage();
+                userImage.setUrlPhoto(userInfo.get("pictureUrl"));
+                userImage.setUser(mapToEntity(pair.getUser()));
+                imageService.saveUserImage(userImage);
+            }
 
-            return authenticateUser(user.getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
+            return authenticateUser(pair.getUser().getUsername(), Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD, Provider.GOOGLE);
         }
         catch (Exception e) {
             log.error("Error validating google code: " + e.getMessage(), e);
@@ -503,25 +486,6 @@ public class UserServiceImp implements UserService{
     }
 
 
-    /*@Override
-    public Page<MessageDTO> getMyInBoxMessage(int page, int size) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User user = userRepository.findByUsername(username);
-        Page<Message> messages = new PageImpl<Message>(user.getReceivedMessages(),PageRequest.of(page,size),user.getReceivedMessages().size());
-        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
-
-        return new PageImpl<>(collect);
-    }
-
-    @Override
-    public Page<MessageDTO> getMyOutBoxMessage(int page, int size) {
-        String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
-        User user = userRepository.findByUsername(username);
-        Page<Message> messages = new PageImpl<Message>(user.getSentMessages(),PageRequest.of(page,size),user.getSentMessages().size());
-        List<MessageDTO> collect = messages.stream().map(s->modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
-
-        return new PageImpl<>(collect);
-    }*/
 
     @Override
     public Page<OfferBasicDTO> getMyOffers(int page, int size) {
@@ -546,5 +510,26 @@ public class UserServiceImp implements UserService{
     public AddressDTO mapToDto(Address address){return modelMapper.map(address, AddressDTO.class);}
     public Address mapToEntity(AddressDTO addressDTO){return modelMapper.map(addressDTO, Address.class);}
 
+    class Pair<T, U> {
+        private T userExists;
+        private U user;
+
+        public Pair(T userExists, U user) {
+            this.userExists = userExists;
+            this.user = user;
+        }
+
+        public Pair() {
+        }
+
+        public T getUserExists() {
+            return userExists;
+        }
+
+        public U getUser() {
+            return user;
+        }
+
+    }
 
 }

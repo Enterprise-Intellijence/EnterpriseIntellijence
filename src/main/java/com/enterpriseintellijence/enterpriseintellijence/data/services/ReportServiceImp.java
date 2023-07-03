@@ -44,6 +44,7 @@ public class ReportServiceImp implements ReportService {
         }
         reportDTO.setStatus(ReportStatus.PENDING);
         reportDTO.setDate(LocalDateTime.now());
+        reportDTO.setLastUpdate(LocalDateTime.now());
         Report report = mapToEntity(reportDTO);
 
         report = reportRepository.save(report);
