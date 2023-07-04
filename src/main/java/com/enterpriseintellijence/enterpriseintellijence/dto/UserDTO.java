@@ -33,7 +33,7 @@ public class UserDTO {
 
     private String bio;
 
-    private UserImageDTO photoProfile;
+    private UserImageDTO phxotoProfile;
     @NotNull
     private Provider provider;
 
