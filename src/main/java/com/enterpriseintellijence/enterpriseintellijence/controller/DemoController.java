@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.Demo;
+import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,32 +26,7 @@ public class DemoController {
 
     @GetMapping("/api/v1/ip")
     public String getIp() throws UnknownHostException {
-        return ip();
+        return Constants.BASE_PATH;
     }
 
-    public String ip() {
-        try {
-            InetAddress localAddress = getLocalAddress();
-            return localAddress.getHostAddress();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private InetAddress getLocalAddress() throws SocketException {
-        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-        while (interfaces.hasMoreElements()) {
-            NetworkInterface networkInterface = interfaces.nextElement();
-            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-            while (addresses.hasMoreElements()) {
-                InetAddress address = addresses.nextElement();
-                if (!address.isLoopbackAddress() && !address.isLinkLocalAddress()
-                        && address.isSiteLocalAddress()) {
-                    return address;
-                }
-            }
-        }
-        throw new SocketException("Unable to determine local address");
-    }
 }

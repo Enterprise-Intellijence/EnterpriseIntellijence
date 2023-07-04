@@ -250,7 +250,7 @@ public class UserServiceImp implements UserService{
         if(user.isEmailVerified())
             return new ResponseEntity<>( "user already verified" , HttpStatus.CONFLICT);
         String token = tokenStore.createEmailToken(username, Constants.EMAIL_VERIFICATION_CLAIM);
-        String url = "https://localhost:8443/api/v1/users/activate?token=" + token;
+        String url = Constants.BASE_PATH + "users/activate?token=" + token;
         emailService.sendEmail(user.getEmail(), Constants.VERIFICATION_EMAIL_SUBJECT,Constants.VERIFICATION_EMAIL_TEXT + url);
         return new ResponseEntity<>( "verification email sent" , HttpStatus.OK);
     }
@@ -328,7 +328,7 @@ public class UserServiceImp implements UserService{
         if(user == null)
             throw new RuntimeException("User not found");
         String token = tokenStore.createEmailToken(user.getUsername(), Constants.RESET_PASSWORD_CLAIM);
-        String url = "https://localhost:8443/api/v1/users/getNewPassword?token=" + token;
+        String url = Constants.BASE_PATH + "users/getNewPassword?token=" + token;
         emailService.sendEmail(user.getEmail(), Constants.RESET_PASSWORD_EMAIL_SUBJECT,Constants.RESET_PASSWORD_EMAIL_TEXT + url);
     }
 
