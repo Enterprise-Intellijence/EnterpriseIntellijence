@@ -2,10 +2,13 @@ package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.Demo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,5 +18,10 @@ public class DemoController {
     @RequestMapping("/api/v1/demo")
     public void createDemoData() throws IOException {
         demo.initialize();
+    }
+
+    @GetMapping("/api/v1/ip")
+    public String getIp() throws UnknownHostException {
+        return InetAddress.getLocalHost().getHostAddress();
     }
 }
