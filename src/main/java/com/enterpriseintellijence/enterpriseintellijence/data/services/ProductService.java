@@ -37,6 +37,12 @@ public interface ProductService {
 
     Iterable<ProductCategoryDTO> getCategoriesList();
 
+    Iterable<String> getPrimaryCategoriesList();
+
+    Iterable<String> getSecondaryCategoriesListByPrimaryCat(String primaryCategory);
+
+    Iterable<String> getTertiaryCategoriesListBySecondaryCat(String secondaryCategory);
+
     Iterable<SizeDTO> getSizeList();
 
     Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);

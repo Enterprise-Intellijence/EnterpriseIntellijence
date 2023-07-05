@@ -17,6 +17,7 @@ import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -115,6 +116,21 @@ public class ProductController {
     @GetMapping("/categories")
     public ResponseEntity<Iterable<ProductCategoryDTO>> getCategoriesList() {
         return ResponseEntity.ok(productService.getCategoriesList());
+    }
+
+    @GetMapping("/primaryCategories")
+    public ResponseEntity<Iterable<String>> getPrimaryCategoriesList() {
+        return ResponseEntity.ok(productService.getPrimaryCategoriesList());
+    }
+
+    @GetMapping("/secondaryCategories/{primary}")
+    public ResponseEntity<Iterable<String>> getSecondaryCategoriesList(@PathVariable("primary") String primary) {
+        return ResponseEntity.ok(productService.getSecondaryCategoriesListByPrimaryCat(primary));
+    }
+
+    @GetMapping("/tertiaryCategories/{secondary}")
+    public ResponseEntity<Iterable<String>> getTertiaryCategoriesList(@PathVariable("secondary") String secondary) {
+        return ResponseEntity.ok(productService.getTertiaryCategoriesListBySecondaryCat(secondary));
     }
 
     //restituisce la lista dei sessi per l'abbigliamento
