@@ -27,8 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -293,6 +292,45 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public Iterable<String> getPrimaryCategoriesList() {
+        Map<String, ProductCategory> categoriesMap = new HashMap<>();
+        List<ProductCategory> productCategories = productCatRepository.findAll();
+
+        productCategories.forEach(c -> {
+            if (!categoriesMap.containsKey(c.getPrimaryCat())) {
+                categoriesMap.put(c.getPrimaryCat(), c);
+            }
+        });
+        return new ArrayList<String>(categoriesMap.keySet());
+    }
+
+    @Override
+    public Iterable<String> getSecondaryCategoriesListByPrimaryCat(String primaryCategory) {
+        List<ProductCategory> productCategories = productCatRepository.findAllByPrimaryCat(primaryCategory);
+        Map<String, ProductCategory> categoriesMap = new HashMap<>();
+
+        productCategories.forEach(c -> {
+            if (!categoriesMap.containsKey(c.getSecondaryCat())) {
+                categoriesMap.put(c.getSecondaryCat(), c);
+            }
+        });
+        return new ArrayList<String>(categoriesMap.keySet());
+    }
+
+    @Override
+    public Iterable<String> getTertiaryCategoriesListBySecondaryCat(String secondaryCategory) {
+        List<ProductCategory> productCategories = productCatRepository.findAllBySecondaryCat(secondaryCategory);
+        Map<String, ProductCategory> categoriesMap = new HashMap<>();
+
+        productCategories.forEach(c -> {
+            if (!categoriesMap.containsKey(c.getTertiaryCat())) {
+                categoriesMap.put(c.getTertiaryCat(), c);
+            }
+        });
+        return new ArrayList<String>(categoriesMap.keySet());
+    }
+
+        @Override
     public Iterable<SizeDTO> getSizeList() {
         List<Size> sizes = sizeRepository.findAll();
 

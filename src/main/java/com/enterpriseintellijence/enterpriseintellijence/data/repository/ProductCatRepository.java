@@ -11,4 +11,7 @@ import java.util.List;
 public interface ProductCatRepository extends JpaRepository<ProductCategory,String>, JpaSpecificationExecutor<ProductCategory> {
     Boolean existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(String id, String primaryCat, String secondaryCat, String tertiaryCat);
     List<ProductCategory> findAllByPrimaryCat(String primaryCat);
+
+    List<ProductCategory> findAllBySecondaryCat(String secondaryCat);
+
 }
