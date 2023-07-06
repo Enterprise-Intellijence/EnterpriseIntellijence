@@ -78,7 +78,7 @@ public class UserServiceImp implements UserService{
     }
 
     public UserDTO updateUser(String id, UserDTO userDTO) throws IllegalAccessException {
-        User loggedUser = userRepository.findByUsername(jwtContextUtils.getUsernameFromContext().get());
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         User oldUser = userRepository.findById(id).orElseThrow();
 
         if(!id.equals(userDTO.getId()))
