@@ -330,11 +330,23 @@ public class ProductServiceImp implements ProductService {
         return new ArrayList<String>(categoriesMap.keySet());
     }
 
-        @Override
+    @Override
     public Iterable<SizeDTO> getSizeList() {
         List<Size> sizes = sizeRepository.findAll();
 
         return sizes.stream().map(s -> modelMapper.map(s, SizeDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Iterable<String> getSizeListByCategory(String category) {
+        List<Size> sizes = sizeRepository.findAll();
+        List<String> filteredSizes = new ArrayList<>();
+        sizes.forEach(s -> {
+            if(s.getType().equals(category)) {
+                filteredSizes.add(s.getSizeName());
+            }
+        });
+        return filteredSizes;
 
     }
 

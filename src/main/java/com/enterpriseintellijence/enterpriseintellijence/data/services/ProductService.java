@@ -45,6 +45,8 @@ public interface ProductService {
 
     Iterable<SizeDTO> getSizeList();
 
+    Iterable<String> getSizeListByCategory(String category);
+
     Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size,String sortBy,String sortDirection);
 
     Page<ProductBasicDTO> getMyProducts(int page, int size);
