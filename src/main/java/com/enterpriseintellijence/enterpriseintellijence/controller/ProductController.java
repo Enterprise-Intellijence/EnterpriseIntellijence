@@ -144,6 +144,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getSizeList());
     }
 
+    @GetMapping("/sizes/{category}")
+    public ResponseEntity<Iterable<String>> getSizesListByCategory(@PathVariable("category") String category) {
+        return ResponseEntity.ok(productService.getSizeListByCategory(category));
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
         // TODO: 03/06/2023 cambiare nome a like e view
