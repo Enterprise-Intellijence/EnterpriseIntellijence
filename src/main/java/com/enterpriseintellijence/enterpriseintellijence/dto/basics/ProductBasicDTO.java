@@ -48,7 +48,8 @@ public class ProductBasicDTO {
 
     @JsonSetter
     public void setProductImages(List<ProductImageDTO> productImages) {
-        this.productImages = List.of(productImages.get(0));
+        if(productImages != null && productImages.size() > 0)
+            this.productImages = List.of(productImages.get(0));
     }
 
 }
