@@ -62,18 +62,25 @@ public class ProductServiceImp implements ProductService {
             product.setViews(0);
             product.setSeller(loggedUser);
             product.setAvailability(Availability.AVAILABLE);
-            if (!productCatRepository.existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(
+            /*if (!productCatRepository.existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(
                 productCreateDTO.getProductCategory().getId(),
                 productCreateDTO.getProductCategory().getPrimaryCat(),
                 productCreateDTO.getProductCategory().getSecondaryCat(),
                 productCreateDTO.getProductCategory().getTertiaryCat()))
-                throw new IllegalArgumentException("Category not found");
+                throw new IllegalArgumentException("Category not found");*/
+            ProductCategory category;
+            if(productCreateDTO.getProductCategory().getId() == null) {
+                category = productCatRepository.findProductCategoryByTertiaryCat(productCreateDTO.getProductCategory().getTertiaryCat());
+                if(category != null)
+                    product.setProductCategory(category);
+                else throw new IllegalArgumentException("Category not found");
+            }
 
             // TODO: 22/06/2023 controllo sulla size
             productRepository.save(product);
-            for (MultipartFile multipartFile : productCreateDTO.getProductImages()) {
+            /*for (MultipartFile multipartFile : productCreateDTO.getProductImages()) {
                 imageServiceImp.localProductImageSave(product, multipartFile, new ProductImage(), "ciao");
-            }
+            }*/
 
             notificationService.notifyNewProduct(product);
             return mapToProductDetailsDTO(product);
@@ -318,6 +325,13 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public String getCategoryId(String category) {
+        String id =  productCatRepository.findProductCategoryByTertiaryCat(category).getId();
+        System.out.println("categoryId: " + id);
+        return id;
+    }
+
+    @Override
     public Iterable<String> getTertiaryCategoriesListBySecondaryCat(String secondaryCategory) {
         List<ProductCategory> productCategories = productCatRepository.findAllBySecondaryCat(secondaryCategory);
         Map<String, ProductCategory> categoriesMap = new HashMap<>();
@@ -346,7 +360,7 @@ public class ProductServiceImp implements ProductService {
                 filteredSizes.add(s.getSizeName());
             }
         });
-        return filteredSizes;
+         return filteredSizes;
 
     }
 

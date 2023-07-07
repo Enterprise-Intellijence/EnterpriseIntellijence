@@ -133,6 +133,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getTertiaryCategoriesListBySecondaryCat(secondary));
     }
 
+    @GetMapping("/category/{category}")
+    public ResponseEntity<String> getCategoryId(@PathVariable("category") String category) {
+        return ResponseEntity.ok(productService.getCategoryId(category));
+    }
+
     //restituisce la lista dei sessi per l'abbigliamento
     @GetMapping("/categories/clothing/gender")
     public ResponseEntity<Iterable<ProductGender>> getProductGender() {
