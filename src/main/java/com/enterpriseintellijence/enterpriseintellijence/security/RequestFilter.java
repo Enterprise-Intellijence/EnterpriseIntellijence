@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
+import com.enterpriseintellijence.enterpriseintellijence.exception.UnauthenticatedException;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,7 +31,7 @@ public class RequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String token = tokenStore.getToken(request);
-        if(invalidTokensRepository.findByToken(token).isPresent()) {
+        if(!token.equals("invalid") && invalidTokensRepository.findByToken(token).isPresent()) {
             token = "invalid";
         }
         if(!"invalid".equals(token)) {
@@ -40,10 +41,15 @@ public class RequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                chain.doFilter(request, response);
             } catch (Exception e) {
-                e.printStackTrace();
+                if(e.getMessage().equals("Invalid token"))
+                    response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
+                else
+                    e.printStackTrace();
             }
         }
+        response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
         chain.doFilter(request, response);
     }
 }
