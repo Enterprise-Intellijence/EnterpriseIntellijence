@@ -60,6 +60,8 @@ public class ImageServiceImp implements ImageService{
     @Override
     public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        System.out.println("funziona anche da app");
+
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
         String localStorageDir = userDir + loggedUser.getUsername();
@@ -72,7 +74,7 @@ public class ImageServiceImp implements ImageService{
         // TODO: 24/05/2023 boolean for check save
 
         userImage= userImageRepository.save(userImage);
-        System.out.println("File type: " + multipartFile.getContentType());
+
 
 
 

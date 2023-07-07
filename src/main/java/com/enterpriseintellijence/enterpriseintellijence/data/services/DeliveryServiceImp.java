@@ -175,14 +175,15 @@ public class DeliveryServiceImp implements DeliveryService {
         if(addressDTO.getPhoneNumber()!=null && !addressDTO.getPhoneNumber().equals(address.getPhoneNumber()))
             address.setPhoneNumber(addressDTO.getPhoneNumber());
         if(addressDTO.isDefault() && !address.isDefault()){
-            address.setDefault(true);
             for(Address address1: loggedUser.getAddresses()){
-                if(address1.isDefault()){
+                if(address1.isDefault() && !address1.equals(address)){
                     address1.setDefault(false);
                     addressRepository.save(address1);
                 }
             }
+            address.setDefault(true);
         }
+
 
         addressRepository.save(address);
 
