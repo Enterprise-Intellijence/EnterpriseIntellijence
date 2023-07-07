@@ -133,6 +133,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getTertiaryCategoriesListBySecondaryCat(secondary));
     }
 
+    @GetMapping("/category/{category}")
+    public ResponseEntity<String> getCategoryId(@PathVariable("category") String category) {
+        return ResponseEntity.ok(productService.getCategoryId(category));
+    }
+
     //restituisce la lista dei sessi per l'abbigliamento
     @GetMapping("/categories/clothing/gender")
     public ResponseEntity<Iterable<ProductGender>> getProductGender() {
@@ -142,6 +147,11 @@ public class ProductController {
     @GetMapping("/sizes")
     public ResponseEntity<Iterable<SizeDTO>> getSizesList() {
         return ResponseEntity.ok(productService.getSizeList());
+    }
+
+    @GetMapping("/sizes/{category}")
+    public ResponseEntity<Iterable<String>> getSizesListByCategory(@PathVariable("category") String category) {
+        return ResponseEntity.ok(productService.getSizeListByCategory(category));
     }
 
     @GetMapping("/filter")

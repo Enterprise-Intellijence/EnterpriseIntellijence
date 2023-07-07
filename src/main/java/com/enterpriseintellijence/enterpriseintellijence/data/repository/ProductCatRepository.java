@@ -14,4 +14,5 @@ public interface ProductCatRepository extends JpaRepository<ProductCategory,Stri
 
     List<ProductCategory> findAllBySecondaryCat(String secondaryCat);
 
+    ProductCategory findProductCategoryByTertiaryCat(String tertiaryCat);
 }
