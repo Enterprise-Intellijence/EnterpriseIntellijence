@@ -60,13 +60,24 @@ public class ProductSpecification {
                     List<Predicate> predicates = new ArrayList<>();
 
                     //ATTRIBUTI COMUNI
-                    if (filter.getTitle() != null && !filter.getTitle().isEmpty()) {
-                        predicates.add(criteriaBuilder.equal(root.get("title"), filter.getTitle()));
+                    if (
+                            (filter.getTitle() != null && !filter.getTitle().isEmpty()) ||
+                            (filter.getDescription()!=null && !filter.getDescription().isEmpty()) ||
+                                    (filter.getBrands() != null &&  filter.getBrands().size()==1)
+
+                    ){
+                        predicates.add(criteriaBuilder.or(
+
+                                criteriaBuilder.like(root.get("description"), '%'+filter.getDescription()+'%'),
+                                criteriaBuilder.like(root.get("title"),'%'+filter.getTitle()+'%'),
+                                criteriaBuilder.like(root.get("brand"),'%'+filter.getBrands().get(0))
+
+                        ));
                     }
 
-                    if (filter.getDescription() != null && !filter.getDescription().isEmpty()) {
-                        predicates.add(criteriaBuilder.equal(root.get("description"), filter.getDescription()));
-                    }
+/*                    if (filter.getDescription() != null && !filter.getDescription().isEmpty()) {
+                        predicates.add(criteriaBuilder.like(root.get("description"), '%'+filter.getDescription()+'%'));
+                    }*/
                     if (filter.getMinProductCost() != null && filter.getMaxProductCost() != null) {
                         predicates.add(criteriaBuilder.between(root.get("productCost").get("price"), filter.getMinProductCost(), filter.getMaxProductCost()));
                     }
