@@ -104,6 +104,12 @@ public class UserController {
         return userBasicDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(null));
     }
 
+    @GetMapping("/search-by-username")
+    public ResponseEntity<Page<UserBasicDTO>> searchByUsername(@RequestParam("username") String username, @RequestParam("page") int page, @RequestParam("size") int size){
+        return ResponseEntity.ok(userService.searchUsersByUsername(username, page, size));
+    }
+
+
     @PostMapping("/google-auth")
     public ResponseEntity<Map<String, String>> googleAuth(@RequestParam String idTokenString) throws Exception {
         return ResponseEntity.ok(userService.googleAuth(idTokenString));

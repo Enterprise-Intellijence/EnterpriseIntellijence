@@ -156,6 +156,12 @@ public class UserServiceImp implements UserService{
         return Optional.of(mapToBasicDto(user));
     }
 
+    @Override
+    public Page<UserBasicDTO> searchUsersByUsername(String usernameQuery, int page, int size) {
+        Page<User> allByUsernameContainingIgnoreCase = userRepository.findAllByUsernameContainingIgnoreCase(PageRequest.of(page, size), usernameQuery);
+        return allByUsernameContainingIgnoreCase.map(this::mapToBasicDto);
+    }
+
     public Page<UserDTO> findAll(int page, int size, UserRole userRole, String username) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         if(!loggedUser.getRole().equals(UserRole.ADMIN) && !loggedUser.getRole().equals(UserRole.SUPER_ADMIN))
