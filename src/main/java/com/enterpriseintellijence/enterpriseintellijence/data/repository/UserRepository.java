@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
     User findByEmail(String email);
 
+    Page<User> findAllByUsernameContainingIgnoreCase(Pageable pageable, String username);
+
     Page<User> findAllByRoleEqualsAndUsernameContains(Pageable pageable, UserRole userRole,String username);
 
     Page<User> findAllByRoleEqualsOrRoleEquals(Pageable pageable, UserRole userRole, UserRole userRole1);

@@ -26,6 +26,8 @@ public interface UserService {
 
     Optional<UserBasicDTO> findBasicByUsername(String username);
 
+    Page<UserBasicDTO> searchUsersByUsername(String usernameQuery, int page, int size);
+
     Page<UserDTO> findAll(int page, int size, UserRole userRole, String username) throws IllegalAccessException;
 
     Optional<UserDTO> findByUsername(String username);
