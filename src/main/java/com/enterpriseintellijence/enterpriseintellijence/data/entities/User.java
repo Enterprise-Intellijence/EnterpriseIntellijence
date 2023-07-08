@@ -30,6 +30,7 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(unique = true, nullable = false, length = 100)
@@ -42,22 +43,18 @@ public class User implements UserDetails {
     private UserImage photoProfile;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Provider provider;
-
-
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole role;
 
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
-
-/*    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "default_payment_method")
-    private PaymentMethod defaultPaymentMethod;*/
 
     @OneToMany(mappedBy = "ownerUser",fetch = FetchType.LAZY)
     private List<PaymentMethod> paymentMethods;
@@ -67,14 +64,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "seller",fetch = FetchType.LAZY)
     private List<Product> sellingProducts = new ArrayList<>();
-
-/*    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "followers_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> followers= new ArrayList<>();;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
-    private List<User> following= new ArrayList<>();;*/
 
     @OneToMany(mappedBy="following",fetch = FetchType.LAZY)
     private List<Following> followers;
@@ -95,10 +84,6 @@ public class User implements UserDetails {
     private int reviewsNumber;
 
     @ManyToMany(mappedBy = "usersThatLiked",fetch = FetchType.LAZY)
-/*    @JoinTable(
-            name = "user_likes",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))*/
     List<Product> likedProducts= new ArrayList<>();
 
     @OneToMany(mappedBy = "sendUser",fetch = FetchType.LAZY)
@@ -110,7 +95,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    // TODO: 08/06/2023 problemi di conversione e caricamento
     @OneToMany(mappedBy = "reviewed",fetch = FetchType.LAZY)
     private List<Review> receivedReviews = new ArrayList<>();
 
