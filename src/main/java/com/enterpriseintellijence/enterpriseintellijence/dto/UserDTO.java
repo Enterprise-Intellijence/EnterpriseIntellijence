@@ -28,20 +28,18 @@ public class UserDTO {
     @Length(min = 3, max = 25)
     @NotNull
     private String username;
+
     @Email
     private String email;
 
     private String bio;
 
     private UserImageDTO photoProfile;
+
     @NotNull
     private Provider provider;
 
     private UserStatus status;
-
-
-    //private AddressDTO defaultAddress;
-
 
     private List<AddressDTO> addresses;
     private List<PaymentMethodDTO> paymentMethods;

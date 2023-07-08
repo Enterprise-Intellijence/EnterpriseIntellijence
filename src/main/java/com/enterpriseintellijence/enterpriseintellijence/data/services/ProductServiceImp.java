@@ -122,6 +122,7 @@ public class ProductServiceImp implements ProductService {
             product.setCondition(patch.getCondition());
 
 
+
         // TODO: 28/05/2023 serve che restituisco il custom money nella funzione?
         if (patch.getProductCost() != null)
             product.setProductCost(checkAndChangeCustomMoney(product.getProductCost(), patch.getProductCost()));

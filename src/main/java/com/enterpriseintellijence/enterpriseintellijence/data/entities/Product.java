@@ -25,40 +25,35 @@ public class Product {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @Column(name = "title", length = 100)
+    @Column(name = "title", length = 100, nullable = false)
     private String title;
 
     @Column(name = "description", length = 1000)
     private String description;
 
-    //@Column(name = "price", nullable = false)
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="price",column=@Column(name="product_price")),
-            @AttributeOverride(name="currency",column=@Column(name="product_currency"))
+            @AttributeOverride(name="price",column=@Column(name="product_price",nullable = false)),
+            @AttributeOverride(name="currency",column=@Column(name="product_currency",nullable = false))
     })
     private CustomMoney productCost;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="price",column=@Column(name="delivery_price")),
-            @AttributeOverride(name="currency",column=@Column(name="delivery_currency"))
+            @AttributeOverride(name="price",column=@Column(name="delivery_price",nullable = false)),
+            @AttributeOverride(name="currency",column=@Column(name="delivery_currency",nullable = false))
     })
     private CustomMoney deliveryCost;
-
 
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "condition")
+    @Column(name = "condition",nullable = false)
     @Enumerated(EnumType.STRING)
     private Condition condition;
-    //TODO: che significa condition?
-    // usato, nuovo, quasi nuovo, ecc
 
-/*    @Embedded
-    private Address address;*/
 
+    //si riferisce alle dimensioni dell'imballo della spedizione
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_type")
     private ProductSize productSize;
@@ -72,7 +67,6 @@ public class Product {
     @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
     private Visibility visibility;
@@ -82,34 +76,21 @@ public class Product {
     private Availability availability;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory productCategory;
-
-/*    @Enumerated(EnumType.STRING)
-    @Column(name="main_category"*//*,nullable = false*//*)
-    private ProductCategoryOld productCategory;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="product_category",nullable = false)
-    private ProductCategoryParent productCategoryParent;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="product_category_child",nullable = false)
-    private ProductCategoryChild productCategoryChild;*/
-
 
     @Column(name = "like_number", nullable = false)
     private Integer likesNumber ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id"/*, nullable = false*/)
+    @JoinColumn(name = "user_id", nullable = false)
     private User seller;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "user_likes",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+            joinColumns = @JoinColumn(name = "product_id",nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "user_id",nullable = false))
     List<User> usersThatLiked = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
@@ -121,11 +102,7 @@ public class Product {
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private Order order;
 
-/*    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "default_image")
-    private ProductImage defaultImage;*/
-
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<ProductImage> productImages;
 
     @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY)
