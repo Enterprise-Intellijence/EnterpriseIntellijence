@@ -4,7 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 
 import com.enterpriseintellijence.enterpriseintellijence.exception.ManyRequestException;
 import com.enterpriseintellijence.enterpriseintellijence.exception.ProductAlreadyLikedException;
-import com.enterpriseintellijence.enterpriseintellijence.exception.UnauthenticatedException;
+import com.enterpriseintellijence.enterpriseintellijence.exception.TokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
         return new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage()).getMessage();
     }
 
-    @ExceptionHandler(UnauthenticatedException.class)
+    @ExceptionHandler(TokenExpiredException.class)
     @ResponseStatus(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED)
     public String unauthenticatedErrorHandler(WebRequest req ,Exception ex){
         return new ResponseStatusException(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED, ex.getMessage()).getMessage();

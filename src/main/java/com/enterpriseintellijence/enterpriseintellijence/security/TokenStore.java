@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.security;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.InvalidToken;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
+import com.enterpriseintellijence.enterpriseintellijence.exception.TokenExpiredException;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -83,6 +84,8 @@ public class TokenStore {
         if(signedJWT.verify(jwsVerifier)) {
             if(new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime()) && new Date().after(signedJWT.getJWTClaimsSet().getNotBeforeTime()))
                 return (String) signedJWT.getPayload().toJSONObject().get("username");
+            else
+                throw new TokenExpiredException();
         }
         throw new RuntimeException("Invalid token");
     }

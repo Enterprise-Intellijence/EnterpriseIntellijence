@@ -1,7 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
-import com.enterpriseintellijence.enterpriseintellijence.exception.UnauthenticatedException;
+import com.enterpriseintellijence.enterpriseintellijence.exception.TokenExpiredException;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,13 +42,11 @@ public class RequestFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } catch (Exception e) {
-                if(e.getMessage().equals("Invalid token"))
-                    response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
+                if (e  instanceof TokenExpiredException)
+                    response.addHeader("token_expired", "true");
                 else
                     e.printStackTrace();
             }
-        }else {
-            response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
         }
         chain.doFilter(request, response);
     }

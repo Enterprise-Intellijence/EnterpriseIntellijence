@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.security;
 
-import com.enterpriseintellijence.enterpriseintellijence.exception.UnauthenticatedException;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
