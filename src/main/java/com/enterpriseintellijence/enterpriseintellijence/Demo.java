@@ -97,7 +97,7 @@ public class Demo {
         sizes.clear();
         sizes.addAll(sizeRepository.findAll());
         createUser();
-        setAddress();
+        /*setAddress();
         try{
             for(User user:userArrays){
                 createProduct(user);
@@ -117,7 +117,7 @@ public class Demo {
         processSaleExampleData();
         //userArrays.clear();
         //userArrays.addAll(userRepository.findAll());
-        reportSomeUser();
+        reportSomeUser();*/
     }
 
     private void reportSomeUser() {
@@ -156,7 +156,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=0; i<80;i++){
+        for (int i=0; i<5;i++){
             User user = new User();
             if(i==0) {
                 user.setUsername("superadmin");

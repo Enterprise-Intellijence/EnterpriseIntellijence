@@ -33,6 +33,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
@@ -129,9 +130,18 @@ public class UserServiceImp implements UserService{
     }
 
     public void  deleteUser(String id) {
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        user.setStatus(UserStatus.CANCELLED);
-        userRepository.save(user);
+        try{
+            User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+            if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(id))
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized Request");
+
+            loggedUser.setStatus(UserStatus.CANCELLED);
+            userRepository.save(loggedUser);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
     }
 
     public UserBasicDTO findUserById(String id) {
