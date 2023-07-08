@@ -22,8 +22,10 @@ public class Size {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+    @Column(nullable = false)
     private String sizeName;
 
+    @Column(nullable = false)
     private String type;
 
     @OneToMany(mappedBy = "clothingSize",fetch = FetchType.LAZY)

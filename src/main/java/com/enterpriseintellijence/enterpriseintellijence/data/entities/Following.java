@@ -25,10 +25,10 @@ public class Following {
     private LocalDateTime followingFrom;
 
     @ManyToOne
-    @JoinColumn(name="follower")
+    @JoinColumn(name="follower",nullable = false)
     private User follower;
 
     @ManyToOne
-    @JoinColumn(name="following")
+    @JoinColumn(name="following",nullable = false)
     private User following;
 }

@@ -27,14 +27,17 @@ public class  Review {
     private LocalDateTime date;
 
     private String title;
+
     private String description;
+
+    @Column(nullable = false)
     private Integer vote;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewer")
+    @JoinColumn(name = "reviewer", nullable = false)
     private User reviewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewed")
+    @JoinColumn(name = "reviewed", nullable = false)
     private User reviewed;
 }

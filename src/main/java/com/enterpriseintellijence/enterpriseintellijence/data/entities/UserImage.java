@@ -20,11 +20,13 @@ public class UserImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
+
     private String description;
 
+    @Column(nullable = false)
     private String urlPhoto;
 
-    @OneToOne(orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

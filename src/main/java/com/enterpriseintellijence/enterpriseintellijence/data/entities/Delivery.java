@@ -25,9 +25,10 @@ public class  Delivery {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @OneToOne(mappedBy = "delivery",cascade = {CascadeType.PERSIST})
+    @OneToOne(mappedBy = "delivery")
     private Order order;
 
+    @Column(nullable = false)
     private LocalDateTime sendTime;
 
     private LocalDateTime deliveredTime;
@@ -38,14 +39,15 @@ public class  Delivery {
     private String shipper;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DeliveryStatus deliveryStatus;
 
     @ManyToOne
-    @JoinColumn(name = "sender_address")
+    @JoinColumn(name = "sender_address",nullable = false)
     private Address senderAddress;
 
 
     @ManyToOne
-    @JoinColumn(name = "receiver_address")
+    @JoinColumn(name = "receiver_address",nullable = false)
     private Address receiverAddress;
 }

@@ -46,6 +46,6 @@ public class Report {
     private ReportStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="admin",nullable = true)
+    @JoinColumn(name="admin")
     private User adminFollowedReport;
 }

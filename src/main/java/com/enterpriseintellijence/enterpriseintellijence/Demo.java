@@ -97,7 +97,7 @@ public class Demo {
         sizes.clear();
         sizes.addAll(sizeRepository.findAll());
         createUser();
-        /*setAddress();
+        setAddress();
         try{
             for(User user:userArrays){
                 createProduct(user);
@@ -117,7 +117,7 @@ public class Demo {
         processSaleExampleData();
         //userArrays.clear();
         //userArrays.addAll(userRepository.findAll());
-        reportSomeUser();*/
+        reportSomeUser();
     }
 
     private void reportSomeUser() {
@@ -156,7 +156,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=0; i<5;i++){
+        for (int i=0; i<15;i++){
             User user = new User();
             if(i==0) {
                 user.setUsername("superadmin");
@@ -530,7 +530,7 @@ public class Demo {
         offers.clear();
         offers = offerRepository.findAll();
         List<Product> products = productRepository.findAll();
-        limitPurchasing= products.size()/100*25;
+        limitPurchasing= products.size()/100*50;
         for(Offer offer: offers){
             buyFromOffer(offer);
         }
@@ -546,7 +546,7 @@ public class Demo {
 
         List<Order> orders = orderRepository.findAll();
         int sizeOrders = orders.size();
-        int pay= sizeOrders/100*75;
+        int pay= sizeOrders/100*50;
         int count=0;
         while(count<pay){
             payForProduct(orders.get(count));
@@ -658,7 +658,7 @@ public class Demo {
 
         Random random = new Random();
         int value = random.nextInt(100);
-        if(value>=70 && product.getAvailability().equals(Availability.AVAILABLE) && globalPurchased<limitPurchasing){
+        if(value>=30 && product.getAvailability().equals(Availability.AVAILABLE) && globalPurchased<limitPurchasing){
             product.setAvailability(Availability.PENDING);
             List<Address> addresses = addressRepository.findAllByUserEquals(user);
             Order order = Order.builder()

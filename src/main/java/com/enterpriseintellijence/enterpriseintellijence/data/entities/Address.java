@@ -44,9 +44,6 @@ public class Address {
     @OneToMany(mappedBy = "deliveryAddress",fetch = FetchType.LAZY)
     private List<Order> orders;
 
-/*    @ToString.Exclude
-    @OneToOne(mappedBy = "defaultAddress",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
-    private User defaultUser;*/
 
     private boolean isDefault;
 
@@ -59,7 +56,6 @@ public class Address {
 
     @OneToMany(mappedBy = "receiverAddress",fetch = FetchType.LAZY)
     private List<Delivery> receivedDeliveries = new ArrayList<>();
-
 
 
 }

@@ -27,19 +27,21 @@ public class Transaction {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationTime;
 
     @Embedded
+    @Column(nullable = false)
     private CustomMoney amount;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionState transactionState;
 
     @ManyToOne()
-    @JoinColumn(name = "payment_method")
+    @JoinColumn(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
-    @OneToOne(mappedBy = "transaction",cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "transaction")
     private Order order;
 }

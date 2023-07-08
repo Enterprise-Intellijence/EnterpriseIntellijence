@@ -21,12 +21,14 @@ public class PaymentMethod {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-
+    @Column(nullable = false)
     private String creditCard;
 
+    @Column(nullable = false)
     private LocalDate expiryDate;  // DD//MM/YYYY
-    private String owner;
 
+    @Column(nullable = false)
+    private String owner;
 
     private boolean isDefault;
 

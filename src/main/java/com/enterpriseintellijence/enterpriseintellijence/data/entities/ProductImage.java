@@ -26,12 +26,14 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
+
     private String description;
+
+    @Column(nullable = false)
     private String urlPhoto;
-    //private byte[] photo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
 

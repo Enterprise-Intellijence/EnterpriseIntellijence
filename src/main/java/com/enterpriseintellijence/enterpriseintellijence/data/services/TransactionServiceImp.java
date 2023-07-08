@@ -10,13 +10,16 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.TransactionCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.TransactionState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -93,7 +96,11 @@ public class TransactionServiceImp implements TransactionService{
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         //controllo che chi effettua l'operazione sia un admin o il proprietario della transazione
         if(loggedUser.getRole().equals(UserRole.USER) && !transaction.getOrder().getUser().getId().equals(loggedUser.getId()))
-            throw new IllegalAccessException("Cannot modify transaction");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access, cannot delete transaction");
+
+        if(transaction.getTransactionState().equals(TransactionState.COMPLETED))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete completed transaction");
+
         transactionRepository.deleteById(id);
     }
 
