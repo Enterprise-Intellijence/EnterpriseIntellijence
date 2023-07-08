@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @Column(name = "bio", length = 500)
     private String bio;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user",  fetch = FetchType.LAZY)
     private UserImage photoProfile;
 
     @Enumerated(EnumType.STRING)

@@ -24,7 +24,7 @@ public class UserImage {
 
     private String urlPhoto;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(orphanRemoval = true,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
