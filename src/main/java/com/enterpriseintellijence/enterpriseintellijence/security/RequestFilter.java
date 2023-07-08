@@ -41,15 +41,15 @@ public class RequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                chain.doFilter(request, response);
             } catch (Exception e) {
                 if(e.getMessage().equals("Invalid token"))
                     response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
                 else
                     e.printStackTrace();
             }
+        }else {
+            response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
         }
-        response.setStatus(HttpServletResponse.SC_PROXY_AUTHENTICATION_REQUIRED);
         chain.doFilter(request, response);
     }
 }
