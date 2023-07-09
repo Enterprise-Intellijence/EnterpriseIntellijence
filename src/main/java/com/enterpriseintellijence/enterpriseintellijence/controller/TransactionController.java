@@ -31,6 +31,7 @@ public class TransactionController {
         return transactionService.createTransaction(transactionDTO);
     }
 
+    /*
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<TransactionDTO> replaceTransaction(@PathVariable("id") String id, @Valid @RequestBody TransactionDTO transactionDTO) throws IllegalAccessException {
         return ResponseEntity.ok(transactionService.replaceTransaction(id,transactionDTO));
@@ -47,6 +48,7 @@ public class TransactionController {
         transactionService.deleteTransaction(id);
         return ResponseEntity.noContent().build();
     }
+     */
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDTO> transactionById(@PathVariable("id") String id){

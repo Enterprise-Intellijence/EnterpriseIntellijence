@@ -8,6 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtil
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,10 +20,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
+import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/orders", produces = "application/json")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class OrderController {
     // TODO: 16/05/23 Erne 
     private final OrderService orderService;

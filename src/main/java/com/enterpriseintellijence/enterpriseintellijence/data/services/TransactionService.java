@@ -7,11 +7,11 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.Transactio
 public interface TransactionService {
     TransactionDTO createTransaction(TransactionCreateDTO transactionDTO) throws IllegalAccessException;
 
-    TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) throws IllegalAccessException;
+    //TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) throws IllegalAccessException;
 
-    TransactionDTO updateTransaction(String id, TransactionDTO patch) throws IllegalAccessException;
+    //TransactionDTO updateTransaction(String id, TransactionDTO patch) throws IllegalAccessException;
 
-    void deleteTransaction(String id) throws IllegalAccessException;
+    //void deleteTransaction(String id) throws IllegalAccessException;
 
     TransactionDTO transactionById(String id);
 

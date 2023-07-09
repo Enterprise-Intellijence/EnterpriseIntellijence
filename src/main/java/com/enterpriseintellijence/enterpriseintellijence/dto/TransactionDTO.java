@@ -26,8 +26,11 @@ public class TransactionDTO {
     private CustomMoneyDTO amount;
     private TransactionState transactionState;
 
-    @NotNull
-    private PaymentMethodBasicDTO paymentMethod;
+    //@NotNull
+    //private PaymentMethodBasicDTO paymentMethod;
+
+    private String paymentMethod;
+    private String paymentMethodOwner;
 
     private OrderBasicDTO order;
 

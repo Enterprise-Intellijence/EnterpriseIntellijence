@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.joda.money.Money;
 
@@ -27,6 +28,7 @@ public class Transaction {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+    //@CreationTimestamp
     @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationTime;
 
@@ -38,9 +40,15 @@ public class Transaction {
     @Column(nullable = false)
     private TransactionState transactionState;
 
-    @ManyToOne()
-    @JoinColumn(name = "payment_method", nullable = false)
-    private PaymentMethod paymentMethod;
+    //@ManyToOne()
+    //@JoinColumn(name = "payment_method", nullable = false)
+    //private PaymentMethod paymentMethod;
+
+    @Column(nullable = false)
+    private String paymentMethod;
+
+    @Column(nullable = false)
+    private String paymentMethodOwner;
 
     @OneToOne(mappedBy = "transaction")
     private Order order;

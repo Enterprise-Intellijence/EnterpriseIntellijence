@@ -2,6 +2,7 @@ package com.enterpriseintellijence.enterpriseintellijence.core.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
+import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.NotificationService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
@@ -25,6 +26,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     private final ModelMapper modelMapper;
     private final NotificationSystem notificationSystem;
     private final NotificationService notificationService;
+    private final OrderRepository orderRepository;
 
     @Override
     public Offer CreateOffer(OfferCreateDTO offerCreateDTO, Product product, User loggedUser) {
@@ -122,6 +124,8 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         transaction.setOrder(order);
         transaction.setCreationTime(now);
         order.setOrderUpdateDate(now);
+        transaction.setPaymentMethod(paymentMethod.getCreditCard());
+        transaction.setPaymentMethodOwner(paymentMethod.getOwner());
         Random random = new Random();
         if(random.nextInt(101)>=90)
             transaction.setTransactionState(TransactionState.REJECTED);
@@ -132,8 +136,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
             order.getProduct().setAvailability(Availability.UNAVAILABLE);
             order.getProduct().setLastUpdateDate(now);
         }
-
-
+        orderRepository.save(order);
         return transaction;
     }
 

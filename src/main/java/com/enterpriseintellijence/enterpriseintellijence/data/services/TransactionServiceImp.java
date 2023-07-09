@@ -49,16 +49,18 @@ public class TransactionServiceImp implements TransactionService{
 
         checkCardOwnership(loggedUser,paymentMethod);
 
-        Transaction transaction = processSaleServiceImp.payProduct(order,loggedUser,paymentMethod);
-
-        transaction = transactionRepository.save(transaction);
-        return mapToDTO(transaction);
+        //transaction = transactionRepository.save(transaction);
+        return mapToDTO(processSaleServiceImp.payProduct(order,loggedUser,paymentMethod));
     }
 
+    /*
     public TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) throws IllegalAccessException {
         return updateTransaction(id,transactionDTO);
     }
 
+     */
+
+    /*
     public TransactionDTO updateTransaction(String id, TransactionDTO patch) throws IllegalAccessException {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
@@ -86,6 +88,9 @@ public class TransactionServiceImp implements TransactionService{
         return mapToDTO(transaction);
     }
 
+     */
+
+    /*
     public void deleteTransaction(String id) throws IllegalAccessException {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
@@ -98,6 +103,8 @@ public class TransactionServiceImp implements TransactionService{
 
         transactionRepository.deleteById(id);
     }
+
+     */
 
     public TransactionDTO transactionById(String id) {
        Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);

@@ -615,7 +615,8 @@ public class Demo {
                 .creationTime(LocalDateTime.now())
                 .amount(new CustomMoney(price,order.getProduct().getProductCost().getCurrency()))
                 .transactionState(TransactionState.COMPLETED)
-                .paymentMethod(paymentMethods.get(0))
+                .paymentMethod(paymentMethods.get(0).getCreditCard())
+                .paymentMethodOwner(paymentMethods.get(0).getOwner())
                 .order(order)
                 .build();
         order.setTransaction(transaction);
