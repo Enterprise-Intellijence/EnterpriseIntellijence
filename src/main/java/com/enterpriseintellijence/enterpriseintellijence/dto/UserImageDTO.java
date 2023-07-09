@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,6 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 public class UserImageDTO {
     private String id;
     private String description;
+
+    @NotNull
     private String urlPhoto;
 
     @JsonSetter

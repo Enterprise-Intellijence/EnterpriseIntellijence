@@ -6,6 +6,8 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,17 +19,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OfferDTO {
 
+    @NotNull
     private String id;
 
+    @NotNull
     private CustomMoneyDTO amount;
 
+    @Past
     private LocalDateTime creationTime;
 
-    // TODO:
+    @NotNull
     private OfferState state;
+
+    @NotNull
     private UserBasicDTO offerer;
+
+    @NotNull
     private ProductBasicDTO product;
-    private OrderBasicDTO order;
+
+    //private OrderBasicDTO order;
 
 
 

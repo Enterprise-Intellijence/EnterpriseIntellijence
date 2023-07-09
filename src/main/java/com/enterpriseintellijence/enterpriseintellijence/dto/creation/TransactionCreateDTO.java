@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class TransactionCreateDTO {
+    @NotNull
     private PaymentMethodBasicDTO paymentMethod;
+
+    @NotNull
     private OrderBasicDTO order;
 }

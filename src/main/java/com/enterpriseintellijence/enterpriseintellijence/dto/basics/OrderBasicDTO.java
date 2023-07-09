@@ -22,9 +22,11 @@ public class OrderBasicDTO {
 
     @Past
     private LocalDateTime orderDate;
+
+    @Past
     private LocalDateTime orderUpdateDate;
 
-
+    @NotNull
     private ProductBasicDTO product;
 
     private OfferBasicDTO offer;

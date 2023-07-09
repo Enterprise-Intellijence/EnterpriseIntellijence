@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasic
 import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -14,6 +15,8 @@ import lombok.*;
 public class ProductImageDTO {
     private String id;
     private String description;
+
+    @NotNull
     private String urlPhoto;
 
     @JsonSetter

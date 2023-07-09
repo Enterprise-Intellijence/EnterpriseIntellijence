@@ -20,12 +20,4 @@ public class ClothingDTO extends ProductDTO {
     @NotNull
     private Colour colour;
 
-/*    @JsonSetter("size")
-    public void setClothingSize(ClothingSize size){
-        if(!getProductCategoryParent().equals(size.getProductCategoryParent()))
-            throw new IllegalArgumentException("size not valid");
-        this.size = size;
-        System.out.println(this.size.size);
-    }*/
-
 }

@@ -4,6 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.Email;
@@ -39,37 +40,26 @@ public class UserDTO {
     @NotNull
     private Provider provider;
 
+    @NotNull
     private UserStatus status;
 
     private List<AddressDTO> addresses;
+
     private List<PaymentMethodDTO> paymentMethods;
+
     @NotNull
     private UserRole role;
 
-    //private PaymentMethodBasicDTO defaultPaymentMethod;
-
+    @PositiveOrZero
     private int reviewsTotalSum;
+
+    @PositiveOrZero
     private int reviewsNumber;
 
+    @PositiveOrZero
     private Integer followersNumber;
+
+    @PositiveOrZero
     private Integer followingNumber;
-
-    //private List<ReviewDTO> receivedReviews;
-    //private List<ReviewDTO> sentReviews;
-
-    /*esiste il metodo per fare la get su questo
-    private List<ProductBasicDTO> sellingProducts; FATTO */
-
-    /*
-    private List<PaymentMethodBasicDTO> paymentMethods FATTO;
-    //private List<OfferDTO> offers; FATTO
-    private List<UserDTO> followers FATTO;
-    private List<UserDTO> follows FATTO;
-    private List<ProductBasicDTO> likes; FATTO
-    private List<MessageDTO> sendMessages FATTO;
-    private List<MessageDTO> receivedMessages FATTO;
-    private List<OrderDTO> orders; FATTO
-
-*/
 
 }

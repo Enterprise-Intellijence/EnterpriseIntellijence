@@ -7,6 +7,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -21,6 +22,7 @@ import java.util.List;
 @Builder
 public class ProductBasicDTO {
 
+    @NotNull
     private String id;
 
     @Length(max = 100)
@@ -28,6 +30,8 @@ public class ProductBasicDTO {
 
     @Length(max = 1000)
     private String description;
+
+    @Past
     private LocalDateTime uploadDate;
 
     @NotNull
@@ -38,12 +42,12 @@ public class ProductBasicDTO {
 
     @Length(max = 100)
     private String brand;
+
+
     private Condition condition;
-    // TODO: 16/05/2023 mappare sul mappare
     private Integer likesNumber;
     private UserBasicDTO seller;
     private List<ProductImageDTO> productImages;
-/*    private ProductCategoryOld productCategory;*/
     private ProductCategoryDTO productCategory;
 
     @JsonSetter
