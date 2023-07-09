@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class ProductDTO {
 
+    @NotNull
     private String id;
 
     @Length(max = 100)
@@ -47,27 +49,38 @@ public class ProductDTO {
 
     @Length(max = 100)
     private String brand;
+
+    @NotNull
     private Condition condition;
+
+    @PositiveOrZero
     private Integer likesNumber;
+
+    @NotNull
     private UserBasicDTO seller;
 
-
-    //private AddressDTO address;
+    @NotNull
     private ProductSize productSize;
 
     @PositiveOrZero
     private Integer views;
+
+    @Past
     private LocalDateTime uploadDate;
+
+    @Past
     private LocalDateTime lastUpdateDate;
 
+    @NotNull
     private Visibility visibility;
+
+    @NotNull
     private Availability availability;
 
+    @NotNull
     private ProductCategoryDTO productCategory;
 
-
     private List<UserBasicDTO> usersThatLiked;
-
 
     private List<ProductImageDTO> productImages;
 

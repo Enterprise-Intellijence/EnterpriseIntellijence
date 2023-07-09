@@ -29,8 +29,10 @@ import java.util.List;
 })
 public class ProductCreateDTO {
 
+    @NotNull
     @Length(max = 100)
     private String title;
+
 
     @Length(max = 1000)
     private String description;
@@ -43,13 +45,17 @@ public class ProductCreateDTO {
 
     @Length(max = 100)
     private String brand;
+
+    @NotNull
     private Condition condition;
 
-    // TODO: 19/06/2023 modificare nome
+    @NotNull
     private ProductSize productSize;
 
+    @NotNull
     private Visibility visibility;
 
+    @NotNull
     private ProductCategoryDTO productCategory;
 
     private List<@Size(max = 5)MultipartFile> productImages;

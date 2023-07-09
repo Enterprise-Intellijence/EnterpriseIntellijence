@@ -14,6 +14,8 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Builder
 public class UserBasicDTO {
+
+    @NotNull
     private String id;
 
     @Length(min = 3, max = 25)

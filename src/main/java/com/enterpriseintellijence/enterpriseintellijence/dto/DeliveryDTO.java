@@ -17,20 +17,27 @@ public class DeliveryDTO {
     @NotNull
     private String Id;
 
+    @NotNull
     private OrderBasicDTO order;
 
+    @NotNull
     private LocalDateTime sendTime;
 
+
     private LocalDateTime deliveredTime;
+
 
     private CustomMoneyDTO deliveryCost;
 
     @Length(max = 50)
     private String shipper;
 
+    @NotNull
     private DeliveryStatus deliveryStatus;
 
+    @NotNull
     private AddressDTO senderAddress;
 
+    @NotNull
     private AddressDTO receiverAddress;
 }

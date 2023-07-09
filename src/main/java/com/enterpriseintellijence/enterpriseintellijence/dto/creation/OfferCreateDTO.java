@@ -5,6 +5,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDT
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OfferCreateDTO {
 
+    @NotNull
     private CustomMoneyDTO amount;
+
+    @NotNull
     private ProductBasicDTO product;
 }

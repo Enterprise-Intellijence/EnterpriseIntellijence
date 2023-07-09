@@ -29,16 +29,23 @@ public class OrderDTO {
 
     @Past
     private LocalDateTime orderDate;
+
+    @Past
     private LocalDateTime orderUpdateDate;
 
-
+    @NotNull
     private ProductBasicDTO product;
+
+    @NotNull
     private UserBasicDTO user;
+
+
     private DeliveryDTO delivery;
 
     private AddressDTO deliveryAddress;
 
     private OfferBasicDTO offer;
+
     private TransactionDTO transaction;
 }
 
