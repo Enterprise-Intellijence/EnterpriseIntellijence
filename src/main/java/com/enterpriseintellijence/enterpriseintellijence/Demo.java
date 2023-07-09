@@ -106,16 +106,16 @@ public class Demo {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //setMessage();
+        setMessage();
         for (Product product: productArrayList){
             setLikeProduct(product);
-        }/*
+        }
         userArrays.clear();
         productArrayList.clear();
         userArrays.addAll(userRepository.findAll());
         productArrayList.addAll(productRepository.findAll());
         processSaleExampleData();
-        reportSomeUser();*/
+        reportSomeUser();
     }
 
     private void reportSomeUser() {
@@ -154,7 +154,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=0; i<5;i++){
+        for (int i=0; i<50;i++){
             User user = new User();
             if(i==0) {
                 user.setUsername("superadmin");

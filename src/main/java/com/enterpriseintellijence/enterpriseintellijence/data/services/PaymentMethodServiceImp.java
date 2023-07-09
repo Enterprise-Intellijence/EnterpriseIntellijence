@@ -121,12 +121,19 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
 
     @Override
     public void deletePaymentMethod(String id) throws IllegalAccessException {
-        PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        if(loggedUser.getRole().equals(UserRole.USER) && !paymentMethod.getOwnerUser().getId().equals(loggedUser.getId()))
-            throw new IllegalAccessException("Cannot delete payment method");
+        try{
+            System.out.println("ci arrivo?");
 
-        paymentMethodRepository.deleteById(id);
+            PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+            User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+            if(loggedUser.getRole().equals(UserRole.USER) && !paymentMethod.getOwnerUser().getId().equals(loggedUser.getId()))
+                throw new IllegalAccessException("Cannot delete payment method");
+            System.out.println("ci arrivo?");
+            paymentMethodRepository.deleteById(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override

@@ -17,18 +17,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PaymentMethodCreateDTO {
 
-    @NotBlank
     @Length(min = 19, max = 19)
     private String creditCard;
 
-    @NotBlank
     @JsonFormat(pattern="dd-MM-yyyy") //DATE MM/AAAA
     private LocalDate expiryDate;
 
     @NotNull
     private boolean isDefault;
 
-    @NotBlank
     @Length(max = 25)
     private String owner;
 
