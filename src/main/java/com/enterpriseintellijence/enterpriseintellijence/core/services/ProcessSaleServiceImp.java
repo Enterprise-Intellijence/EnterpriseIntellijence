@@ -36,11 +36,14 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         offer.setOfferer(loggedUser);
         product.setLastUpdateDate(timeNow());
         offer.setProduct(product);
-        // TODO: 25/05/2023 aggiungere un campo in user per i messaggi non letti?
+
 //        offer.setMessage(notificationSystem.offerCreatedNotification(offer));
+
+
         return offer;
     }
 
+    // TODO: 09/07/2023 cancelliamo??
     @Override
     public Offer acceptOrRejectAnOffer(Offer offer, OfferDTO offerDTO, Product product, User loggedUser, boolean isAccepted) {
         if(!offer.getState().equals(OfferState.PENDING)) {
@@ -97,10 +100,8 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.getProduct().setLastUpdateDate(now);
         order.setState(OrderState.CANCELED);
         order.setOrderUpdateDate(now);
-        order.setUser(null);
         if(order.getOffer()!=null){
-            order.getOffer().setState(OfferState.REJECTED);
-            order.setOffer(null);
+            order.getOffer().setState(OfferState.CANCELLED);
         }
         // TODO: 25/05/2023 send notification
 

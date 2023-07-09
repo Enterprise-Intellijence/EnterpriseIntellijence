@@ -23,7 +23,9 @@ import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtil
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Clock;
 
@@ -49,10 +51,12 @@ public class OfferServiceImp implements OfferService {
     public OfferDTO createOffer(OfferCreateDTO offerCreateDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(offerCreateDTO.getProduct().getId()).orElseThrow();
-        User seller = product.getSeller();
 
         if (!product.getAvailability().equals(Availability.AVAILABLE))
             throw new IllegalAccessException("Cannot create an offer");
+
+        if(loggedUser.getId().equals(product.getSeller().getId()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Cannot do offer for your product");
 
         Offer offer = processSaleServiceImp.CreateOffer(offerCreateDTO, product, loggedUser);
         Offer savedOffer = offerRepository.save(offer);
@@ -121,6 +125,7 @@ public class OfferServiceImp implements OfferService {
                 if (state.equals(OfferState.ACCEPTED))
                 {
                     offer.setState(state);
+                    offer.getProduct().setAvailability(Availability.PENDING);
 
                 }
                 else if (state.equals(OfferState.REJECTED))

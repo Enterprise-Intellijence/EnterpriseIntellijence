@@ -122,7 +122,9 @@ public class OrderServiceImp implements OrderService {
 
         if (loggedUser.getId().equals(order.getUser().getId()) && order.getState().equals(OrderState.PENDING)) {
             processSaleServiceImp.cancelOrder(order,loggedUser);
+            orderRepository.save(order);
         }
+/*
         else if(loggedUser.getId().equals(order.getProduct().getSeller().getId()) || order.getState().equals(OrderState.CANCELED)){
             Product product = order.getProduct();
             product.setAvailability(Availability.AVAILABLE);
@@ -130,6 +132,7 @@ public class OrderServiceImp implements OrderService {
             productRepository.save(product);
             orderRepository.delete(order);
         }
+*/
         else
             throw new IllegalAccessException("User cannot delete order");
 

@@ -39,7 +39,6 @@ public class TransactionServiceImp implements TransactionService{
     private final Clock clock;
 
     public TransactionDTO createTransaction(TransactionCreateDTO transactionDTO) throws IllegalAccessException {
-        // TODO: 28/05/2023 forse più opportuno ricevere come parametri id order e id paymentmethod
         Order order = orderRepository.findById(transactionDTO.getOrder().getId()).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         PaymentMethod paymentMethod = paymentMethodRepository.findById(transactionDTO.getPaymentMethod().getId()).orElseThrow(EntityNotFoundException::new);
@@ -51,10 +50,6 @@ public class TransactionServiceImp implements TransactionService{
         checkCardOwnership(loggedUser,paymentMethod);
 
         Transaction transaction = processSaleServiceImp.payProduct(order,loggedUser,paymentMethod);
-
-        // TODO: 28/05/2023 check cosa salva
-
-
 
         transaction = transactionRepository.save(transaction);
         return mapToDTO(transaction);
