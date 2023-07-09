@@ -27,7 +27,7 @@ public class ProductSpecification {
         private Double minProductCost;
         private Double maxProductCost;
         private List<String> brands;
-        private Condition condition;
+        private List<Condition> condition;
         private Integer views;
         private LocalDateTime uploadDate;
         private Availability availability;
@@ -100,8 +100,8 @@ public class ProductSpecification {
                         predicates.add(root.get("brand").in(filter.getBrands()));
                     }
 
-                    if (filter.getCondition() != null) {
-                        predicates.add(criteriaBuilder.equal(root.get("condition"), filter.getCondition()));
+                    if (filter.getCondition() != null && !filter.getCondition().isEmpty()) {
+                        predicates.add(root.get("condition").in(filter.getCondition()));
                     }
 
                     if (filter.getViews() != null) {

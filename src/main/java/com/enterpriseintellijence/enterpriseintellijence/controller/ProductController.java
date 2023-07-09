@@ -162,7 +162,7 @@ public class ProductController {
         @RequestParam(required = false) Double minProductCost,
         @RequestParam(required = false) Double maxProductCost,
         @RequestParam(required = false) String[] brands,
-        @RequestParam(required = false) Condition condition,
+        @RequestParam(required = false) Condition[] condition,
         @RequestParam(required = false) Integer views,
         @RequestParam(required = false) String userId,
         @RequestParam(required = false) LocalDateTime uploadDate,
@@ -189,7 +189,7 @@ public class ProductController {
         filter.setMinProductCost(minProductCost);
         filter.setMaxProductCost(maxProductCost);
         filter.setBrands(brands != null ? Arrays.asList(brands) : null);
-        filter.setCondition(condition);
+        filter.setCondition(condition != null ? Arrays.asList(condition) : null);
         filter.setViews(views);
         filter.setSeller(userId);
         filter.setUploadDate(uploadDate);
