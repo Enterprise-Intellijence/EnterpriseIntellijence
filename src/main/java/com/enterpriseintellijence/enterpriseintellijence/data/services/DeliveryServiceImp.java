@@ -129,7 +129,7 @@ public class DeliveryServiceImp implements DeliveryService {
 
         Address address = modelMapper.map(addressCreateDTO,Address.class);
         address.setUser(loggedUser);
-        if(addressCreateDTO.isDefault()){
+        if(addressCreateDTO.getIsDefault()){
             for (Address address1: loggedUser.getAddresses()){
                 if(address1.isDefault()){
                     address1.setDefault(false);
@@ -169,7 +169,7 @@ public class DeliveryServiceImp implements DeliveryService {
             address.setZipCode(addressDTO.getZipCode());
         if(addressDTO.getPhoneNumber()!=null && !addressDTO.getPhoneNumber().equals(address.getPhoneNumber()))
             address.setPhoneNumber(addressDTO.getPhoneNumber());
-        if(addressDTO.isDefault() && !address.isDefault()){
+        if(addressDTO.getIsDefault() && !address.isDefault()){
             for(Address address1: loggedUser.getAddresses()){
                 if(address1.isDefault() && !address1.equals(address)){
                     address1.setDefault(false);

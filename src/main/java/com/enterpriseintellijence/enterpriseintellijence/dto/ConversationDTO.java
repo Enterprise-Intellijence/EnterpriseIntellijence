@@ -17,6 +17,6 @@ public class ConversationDTO {
     @NotNull
     private MessageDTO lastMessage;
     @NotNull
-    private boolean unreadMessages;
+    private Boolean unreadMessages;
     private String conversationId;
 }

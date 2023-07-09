@@ -39,7 +39,7 @@ public class AddressDTO {
     private String phoneNumber;
 
     @NotNull
-    private boolean isDefault;
+    private Boolean isDefault;
 
 
 }

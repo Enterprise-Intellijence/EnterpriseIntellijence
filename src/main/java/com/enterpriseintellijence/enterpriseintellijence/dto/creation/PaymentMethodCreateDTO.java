@@ -26,7 +26,7 @@ public class PaymentMethodCreateDTO {
     private LocalDate expiryDate;
 
     @NotNull
-    private boolean isDefault;
+    private Boolean isDefault;
 
     @NotNull
     @Length(max = 25)
