@@ -104,7 +104,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         if (patch.getOwner() != null && !paymentMethod.getOwner().equals(patch.getOwner())) {
             paymentMethod.setOwner(patch.getOwner());
         }
-        if(patch.isDefault()){
+        if(patch.getIsDefault()){
             for(PaymentMethod paymentMethod1:loggedUser.getPaymentMethods()) {
                 if (paymentMethod1.isDefault()) {
                     paymentMethod1.setDefault(false);

@@ -138,7 +138,7 @@ public class DeliveryServiceImp implements DeliveryService {
 
         Address address = modelMapper.map(addressCreateDTO,Address.class);
         address.setUser(loggedUser);
-        if(addressCreateDTO.isDefault()){
+        if(addressCreateDTO.getIsDefault()){
             for (Address address1: loggedUser.getAddresses()){
                 if(address1.isDefault()){
                     address1.setDefault(false);

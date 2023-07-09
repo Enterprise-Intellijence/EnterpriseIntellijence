@@ -36,6 +36,6 @@ public class AddressCreateDTO {
     private String phoneNumber;
 
     @NotNull
-    private boolean isDefault;
+    private Boolean isDefault;
 
 }
