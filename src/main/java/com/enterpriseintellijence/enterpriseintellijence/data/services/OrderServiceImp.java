@@ -62,9 +62,10 @@ public class OrderServiceImp implements OrderService {
         return mapToDTO(order);
     }
 
+    /*
     @Override
     public OrderDTO replaceOrder(String id, OrderDTO orderDTO) throws IllegalAccessException {
-        // TODO: 25/05/2023 ha senso di esistere?
+        // TODO: 25/05/2023 ha senso di esistere? No
         throwOnIdMismatch(id, orderDTO);
 
         Order oldOrder = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -88,6 +89,8 @@ public class OrderServiceImp implements OrderService {
         newOrder = orderRepository.save(newOrder);
         return mapToDTO(newOrder);
     }
+
+     */
 
     @Override
     public OrderDTO updateOrder(String id, OrderDTO patch) throws IllegalAccessException {
@@ -136,7 +139,6 @@ public class OrderServiceImp implements OrderService {
         else
             throw new IllegalAccessException("User cannot delete order");
 
-
     }
 
     @Override
@@ -159,7 +161,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {
-        if (orderDTO.getId() != null && !orderDTO.getId().equals(id))
+        if (!orderDTO.getId().equals(id))
             throw new IdMismatchException();
     }
 

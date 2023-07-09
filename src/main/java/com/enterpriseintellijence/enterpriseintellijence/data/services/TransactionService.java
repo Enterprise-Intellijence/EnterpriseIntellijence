@@ -15,5 +15,5 @@ public interface TransactionService {
 
     TransactionDTO transactionById(String id);
 
-    Iterable<TransactionDTO> findAll();
+    Iterable<TransactionDTO> findAll() throws IllegalAccessException;
 }

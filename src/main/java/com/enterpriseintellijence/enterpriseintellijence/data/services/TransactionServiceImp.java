@@ -2,28 +2,20 @@ package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
 import com.enterpriseintellijence.enterpriseintellijence.core.services.ProcessSaleServiceImp;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.PaymentMethodRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.TransactionRepository;
 import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.TransactionCreateDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.TransactionState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,27 +100,34 @@ public class TransactionServiceImp implements TransactionService{
 
     public TransactionDTO transactionById(String id) {
        Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+       User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+       if (!transaction.getOrder().getUser().getId().equals(loggedUser.getId())
+            || !transaction.getOrder().getProduct().getSeller().getId().equals(loggedUser.getId()))
+           if (loggedUser.getRole().equals(UserRole.USER))
+              throw new EntityNotFoundException();
+
        return mapToDTO(transaction);
     }
 
-    public Iterable<TransactionDTO> findAll() {
+    public Iterable<TransactionDTO> findAll() throws IllegalAccessException {
+        if (jwtContextUtils.getUserLoggedFromContext().getRole().equals(UserRole.USER))
+            throw new IllegalAccessException("Cannot access this resource");
+
         return transactionRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
 
     private void throwOnIdMismatch(String id, TransactionDTO transactionDTO){
-        if(transactionDTO.getId() != null && !transactionDTO.getId().equals(id))
+        if(!transactionDTO.getId().equals(id))
             throw new IdMismatchException();
     }
 
     public Transaction mapToEntity(TransactionDTO transactionDTO){return modelMapper.map(transactionDTO,Transaction.class);}
     public TransactionDTO mapToDTO(Transaction transaction){return modelMapper.map(transaction,TransactionDTO.class);}
 
-    private boolean checkCardOwnership(User user, PaymentMethod paymentMethod) throws IllegalAccessException {
+    private void checkCardOwnership(User user, PaymentMethod paymentMethod) throws IllegalAccessException {
         if(!user.getPaymentMethods().contains(paymentMethod))
             throw new IllegalAccessException("Cannot use this credit card");
-
-        return true;
 
     }
 }

@@ -56,7 +56,7 @@ public class TransactionController {
     }
 
     @GetMapping("")
-    public Iterable<TransactionDTO> allTransaction() {
+    public Iterable<TransactionDTO> allTransaction() throws IllegalAccessException {
         return transactionService.findAll();
     }
 }

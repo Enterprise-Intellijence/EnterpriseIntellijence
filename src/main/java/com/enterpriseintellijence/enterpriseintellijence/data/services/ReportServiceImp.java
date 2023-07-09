@@ -30,9 +30,11 @@ public class ReportServiceImp implements ReportService {
 
     @Override
     public ReportDTO createReport(ReportDTO reportDTO) {
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-        if (!jwtContextUtils.getUserLoggedFromContext().getId().equals(reportDTO.getReporterUser().getId())
-                 || userService.findUserById(reportDTO.getReportedUser().getId()) == null) {
+        if (!loggedUser.getId().equals(reportDTO.getReporterUser().getId())
+                 || userService.findUserById(reportDTO.getReportedUser().getId()) == null
+                 || reportDTO.getReportedUser().getId().equals(reportDTO.getReporterUser().getId()) ) {
             throw new RuntimeException("User not allowed to report");
         }
 
@@ -46,9 +48,7 @@ public class ReportServiceImp implements ReportService {
         reportDTO.setDate(LocalDateTime.now());
         reportDTO.setLastUpdate(LocalDateTime.now());
         Report report = mapToEntity(reportDTO);
-
-        report = reportRepository.save(report);
-        return mapToDto(report);
+        return mapToDto(reportRepository.save(report));
     }
 
     @Override

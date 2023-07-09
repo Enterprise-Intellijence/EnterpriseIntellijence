@@ -21,6 +21,7 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,7 @@ public class OfferServiceImp implements OfferService {
         return mapToDTO(savedOffer);
     }
 
+    /*
     @Override
     public OfferDTO replaceOffer(String id, OfferDTO offerDTO) throws IllegalAccessException {
         throwOnIdMismatch(id, offerDTO);
@@ -85,18 +87,21 @@ public class OfferServiceImp implements OfferService {
         return updateOfferState(id, state);
     }
 
+     */
+
     @Override
     public OfferDTO updateOfferState(String id, OfferState state) throws IllegalAccessException {
+        if (state == null) {
+            throw new IllegalAccessException("Cannot modify offer with null state");
+        }
+
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Product product = offer.getProduct();
 
+
         boolean isOfferByLoggedUser = offer.getOfferer().getId().equals(loggedUser.getId());
         boolean isOfferForLoggedUser = offer.getProduct().getSeller().getId().equals(loggedUser.getId());
-
-        if (state == null) {
-            throw new IllegalAccessException("Cannot modify offer with null state");
-        }
 
 
         if (!loggedUser.isAdministrator()) {
@@ -141,6 +146,7 @@ public class OfferServiceImp implements OfferService {
     }
 
 
+    /*
     @Override
     public void deleteOffer(String id) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
@@ -153,6 +159,8 @@ public class OfferServiceImp implements OfferService {
 
         offerRepository.delete(offer);
     }
+
+     */
 
     @Override
     public OfferDTO getOffer(String id) throws IllegalAccessException {
@@ -174,7 +182,7 @@ public class OfferServiceImp implements OfferService {
 
 
     private void throwOnIdMismatch(String id, OfferDTO offerDTO) {
-        if (offerDTO.getId() != null && !offerDTO.getId().equals(id)) {
+        if (!offerDTO.getId().equals(id)) {
             throw new IdMismatchException();
         }
     }
