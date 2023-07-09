@@ -52,14 +52,10 @@ public class DeliveryServiceImp implements DeliveryService {
         if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(order.getProduct().getSeller().getId()))
             throw new IllegalAccessException("Only seller can create a delivery");
 
-        if(order.getTransaction()!=null && !!order.getTransaction().getTransactionState().equals(TransactionState.COMPLETED))
+        if(order.getTransaction()!=null && !order.getTransaction().getTransactionState().equals(TransactionState.COMPLETED))
             throw new IllegalAccessException("cant create delivery with no transaction completed");
 
-        Delivery delivery = processSaleServiceImp.sendProduct(order,loggedUser,deliveryDTO.getShipper());
-
-
-        deliveryRepository.save(delivery);
-        return mapToDTO(delivery);
+        return mapToDTO(processSaleServiceImp.sendProduct(order,loggedUser,deliveryDTO.getShipper()));
     }
 
     @Override
@@ -92,7 +88,6 @@ public class DeliveryServiceImp implements DeliveryService {
 
         if(patch.getDeliveryStatus().equals(DeliveryStatus.DELIVERED)){
             processSaleServiceImp.productDelivered(order,loggedUser,delivery);
-            deliveryRepository.save(delivery);
         }
         else
             throw new IllegalArgumentException("Can only update delivered product, check your parameter and try again");
