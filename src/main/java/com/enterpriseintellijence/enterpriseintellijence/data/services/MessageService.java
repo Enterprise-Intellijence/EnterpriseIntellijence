@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface MessageService {
 
     MessageDTO createMessage(MessageCreateDTO messageCreateDTO);
-    MessageDTO replaceMessage(String id, MessageDTO messageDTO) throws IllegalAccessException;
-    MessageDTO updateMessage (String id, MessageDTO patch) throws IllegalAccessException;
     void deleteMessage(String id) throws IllegalAccessException;
     MessageDTO getMessage(String id) throws IllegalAccessException;
 

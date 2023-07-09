@@ -37,7 +37,7 @@ public class FollowingServiceImp implements FollowingService{
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
         if(loggedUser.getId().equals(id))
-            throw new IllegalAccessException("can't follow yourself");
+            throw new IllegalAccessException("You can't follow yourself");
 
         User followingUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         if(!followingRepository.existsFollowingByFollowerEqualsAndFollowingEquals(loggedUser,followingUser)){
@@ -56,7 +56,6 @@ public class FollowingServiceImp implements FollowingService{
             userRepository.save(followingUser);
 
             notificationService.notifyFollow(followingUser);
-
             return setTheOnlyFollowing(following);
         }
         else
@@ -89,7 +88,6 @@ public class FollowingServiceImp implements FollowingService{
     @Override
     public Page<FollowingFollowersDTO> getFollowingByUser(String id, int page, int sizePage) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        // TODO: 05/06/2023 restituisce la pagina più lunga
 
         Page<Following> followingPage = new PageImpl<Following>(user.getFollowing(), PageRequest.of(page,sizePage),user.getFollowing().size());
 
@@ -105,7 +103,7 @@ public class FollowingServiceImp implements FollowingService{
     @Override
     public Page<FollowingFollowersDTO> getFollowersOfUser(String id, int page, int sizePage) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        // TODO: 05/06/2023 restituisce la pagina più lunga
+
         Page<Following> followersPage = new PageImpl<Following>(user.getFollowers(), PageRequest.of(page,sizePage),user.getFollowers().size());
 
         List<FollowingFollowersDTO> followingFollowersDTOS = new ArrayList<>();

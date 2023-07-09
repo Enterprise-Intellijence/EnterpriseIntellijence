@@ -44,10 +44,9 @@ public class DeliveryServiceImp implements DeliveryService {
 
     @Override
     public DeliveryDTO createDelivery(DeliveryCreateDTO deliveryDTO) throws IllegalAccessException {
-        // TODO: 29/05/2023 io uso solo id order del deliveryDTO e lo shipper...usiamo parameter?
 
         Order order = orderRepository.findById(deliveryDTO.getOrder().getId()).orElseThrow(EntityNotFoundException::new);
-        Product product = order.getProduct();
+
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(order.getProduct().getSeller().getId()))
             throw new IllegalAccessException("Only seller can create a delivery");
@@ -55,12 +54,16 @@ public class DeliveryServiceImp implements DeliveryService {
         if(order.getTransaction()!=null && !order.getTransaction().getTransactionState().equals(TransactionState.COMPLETED))
             throw new IllegalAccessException("cant create delivery with no transaction completed");
 
+        if(order.getTransaction() == null)
+            throw new IllegalAccessException("cant create delivery with no transaction");
+
         return mapToDTO(processSaleServiceImp.sendProduct(order,loggedUser,deliveryDTO.getShipper()));
     }
 
+    /*
     @Override
     public DeliveryDTO replaceDelivery(String id, DeliveryDTO deliveryDTO) throws IllegalAccessException {
-        // TODO: 25/05/2023 ha senso di esistere?
+        // TODO: 25/05/2023 ha senso di esistere? Effettivamente non si dovrebbe poter cambiare una consegna
         throwOnIdMismatch(id, deliveryDTO);
 
         Delivery oldDelivery = deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -74,13 +77,15 @@ public class DeliveryServiceImp implements DeliveryService {
         return updateDelivery(id,deliveryDTO);
     }
 
+     */
+
     @Override
     public DeliveryDTO updateDelivery(String Id, DeliveryDTO patch) throws IllegalAccessException {
-        // TODO: 29/05/2023 sistemare
+
         throwOnIdMismatch(Id, patch);
         Delivery delivery = deliveryRepository.findById(Id).orElseThrow(EntityNotFoundException::new);
         Order order = delivery.getOrder();
-        Product product = order.getProduct();
+
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
         if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(order.getProduct().getSeller().getId()))
@@ -95,6 +100,8 @@ public class DeliveryServiceImp implements DeliveryService {
         return mapToDTO(delivery);
     }
 
+
+    /*
     @Transactional
     @Override
     public void deleteDelivery(String id) throws IllegalAccessException {
@@ -105,10 +112,12 @@ public class DeliveryServiceImp implements DeliveryService {
         if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(order.getProduct().getSeller().getId()))
             throw new IllegalAccessException("Only seller can update a delivery");
 
-        // TODO: 25/05/2023 perchè si dovrebbe deletare una consegna?
+        // TODO: 25/05/2023 perchè si dovrebbe deletare una consegna?   infatti non ha senso
         order.setDelivery(null);
         deliveryRepository.delete(delivery);
     }
+
+     */
 
     @Override
     public DeliveryDTO getDeliveryById(String id) throws IllegalAccessException {
@@ -137,9 +146,7 @@ public class DeliveryServiceImp implements DeliveryService {
                 }
             }
         }
-
         addressRepository.save(address);
-
         return modelMapper.map(address,AddressDTO.class);
     }
 
@@ -157,18 +164,13 @@ public class DeliveryServiceImp implements DeliveryService {
         if(!address.getUser().equals(loggedUser))
             throw new IllegalAccessException("Cannot modify address of other user");
 
-        if(addressDTO.getHeader()!=null && !addressDTO.getHeader().equals(address.getHeader()))
-            address.setHeader(addressDTO.getHeader());
-        if(addressDTO.getCountry()!=null && !addressDTO.getCountry().equals(address.getCountry()))
-            address.setCountry(addressDTO.getCountry());
-        if(addressDTO.getCity()!=null && !addressDTO.getCity().equals(address.getCity()))
-            address.setCity(addressDTO.getCity());
-        if(addressDTO.getStreet()!=null && !addressDTO.getStreet().equals(address.getStreet()))
-            address.setStreet(addressDTO.getStreet());
-        if(addressDTO.getZipCode()!=null && !addressDTO.getZipCode().equals(address.getZipCode()))
-            address.setZipCode(addressDTO.getZipCode());
-        if(addressDTO.getPhoneNumber()!=null && !addressDTO.getPhoneNumber().equals(address.getPhoneNumber()))
-            address.setPhoneNumber(addressDTO.getPhoneNumber());
+        assert addressDTO != null;
+        address.setHeader(addressDTO.getHeader());
+        address.setCountry(addressDTO.getCountry());
+        address.setCity(addressDTO.getCity());
+        address.setStreet(addressDTO.getStreet());
+        address.setZipCode(addressDTO.getZipCode());
+        address.setPhoneNumber(addressDTO.getPhoneNumber());
         if(addressDTO.isDefault() && !address.isDefault()){
             for(Address address1: loggedUser.getAddresses()){
                 if(address1.isDefault() && !address1.equals(address)){
@@ -192,22 +194,31 @@ public class DeliveryServiceImp implements DeliveryService {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         if(loggedUser.getRole().equals(UserRole.USER) && !address.getUser().equals(loggedUser))
             throw new IllegalAccessException("Cannot delete address of other user");
+        if (address.getOrders() != null && !address.getOrders().isEmpty())
+            throw new IllegalArgumentException("Cannot delete address with orders");
 
+        if (address.isDefault()){
+            for (Address address1: loggedUser.getAddresses()){
+                if(!address1.equals(address)){
+                    address1.setDefault(true);
+                    addressRepository.save(address1);
+                    break;
+                }
+            }
+        }
         addressRepository.delete(address);
     }
 
     @Override
     public AddressDTO getAddress(String id) {
         Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
         return modelMapper.map(address,AddressDTO.class);
     }
 
     @Override
     public Iterable<AddressDTO> getMyAddressList() throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        List<AddressDTO> addressList = loggedUser.getAddresses().stream().map(s->modelMapper.map(s,AddressDTO.class)).collect(Collectors.toList());
-        return addressList;
+        return loggedUser.getAddresses().stream().map(s->modelMapper.map(s,AddressDTO.class)).collect(Collectors.toList());
     }
 
 
@@ -229,7 +240,7 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     private void throwOnIdMismatch(String id, DeliveryDTO deliveryDTO) {
-        if (deliveryDTO.getId() != null && !deliveryDTO.getId().equals(id))
+        if (!deliveryDTO.getId().equals(id))
             throw new IdMismatchException();
     }
 }

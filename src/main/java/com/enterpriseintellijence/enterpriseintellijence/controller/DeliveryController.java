@@ -37,21 +37,28 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.createDelivery(deliveryDTO));
     }
 
+    /*
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<DeliveryDTO> replaceDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.replaceDelivery(id, deliveryDTO));
     }
+
+     */
+
 
     @PatchMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.updateDelivery(id, deliveryDTO));
     }
 
+    /*
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDelivery(@PathVariable("id") String id) throws IllegalAccessException {
         deliveryService.deleteDelivery(id);
     }
+
+     */
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<DeliveryDTO> getDelivery(@PathVariable("id") String id) throws IllegalAccessException {

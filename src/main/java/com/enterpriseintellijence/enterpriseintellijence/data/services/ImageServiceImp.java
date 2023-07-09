@@ -24,13 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImp implements ImageService{
-    private static String userDir = System.getProperty("user.dir") + "/images/user_photos/";
-    private static String prodDir = System.getProperty("user.dir") + "/images/product_photos/";
-    private static String imagesGetDir = System.getProperty("user.dir")+"/images/";
+    private static final String userDir = System.getProperty("user.dir") + "/images/user_photos/";
+    private static final String prodDir = System.getProperty("user.dir") + "/images/product_photos/";
+    private static final String imagesGetDir = System.getProperty("user.dir")+"/images/";
 
 
     private final ProductImageRepository productImageRepository;
@@ -41,14 +42,12 @@ public class ImageServiceImp implements ImageService{
 
     @Override
     public Resource getImage(String url) throws IOException {
-
         try{
             String myPath=imagesGetDir+url;
 
             Path filePath = Paths.get(myPath);
 
-            Resource resource  = new FileSystemResource(filePath);
-            return resource;
+            return new FileSystemResource(filePath);
         }catch (Exception e){
             e.printStackTrace();
             throw new IOException("Something gone wrong, try again.");
@@ -60,9 +59,8 @@ public class ImageServiceImp implements ImageService{
     @Override
     public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        System.out.println("funziona anche da app");
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
         String localStorageDir = userDir + loggedUser.getUsername();
         UserImage userImage = new UserImage();
@@ -71,11 +69,7 @@ public class ImageServiceImp implements ImageService{
         userImage.setUser(loggedUser);
         loggedUser.setPhotoProfile(userImage);
 
-        // TODO: 24/05/2023 boolean for check save
-
         userImage= userImageRepository.save(userImage);
-
-
 
 
         FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);

@@ -85,6 +85,7 @@ public class MessageServiceImp implements MessageService {
         return mapToDTO(message);
     }
 
+    /*
     @Override
     public MessageDTO replaceMessage(String id, MessageDTO messageDTO) throws IllegalAccessException {
         // TODO: 23/05/2023 ha senso che ci sia?
@@ -112,6 +113,7 @@ public class MessageServiceImp implements MessageService {
         messageRepository.save(message);
         return mapToDTO(message);
     }
+    */
 
     @Override
     public void deleteMessage(String id) throws IllegalAccessException {
@@ -212,28 +214,7 @@ public class MessageServiceImp implements MessageService {
 
     @Override
     public Iterable<ConversationDTO> getAllMyConversations() {
-/*
-        Map<String,ConversationDTO> myConversationsMap = new HashMap<>();
-        String loggedUserID= loggedUser.getId();
 
-        for(Message message: loggedUser.getSentMessages()){
-            String tempKey;
-            if(message.getProduct()!=null){
-                tempKey=message.getProduct().getId()+loggedUserID+message.getReceivedUser().getId();
-            }else
-                tempKey=loggedUserID+message.getReceivedUser().getId();
-            checkAndSetConversation(myConversationsMap,tempKey,message,true);
-        }
-
-        for(Message message: loggedUser.getReceivedMessages()){
-            String tempKey;
-            if(message.getProduct()!=null){
-                tempKey=message.getProduct().getId()+loggedUserID+message.getSendUser().getId();
-            }else
-                tempKey=loggedUserID+message.getSendUser().getId();
-            checkAndSetConversation(myConversationsMap,tempKey,message,false);
-        }
-*/
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         try {
             List<Message> messages = messageRepository.findAllMyConversation(loggedUser.getId());
@@ -259,30 +240,6 @@ public class MessageServiceImp implements MessageService {
         }
     }
 
-/*    private void checkAndSetConversation(Map<String,ConversationDTO> myConversationsMap,String key,Message message,boolean sent){
-        if(!myConversationsMap.containsKey(key)){
-            ConversationDTO conversationDTO = new ConversationDTO();
-            if(sent)
-                conversationDTO.setOtherUser(modelMapper.map(message.getReceivedUser(), UserBasicDTO.class) );
-            else
-                conversationDTO.setOtherUser(modelMapper.map(message.getSendUser(), UserBasicDTO.class) );
-
-            if(message.getProduct()!=null)
-                conversationDTO.setProductBasicDTO(modelMapper.map(message.getProduct(), ProductBasicDTO.class) );
-            conversationDTO.setLastMessage(modelMapper.map(message,MessageDTO.class));
-            int n=0;
-            if(message.getMessageStatus().equals(MessageStatus.UNREAD))
-                n++;
-            conversationDTO.setUnreadMessagesCount(n);
-            myConversationsMap.put(key,conversationDTO);
-        }
-        else{
-            if(myConversationsMap.get(key).getLastMessage().getMessageDate().isAfter(message.getMessageDate()))
-                myConversationsMap.get(key).setLastMessage(modelMapper.map(message,MessageDTO.class));
-            if(message.getMessageStatus().equals(MessageStatus.UNREAD))
-                myConversationsMap.get(key).setUnreadMessagesCount(myConversationsMap.get(key).getUnreadMessagesCount()+1);
-        }
-    }*/
 
     private ConversationDTO convertToConversationDTO(Message message, User loggedUser) {
         UserBasicDTO userBasicDTO;

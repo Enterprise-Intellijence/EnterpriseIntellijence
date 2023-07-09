@@ -248,6 +248,10 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<String> registerUser(String username, String email, String password) {
+        if (username == null || email == null || password == null)
+            throw new IllegalArgumentException("username, email and password cannot be null");
+        if (password.length() < 8)
+            throw new IllegalArgumentException("password must be at least 8 characters long");
 
         if(findByUsername(username).isPresent())
             throw new IllegalArgumentException("username already exists");
@@ -311,6 +315,8 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void changePassword(String oldPassword, String newPassword, String authToken) throws ParseException, JOSEException, MessagingException {
+        if (newPassword.length() < 8)
+            throw new RuntimeException("Password must be at least 8 characters long");
         if (oldPassword.equals(newPassword))
             throw new RuntimeException("New password must be different from old password");
         User user = jwtContextUtils.getUserLoggedFromContext();

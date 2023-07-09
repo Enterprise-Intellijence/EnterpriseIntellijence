@@ -33,7 +33,7 @@ public class Address {
     @Column(nullable = false)
     private String street;
 
-    @Column(name = "zip_code")
+    @Column(name = "zip_code", nullable = false)
     private String zipCode;
 
     @Column(nullable = false)
@@ -48,7 +48,7 @@ public class Address {
     private boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_address")
+    @JoinColumn(name = "owner_address", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "senderAddress",fetch = FetchType.LAZY)
