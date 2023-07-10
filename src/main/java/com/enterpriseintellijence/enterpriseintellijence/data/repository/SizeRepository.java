@@ -11,4 +11,6 @@ public interface SizeRepository extends JpaRepository<Size,String> {
 
     List<Size> findAllBySizeName(String sizeName);
 
+    Size findBySizeNameAndType(String sizeName, String type);
+
 }

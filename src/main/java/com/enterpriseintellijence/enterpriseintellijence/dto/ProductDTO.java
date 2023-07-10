@@ -36,6 +36,7 @@ public class ProductDTO {
     private String id;
 
     @Length(max = 100)
+    @NotNull
     private String title;
 
     @Length(max = 1000)

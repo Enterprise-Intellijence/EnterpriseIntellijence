@@ -80,7 +80,10 @@ public class ProductServiceImp implements ProductService {
 
             if(productCreateDTO instanceof ClothingCreateDTO){
                 Clothing clothing= (Clothing) product;
-                Size size = sizeRepository.findById(clothing.getClothingSize().getId()).orElseThrow(EntityNotFoundException::new);
+                Size size = sizeRepository.findBySizeNameAndType(clothing.getClothingSize().getSizeName(), clothing.getClothingSize().getType());
+                if(size == null)
+                    throw new IllegalArgumentException("Size not found");
+
                 if(!size.getType().equals(clothing.getProductCategory().getSecondaryCat()))
                     throw new IllegalArgumentException("Can't use this size for this category");
                 clothing.setClothingSize(size);
@@ -88,7 +91,10 @@ public class ProductServiceImp implements ProductService {
             }
             else if (productCreateDTO instanceof HomeCreateDTO){
                 Home home= (Home) product;
-                Size size = sizeRepository.findById(home.getHomeSize().getId()).orElseThrow(EntityNotFoundException::new);
+                Size size = sizeRepository.findBySizeNameAndType(home.getHomeSize().getSizeName(), home.getHomeSize().getType());
+                if(size == null)
+                    throw new IllegalArgumentException("Size not found");
+
                 if(!size.getType().equals(home.getProductCategory().getPrimaryCat()))
                     throw new IllegalArgumentException("Can't use this size for this category");
                 home.setHomeSize(size);
@@ -132,14 +138,12 @@ public class ProductServiceImp implements ProductService {
             throw new IllegalAccessException("Cannot update product while order is active");
 
 
-        if (patch.getTitle() != null && !product.getTitle().equals(patch.getTitle()))
-            product.setTitle(patch.getTitle());
         if (patch.getDescription() != null && !product.getDescription().equals(patch.getDescription()))
             product.setDescription(patch.getDescription());
-        if (!product.getVisibility().equals(patch.getVisibility()))
-            product.setVisibility(patch.getVisibility());
-        if (!product.getCondition().equals(patch.getCondition()))
-            product.setCondition(patch.getCondition());
+
+        product.setVisibility(patch.getVisibility());
+        product.setTitle(patch.getTitle());
+        product.setCondition(patch.getCondition());
 
 
 
