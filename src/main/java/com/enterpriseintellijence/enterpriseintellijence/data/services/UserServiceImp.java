@@ -223,11 +223,12 @@ public class UserServiceImp implements UserService{
 
     @Override
     public Map<String, String> authenticateUser(String username, String password, Provider provider) throws JOSEException {
+        User u = userRepository.findByUsername(username);
         if(!provider.equals(Provider.GOOGLE) && password.equals(Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD)
-            && userRepository.findByUsername(username).getProvider().equals(Provider.GOOGLE))
+            && u.getProvider().equals(Provider.GOOGLE))
             throw new IllegalArgumentException("You cannot login with password with a google linked account");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        String accessToken = tokenStore.createAccessToken(Map.of("username", username, "role", "user"));
+        String accessToken = tokenStore.createAccessToken(Map.of("username", username, "role", u.getAuthorities().toString()));
         String refreshToken = tokenStore.createRefreshToken(username);
         return Map.of("accessToken", "Bearer "+accessToken, "refreshToken", "Bearer "+refreshToken);
     }
@@ -270,7 +271,7 @@ public class UserServiceImp implements UserService{
                 UserDTO user = findByUsername(username).orElseThrow(()->new RuntimeException("user not found"));
 
                 User userDetails = mapToEntity(user);
-                String accessToken = tokenStore.createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getRole()));;
+                String accessToken = tokenStore.createAccessToken(Map.of("username", userDetails.getUsername(), "role", userDetails.getAuthorities().toString()));
 
                 return Map.of("accessToken", "Bearer "+accessToken, "refreshToken", "Bearer "+refreshToken);
             }
