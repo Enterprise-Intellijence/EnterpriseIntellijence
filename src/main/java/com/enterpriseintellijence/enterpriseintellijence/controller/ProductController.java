@@ -87,10 +87,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductMessages(id, page, size));
     }
 
-    @GetMapping("/{id}/order")
-    public ResponseEntity<OrderBasicDTO> getProductOrder(@PathVariable("id") String id) throws IllegalAccessException {
-        return ResponseEntity.ok(productService.getProductOrder(id));
-    }
+//    @GetMapping("/{id}/order")
+//    public ResponseEntity<OrderBasicDTO> getProductOrder(@PathVariable("id") String id) throws IllegalAccessException {
+//        return ResponseEntity.ok(productService.getProductOrder(id));
+//    }
 
 
     @PostMapping(value = "/capability/{productId}")
