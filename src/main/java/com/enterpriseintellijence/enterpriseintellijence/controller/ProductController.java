@@ -42,7 +42,7 @@ public class ProductController {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@RequestBody @Valid ProductCreateDTO productCreateDTO) throws IllegalAccessException {
-
+        System.out.println("product: " + productCreateDTO);
         return productService.createProduct(productCreateDTO);
     }
 
@@ -87,10 +87,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductMessages(id, page, size));
     }
 
-    @GetMapping("/{id}/order")
+    /*@GetMapping("/{id}/order")
     public ResponseEntity<OrderBasicDTO> getProductOrder(@PathVariable("id") String id) throws IllegalAccessException {
         return ResponseEntity.ok(productService.getProductOrder(id));
-    }
+    }*/
 
 
     @PostMapping(value = "/capability/{productId}")
@@ -209,5 +209,4 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductFilteredPage(
             ProductSpecification.withFilters(filter), page, sizePage, sortBy, sortDirection));
     }
-
 }

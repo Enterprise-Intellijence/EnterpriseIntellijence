@@ -126,7 +126,7 @@ public class ImageServiceImp implements ImageService{
     }
 
     public ProductImageDTO localProductImageSave(Product product, MultipartFile multipartFile, ProductImage productImage,String description) {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename()).replace(":", "");
 
         try{
         String localStorageDir = prodDir +product.getId();

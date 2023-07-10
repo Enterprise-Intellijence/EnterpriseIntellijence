@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -51,9 +52,9 @@ public class ImageController {
     }
 
 
-    @PostMapping("/product")
+    @PostMapping(value =  "/product")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductImageDTO saveImageProduct(@RequestBody MultipartFile multipartFile, @RequestParam("product_id")String product_id, @RequestParam("description") String description) throws IOException, IllegalAccessException {
+    public ProductImageDTO saveImageProduct(@RequestBody MultipartFile multipartFile, @RequestParam("product_id") String product_id, @RequestParam("description") String description) throws IOException, IllegalAccessException {
         return imageService.saveImageProduct(multipartFile,product_id,description);
     }
 
