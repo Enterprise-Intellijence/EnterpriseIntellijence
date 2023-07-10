@@ -171,7 +171,7 @@ public class DeliveryServiceImp implements DeliveryService {
         address.setStreet(addressDTO.getStreet());
         address.setZipCode(addressDTO.getZipCode());
         address.setPhoneNumber(addressDTO.getPhoneNumber());
-        if(addressDTO.isDefault() && !address.isDefault()){
+        if(addressDTO.getIsDefault() && !address.isDefault()){
             for(Address address1: loggedUser.getAddresses()){
                 if(address1.isDefault() && !address1.equals(address)){
                     address1.setDefault(false);
