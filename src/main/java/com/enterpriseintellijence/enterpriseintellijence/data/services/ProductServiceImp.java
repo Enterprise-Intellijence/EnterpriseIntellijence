@@ -157,14 +157,17 @@ public class ProductServiceImp implements ProductService {
             product.setProductSize(patch.getProductSize());
 
         if (patch instanceof ClothingDTO) {
-            // TODO: 22/05/2023
+            ClothingDTO categorized = (ClothingDTO) patch;
+            Size size = sizeRepository.findBySizeNameAndType(categorized.getClothingSize().getSizeName(), categorized.getClothingSize().getType());
+            if(size == null)
+                throw new IllegalArgumentException("Size not found");
 
-        } else if (patch instanceof EntertainmentDTO) {
-            // TODO: 22/05/2023  
         } else if (patch instanceof HomeDTO) {
-            // TODO: 22/05/2023  
+            HomeDTO categorized = (HomeDTO) patch;
+            Size size = sizeRepository.findBySizeNameAndType(categorized.getHomeSize().getSizeName(), categorized.getHomeSize().getType());
+            if(size == null)
+                throw new IllegalArgumentException("Size not found");
         }
-
 
         productRepository.save(product);
         return mapToProductDetailsDTO(product);
