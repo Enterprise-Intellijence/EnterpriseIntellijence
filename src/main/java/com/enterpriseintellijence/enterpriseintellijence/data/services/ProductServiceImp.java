@@ -87,7 +87,6 @@ public class ProductServiceImp implements ProductService {
                 if(!size.getType().equals(clothing.getProductCategory().getSecondaryCat()))
                     throw new IllegalArgumentException("Can't use this size for this category");
                 clothing.setClothingSize(size);
-                productRepository.save(clothing);
             }
             else if (productCreateDTO instanceof HomeCreateDTO){
                 Home home= (Home) product;
@@ -98,10 +97,7 @@ public class ProductServiceImp implements ProductService {
                 if(!size.getType().equals(home.getProductCategory().getPrimaryCat()))
                     throw new IllegalArgumentException("Can't use this size for this category");
                 home.setHomeSize(size);
-                productRepository.save(home);
             }
-            else
-                productRepository.save(product);
 
             productRepository.save(product);
 
