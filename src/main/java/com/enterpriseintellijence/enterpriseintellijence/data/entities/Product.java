@@ -93,7 +93,7 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "user_id",nullable = false))
     List<User> usersThatLiked = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Offer> offers =new ArrayList<>();
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
@@ -111,11 +111,12 @@ public class Product {
     @PreRemove
     private void preRemove(){
         this.usersThatLiked.clear();
-        this.offers.clear();
-        this.messages.clear();
         this.order = null;
         // TODO: 26/06/2023 rimuovere le immagini prima della consegna
         //this.productImages.clear();
+        for (Message message:this.messages){
+            message.setProduct(null);
+        }
         for(Report report:this.reports){
             report.setReportedProduct(null);
         }

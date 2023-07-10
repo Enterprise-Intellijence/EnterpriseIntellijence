@@ -112,9 +112,7 @@ public class ProductSpecification {
                         predicates.add(criteriaBuilder.equal(root.get("uploadDate"), filter.getUploadDate()));
                     }
 
-                    if (filter.getAvailability() != null) {
-                        predicates.add(criteriaBuilder.equal(root.get("availability"), Availability.AVAILABLE));
-                    }
+                    predicates.add(criteriaBuilder.equal(root.get("availability"), Availability.AVAILABLE));
 
                     if (filter.getProductCategory() != null)
                         predicates.add(criteriaBuilder.equal(root.get("productCategory"), filter.getProductCategory()));
@@ -137,8 +135,7 @@ public class ProductSpecification {
                         predicates.add(criteriaBuilder.equal(root.get("seller"), filter.getSeller()));
                     }
                     predicates.add(criteriaBuilder.equal(root.get("visibility"), Visibility.PUBLIC));
-
-
+                    
                     //ATTRIBUTI DELLA CLASSE Clothing.class
                     if (filter.getPrimaryCat() != null && filter.getPrimaryCat().equals("Clothing")) {
                         Root<Clothing> clothingRoot = query.from(Clothing.class);

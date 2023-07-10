@@ -177,10 +177,10 @@ public class ProductServiceImp implements ProductService {
         if (loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot delete product of others");
 
-        if (loggedUser.getRole().equals(UserRole.USER) && product.getOrder() != null)
+        if (product.getOrder() != null)
             throw new IllegalAccessException("Cannot delete product with order active");
 
-        // TODO: 26/06/2023 perchè product sold in una delete?
+        //Avvisiamo un utente che aveva messo like al prodotto che questo è stato venduto o rimosso dal venditore
         notificationService.notifyProductSold(product);
         try {
             productRepository.delete(product);
@@ -206,6 +206,8 @@ public class ProductServiceImp implements ProductService {
         if (product.getVisibility().equals(Visibility.PRIVATE) && !ignoreVisibility)
             throw new EntityNotFoundException("Product not found");
 
+        if (!product.getAvailability().equals(Availability.AVAILABLE))
+            throw new EntityNotFoundException("Product not found");
 
         product.setViews(product.getViews() + 1);
         productRepository.save(product);

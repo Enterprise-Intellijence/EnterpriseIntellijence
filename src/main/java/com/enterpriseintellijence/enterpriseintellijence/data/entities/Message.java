@@ -23,16 +23,17 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
+
     private String text;
 
     @Column(length = 36, nullable = false, updatable = false)
     private String conversationId;
 
-    @Column(name = "message_date")
+    @Column(name = "message_date", nullable = false, updatable = false)
     private LocalDateTime messageDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "message_status")
+    @Column(name = "message_status", nullable = false)
     private MessageStatus messageStatus;
 
     @ManyToOne
@@ -40,11 +41,11 @@ public class Message {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "send_user")
+    @JoinColumn(name = "send_user", nullable = false)
     private  User sendUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "received_user")
+    @JoinColumn(name = "received_user", nullable = false)
     private User receivedUser;
 
     @OneToOne(cascade = CascadeType.ALL)
