@@ -58,5 +58,5 @@ public class ProductCreateDTO {
     @NotNull
     private ProductCategoryDTO productCategory;
 
-    private List<@Size(max = 5)MultipartFile> productImages;
+    //private List<@Size(max = 5)MultipartFile> productImages;
 }

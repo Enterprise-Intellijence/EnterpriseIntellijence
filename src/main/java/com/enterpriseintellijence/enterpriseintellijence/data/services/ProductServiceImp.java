@@ -8,6 +8,8 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDT
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ClothingCreateDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.creation.HomeCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ProductCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 
@@ -41,8 +43,6 @@ public class ProductServiceImp implements ProductService {
     private final ProductCatRepository productCatRepository;
     private final SizeRepository sizeRepository;
     private final TokenStore tokenStore;
-    // TODO: 19/06/2023 usare interfaccia
-    private final ImageServiceImp imageServiceImp;
 
     private final Clock clock;
 
@@ -78,11 +78,26 @@ public class ProductServiceImp implements ProductService {
                 else throw new IllegalArgumentException("Category not found");
             }
 
-            // TODO: 22/06/2023 controllo sulla size
+            if(productCreateDTO instanceof ClothingCreateDTO){
+                Clothing clothing= (Clothing) product;
+                Size size = sizeRepository.findById(clothing.getClothingSize().getId()).orElseThrow(EntityNotFoundException::new);
+                if(!size.getType().equals(clothing.getProductCategory().getSecondaryCat()))
+                    throw new IllegalArgumentException("Can't use this size for this category");
+                clothing.setClothingSize(size);
+                productRepository.save(clothing);
+            }
+            else if (productCreateDTO instanceof HomeCreateDTO){
+                Home home= (Home) product;
+                Size size = sizeRepository.findById(home.getHomeSize().getId()).orElseThrow(EntityNotFoundException::new);
+                if(!size.getType().equals(home.getProductCategory().getPrimaryCat()))
+                    throw new IllegalArgumentException("Can't use this size for this category");
+                home.setHomeSize(size);
+                productRepository.save(home);
+            }
+            else
+                productRepository.save(product);
+
             productRepository.save(product);
-            /*for (MultipartFile multipartFile : productCreateDTO.getProductImages()) {
-                imageServiceImp.localProductImageSave(product, multipartFile, new ProductImage(), "ciao");
-            }*/
 
             notificationService.notifyNewProduct(product);
             return mapToProductDetailsDTO(product);

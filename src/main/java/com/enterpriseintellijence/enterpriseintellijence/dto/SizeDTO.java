@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class SizeDTO {
-
+    @NotNull
     private String id;
     @NotNull
     private String sizeName;
