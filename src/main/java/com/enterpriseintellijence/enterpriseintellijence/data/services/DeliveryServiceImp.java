@@ -183,6 +183,8 @@ public class DeliveryServiceImp implements DeliveryService {
             }
             address.setDefault(true);
         }
+        else if(!addressDTO.getIsDefault() && address.isDefault())
+            address.setDefault(false);
 
 
         addressRepository.save(address);

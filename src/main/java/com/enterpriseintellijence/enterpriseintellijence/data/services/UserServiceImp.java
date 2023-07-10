@@ -118,6 +118,11 @@ public class UserServiceImp implements UserService{
             String newUsername = "deletedUser_" + loggedUser.getId();
             loggedUser.setUsername(newUsername);
 
+            for(Product product: loggedUser.getSellingProducts()){
+                if(product.getOrder()!=null && product.getOrder().isEmpty())
+                    productRepository.delete(product);
+            }
+
             //TODO: delete all user's products
             userRepository.save(loggedUser);
         }catch (Exception e){

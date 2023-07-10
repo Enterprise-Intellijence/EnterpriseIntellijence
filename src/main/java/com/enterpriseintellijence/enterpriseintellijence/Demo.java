@@ -645,7 +645,7 @@ public class Demo {
                     .build();
 
             orderRepository.save(order);
-            product.setOrder(order);
+            product.getOrder().add(order);
 
             productRepository.save(product);
             globalPurchased++;
@@ -670,7 +670,7 @@ public class Demo {
                     .build();
 
             orderRepository.save(order);
-            product.setOrder(order);
+            product.getOrder().add(order);
             productRepository.save(product);
             globalPurchased++;
 

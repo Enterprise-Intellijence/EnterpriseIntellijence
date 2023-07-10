@@ -80,7 +80,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
 
         paymentMethod.setOwner(patch.getOwner());
 
-        if(patch.getIsDefault()){
+        if(patch.getIsDefault() && !paymentMethod.isDefault()){
             for(PaymentMethod paymentMethod1:loggedUser.getPaymentMethods()) {
                 if (paymentMethod1.isDefault()) {
                     paymentMethod1.setDefault(false);
@@ -89,6 +89,8 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
             }
             paymentMethod.setDefault(true);
         }
+        else if(!patch.getIsDefault() && paymentMethod.isDefault() )
+            paymentMethod.setDefault(false);
 
         paymentMethodRepository.save(paymentMethod);
         return mapToDTO(paymentMethod);
