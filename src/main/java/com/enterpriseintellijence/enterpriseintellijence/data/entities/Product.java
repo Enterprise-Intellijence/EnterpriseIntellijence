@@ -99,8 +99,8 @@ public class Product {
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<Message> messages = new ArrayList<>();
 
-    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
-    private Order order;
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private List<Order> order;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<ProductImage> productImages;
@@ -110,10 +110,7 @@ public class Product {
 
     @PreRemove
     private void preRemove(){
-        this.usersThatLiked.clear();
-        this.order = null;
-        // TODO: 26/06/2023 rimuovere le immagini prima della consegna
-        //this.productImages.clear();
+
         for (Message message:this.messages){
             message.setProduct(null);
         }

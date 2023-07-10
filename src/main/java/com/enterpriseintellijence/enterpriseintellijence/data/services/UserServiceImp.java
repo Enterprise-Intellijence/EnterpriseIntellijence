@@ -51,6 +51,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class UserServiceImp implements UserService{
 
     private final UserRepository userRepository;
+    private final ProductService productService;
     private final ModelMapper modelMapper;
     private final JwtContextUtils jwtContextUtils;
     private final PaymentMethodRepository paymentMethodRepository;
@@ -88,21 +89,18 @@ public class UserServiceImp implements UserService{
         if(!id.equals(userDTO.getId()))
             throw new IllegalAccessException("User cannot change another user");
 
-        if(!id.equals(loggedUser.getId()) && (!loggedUser.getRole().equals(UserRole.ADMIN)) )
+        if(!id.equals(loggedUser.getId()) && (!loggedUser.isAdministrator()) )
             throw new IllegalAccessException("User cannot change another user");
 
 
         if(!oldUser.getUsername().equals(userDTO.getUsername()) && userRepository.findByUsername(userDTO.getUsername()) != null)
             throw new IllegalAccessException("Username already exists");
-        if(!oldUser.getEmail().equals(userDTO.getEmail()) && userDTO.getEmail() != null && userRepository.findByEmail(userDTO.getEmail()) != null)
+        if(!oldUser.getEmail().equals(userDTO.getEmail()) && userRepository.findByEmail(userDTO.getEmail()) != null)
             throw new IllegalAccessException("Email already exists");
 
+        oldUser.setUsername(userDTO.getUsername());
+        oldUser.setEmail(userDTO.getEmail());
 
-
-        if(!oldUser.getUsername().equals(userDTO.getUsername()))
-            oldUser.setUsername(userDTO.getUsername());
-        if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
-            oldUser.setEmail(userDTO.getEmail());
         if(userDTO.getBio() != null && !userDTO.getBio().equals(oldUser.getBio())/* oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())*/)
             oldUser.setBio(userDTO.getBio());
 

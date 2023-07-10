@@ -21,8 +21,6 @@ public interface ProductService {
     String getCapabilityUrl(String productId);
 
     CapabilityDTO getCapability(String productId);
-
-    Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size);
     
 
     Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size);
@@ -30,8 +28,6 @@ public interface ProductService {
     Page<OfferBasicDTO> getProductOffers(String id, int page, int size) throws IllegalAccessException;
 
     Page<MessageDTO> getProductMessages(String id, int page, int size) throws IllegalAccessException;
-
-    OrderBasicDTO getProductOrder(String id) throws IllegalAccessException;
 
 
     Iterable<ProductCategoryDTO> getCategoriesList();

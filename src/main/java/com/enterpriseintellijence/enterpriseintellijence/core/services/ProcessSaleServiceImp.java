@@ -87,7 +87,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.setDeliveryAddress(deliveryAddress);
         product.setAvailability(Availability.PENDING);
         product.setLastUpdateDate(now);
-        product.setOrder(order);
+        product.getOrder().add(order);
         order.setProduct(product);
 
         order.setUser(loggedUser);

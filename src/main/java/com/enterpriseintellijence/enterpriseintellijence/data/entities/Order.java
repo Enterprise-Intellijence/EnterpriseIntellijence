@@ -34,7 +34,7 @@ public class Order {
     @Column(nullable = false)
     private OrderState state;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_product", nullable = false)
     private Product product;
 

@@ -24,6 +24,7 @@ import java.util.List;
 @Builder
 public class UserDTO {
 
+    @NotNull
     private String id;
 
     @Length(min = 3, max = 25)
@@ -31,8 +32,10 @@ public class UserDTO {
     private String username;
 
     @Email
+    @NotNull
     private String email;
 
+    @Length(max = 500)
     private String bio;
 
     private UserImageDTO photoProfile;

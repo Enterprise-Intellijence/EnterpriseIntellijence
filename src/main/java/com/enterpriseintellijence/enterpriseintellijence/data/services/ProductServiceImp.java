@@ -177,7 +177,7 @@ public class ProductServiceImp implements ProductService {
         if (loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot delete product of others");
 
-        if (product.getOrder() != null)
+        if (product.getOrder().isEmpty())
             throw new IllegalAccessException("Cannot delete product with order active");
 
         //Avvisiamo un utente che aveva messo like al prodotto che questo è stato venduto o rimosso dal venditore
@@ -199,14 +199,10 @@ public class ProductServiceImp implements ProductService {
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-        if (loggedUser != null && product.getSeller().getId().equals(loggedUser.getId()))
+        if (loggedUser != null && product.getSeller().getId().equals(loggedUser.getId()) && !loggedUser.getRole().equals(UserRole.USER))
             return mapToProductDetailsDTO(product);
 
-
         if (product.getVisibility().equals(Visibility.PRIVATE) && !ignoreVisibility)
-            throw new EntityNotFoundException("Product not found");
-
-        if (!product.getAvailability().equals(Availability.AVAILABLE))
             throw new EntityNotFoundException("Product not found");
 
         product.setViews(product.getViews() + 1);
@@ -219,36 +215,19 @@ public class ProductServiceImp implements ProductService {
         return mapToProductBasicDTO(mapToEntity(getProductById(id, ignoreVisibility)));
     }
 
-    @Override
-    public Page<ProductBasicDTO> getAllPagedBySellerId(UserBasicDTO userBasicDTO, int page, int size) {
-        User user = modelMapper.map(userBasicDTO, User.class);
-        Page<Product> products = null;
-
-        if (jwtContextUtils.getUsernameFromContext().isPresent() && jwtContextUtils.getUsernameFromContext().get().equals(user.getUsername()))
-            products = productRepository.findAllBySeller(user, PageRequest.of(page, size));
-        else
-            products = productRepository.findAllBySellerAndVisibilityEquals(user, Visibility.PUBLIC, PageRequest.of(page, size));
-        List<ProductBasicDTO> collect = products.stream().map(s -> modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
-
-        return new PageImpl<>(collect, products.getPageable(), products.getTotalElements());
-    }
-
 
     @Override
     public Page<UserBasicDTO> getUserThatLikedProduct(String id, int page, int size) {
-        Optional<User> u = userRepository.findById(id);
-        if (u.isEmpty()) {
-            throw new EntityNotFoundException("Product not found");
-        }
-        return userRepository.findAllByLikedProducts(id, PageRequest.of(page, size))
-            .map(user -> modelMapper.map(user, UserBasicDTO.class));
+        Product p = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        return new PageImpl<>(p.getUsersThatLiked().stream().map(user -> modelMapper.map(user, UserBasicDTO.class)).collect(Collectors.toList()), PageRequest.of(page, size), p.getUsersThatLiked().size());
     }
 
     @Override
     public Page<OfferBasicDTO> getProductOffers(String id, int page, int size) throws IllegalAccessException {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        if (!loggedUser.getId().equals(product.getSeller().getId()))
+        if (!loggedUser.isAdministrator() && !loggedUser.getId().equals(product.getSeller().getId()))
             throw new IllegalAccessException("Cannot see offers of others product");
         Page<Offer> offers = new PageImpl<Offer>(product.getOffers(), PageRequest.of(page, size), product.getOffers().size());
         List<OfferBasicDTO> collect = offers.stream().map(s -> modelMapper.map(s, OfferBasicDTO.class)).collect(Collectors.toList());
@@ -260,7 +239,7 @@ public class ProductServiceImp implements ProductService {
     public Page<MessageDTO> getProductMessages(String id, int page, int size) throws IllegalAccessException {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        if (!loggedUser.getId().equals(product.getSeller().getId()))
+        if (!loggedUser.isAdministrator() || !loggedUser.getId().equals(product.getSeller().getId()))
             throw new IllegalAccessException("Cannot see messages of others product");
         Page<Message> messages = new PageImpl<Message>(product.getMessages(), PageRequest.of(page, size), product.getMessages().size());
         List<MessageDTO> collect = messages.stream().map(s -> modelMapper.map(s, MessageDTO.class)).collect(Collectors.toList());
@@ -269,6 +248,7 @@ public class ProductServiceImp implements ProductService {
     }
 
 
+    /*
     @Override
     public OrderBasicDTO getProductOrder(String id) throws IllegalAccessException {
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -283,18 +263,15 @@ public class ProductServiceImp implements ProductService {
             throw new EntityNotFoundException("Order not exists");
     }
 
+     */
+
     @Override
     public Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size, String sortBy, String sortDirection) {
 
-        Sort sort = null;
-        Sort.Direction direction = null;
-        if (sortBy != null && !sortBy.isEmpty()) {
-            if (sortDirection.equals("DESC") || sortDirection.equals("ASC"))
-                direction = Sort.Direction.fromString(sortDirection);
-            else
-                direction = Sort.Direction.DESC;
-            sort = Sort.by(direction, sortBy);
-        }
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+
+        Sort sort = Sort.by(direction, sortBy);
+
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Product> products = productRepository.findAll(withFilters, pageable);
@@ -415,27 +392,21 @@ public class ProductServiceImp implements ProductService {
 
 
     private Product mapToEntity(ProductDTO productDTO) {
-        if (productDTO.getProductCategory().getPrimaryCat().equals("Clothing")) {
-            return modelMapper.map(productDTO, Clothing.class);
-        } else if (productDTO.getProductCategory().getPrimaryCat().equals("Home")) {
-
-            return modelMapper.map(productDTO, Home.class);
-        } else if (productDTO.getProductCategory().getPrimaryCat().equals("Entertainment")) {
-            return modelMapper.map(productDTO, Entertainment.class);
-        } else {
-            return modelMapper.map(productDTO, Product.class);
-        }
+        return switch (productDTO.getProductCategory().getPrimaryCat()) {
+            case "Clothing" -> modelMapper.map(productDTO, Clothing.class);
+            case "Home" -> modelMapper.map(productDTO, Home.class);
+            case "Entertainment" -> modelMapper.map(productDTO, Entertainment.class);
+            default -> modelMapper.map(productDTO, Product.class);
+        };
     }
 
     private ProductDTO mapToProductDetailsDTO(Product product) {
-        if (product.getProductCategory().getPrimaryCat().equals("Clothing"))
-            return modelMapper.map(product, ClothingDTO.class);
-        else if (product.getProductCategory().getPrimaryCat().equals("Home"))
-            return modelMapper.map(product, HomeDTO.class);
-        else if (product.getProductCategory().getPrimaryCat().equals("Entertainment"))
-            return modelMapper.map(product, EntertainmentDTO.class);
-        else
-            return modelMapper.map(product, ProductDTO.class);
+        return switch (product.getProductCategory().getPrimaryCat()) {
+            case "Clothing" -> modelMapper.map(product, ClothingDTO.class);
+            case "Home" -> modelMapper.map(product, HomeDTO.class);
+            case "Entertainment" -> modelMapper.map(product, EntertainmentDTO.class);
+            default -> modelMapper.map(product, ProductDTO.class);
+        };
     }
 
     private List<ProductBasicDTO> mapToProductBasicDTOList(Page<Product> products) {
@@ -448,7 +419,7 @@ public class ProductServiceImp implements ProductService {
 
 
     private void throwOnIdMismatch(String productId, ProductDTO productDTO) {
-        if (productDTO.getId() != null && !productDTO.getId().equals(productId)) {
+        if (!productDTO.getId().equals(productId)) {
             throw new IdMismatchException();
         }
     }
