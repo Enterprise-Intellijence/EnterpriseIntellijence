@@ -150,10 +150,13 @@ public class DeliveryServiceImp implements DeliveryService {
         return modelMapper.map(address,AddressDTO.class);
     }
 
+    /*
     @Override
     public AddressDTO replaceAddress(String id, AddressDTO addressDTO) throws IllegalAccessException {
         return updateAddress(id,addressDTO);
     }
+
+     */
 
     @Override
     public AddressDTO updateAddress(String id, AddressDTO addressDTO) throws IllegalAccessException {

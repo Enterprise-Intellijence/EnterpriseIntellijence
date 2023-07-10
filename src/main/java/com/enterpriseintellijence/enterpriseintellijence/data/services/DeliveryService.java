@@ -13,8 +13,6 @@ public interface DeliveryService {
 
     AddressDTO createAddress(AddressCreateDTO addressCreateDTO);
 
-    AddressDTO replaceAddress(String id, AddressDTO addressDTO) throws IllegalAccessException;
-
     AddressDTO updateAddress(String id, AddressDTO addressDTO) throws IllegalAccessException;
 
     void deleteAddress(String id) throws IllegalAccessException;

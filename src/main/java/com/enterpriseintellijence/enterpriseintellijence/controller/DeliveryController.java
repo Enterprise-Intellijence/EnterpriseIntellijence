@@ -71,10 +71,13 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.createAddress(addressCreateDTO));
     }
 
+    /*
     @PutMapping(path = "/address/{id}", consumes = "application/json")
     public ResponseEntity<AddressDTO> replaceAddress(@PathVariable("id") String id, @Valid @RequestBody AddressDTO addressDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.replaceAddress(id, addressDTO));
     }
+    
+     */
 
     @PutMapping(path = "/address/{id}", consumes = "application/json")
     public ResponseEntity<AddressDTO> updateAddress(@PathVariable("id") String id, @Valid @RequestBody AddressDTO addressDTO) throws IllegalAccessException {
