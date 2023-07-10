@@ -8,7 +8,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +32,7 @@ public class RequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        logger.info("Request: id: " + request.getRequestId() + " uri: " + request.getRequestURI() + " " + request.getMethod() + " from:" + request.getLocalAddr());
         String token = tokenStore.getToken(request);
         if(!token.equals("invalid") && invalidTokensRepository.findByToken(token).isPresent()) {
             token = "invalid";
@@ -48,6 +51,7 @@ public class RequestFilter extends OncePerRequestFilter {
                     e.printStackTrace();
             }
         }
+        logger.info("Response:  to request id: " + request.getRequestId() + " response status: " + response.getStatus());
         chain.doFilter(request, response);
     }
 }

@@ -117,9 +117,6 @@ public class UserController {
 
     @PostMapping(value = "/login-with-google", consumes = "application/x-www-form-urlencoded;charset=UTF-8")
     public ResponseEntity<Map<String, String>> loginWithGoogle(LoginWithGoogleBody body) throws Exception {
-        System.out.println("credentials in body (login-with-google):\n" +  body.getCredential());
-        System.out.println("g_csrf_token in body (login-with-google):\n" +  body.getG_csrf_token());
-
         return ResponseEntity.ok(userService.googleAuth(body.getCredential()));
     }
 
