@@ -76,10 +76,10 @@ public class UserController {
 
     }*/
 
-    @PutMapping(path = "/{id}",consumes="application/json")
-    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO userDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(userService.replaceUser(id, userDTO));
-    }
+//    @PutMapping(path = "/{id}",consumes="application/json")
+//    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO userDTO) throws IllegalAccessException {
+//        return ResponseEntity.ok(userService.replaceUser(id, userDTO));
+//    }
 
     @PatchMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO patch) throws IllegalAccessException {
