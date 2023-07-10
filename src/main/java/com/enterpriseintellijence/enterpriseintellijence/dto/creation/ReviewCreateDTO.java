@@ -29,6 +29,7 @@ public class ReviewCreateDTO {
 
     @Max(5)
     @Min(1)
+    @NotNull
     private Integer vote;
 
     @NotNull

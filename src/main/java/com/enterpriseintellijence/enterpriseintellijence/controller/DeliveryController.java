@@ -46,7 +46,7 @@ public class DeliveryController {
      */
 
 
-    @PatchMapping(path = "/{id}", consumes = "application/json")
+    @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.updateDelivery(id, deliveryDTO));
     }
@@ -76,7 +76,7 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.replaceAddress(id, addressDTO));
     }
 
-    @PatchMapping(path = "/address/{id}", consumes = "application/json")
+    @PutMapping(path = "/address/{id}", consumes = "application/json")
     public ResponseEntity<AddressDTO> updateAddress(@PathVariable("id") String id, @Valid @RequestBody AddressDTO addressDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.updateAddress(id, addressDTO));
     }

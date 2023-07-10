@@ -31,12 +31,15 @@ public class ReviewController {
         return reviewService.createReview(reviewDTO);
     }
 
+    /*
     @PutMapping(path = "/{id}",consumes="application/json")
     public ResponseEntity<ReviewDTO> replaceReview(@PathVariable("id") String id, @Valid @RequestBody ReviewDTO reviewDTO) throws IllegalAccessException {
         return ResponseEntity.ok(reviewService.replaceReview(id,reviewDTO));
     }
 
-    @PatchMapping(path="/{id}", consumes = "application/json")
+     */
+
+    @PutMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<ReviewDTO> updateReview(@PathVariable("id") String id, @Valid @RequestBody ReviewDTO patch) throws IllegalAccessException {
         return ResponseEntity.ok(reviewService.updateReview(id,patch));
     }

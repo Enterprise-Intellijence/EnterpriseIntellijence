@@ -28,7 +28,6 @@ import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecu
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @SecurityRequirement(name = SECURITY_CONFIG_NAME)
 public class PaymentMethodController {
-    // TODO: 16/05/23 Erne 
 
     private final PaymentMethodService paymentMethodService;
 
@@ -41,12 +40,15 @@ public class PaymentMethodController {
         return ResponseEntity.ok(paymentMethodService.createPaymentMethod(paymentMethodCreateDTO));
     }
 
+    /*
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<PaymentMethodDTO> replacePaymentMethod(@PathVariable("id") String id, @Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
         return ResponseEntity.ok(paymentMethodService.replacePaymentMethod(id, paymentMethodDTO));
     }
 
-    @PatchMapping(path = "/{id}", consumes = "application/json")
+     */
+
+    @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(@PathVariable("id") String id, @Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
         return ResponseEntity.ok(paymentMethodService.updatePaymentMethod(id, paymentMethodDTO));
     }

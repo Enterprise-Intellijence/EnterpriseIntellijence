@@ -46,15 +46,12 @@ public class ProductController {
         return productService.createProduct(productCreateDTO);
     }
 
+
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> replaceProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(productService.replaceProduct(id, productDTO));
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO) throws IllegalAccessException {
+        return ResponseEntity.ok(productService.updateProduct(id, productDTO));
     }
 
-    @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO patch) throws IllegalAccessException {
-        return ResponseEntity.ok(productService.updateProduct(id, patch));
-    }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

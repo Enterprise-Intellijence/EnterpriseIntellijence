@@ -14,6 +14,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.ReviewDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.ReviewCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
@@ -46,29 +47,25 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public ReviewDTO createReview(ReviewCreateDTO reviewDTO) throws IllegalAccessException {
-        // TODO: 29/05/2023 rivedere con calma
-       /* if (!checkOwnership(reviewDTO)) {
-            throw new IllegalAccessException("User cannot review himself");
-        }*/
+
         Order order = orderRepository.findById(reviewDTO.getOrderBasicDTO().getId()).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
         if(order.getProduct().getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("User cannot review himself");
 
+        if(!order.getUser().getId().equals(loggedUser.getId()))
+            throw new IllegalAccessException("User cannot review an order that isn't his");
+
         if(!order.getState().equals(OrderState.COMPLETED))
             throw new IllegalAccessException("Cannot review if order isn't completed");
-
-        if (order.getOrderDate().equals(OrderState.REVIEWED))
-            throw new IllegalAccessException("Order already reviewed");
 
         Review review = modelMapper.map(reviewDTO,Review.class);
 
 
-        review.setReviewer(order.getProduct().getSeller());
+        review.setReviewed(order.getProduct().getSeller());
         review.setDate(LocalDateTime.now());
         review.setReviewer(loggedUser);
-        // TODO: 29/05/2023 controllare la relazione con gli user
         loggedUser.addReview(review.getVote());
         order.setState(OrderState.REVIEWED);
 
@@ -79,6 +76,7 @@ public class ReviewServiceImp implements ReviewService {
         return mapToDTO(review);
     }
 
+    /*
     @Override
     public ReviewDTO replaceReview(String id, ReviewDTO reviewDTO) throws IllegalAccessException {
 
@@ -101,6 +99,8 @@ public class ReviewServiceImp implements ReviewService {
         return mapToDTO(newReview);
     }
 
+     */
+
     @Override
     public ReviewDTO updateReview(String id, ReviewDTO patch) throws IllegalAccessException {
         throwOnIdMismatch(id, patch);
@@ -110,18 +110,14 @@ public class ReviewServiceImp implements ReviewService {
             throw new IllegalAccessException("User cannot change review");
         }
 
-        if (patch.getTitle() != null) {
-            review.setTitle(patch.getTitle());
-        }
+        review.setTitle(patch.getTitle());
 
         if (patch.getDescription() != null) {
             review.setDescription(patch.getDescription());
         }
 
-        if (patch.getVote() != null) {
-            review.setVote(patch.getVote());
-            user.editReview(review.getVote(), patch.getVote());
-        }
+        review.setVote(patch.getVote());
+        user.editReview(review.getVote(), patch.getVote());
 
         reviewRepository.save(review);
         userRepository.save(user);
@@ -132,7 +128,7 @@ public class ReviewServiceImp implements ReviewService {
     public void deleteReview(String id) throws IllegalAccessException {
         Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User user = jwtContextUtils.getUserLoggedFromContext();
-        if(!review.getReviewer().getId().equals(user.getId())) {
+        if(user.getRole().equals(UserRole.USER) && !review.getReviewer().getId().equals(user.getId())) {
             throw new IllegalAccessException("User cannot delete review");
         }
         reviewRepository.deleteById(id);
@@ -145,14 +141,7 @@ public class ReviewServiceImp implements ReviewService {
     @Override
     public ReviewDTO reviewById(String id) {
         Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
         return mapToDTO(review);
-    }
-
-    @Override
-    public Iterable<ReviewDTO> findAll() {
-        Iterable<Review> reviews = reviewRepository.findAll();
-        return mapToDTO(reviews);
     }
 
     @Override
@@ -173,13 +162,6 @@ public class ReviewServiceImp implements ReviewService {
         else
             return new PageImpl<>(List.of() ,PageRequest.of(page,sizePage),0);
 
-    }
-
-    // TODO: VA TESTATA ASSOLUTAMENTE
-    private Iterable<ReviewDTO> mapToDTO(Iterable<Review> reviews) {
-        Iterable<ReviewDTO> reviewDTOs = new ArrayList<>();
-        modelMapper.map(reviews,reviewDTOs);
-        return reviewDTOs;
     }
 
 /*    private boolean checkOwnership(ReviewDTO review){
@@ -204,7 +186,7 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     private void throwOnIdMismatch(String id, ReviewDTO reviewDTO) {
-        if (reviewDTO.getId() != null && !reviewDTO.getId().equals(id)) {
+        if (!reviewDTO.getId().equals(id)) {
             throw new IdMismatchException();
         }
     }

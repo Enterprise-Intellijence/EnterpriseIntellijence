@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewDTO {
 
+    @NotNull
     private String id;
 
     @Past
@@ -31,6 +32,7 @@ public class ReviewDTO {
 
     @Max(5)
     @Min(1)
+    @NotNull
     private Integer vote;
 
     @NotNull

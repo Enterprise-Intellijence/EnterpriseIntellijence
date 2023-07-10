@@ -52,9 +52,9 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/products/")
+    @PutMapping("/products/")
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(productService.replaceProduct(productDTO.getId(), productDTO));
+        return ResponseEntity.ok(productService.updateProduct(productDTO.getId(), productDTO));
     }
 
 }

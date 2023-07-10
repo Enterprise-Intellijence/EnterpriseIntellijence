@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 public interface PaymentMethodService {
 
         PaymentMethodDTO createPaymentMethod(PaymentMethodCreateDTO paymentMethodCreateDTO) throws IllegalAccessException;
-        PaymentMethodDTO replacePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException;
         PaymentMethodDTO updatePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException;
         void deletePaymentMethod(String id) throws IllegalAccessException;
         PaymentMethodDTO getPaymentMethodById(String id) throws IllegalAccessException;

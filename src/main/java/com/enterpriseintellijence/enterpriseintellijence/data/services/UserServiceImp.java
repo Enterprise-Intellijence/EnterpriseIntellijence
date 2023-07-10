@@ -73,10 +73,13 @@ public class UserServiceImp implements UserService{
         return mapToDto(user);
     }
 
+    /*
     public UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException {
 
         return updateUser(id,userDTO);
     }
+
+     */
 
     public UserDTO updateUser(String id, UserDTO userDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
@@ -100,31 +103,9 @@ public class UserServiceImp implements UserService{
             oldUser.setUsername(userDTO.getUsername());
         if(userDTO.getEmail()!=null && !oldUser.getEmail().equals(userDTO.getEmail()))
             oldUser.setEmail(userDTO.getEmail());
-        /*if(userDTO.getPhotoProfile()!=null ){
-            UserImage userImage = new UserImage();
-            if(oldUser.getPhotoProfile().getId()!=null)
-                userImage.setId(oldUser.getId());
-            if(userDTO.getPhotoProfile().getDescription()!=null && !oldUser.getPhotoProfile().getDescription().equals(userDTO.getPhotoProfile().getDescription()))
-                userImage.setDescription(userDTO.getPhotoProfile().getDescription());
-            *//*if(userDTO.getPhotoProfile().getPhoto()!=null && !Arrays.equals(oldUser.getPhotoProfile().getPhoto(), userDTO.getPhotoProfile().getPhoto()))
-                userImage.setPhoto(userDTO.getPhotoProfile().getPhoto());
-*//*          userImage.setUser(oldUser);
-            oldUser.setPhotoProfile(userImage);
-        }*/
         if(userDTO.getBio() != null && !userDTO.getBio().equals(oldUser.getBio())/* oldUser.getBio() == null || !oldUser.getBio().equals(userDTO.getBio())*/)
             oldUser.setBio(userDTO.getBio());
-/*        if(userDTO.getDefaultAddress()!=null){
-            Address address
-            oldUser.setDefaultAddress(mo);
-        }*/
 
-
-        //oldUser.setAddress(modelMapper.map( userDTO.getAddress(),Address.class));
-/*        if (userDTO.getDefaultPaymentMethod()!=null &&  !oldUser.getDefaultPaymentMethod().getId().equals(userDTO.getDefaultPaymentMethod().getId())) {
-            PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(userDTO.getDefaultPaymentMethod().getId());
-            //paymentMethod.setDefaultUser(oldUser);
-            oldUser.setDefaultPaymentMethod(paymentMethod);
-        }*/
         userRepository.save(oldUser);
         return mapToDto(oldUser);
     }
@@ -136,12 +117,14 @@ public class UserServiceImp implements UserService{
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized Request");
 
             loggedUser.setStatus(UserStatus.CANCELLED);
+            String newUsername = "deletedUser_" + loggedUser.getId();
+            loggedUser.setUsername(newUsername);
+
+            //TODO: delete all user's products
             userRepository.save(loggedUser);
         }catch (Exception e){
             e.printStackTrace();
         }
-        //User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
     }
 
     public UserBasicDTO findUserById(String id) {

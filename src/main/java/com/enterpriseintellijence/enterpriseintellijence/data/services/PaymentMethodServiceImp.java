@@ -39,13 +39,6 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
-/*        if (!loggedUser.getId().equals(paymentMethod.getDefaultUser().getId())) {
-            throw new IllegalAccessException("User cannot create payment method");
-        }*/
-
-/*        paymentMethod.setCreditCard(paymentMethodDTO.getCreditCard());
-        paymentMethod.setOwner(paymentMethodDTO.getOwner());
-        paymentMethod.setExpiryDate(paymentMethodDTO.getExpiryDate());*/
         paymentMethod.setOwnerUser(loggedUser);
 
         if(paymentMethod.isDefault()){
@@ -61,27 +54,15 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         return mapToDTO(paymentMethod);
     }
 
+    /*
     @Override
     public PaymentMethodDTO replacePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
-       /* throwOnIdMismatch(id, paymentMethodDTO);
 
-        PaymentMethod oldPaymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        PaymentMethod newPaymentMethod = mapToEntity(paymentMethodDTO);
-
-        UserDTO requestingUser = userService.findUserFromContext()
-            .orElseThrow(EntityNotFoundException::new);
-
-        if (!requestingUser.getId().equals(oldPaymentMethod.getDefaultUser().getId())) {
-            throw new IllegalAccessException("User cannot change payment method");
-        }
-
-        if (!requestingUser.getId().equals(newPaymentMethod.getDefaultUser().getId())) {
-            throw new IllegalAccessException("User cannot change payment method");
-        }
-
-        newPaymentMethod = paymentMethodRepository.save(newPaymentMethod);*/
         return updatePaymentMethod(id,paymentMethodDTO);
     }
+
+     */
+
 
     @Override
     public PaymentMethodDTO updatePaymentMethod(String id, PaymentMethodDTO patch) throws IllegalAccessException {
@@ -93,17 +74,12 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
             throw new IllegalAccessException("User cannot update payment method");
         }
 
-        if (patch.getCreditCard() != null && !paymentMethod.getCreditCard().equals(patch.getCreditCard())) {
-            paymentMethod.setCreditCard(patch.getCreditCard());
-        }
+        paymentMethod.setCreditCard(patch.getCreditCard());
 
-        if (patch.getExpiryDate() != null && !paymentMethod.getExpiryDate().equals(patch.getExpiryDate())) {
-            paymentMethod.setExpiryDate(patch.getExpiryDate());
-        }
+        paymentMethod.setExpiryDate(patch.getExpiryDate());
 
-        if (patch.getOwner() != null && !paymentMethod.getOwner().equals(patch.getOwner())) {
-            paymentMethod.setOwner(patch.getOwner());
-        }
+        paymentMethod.setOwner(patch.getOwner());
+
         if(patch.getIsDefault()){
             for(PaymentMethod paymentMethod1:loggedUser.getPaymentMethods()) {
                 if (paymentMethod1.isDefault()) {
@@ -114,7 +90,6 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
             paymentMethod.setDefault(true);
         }
 
-
         paymentMethodRepository.save(paymentMethod);
         return mapToDTO(paymentMethod);
     }
@@ -122,13 +97,10 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     @Override
     public void deletePaymentMethod(String id) throws IllegalAccessException {
         try{
-            System.out.println("ci arrivo?");
-
             PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
             User loggedUser = jwtContextUtils.getUserLoggedFromContext();
             if(loggedUser.getRole().equals(UserRole.USER) && !paymentMethod.getOwnerUser().getId().equals(loggedUser.getId()))
                 throw new IllegalAccessException("Cannot delete payment method");
-            System.out.println("ci arrivo?");
             paymentMethodRepository.deleteById(id);
         }catch (Exception e){
             e.printStackTrace();
@@ -165,7 +137,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     }
 
     private void throwOnIdMismatch(String id, PaymentMethodDTO paymentMethodDTO) {
-        if (paymentMethodDTO.getId() != null && !paymentMethodDTO.getId().equals(id))
+        if (!paymentMethodDTO.getId().equals(id))
             throw new IdMismatchException();
     }
 }

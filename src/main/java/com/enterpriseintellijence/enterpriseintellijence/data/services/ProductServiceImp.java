@@ -62,12 +62,14 @@ public class ProductServiceImp implements ProductService {
             product.setViews(0);
             product.setSeller(loggedUser);
             product.setAvailability(Availability.AVAILABLE);
-            /*if (!productCatRepository.existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(
+            /*
+            if (!productCatRepository.existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(
                 productCreateDTO.getProductCategory().getId(),
                 productCreateDTO.getProductCategory().getPrimaryCat(),
                 productCreateDTO.getProductCategory().getSecondaryCat(),
                 productCreateDTO.getProductCategory().getTertiaryCat()))
-                throw new IllegalArgumentException("Category not found");*/
+                throw new IllegalArgumentException("Category not found");
+            */
             ProductCategory category;
             if(productCreateDTO.getProductCategory().getId() == null) {
                 category = productCatRepository.findProductCategoryByTertiaryCat(productCreateDTO.getProductCategory().getTertiaryCat());
@@ -92,12 +94,15 @@ public class ProductServiceImp implements ProductService {
     }
 
 
+    /*
     @Override
     public ProductDTO replaceProduct(String id, ProductDTO productDTO) throws IllegalAccessException {
         throwOnIdMismatch(id, productDTO);
 
         return updateProduct(id, productDTO);
     }
+
+     */
 
     @Override
     public ProductDTO updateProduct(String id, ProductDTO patch) throws IllegalAccessException {
@@ -116,22 +121,20 @@ public class ProductServiceImp implements ProductService {
             product.setTitle(patch.getTitle());
         if (patch.getDescription() != null && !product.getDescription().equals(patch.getDescription()))
             product.setDescription(patch.getDescription());
-        if (patch.getVisibility() != null && !product.getVisibility().equals(patch.getVisibility()))
+        if (!product.getVisibility().equals(patch.getVisibility()))
             product.setVisibility(patch.getVisibility());
-        if (patch.getCondition() != null && !product.getCondition().equals(patch.getCondition()))
+        if (!product.getCondition().equals(patch.getCondition()))
             product.setCondition(patch.getCondition());
 
 
 
         // TODO: 28/05/2023 serve che restituisco il custom money nella funzione?
-        if (patch.getProductCost() != null)
-            product.setProductCost(checkAndChangeCustomMoney(product.getProductCost(), patch.getProductCost()));
-        if (patch.getDeliveryCost() != null)
-            product.setDeliveryCost(checkAndChangeCustomMoney(product.getDeliveryCost(), patch.getDeliveryCost()));
+        product.setProductCost(checkAndChangeCustomMoney(product.getProductCost(), patch.getProductCost()));
+        product.setDeliveryCost(checkAndChangeCustomMoney(product.getDeliveryCost(), patch.getDeliveryCost()));
 
         if (patch.getBrand() != null && !product.getBrand().equals(patch.getBrand()))
             product.setBrand(patch.getBrand());
-        if (patch.getProductSize() != null && !product.getProductSize().equals(patch.getProductSize()))
+        if (!product.getProductSize().equals(patch.getProductSize()))
             product.setProductSize(patch.getProductSize());
 
         if (patch instanceof ClothingDTO) {

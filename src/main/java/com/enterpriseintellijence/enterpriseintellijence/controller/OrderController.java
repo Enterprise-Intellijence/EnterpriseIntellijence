@@ -54,7 +54,7 @@ public class OrderController {
 
      */
 
-    @PatchMapping(path = "/{id}", consumes = "application/json")
+    @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @Valid @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
         return ResponseEntity.ok(orderService.updateOrder(id, orderDTO));
     }

@@ -7,17 +7,10 @@ import org.springframework.data.domain.Page;
 public interface ReviewService {
     ReviewDTO createReview(ReviewCreateDTO reviewDTO) throws IllegalAccessException;
 
-    ReviewDTO replaceReview(String id, ReviewDTO reviewDTO) throws IllegalAccessException;
-
     ReviewDTO updateReview(String id, ReviewDTO patch) throws IllegalAccessException;
 
     void deleteReview(String id) throws IllegalAccessException;
     ReviewDTO reviewById(String id);
-
-    Iterable<ReviewDTO> findAll();
-
-
-
 
     Page<ReviewDTO> allReviewSent(String userId, int page, int sizePage);
 
