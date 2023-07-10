@@ -21,7 +21,9 @@ public class FileUploadUtil {
             Files.createDirectories(uploadPath);
         }
 
+        // TODO: crash di app su immagini di dimensione < 3MB
         byte[] compressedImage = compressImage(multipartFile.getBytes(), 3 * 1024 * 1024); // 3 MB
+        //byte[] compressedImage = multipartFile.getBytes();
         if (compressedImage.length == 0) {
             throw new IOException("Compressed image data is empty.");
         }
@@ -38,7 +40,10 @@ public class FileUploadUtil {
         graphics.drawImage(scaledImage, 0, 0, null);
         graphics.dispose();
 
+        System.out.println("fileName: " + fileName);
         Path filePath = uploadPath.resolve(fileName);
+        System.out.println("filePath: " + filePath);
+
         ImageIO.write(finalImage, "jpg", filePath.toFile());
     }
 
