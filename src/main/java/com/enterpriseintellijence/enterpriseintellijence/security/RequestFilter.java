@@ -75,12 +75,15 @@ public class RequestFilter extends OncePerRequestFilter {
                 request.getCharacterEncoding());
         String responseBody = getStringValue(responseWrapper.getContentAsByteArray(),
                 response.getCharacterEncoding());
-        logger.info(String.format("\nFINISHED PROCESSING : METHOD={%s}; REQUESTURI={%s}; REMOTEADDR={%S};\nREQUEST PAYLOAD={%s};\nLOGGED USERNAME={%s}; RESPONSE CODE={%d};\nRESPONSE={%s}; TIME TAKEN={%d}",
+        logger.trace(String.format("\nFINISHED PROCESSING : METHOD={%s}; REQUESTURI={%s}; REMOTEADDR={%S};\nREQUEST PAYLOAD={%s};\nLOGGED USERNAME={%s}; RESPONSE CODE={%d};\nRESPONSE={%s}; TIME TAKEN={%d}",
                 request.getMethod(), request.getRequestURI(), request.getRemoteAddr(), requestBody, loggedUser,response.getStatus(), responseBody, timeTaken));
         responseWrapper.copyBodyToResponse();
     }
 
     private String getStringValue (byte[] contentAsByteArray, String characterEncoding) {
+        if (contentAsByteArray == null || contentAsByteArray.length == 0) {
+            return "";
+        }
         try {
             String jsonString = new String(contentAsByteArray, characterEncoding);
             ObjectMapper objectMapper = new ObjectMapper();

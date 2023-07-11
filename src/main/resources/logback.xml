@@ -18,7 +18,7 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="TRACE">
         <appender-ref ref="fileAppender" />
     </root>
     <root level="ERROR">
