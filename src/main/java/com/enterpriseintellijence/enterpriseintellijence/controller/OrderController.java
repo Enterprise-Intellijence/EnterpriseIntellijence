@@ -1,6 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.OrderService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 
@@ -41,9 +42,9 @@ public class OrderController {
 
     @GetMapping(path = "/me")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<OrderDTO>> getAllOrdersOfUser(@RequestParam(defaultValue = "0", required = false) int page,
-                                                             @RequestParam(defaultValue = "10", required = false) int sizePage) {
-        return ResponseEntity.ok((Page<OrderDTO>) orderService.findAllByUserId(PageRequest.of(page, sizePage)));
+    public ResponseEntity<Page<OrderBasicDTO>> getAllOrdersOfUser(@RequestParam(defaultValue = "0", required = false) int page,
+                                                                  @RequestParam(defaultValue = "10", required = false) int sizePage) {
+        return ResponseEntity.ok((Page<OrderBasicDTO>) orderService.findAllByUserId(PageRequest.of(page, sizePage)));
     }
 
     /*

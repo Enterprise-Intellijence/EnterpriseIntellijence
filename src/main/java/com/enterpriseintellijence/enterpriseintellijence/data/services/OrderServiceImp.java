@@ -9,6 +9,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Address
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
@@ -153,11 +154,11 @@ public class OrderServiceImp implements OrderService {
     }
 
 
-    public Page<OrderDTO> findAllByUserId(Pageable pageable) {
+    public Page<OrderBasicDTO> findAllByUserId(Pageable pageable) {
 
         User user = jwtContextUtils.getUserLoggedFromContext();
 
-        return orderRepository.findAllByUser(user, pageable).map(this::mapToDTO);
+        return orderRepository.findAllByUser(user, pageable).map(this::mapToBasicDTO);
     }
 
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {
@@ -175,5 +176,9 @@ public class OrderServiceImp implements OrderService {
 
     public OrderDTO mapToDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);
+    }
+
+    public OrderBasicDTO mapToBasicDTO(Order order){
+        return modelMapper.map(order,OrderBasicDTO.class);
     }
 }
