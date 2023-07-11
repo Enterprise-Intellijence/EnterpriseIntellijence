@@ -50,6 +50,6 @@ public class Transaction {
     @Column(nullable = false)
     private String paymentMethodOwner;
 
-    @OneToOne(mappedBy = "transaction")
+    @OneToOne(mappedBy = "transaction",fetch = FetchType.LAZY)
     private Order order;
 }

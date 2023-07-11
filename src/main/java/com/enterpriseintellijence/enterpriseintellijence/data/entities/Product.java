@@ -100,13 +100,13 @@ public class Product {
     private List<Message> messages = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    private List<Order> order;
+    private List<Order> order = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
-    private List<ProductImage> productImages;
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "reportedProduct",fetch = FetchType.LAZY)
-    private List<Report> reports;
+    private List<Report> reports = new ArrayList<>();
 
     @PreRemove
     private void preRemove(){

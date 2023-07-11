@@ -141,7 +141,7 @@ public class Demo {
                    report.setStatus(ReportStatus.PENDING);
                    int x = random.nextInt(10);
                    if(x%2==0){
-                       if(reported.getSellingProducts()!=null)
+                       if(reported.getSellingProducts()!=null && !reported.getSellingProducts().isEmpty())
                            report.setReportedProduct(reported.getSellingProducts().get(random.nextInt(reported.getSellingProducts().size())));
                    }
                    reportRepository.save(report);
@@ -617,12 +617,12 @@ public class Demo {
                 .transactionState(TransactionState.COMPLETED)
                 .paymentMethod(paymentMethods.get(0).getCreditCard())
                 .paymentMethodOwner(paymentMethods.get(0).getOwner())
-                .order(order)
+                .order(null)
                 .build();
         order.setTransaction(transaction);
         order.getProduct().setAvailability(Availability.UNAVAILABLE);
         order.setState(OrderState.PURCHASED);
-        transactionRepository.save(transaction);
+        //transactionRepository.save(transaction);
         orderRepository.save(order);
     }
 
@@ -645,12 +645,13 @@ public class Demo {
                     .build();
 
             orderRepository.save(order);
-            product.getOrder().add(order);
+            //product.getOrder().add(order);
 
-            productRepository.save(product);
+            //productRepository.save(product);
             globalPurchased++;
 
         }
+
     }
 
     private void buyProduct(Product product,User user) {
