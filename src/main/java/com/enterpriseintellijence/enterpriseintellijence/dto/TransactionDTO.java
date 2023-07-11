@@ -41,7 +41,7 @@ public class TransactionDTO {
     @NotNull
     private String paymentMethodOwner;
 
-    @NotNull
-    private OrderBasicDTO order;
+    /*@NotNull
+    private OrderBasicDTO order;*/
 
 }
