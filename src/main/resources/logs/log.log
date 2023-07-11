@@ -1,0 +1,71 @@
+10:06:59.862 [34mINFO [0;39m [35mo.h.validator.internal.util.Version[0;39m - HV000001: Hibernate Validator 8.0.0.Final 
+10:06:59.877 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Starting EnterpriseIntellijenceApplication using Java 19.0.1 with PID 3288 (C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence\target\classes started by Ernesto in C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence) 
+10:06:59.878 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - No active profile set, falling back to 1 default profile: "default" 
+10:07:01.006 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Initializing ProtocolHandler ["http-nio-8080"] 
+10:07:01.007 [34mINFO [0;39m [35mo.a.catalina.core.StandardService[0;39m - Starting service [Tomcat] 
+10:07:01.007 [34mINFO [0;39m [35mo.a.catalina.core.StandardEngine[0;39m - Starting Servlet engine: [Apache Tomcat/10.1.7] 
+10:07:01.053 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring embedded WebApplicationContext 
+10:07:01.123 [34mINFO [0;39m [35mo.h.jpa.internal.util.LogHelper[0;39m - HHH000204: Processing PersistenceUnitInfo [name: default] 
+10:07:01.158 [34mINFO [0;39m [35morg.hibernate.Version[0;39m - HHH000412: Hibernate ORM core version 6.1.7.Final 
+10:07:01.328 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Starting... 
+10:07:01.453 [34mINFO [0;39m [35mcom.zaxxer.hikari.pool.HikariPool[0;39m - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@44d3e73f 
+10:07:01.455 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Start completed. 
+10:07:01.488 [34mINFO [0;39m [35mSQL dialect[0;39m - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect 
+10:07:02.494 [34mINFO [0;39m [35mo.h.e.t.j.p.i.JtaPlatformInitiator[0;39m - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform] 
+10:07:03.747 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"] 
+10:07:03.766 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Started EnterpriseIntellijenceApplication in 4.074 seconds (process running for 5.502) 
+10:07:06.104 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring DispatcherServlet 'dispatcherServlet' 
+10:07:06.113 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 1 uri: /api/v1/users/authenticate POST from:0:0:0:0:0:0:0:1 
+10:07:06.114 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 1 response status: 200 
+10:10:30.023 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 2 uri: /api/v1/images/users/photo-profile POST from:0:0:0:0:0:0:0:1 
+10:10:30.043 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 2 response status: 200 
+10:11:01.893 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 3 uri: /api/v1/images/users/photo-profile POST from:0:0:0:0:0:0:0:1 
+10:11:01.897 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 3 response status: 200 
+10:15:35.811 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown initiated... 
+10:15:35.814 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown completed. 
+10:15:39.651 [34mINFO [0;39m [35mo.h.validator.internal.util.Version[0;39m - HV000001: Hibernate Validator 8.0.0.Final 
+10:15:39.667 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Starting EnterpriseIntellijenceApplication using Java 19.0.1 with PID 3712 (C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence\target\classes started by Ernesto in C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence) 
+10:15:39.668 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - No active profile set, falling back to 1 default profile: "default" 
+10:15:40.667 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Initializing ProtocolHandler ["http-nio-8080"] 
+10:15:40.668 [34mINFO [0;39m [35mo.a.catalina.core.StandardService[0;39m - Starting service [Tomcat] 
+10:15:40.668 [34mINFO [0;39m [35mo.a.catalina.core.StandardEngine[0;39m - Starting Servlet engine: [Apache Tomcat/10.1.7] 
+10:15:40.707 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring embedded WebApplicationContext 
+10:15:40.791 [34mINFO [0;39m [35mo.h.jpa.internal.util.LogHelper[0;39m - HHH000204: Processing PersistenceUnitInfo [name: default] 
+10:15:40.817 [34mINFO [0;39m [35morg.hibernate.Version[0;39m - HHH000412: Hibernate ORM core version 6.1.7.Final 
+10:15:40.953 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Starting... 
+10:15:41.045 [34mINFO [0;39m [35mcom.zaxxer.hikari.pool.HikariPool[0;39m - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3dca1ec7 
+10:15:41.046 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Start completed. 
+10:15:41.064 [34mINFO [0;39m [35mSQL dialect[0;39m - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect 
+10:15:42.000 [34mINFO [0;39m [35mo.h.e.t.j.p.i.JtaPlatformInitiator[0;39m - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform] 
+10:15:43.229 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"] 
+10:15:43.248 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Started EnterpriseIntellijenceApplication in 3.774 seconds (process running for 4.385) 
+10:16:40.318 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring DispatcherServlet 'dispatcherServlet' 
+10:16:40.327 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 0 uri: /api/v1/images/users/photo-profile POST from:0:0:0:0:0:0:0:1 
+10:16:40.451 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 0 response status: 200 
+10:17:00.855 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown initiated... 
+10:17:00.858 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown completed. 
+10:17:02.764 [34mINFO [0;39m [35mo.h.validator.internal.util.Version[0;39m - HV000001: Hibernate Validator 8.0.0.Final 
+10:17:02.779 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Starting EnterpriseIntellijenceApplication using Java 19.0.1 with PID 8904 (C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence\target\classes started by Ernesto in C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence) 
+10:17:02.780 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - No active profile set, falling back to 1 default profile: "default" 
+10:17:03.758 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Initializing ProtocolHandler ["http-nio-8080"] 
+10:17:03.759 [34mINFO [0;39m [35mo.a.catalina.core.StandardService[0;39m - Starting service [Tomcat] 
+10:17:03.759 [34mINFO [0;39m [35mo.a.catalina.core.StandardEngine[0;39m - Starting Servlet engine: [Apache Tomcat/10.1.7] 
+10:17:03.799 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring embedded WebApplicationContext 
+10:17:03.864 [34mINFO [0;39m [35mo.h.jpa.internal.util.LogHelper[0;39m - HHH000204: Processing PersistenceUnitInfo [name: default] 
+10:17:03.888 [34mINFO [0;39m [35morg.hibernate.Version[0;39m - HHH000412: Hibernate ORM core version 6.1.7.Final 
+10:17:04.018 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Starting... 
+10:17:04.106 [34mINFO [0;39m [35mcom.zaxxer.hikari.pool.HikariPool[0;39m - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3861772c 
+10:17:04.107 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Start completed. 
+10:17:04.124 [34mINFO [0;39m [35mSQL dialect[0;39m - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect 
+10:17:05.027 [34mINFO [0;39m [35mo.h.e.t.j.p.i.JtaPlatformInitiator[0;39m - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform] 
+10:17:06.250 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"] 
+10:17:06.268 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Started EnterpriseIntellijenceApplication in 3.674 seconds (process running for 4.224) 
+10:17:08.844 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring DispatcherServlet 'dispatcherServlet' 
+10:17:08.854 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 1 uri: /api/v1/images/users/photo-profile POST from:0:0:0:0:0:0:0:1 
+10:17:08.964 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 1 response status: 200 
+10:17:36.468 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 2 uri: /api/v1/users/authenticate POST from:0:0:0:0:0:0:0:1 
+10:17:36.469 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 2 response status: 200 
+10:17:53.071 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 3 uri: /api/v1/images/users/photo-profile POST from:0:0:0:0:0:0:0:1 
+10:17:53.076 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 3 response status: 200 
+10:19:42.582 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 4 uri: /api/v1/images/users/photo-profile POST from:0:0:0:0:0:0:0:1 
+10:19:42.587 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 4 response status: 200 

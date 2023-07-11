@@ -22,8 +22,12 @@ public class FileUploadUtil {
         }
 
         // TODO: crash di app su immagini di dimensione < 3MB
-        byte[] compressedImage = compressImage(multipartFile.getBytes(), 3 * 1024 * 1024); // 3 MB
-        //byte[] compressedImage = multipartFile.getBytes();
+        byte[] compressedImage ;
+        if(!multipartFile.isEmpty() && multipartFile.getSize()>(3*1024*1024))
+            compressedImage = compressImage(multipartFile.getBytes(), 3 * 1024 * 1024); // 3 MB
+        else
+            compressedImage = multipartFile.getBytes();
+
         if (compressedImage.length == 0) {
             throw new IOException("Compressed image data is empty.");
         }
@@ -52,6 +56,7 @@ public class FileUploadUtil {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         float quality = 1.0f;
         ImageIO.write(image, "jpg", outputStream);
+
 
         while (outputStream.size() > maxSize && quality >= 0.1f) {
             outputStream.reset();
