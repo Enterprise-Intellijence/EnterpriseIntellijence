@@ -2,6 +2,10 @@ package com.enterpriseintellijence.enterpriseintellijence.security;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.CustomUserDetailsService;
 import com.enterpriseintellijence.enterpriseintellijence.exception.TokenExpiredException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.nimbusds.jose.JOSEException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,15 +14,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.CacheResponse;
 import java.text.ParseException;
 
 @Component
@@ -32,7 +42,12 @@ public class RequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        logger.info("Request: id: " + request.getRequestId() + " uri: " + request.getRequestURI() + " " + request.getMethod() + " from:" + request.getLocalAddr());
+
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
+        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+        long startTime = System.currentTimeMillis();
+        String loggedUser = "";
+
         String token = tokenStore.getToken(request);
         if(!token.equals("invalid") && invalidTokensRepository.findByToken(token).isPresent()) {
             token = "invalid";
@@ -44,6 +59,7 @@ public class RequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                loggedUser = user.getUsername();
             } catch (Exception e) {
                 if (e  instanceof TokenExpiredException)
                     response.addHeader("token_expired", "true");
@@ -51,7 +67,31 @@ public class RequestFilter extends OncePerRequestFilter {
                     e.printStackTrace();
             }
         }
-        logger.info("Response:  to request id: " + request.getRequestId() + " response status: " + response.getStatus());
-        chain.doFilter(request, response);
+
+        chain.doFilter (requestWrapper, responseWrapper);
+
+        long timeTaken = System.currentTimeMillis () - startTime;
+        String requestBody = getStringValue(requestWrapper.getContentAsByteArray(),
+                request.getCharacterEncoding());
+        String responseBody = getStringValue(responseWrapper.getContentAsByteArray(),
+                response.getCharacterEncoding());
+        logger.info(String.format("\nFINISHED PROCESSING : METHOD={%s}; REQUESTURI={%s}; REMOTEADDR={%S};\nREQUEST PAYLOAD={%s};\nLOGGED USERNAME={%s}; RESPONSE CODE={%d};\nRESPONSE={%s}; TIME TAKEN={%d}",
+                request.getMethod(), request.getRequestURI(), request.getRemoteAddr(), requestBody, loggedUser,response.getStatus(), responseBody, timeTaken));
+        responseWrapper.copyBodyToResponse();
+    }
+
+    private String getStringValue (byte[] contentAsByteArray, String characterEncoding) {
+        try {
+            String jsonString = new String(contentAsByteArray, characterEncoding);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Object jsonObject = objectMapper.readValue(jsonString, Object.class);
+            ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+            return objectWriter.writeValueAsString(jsonObject);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
     }
 }
