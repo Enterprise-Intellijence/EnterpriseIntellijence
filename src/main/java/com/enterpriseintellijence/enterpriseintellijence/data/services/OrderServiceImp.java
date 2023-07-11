@@ -162,6 +162,19 @@ public class OrderServiceImp implements OrderService {
 
     }
 
+    @Override
+    public Page<OrderBasicDTO> findAllMySellerOrdersByState(Pageable pageable, OrderState state) {
+        User user = jwtContextUtils.getUserLoggedFromContext();
+
+        if(state == null)
+            return orderRepository.findAllByProduct_Seller(user, pageable).map(this::mapToBasicDTO);
+        else
+            return orderRepository.findAllByProduct_SellerAndState(user, state, pageable).map(this::mapToBasicDTO);
+
+    }
+
+
+
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {
         if (!orderDTO.getId().equals(id))
             throw new IdMismatchException();

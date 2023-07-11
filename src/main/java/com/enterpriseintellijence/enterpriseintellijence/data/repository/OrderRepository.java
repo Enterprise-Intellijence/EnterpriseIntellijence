@@ -15,4 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
     Page<Order> findAllByUserAndState(User user, OrderState state, Pageable pageable);
 
+    Page<Order> findAllByProduct_Seller(User user, Pageable pageable);
+
+    Page<Order> findAllByProduct_SellerAndState(User user, OrderState state, Pageable pageable);
 }

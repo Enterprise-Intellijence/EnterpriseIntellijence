@@ -44,6 +44,15 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAllMyOrdersByState(PageRequest.of(page, sizePage), state));
     }
 
+    @GetMapping(path = "/me/seller")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<OrderBasicDTO>> getAllOrdersOfSeller(
+        @RequestParam(required = false) OrderState state,
+        @RequestParam(defaultValue = "0", required = false) int page,
+        @RequestParam(defaultValue = "10", required = false) int sizePage) {
+        return ResponseEntity.ok(orderService.findAllMySellerOrdersByState(PageRequest.of(page, sizePage), state));
+    }
+
     /*
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OrderDTO> replaceOrder(@PathVariable("id") String id, @Valid @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
