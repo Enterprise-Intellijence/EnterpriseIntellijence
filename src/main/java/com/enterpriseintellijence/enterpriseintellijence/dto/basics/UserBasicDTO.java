@@ -3,6 +3,7 @@ package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -30,5 +31,7 @@ public class UserBasicDTO {
 
     private Integer followersNumber;
     private Integer followingNumber;
+
+    private UserStatus status;
 
 }
