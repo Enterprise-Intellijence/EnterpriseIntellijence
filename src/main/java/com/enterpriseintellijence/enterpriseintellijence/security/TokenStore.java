@@ -53,7 +53,6 @@ public class TokenStore {
         try {
             jwtContextUtils.getUsernameFromContext().ifPresentOrElse(username -> {
                 try {
-                    System.out.println("username: " + username);
                     if(!username.equals(getUser(token)) || invalidTokensRepository.findByToken(token).isPresent())
                         throw new RuntimeException("Invalid token");
                     if(claim != null && !claim.equals(getClaim(token)))
@@ -102,6 +101,7 @@ public class TokenStore {
         try {
             JWTClaimsSet claims = new JWTClaimsSet.Builder()
                     .claim("username", username)
+                    .claim("claim", "refresh")
                     .expirationTime(Date.from(Instant.now().plus(Constants.JWT_REFRESH_EXPIRATION_TIME, ChronoUnit.HOURS)))
                     .notBeforeTime(Date.from(Instant.now()))
                     .issueTime(Date.from(Instant.now()))
@@ -177,13 +177,21 @@ public class TokenStore {
         throw new RuntimeException("Invalid token");
     }
 
-    public void logout(String accessToken) throws ParseException, JOSEException {
+    public void logout(String accessToken, String refreshToken) throws ParseException, JOSEException {
         if( !verifyToken(accessToken, null))
             throw new RuntimeException("Invalid token");
-        System.out.println(accessToken);
+        if( !verifyToken(refreshToken, null))
+            throw new RuntimeException("Invalid token");
+
         InvalidToken invalidToken = new InvalidToken();
         invalidToken.setToken(accessToken);
         SignedJWT signedJWT = SignedJWT.parse(accessToken);
+        invalidToken.setExpirationDate(signedJWT.getJWTClaimsSet().getExpirationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().truncatedTo(ChronoUnit.SECONDS));
+        invalidTokensRepository.save(invalidToken);
+
+        invalidToken = new InvalidToken();
+        invalidToken.setToken(refreshToken);
+        signedJWT = SignedJWT.parse(refreshToken);
         invalidToken.setExpirationDate(signedJWT.getJWTClaimsSet().getExpirationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().truncatedTo(ChronoUnit.SECONDS));
         invalidTokensRepository.save(invalidToken);
     }

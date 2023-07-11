@@ -53,7 +53,7 @@ public class RequestFilter extends OncePerRequestFilter {
 
         String token = tokenStore.getToken(request);
         if(!token.equals("invalid") && invalidTokensRepository.findByToken(token).isPresent()) {
-            token = "invalid";
+            throw new ServletException("Invalid token");
         }
         if(!"invalid".equals(token)) {
             try {

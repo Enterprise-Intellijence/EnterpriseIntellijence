@@ -135,13 +135,13 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException, JOSEException {
-        userService.logout(request.getHeader(AUTHORIZATION));
+        userService.logout(request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/changePassword")
     public ResponseEntity<Void> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword, HttpServletRequest request) throws EntityNotFoundException, MessagingException, ParseException, JOSEException {
-        userService.changePassword(oldPassword, newPassword, request.getHeader(AUTHORIZATION));
+        userService.changePassword(oldPassword, newPassword, request);
         return ResponseEntity.ok().build();
     }
 
@@ -152,8 +152,8 @@ public class UserController {
     }
 
     @GetMapping("/getNewPassword")
-    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token, HttpServletRequest request) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
-        userService.changePassword(token, request.getHeader(AUTHORIZATION));
+    public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
+        userService.changePassword(token);
         return ResponseEntity.ok().build();
     }
 

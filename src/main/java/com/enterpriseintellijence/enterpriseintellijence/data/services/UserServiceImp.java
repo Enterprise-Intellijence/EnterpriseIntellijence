@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +36,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Map.of;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -290,18 +291,21 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public void logout(String authorizationHeader) throws ParseException, JOSEException {
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+    public void logout(HttpServletRequest request) throws ParseException, JOSEException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String refreshToken = request.getHeader("refresh-token");
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ") && refreshToken != null && refreshToken.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring("Bearer ".length());
-            tokenStore.logout(accessToken);
+            String refreshToken2 = refreshToken.substring("Bearer ".length());
+            tokenStore.logout(accessToken, refreshToken2);
             notificationsRepository.deleteAllByReceiverAndReadIsTrue(jwtContextUtils.getUserLoggedFromContext());
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            throw new RuntimeException("Token is missing");
         }
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword, String authToken) throws ParseException, JOSEException, MessagingException {
+    public void changePassword(String oldPassword, String newPassword, HttpServletRequest request) throws ParseException, JOSEException, MessagingException {
         if (newPassword.length() < 8)
             throw new RuntimeException("Password must be at least 8 characters long");
         if (oldPassword.equals(newPassword))
@@ -311,13 +315,19 @@ public class UserServiceImp implements UserService{
             throw new RuntimeException("Wrong old password");
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        System.out.println("password changed");
-        authToken = authToken.substring("Bearer ".length());
-        tokenStore.logout(authToken);
+
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String refreshToken = request.getHeader("refresh-token");
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ") && refreshToken != null && refreshToken.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+            String refreshToken2 = refreshToken.substring("Bearer ".length());
+            tokenStore.logout(accessToken, refreshToken2);
+        }else
+            throw new RuntimeException("Token is missing");
     }
 
     @Override
-    public void changePassword(String token, String authToken) throws ParseException, JOSEException, MessagingException {
+    public void changePassword(String token) throws ParseException, JOSEException, MessagingException {
         tokenStore.verifyToken(token, Constants.RESET_PASSWORD_CLAIM);
         String username = tokenStore.getUser(token);
         User user = userRepository.findByUsername(username);
@@ -327,8 +337,6 @@ public class UserServiceImp implements UserService{
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         emailService.sendEmail(user.getEmail(), Constants.NEW_PASSWORD_EMAIL_SUBJECT,Constants.NEW_PASSWORD_EMAIL_TEXT + newPassword);
-        authToken = authToken.substring("Bearer ".length());
-        tokenStore.logout(authToken);
     }
 
     @Override
