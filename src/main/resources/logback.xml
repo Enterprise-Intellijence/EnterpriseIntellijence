@@ -19,7 +19,9 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
+    </root>
+    <root level="ERROR">
+        <appender-ref ref="consoleAppender" />
     </root>
 </configuration>
