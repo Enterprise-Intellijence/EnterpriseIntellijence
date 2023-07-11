@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -35,6 +36,8 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @Slf4j
 public class RequestFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger("myLogger");
 
     private final CustomUserDetailsService userDetailsService;
     private final TokenStore tokenStore;
@@ -75,7 +78,7 @@ public class RequestFilter extends OncePerRequestFilter {
                 request.getCharacterEncoding());
         String responseBody = getStringValue(responseWrapper.getContentAsByteArray(),
                 response.getCharacterEncoding());
-        logger.trace(String.format("\nFINISHED PROCESSING : METHOD={%s}; REQUESTURI={%s}; REMOTEADDR={%S};\nREQUEST PAYLOAD={%s};\nLOGGED USERNAME={%s}; RESPONSE CODE={%d};\nRESPONSE={%s}; TIME TAKEN={%d}",
+        logger.info(String.format("\nFINISHED PROCESSING : METHOD={%s}; REQUESTURI={%s}; REMOTEADDR={%S};\nREQUEST PAYLOAD={%s};\nLOGGED USERNAME={%s}; RESPONSE CODE={%d};\nRESPONSE={%s}; TIME TAKEN={%d}",
                 request.getMethod(), request.getRequestURI(), request.getRemoteAddr(), requestBody, loggedUser,response.getStatus(), responseBody, timeTaken));
         responseWrapper.copyBodyToResponse();
     }
@@ -90,8 +93,7 @@ public class RequestFilter extends OncePerRequestFilter {
             Object jsonObject = objectMapper.readValue(jsonString, Object.class);
             ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
             return objectWriter.writeValueAsString(jsonObject);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        } catch (JsonProcessingException ignored) {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

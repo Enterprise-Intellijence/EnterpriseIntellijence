@@ -472,6 +472,8 @@ public class UserServiceImp implements UserService{
     @Override
     public UserDTO changeRole(String userId, UserRole role) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        if (jwtContextUtils.getUserLoggedFromContext().getId().equals(userId))
+            throw new IllegalArgumentException("You cannot change your own role");
         user.setRole(role);
         return mapToDto(userRepository.save(user));
     }

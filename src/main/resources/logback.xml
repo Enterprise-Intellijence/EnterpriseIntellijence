@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.springframework" level="INFO"/>
     <logger name="com.enterpriseintellijence" level="INFO"/>
 
     <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
@@ -18,10 +18,12 @@
         </encoder>
     </appender>
 
-    <root level="TRACE">
+    <root level="INFO">
+        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </root>
-    <root level="ERROR">
-        <appender-ref ref="consoleAppender" />
-    </root>
+
+    <logger name="myLogger" level="INFO" additivity="false">
+        <appender-ref ref="fileAppender" />
+    </logger>
 </configuration>
