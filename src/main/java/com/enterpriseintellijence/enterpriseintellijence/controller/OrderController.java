@@ -1,24 +1,20 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.services.OrderService;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 
+import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Duration;
 
 import static com.enterpriseintellijence.enterpriseintellijence.security.AppSecurityConfig.SECURITY_CONFIG_NAME;
 
@@ -35,15 +31,17 @@ public class OrderController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderCreateDTO orderDTO ) throws IllegalAccessException {
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderCreateDTO orderDTO) throws IllegalAccessException {
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
 
     @GetMapping(path = "/me")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<OrderDTO>> getAllOrdersOfUser(@RequestParam(defaultValue = "0", required = false) int page,
-                                                             @RequestParam(defaultValue = "10", required = false) int sizePage) {
-        return ResponseEntity.ok((Page<OrderDTO>) orderService.findAllByUserId(PageRequest.of(page, sizePage)));
+    public ResponseEntity<Page<OrderBasicDTO>> getAllOrdersOfUser(
+        @RequestParam(required = false) OrderState state,
+        @RequestParam(defaultValue = "0", required = false) int page,
+        @RequestParam(defaultValue = "10", required = false) int sizePage) {
+        return ResponseEntity.ok(orderService.findAllMyOrdersByState(PageRequest.of(page, sizePage), state));
     }
 
     /*

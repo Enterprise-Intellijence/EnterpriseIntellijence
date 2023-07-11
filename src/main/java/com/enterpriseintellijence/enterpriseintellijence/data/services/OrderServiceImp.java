@@ -9,9 +9,9 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.Address
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OfferRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.ProductRepository;
+import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OrderCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -153,11 +152,14 @@ public class OrderServiceImp implements OrderService {
     }
 
 
-    public Page<OrderDTO> findAllByUserId(Pageable pageable) {
-
+    public Page<OrderBasicDTO> findAllMyOrdersByState(Pageable pageable, OrderState state) {
         User user = jwtContextUtils.getUserLoggedFromContext();
 
-        return orderRepository.findAllByUser(user, pageable).map(this::mapToDTO);
+        if(state == null)
+            return orderRepository.findAllByUser(user, pageable).map(this::mapToBasicDTO);
+        else
+            return orderRepository.findAllByUserAndState(user, state, pageable).map(this::mapToBasicDTO);
+
     }
 
     private void throwOnIdMismatch(String id, OrderDTO orderDTO) {
@@ -175,5 +177,9 @@ public class OrderServiceImp implements OrderService {
 
     public OrderDTO mapToDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);
+    }
+
+    public OrderBasicDTO mapToBasicDTO(Order order){
+        return modelMapper.map(order,OrderBasicDTO.class);
     }
 }

@@ -18573,3 +18573,177 @@ Caused by: java.lang.StackOverflowError: null
 12:49:34.635 [34mINFO [0;39m [35mo.h.e.t.j.p.i.JtaPlatformInitiator[0;39m - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform] 
 12:49:35.859 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"] 
 12:49:35.878 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Started EnterpriseIntellijenceApplication in 3.915 seconds (process running for 4.521) 
+12:51:24.690 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring DispatcherServlet 'dispatcherServlet' 
+12:51:24.699 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 1 uri: /api/v1/users/authenticate POST from:0:0:0:0:0:0:0:1 
+12:51:24.699 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 1 response status: 200 
+12:51:39.933 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 2 uri: /api/v1/orders/me GET from:0:0:0:0:0:0:0:1 
+12:51:39.961 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 2 response status: 200 
+12:51:40.109 [34mERROR[0;39m [35mc.e.e.handler.GlobalExceptionHandler[0;39m - ModelMapper mapping errors:
+
+1) Error mapping com.enterpriseintellijence.enterpriseintellijence.data.entities.Order to com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO
+
+1 error 
+org.modelmapper.MappingException: ModelMapper mapping errors:
+
+1) Error mapping com.enterpriseintellijence.enterpriseintellijence.data.entities.Order to com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO
+
+1 error
+	at org.modelmapper.internal.Errors.throwMappingExceptionIfErrorsExist(Errors.java:386)
+	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:80)
+	at org.modelmapper.ModelMapper.mapInternal(ModelMapper.java:589)
+	at org.modelmapper.ModelMapper.map(ModelMapper.java:422)
+	at com.enterpriseintellijence.enterpriseintellijence.data.services.OrderServiceImp.mapToDTO(OrderServiceImp.java:177)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$Itr.forEachRemaining(ArrayList.java:1003)
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1921)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at org.springframework.data.domain.Chunk.getConvertedContent(Chunk.java:121)
+	at org.springframework.data.domain.PageImpl.map(PageImpl.java:86)
+	at com.enterpriseintellijence.enterpriseintellijence.data.services.OrderServiceImp.findAllByUserId(OrderServiceImp.java:160)
+	at com.enterpriseintellijence.enterpriseintellijence.controller.OrderController.getAllOrdersOfUser(OrderController.java:46)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.enterpriseintellijence.enterpriseintellijence.security.RequestFilter.doFilterInternal(RequestFilter.java:55)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:101)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1589)
+Caused by: org.modelmapper.MappingException: ModelMapper mapping errors:
+
+1) Failed to set value 'OrderDTO(id=525af525-8824-4efd-90f3-981175439e5b, state=COMPLETED, orderDate=2023-07-11T12:43:32.890719, orderUpdateDate=2023-07-11T12:43:32.890719, product=ProductBasicDTO(id=aa5f8b5c-f211-413e-ae04-bf21a2f4719a, title=Title product 63, description=The standard Lorem Ipsum passage, used since the 1500s
+, uploadDate=2023-05-24T18:26:31.845150, productCost=CustomMoneyDTO(price=1044.9, currency=EUR), deliveryCost=CustomMoneyDTO(price=5.0, currency=EUR), brand=Brand 4, condition=VERY_GOOD, likesNumber=5, seller=UserBasicDTO(id=b48e6241-e3e2-482c-825f-ce7b42e48307, username=username3, bio=null, photoProfile=UserImageDTO(id=62db597c-9cf8-4aab-9cbf-0c5b7dadcdf2, description=No description avalaible, urlPhoto=http://192.168.1.66:8080/api/v1/images/user_photos/examples/foto_profilo5.jpg), reviewsTotalSum=4, reviewsNumber=1, followersNumber=0, followingNumber=0), productImages=[ProductImageDTO(id=32d9a356-c6ed-40ab-9dd2-eeb0245b1d13, description=Random description bla bla, urlPhoto=http://192.168.1.66:8080/api/v1/images/product_photos/examples/6.jpeg)], productCategory=ProductCategoryDTO(id=2e0b6388-da91-4a2d-aba9-51332cc7c984, primaryCat=Entertainment, secondaryCat=Books, tertiaryCat=Literature)), user=null, delivery=null, deliveryAddress=AddressDTO(id=4339fb94-0d05-491c-a0ff-e70686f1e5d1, header=username2 username2, country=country3, city=city3, street=street3, zipCode=85269, phoneNumber=342 6989745, isDefault=false), offer=null, transaction=TransactionDTO(id=2eb75b49-8131-4c0f-8612-68befd8460d6, creationTime=2023-07-11T12:43:45.514944, amount=CustomMoneyDTO(price=1044.9, currency=EUR), transactionState=null, paymentMethod=null, paymentMethodOwner=null, order=null))' on com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO.setOrder()
+
+1 error
+	at org.modelmapper.internal.Errors.toMappingException(Errors.java:257)
+	at org.modelmapper.internal.PropertyInfoImpl$MethodMutator.setValue(PropertyInfoImpl.java:126)
+	at org.modelmapper.internal.MappingContextImpl.getParentDestination(MappingContextImpl.java:325)
+	at org.modelmapper.internal.MappingEngineImpl.setDestinationValue(MappingEngineImpl.java:230)
+	at org.modelmapper.internal.MappingEngineImpl.propertyMap(MappingEngineImpl.java:187)
+	at org.modelmapper.internal.MappingEngineImpl.typeMap(MappingEngineImpl.java:151)
+	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:114)
+	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:71)
+	... 116 common frames omitted
+Caused by: java.lang.IllegalArgumentException: argument type mismatch
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.modelmapper.internal.PropertyInfoImpl$MethodMutator.setValue(PropertyInfoImpl.java:124)
+	... 122 common frames omitted
+12:58:30.975 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown initiated... 
+12:58:30.978 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown completed. 
+12:58:35.980 [34mINFO [0;39m [35mo.h.validator.internal.util.Version[0;39m - HV000001: Hibernate Validator 8.0.0.Final 
+12:58:35.996 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Starting EnterpriseIntellijenceApplication using Java 19.0.1 with PID 19460 (C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence\target\classes started by Ernesto in C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence) 
+12:58:35.997 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - No active profile set, falling back to 1 default profile: "default" 
+12:58:37.043 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Initializing ProtocolHandler ["http-nio-8080"] 
+12:58:37.044 [34mINFO [0;39m [35mo.a.catalina.core.StandardService[0;39m - Starting service [Tomcat] 
+12:58:37.044 [34mINFO [0;39m [35mo.a.catalina.core.StandardEngine[0;39m - Starting Servlet engine: [Apache Tomcat/10.1.7] 
+12:58:37.086 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring embedded WebApplicationContext 
+12:58:37.157 [34mINFO [0;39m [35mo.h.jpa.internal.util.LogHelper[0;39m - HHH000204: Processing PersistenceUnitInfo [name: default] 
+12:58:37.183 [34mINFO [0;39m [35morg.hibernate.Version[0;39m - HHH000412: Hibernate ORM core version 6.1.7.Final 
+12:58:37.329 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Starting... 
+12:58:37.422 [34mINFO [0;39m [35mcom.zaxxer.hikari.pool.HikariPool[0;39m - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3e85cbd2 
+12:58:37.423 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Start completed. 
+12:58:37.441 [34mINFO [0;39m [35mSQL dialect[0;39m - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect 
+12:58:38.356 [34mINFO [0;39m [35mo.h.e.t.j.p.i.JtaPlatformInitiator[0;39m - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform] 
+12:58:39.601 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"] 
+12:58:39.620 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Started EnterpriseIntellijenceApplication in 3.833 seconds (process running for 4.489) 
+12:59:13.769 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring DispatcherServlet 'dispatcherServlet' 
+12:59:13.779 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 1 uri: /api/v1/orders/me GET from:0:0:0:0:0:0:0:1 
+12:59:13.886 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 1 response status: 200 
