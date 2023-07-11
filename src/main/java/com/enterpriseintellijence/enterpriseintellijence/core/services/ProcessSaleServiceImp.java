@@ -87,6 +87,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.setDeliveryAddress(deliveryAddress);
         product.setAvailability(Availability.PENDING);
         product.setLastUpdateDate(now);
+        // TODO: 11/07/2023 tenere d'occhio al momento del save
         product.getOrder().add(order);
         order.setProduct(product);
 
@@ -121,7 +122,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
             productPrice = order.getOffer().getAmount().getPrice();
         Double amount = productPrice+order.getProduct().getDeliveryCost().getPrice();
         transaction.setAmount(new CustomMoney(amount,order.getProduct().getProductCost().getCurrency()));
-        transaction.setOrder(order);
+        //transaction.setOrder(order);
         transaction.setCreationTime(now);
         order.setOrderUpdateDate(now);
         transaction.setPaymentMethod(paymentMethod.getCreditCard());
@@ -148,7 +149,9 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         delivery.setSendTime(now);
         order.setState(OrderState.SHIPPED);
         order.setOrderUpdateDate(now);
-        delivery.setOrder(order);
+
+        //delivery.setOrder(order);
+
         order.setDelivery(delivery);
 
         delivery.setDeliveryStatus(DeliveryStatus.SHIPPED);
@@ -174,7 +177,8 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.setState(OrderState.DELIVERED);
         order.setOrderUpdateDate(timeNow());
         order.getProduct().setLastUpdateDate(timeNow());
-        delivery.setOrder(order);
+        //delivery.setOrder(order);
+
         delivery.setDeliveredTime(timeNow());
 
         orderRepository.save(order);

@@ -18555,3 +18555,21 @@ Caused by: java.lang.StackOverflowError: null
 12:42:23.737 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring DispatcherServlet 'dispatcherServlet' 
 12:42:23.746 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Request: id: 1 uri: /api/v1/demo GET from:0:0:0:0:0:0:0:1 
 12:42:23.746 [34mINFO [0;39m [35mc.e.e.security.RequestFilter[0;39m - Response:  to request id: 1 response status: 200 
+12:49:26.271 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown initiated... 
+12:49:26.273 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Shutdown completed. 
+12:49:32.184 [34mINFO [0;39m [35mo.h.validator.internal.util.Version[0;39m - HV000001: Hibernate Validator 8.0.0.Final 
+12:49:32.202 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Starting EnterpriseIntellijenceApplication using Java 19.0.1 with PID 1936 (C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence\target\classes started by Ernesto in C:\Users\Ernesto\Desktop\Progetto Enterprise\EnterpriseIntellijence\EnterpriseIntellijence) 
+12:49:32.204 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - No active profile set, falling back to 1 default profile: "default" 
+12:49:33.338 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Initializing ProtocolHandler ["http-nio-8080"] 
+12:49:33.339 [34mINFO [0;39m [35mo.a.catalina.core.StandardService[0;39m - Starting service [Tomcat] 
+12:49:33.339 [34mINFO [0;39m [35mo.a.catalina.core.StandardEngine[0;39m - Starting Servlet engine: [Apache Tomcat/10.1.7] 
+12:49:33.380 [34mINFO [0;39m [35mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring embedded WebApplicationContext 
+12:49:33.450 [34mINFO [0;39m [35mo.h.jpa.internal.util.LogHelper[0;39m - HHH000204: Processing PersistenceUnitInfo [name: default] 
+12:49:33.475 [34mINFO [0;39m [35morg.hibernate.Version[0;39m - HHH000412: Hibernate ORM core version 6.1.7.Final 
+12:49:33.612 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Starting... 
+12:49:33.703 [34mINFO [0;39m [35mcom.zaxxer.hikari.pool.HikariPool[0;39m - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@ea1c645 
+12:49:33.704 [34mINFO [0;39m [35mcom.zaxxer.hikari.HikariDataSource[0;39m - HikariPool-1 - Start completed. 
+12:49:33.721 [34mINFO [0;39m [35mSQL dialect[0;39m - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect 
+12:49:34.635 [34mINFO [0;39m [35mo.h.e.t.j.p.i.JtaPlatformInitiator[0;39m - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform] 
+12:49:35.859 [34mINFO [0;39m [35mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"] 
+12:49:35.878 [34mINFO [0;39m [35mc.e.e.EnterpriseIntellijenceApplication[0;39m - Started EnterpriseIntellijenceApplication in 3.915 seconds (process running for 4.521) 
