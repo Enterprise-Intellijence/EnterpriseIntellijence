@@ -33,3 +33,5 @@ build/
 .vscode/
 
 images/product_photos/
+
+src/main/resources/logs/log.log
