@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -16,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 public class ReviewCreateDTO {
 
     @NotNull
-    private OrderBasicDTO orderBasicDTO;
+    private String orderId;
 
     @NotNull
     @Length(max = 20)
