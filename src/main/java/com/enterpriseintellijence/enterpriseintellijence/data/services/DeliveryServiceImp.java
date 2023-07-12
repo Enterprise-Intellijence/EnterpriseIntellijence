@@ -54,7 +54,7 @@ public class DeliveryServiceImp implements DeliveryService {
             throw new IllegalAccessException("cant create delivery with no transaction");
 
         Address senderAddress = addressRepository.findById(deliveryDTO.getSenderAddressId()).orElseThrow(EntityNotFoundException::new);
-        if(senderAddress.getUser().getId().equals(loggedUser.getId()))
+        if(!senderAddress.getUser().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("cant use address from another user");
 
         return mapToDTO(processSaleServiceImp.sendProduct(order,loggedUser,deliveryDTO.getShipper(), senderAddress));

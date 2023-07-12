@@ -31,7 +31,7 @@ public class NotificationServiceImp implements NotificationService {
         User receiver = userRepository.findById(notification.getReceiver().getId()).orElseThrow(() -> new IllegalArgumentException("Receiver not found"));
         if (notification.getType() == null) throw new IllegalArgumentException("Invalid notification");
         if (!notification.getType().equals(NotificationType.MESSAGE) &&
-                (notification.getUserTarget() == null && notification.getProductTarget() == null && notification.getOfferTarget() == null)) throw new IllegalArgumentException("Invalid notification");
+                (notification.getUserTarget() == null && notification.getProductTarget() == null && notification.getOfferTarget() == null && notification.getReviewTarget() == null)) throw new IllegalArgumentException("Invalid notification");
         if (notification.getUserTarget() != null && userRepository.findById(notification.getUserTarget()).isEmpty())
             throw new IllegalArgumentException("User target not found");
         if (notification.getProductTarget() != null && productRepository.findById(notification.getProductTarget()).isEmpty())
