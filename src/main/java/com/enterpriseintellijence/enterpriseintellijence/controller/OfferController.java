@@ -34,22 +34,16 @@ public class OfferController {
         return offerService.createOffer(offerCreateDTO);
     }
 
-    /*
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public OfferDTO replaceOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO offerDTO) throws IllegalAccessException {
-        return offerService.replaceOffer(id, offerDTO);
-    }
-
-     */
-
     @PatchMapping(path = "/{id}/accept")
     public OfferDTO acceptOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.ACCEPTED);
     }
+
     @PatchMapping(path = "/{id}/reject")
     public OfferDTO rejectOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.REJECTED);
     }
+
     @PatchMapping(path = "/{id}/cancel")
     public OfferDTO cancelOffer(@PathVariable("id") String id) throws IllegalAccessException {
         return offerService.updateOfferState(id, OfferState.CANCELLED);
@@ -59,22 +53,6 @@ public class OfferController {
     public OfferDTO setOfferState(@PathVariable("id") String id, @Valid @RequestBody OfferState state) throws IllegalAccessException {
         return offerService.updateOfferState(id, state);
     }
-
-    /*
-    @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OfferDTO> updateOffer(@PathVariable("id") String id, @Valid @RequestBody OfferDTO patch) throws IllegalAccessException {
-        return ResponseEntity.ok(offerService.updateOffer(id, patch));
-    }
-
-
-    @DeleteMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteOffer(@PathVariable("id") String id) throws IllegalAccessException {
-        offerService.deleteOffer(id);
-        return ResponseEntity.noContent().build();
-    }
-
-     */
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<OfferDTO> getOffer(@PathVariable("id") String id) throws IllegalAccessException {

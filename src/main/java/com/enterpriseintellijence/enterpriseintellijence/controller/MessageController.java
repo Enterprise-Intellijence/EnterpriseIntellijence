@@ -38,19 +38,6 @@ public class MessageController {
         return messageService.createMessage(messageCreateDTO);
     }
 
-    /*
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public MessageDTO replaceMessage(@PathVariable("id") String id, @Valid @RequestBody MessageDTO messageDTO) throws IllegalAccessException {
-        return messageService.replaceMessage(id, messageDTO);
-    }
-
-    @PatchMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<MessageDTO> updateMessage(@PathVariable("id") String id, @Valid @RequestBody MessageDTO patch) throws IllegalAccessException {
-        return ResponseEntity.ok(messageService.updateMessage(id, patch));
-    }
-
-     */
-
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMessage(@PathVariable("id") String id) throws IllegalAccessException {

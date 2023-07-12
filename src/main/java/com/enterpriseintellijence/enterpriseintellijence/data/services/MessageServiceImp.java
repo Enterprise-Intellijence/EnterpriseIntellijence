@@ -85,39 +85,8 @@ public class MessageServiceImp implements MessageService {
         return mapToDTO(message);
     }
 
-    /*
-    @Override
-    public MessageDTO replaceMessage(String id, MessageDTO messageDTO) throws IllegalAccessException {
-        // TODO: 23/05/2023 ha senso che ci sia?
-
-        return updateMessage(id, messageDTO);
-    }
-
-
-    @Override
-    public MessageDTO updateMessage(String id, MessageDTO patch) throws IllegalAccessException {
-        Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        throwOnIdMismatch(id, patch);
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        if (loggedUser.getId().equals(message.getSendUser().getId()))
-            throw new IllegalAccessException("Cannot modify message of others");
-
-        if (message.getMessageStatus().equals(MessageStatus.READ))
-            throw new IllegalAccessException("Cannot modify message readed");
-
-        message.setText(patch.getText());
-
-        User receiver = userRepository.findById(patch.getId()).orElseThrow(EntityNotFoundException::new);
-        message.setReceivedUser(receiver);
-
-        messageRepository.save(message);
-        return mapToDTO(message);
-    }
-    */
-
     @Override
     public void deleteMessage(String id) throws IllegalAccessException {
-        // TODO: 04/06/2023 verificare la logica
         Message message = messageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
@@ -159,8 +128,6 @@ public class MessageServiceImp implements MessageService {
 
     @Override
     public Optional<ConversationDTO> getConversation(User loggedUser, User otherUser, @Nullable Product product) {
-        // TODO: 22/06/2023 why?? senza la query?
-
         if(loggedUser != jwtContextUtils.getUserLoggedFromContext())
             throw new IllegalArgumentException("Logged user is not the same of the user passed");
 

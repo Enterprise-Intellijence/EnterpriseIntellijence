@@ -37,10 +37,6 @@ public class Transaction {
     @Column(nullable = false)
     private TransactionState transactionState;
 
-    //@ManyToOne()
-    //@JoinColumn(name = "payment_method", nullable = false)
-    //private PaymentMethod paymentMethod;
-
     @Column(nullable = false)
     private String paymentMethod;
 

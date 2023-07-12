@@ -53,14 +53,6 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAllMySellerOrdersByState(PageRequest.of(page, sizePage), state));
     }
 
-    /*
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<OrderDTO> replaceOrder(@PathVariable("id") String id, @Valid @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(orderService.replaceOrder(id, orderDTO));
-    }
-
-     */
-
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") String id, @Valid @RequestBody OrderDTO orderDTO) throws IllegalAccessException {
         return ResponseEntity.ok(orderService.updateOrder(id, orderDTO));

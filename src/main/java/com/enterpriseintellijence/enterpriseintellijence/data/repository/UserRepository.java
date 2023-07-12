@@ -23,31 +23,6 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
 
     Page<User> findAllByRoleEqualsOrRoleEquals(Pageable pageable, UserRole userRole, UserRole userRole1);
 
-/*    Page<User> findAllByFollowingId(String userId, Pageable pageable);
-
-    Page<User> findAllByFollowersId(String userId, Pageable pageable);
-
-
-    @Query("update User u set u.followers_number = u.followers_number + 1 where u.id = ?1")
-    void increaseFollowersNumber(String userId);
-
-    @Query("update User u set u.following_number = u.following_number + 1 where u.id = ?1")
-    void increaseFollowingNumber(String userId);
-
-    @Query("update User u set u.followers_number = u.followers_number - 1 where u.id = ?1")
-    void decreaseFollowersNumbers(String userId);
-
-    @Query("update User u set u.following_number = u.following_number - 1 where u.id = ?1")
-    void decreaseFollowingNumbers(String userId);
-
-
-    @Query(value = "insert into user_follows (user_id, following_id) values (?1, ?2)", nativeQuery = true)
-    void addFollow(String userId, String userIdToFollow);
-
-
-    @Query(value = "delete from user_follows where user_id = ?1 and following_id = ?2", nativeQuery = true)
-    void removeFollow(String userId, String userIdToUnFollow);
-*/
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query(value = "insert into user_likes values (?2, ?1)", nativeQuery = true)
@@ -59,13 +34,5 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
     void removeLikeToProduct(String userId, String productId);
 
     Page<User> findAllByLikedProducts(String productId, Pageable pageable);
-    /*
-    @Query(value = "select u from users_following uf, users u where uf.followers_id = ?1 and uf.following_id = u.id", nativeQuery = true)
-    Page<User> findAllFollowing(Long userId, Pageable pageable);
-
-
-    @Query(value = "select p from user_likes ul, products p where ul.user_id = ?1 and ul.product_id = p.id", nativeQuery = true)
-    Page<Product> findAllLikedProducts(String userId, Pageable pageable);
-*/
 
 }

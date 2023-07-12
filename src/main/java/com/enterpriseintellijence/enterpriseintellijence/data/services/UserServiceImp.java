@@ -75,14 +75,6 @@ public class UserServiceImp implements UserService{
         return mapToDto(user);
     }
 
-    /*
-    public UserDTO replaceUser(String id, UserDTO userDTO) throws IllegalAccessException {
-
-        return updateUser(id,userDTO);
-    }
-
-     */
-
     public UserDTO updateUser(String id, UserDTO userDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         User oldUser = userRepository.findById(id).orElseThrow();
@@ -454,12 +446,6 @@ public class UserServiceImp implements UserService{
             productRepository.save(product);
 
         }
-
-/*      userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        productRepository.findById(productId).orElseThrow(EntityNotFoundException::new);
-
-        userRepository.removeLikeToProduct(userId, productId);
-        productRepository.decreaseLikesNumber(productId);*/
     }
 
     @Override

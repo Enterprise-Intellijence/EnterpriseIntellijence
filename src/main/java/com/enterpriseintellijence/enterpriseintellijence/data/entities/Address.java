@@ -39,11 +39,8 @@ public class Address {
     @Column(nullable = false)
     private String phoneNumber;
 
-
-
     @OneToMany(mappedBy = "deliveryAddress",fetch = FetchType.LAZY)
     private List<Order> orders;
-
 
     private boolean isDefault;
 
@@ -56,6 +53,5 @@ public class Address {
 
     @OneToMany(mappedBy = "receiverAddress",fetch = FetchType.LAZY)
     private List<Delivery> receivedDeliveries = new ArrayList<>();
-
 
 }

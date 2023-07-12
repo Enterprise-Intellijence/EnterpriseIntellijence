@@ -71,31 +71,6 @@ public class ReviewServiceImp implements ReviewService {
         return mapToDTO(review);
     }
 
-    /*
-    @Override
-    public ReviewDTO replaceReview(String id, ReviewDTO reviewDTO) throws IllegalAccessException {
-
-        throwOnIdMismatch(id, reviewDTO);
-
-        Review oldReview = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Review newReview = mapToEntity(reviewDTO);
-
-        User requestingUser = jwtContextUtils.getUserLoggedFromContext();
-
-        if(!requestingUser.getId().equals(oldReview.getReviewer().getId())) {
-            throw new IllegalAccessException("User cannot change review");
-        }
-        if(!requestingUser.getId().equals(newReview.getReviewer().getId())) {
-            throw new IllegalAccessException("User cannot change review");
-        }
-        requestingUser.editReview(oldReview.getVote(), newReview.getVote());
-        newReview = reviewRepository.save(newReview);
-        userRepository.save(requestingUser);
-        return mapToDTO(newReview);
-    }
-
-     */
-
     @Override
     @Transactional
     public ReviewDTO updateReview(String id, ReviewDTO patch) throws IllegalAccessException {
@@ -160,19 +135,6 @@ public class ReviewServiceImp implements ReviewService {
             return new PageImpl<>(List.of() ,PageRequest.of(page,sizePage),0);
 
     }
-
-/*    private boolean checkOwnership(ReviewDTO review){
-        AtomicBoolean result = new AtomicBoolean(false);
-        UserDTO userDTO = userService.findUserFromContext()
-                .orElseThrow(EntityNotFoundException::new);
-        orderService.findAllByUserId(userDTO.getId(), Pageable.unpaged()).forEach(orderDTO -> {
-            if(orderDTO.getUser().getId().equals(review.getReviewer().getId())
-                    && orderDTO.getState().equals(OrderState.COMPLETED)){
-                result.set(true);
-            }
-        });
-        return result.get();
-    }*/
 
     private Review mapToEntity(ReviewDTO reviewDTO) {
         return modelMapper.map(reviewDTO,Review.class);

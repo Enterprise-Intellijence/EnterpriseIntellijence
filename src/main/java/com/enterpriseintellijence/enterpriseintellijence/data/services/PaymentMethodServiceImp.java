@@ -54,16 +54,6 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
         return mapToDTO(paymentMethod);
     }
 
-    /*
-    @Override
-    public PaymentMethodDTO replacePaymentMethod(String id, PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
-
-        return updatePaymentMethod(id,paymentMethodDTO);
-    }
-
-     */
-
-
     @Override
     @Transactional
     public PaymentMethodDTO updatePaymentMethod(String id, PaymentMethodDTO patch) throws IllegalAccessException {

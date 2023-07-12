@@ -54,8 +54,6 @@ public class ImageServiceImp implements ImageService{
         }
     }
 
-
-
     @Override
     public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException, IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
@@ -105,8 +103,6 @@ public class ImageServiceImp implements ImageService{
         // TODO: 24/05/2023 remove from system
         userImageRepository.delete(userImage);
     }
-
-
 
     @Override
     public ProductImageDTO saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {

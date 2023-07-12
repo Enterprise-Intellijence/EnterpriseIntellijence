@@ -63,19 +63,6 @@ public class UserController {
         userService.activateUser(unique_code);
     }
 
-
-/*    @PostMapping(consumes = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
-        return ResponseEntity.ok(userService.createUser(userDTO));
-
-    }*/
-
-//    @PutMapping(path = "/{id}",consumes="application/json")
-//    public ResponseEntity<UserDTO> replaceUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO userDTO) throws IllegalAccessException {
-//        return ResponseEntity.ok(userService.replaceUser(id, userDTO));
-//    }
-
     @PatchMapping(path="/{id}", consumes = "application/json")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") String id, @Valid @RequestBody UserDTO patch) throws IllegalAccessException {
             return ResponseEntity.ok(userService.updateUser(id,patch));
@@ -114,9 +101,6 @@ public class UserController {
     public ResponseEntity<Map<String, String>> loginWithGoogle(LoginWithGoogleBody body) throws Exception {
         return ResponseEntity.ok(userService.googleAuth(body.getCredential()));
     }
-
-
-
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me() throws EntityNotFoundException {

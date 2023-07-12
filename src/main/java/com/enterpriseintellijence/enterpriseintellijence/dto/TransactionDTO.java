@@ -28,16 +28,10 @@ public class TransactionDTO {
     @NotNull
     private TransactionState transactionState;
 
-    //@NotNull
-    //private PaymentMethodBasicDTO paymentMethod;
-
     @NotNull
     private String paymentMethod;
 
     @NotNull
     private String paymentMethodOwner;
-
-    /*@NotNull
-    private OrderBasicDTO order;*/
 
 }

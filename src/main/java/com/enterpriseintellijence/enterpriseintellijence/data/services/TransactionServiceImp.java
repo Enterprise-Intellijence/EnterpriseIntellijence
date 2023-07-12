@@ -45,59 +45,6 @@ public class TransactionServiceImp implements TransactionService{
         return mapToDTO(processSaleServiceImp.payProduct(order,loggedUser,paymentMethod));
     }
 
-    /*
-    public TransactionDTO replaceTransaction(String id, TransactionDTO transactionDTO) throws IllegalAccessException {
-        return updateTransaction(id,transactionDTO);
-    }
-
-     */
-
-    /*
-    public TransactionDTO updateTransaction(String id, TransactionDTO patch) throws IllegalAccessException {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
-        //check sugli id
-        throwOnIdMismatch(id,patch);
-
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        //controllo che chi effettua l'operazione sia un admin o il proprietario della transazione
-        if(loggedUser!= null && loggedUser.getRole().equals(UserRole.USER) && !transaction.getOrder().getUser().getId().equals(loggedUser.getId()))
-            throw new IllegalAccessException("Cannot modify transaction");
-        //controllo che il campo del metodo non sia null
-        if(patch.getPaymentMethod()!=null){
-            PaymentMethod paymentMethod = paymentMethodRepository.getReferenceById(patch.getPaymentMethod().getId());
-            //controllo che il proprietario della carta sia nei metodi di pagamento dell'utente
-            checkCardOwnership(transaction.getOrder().getUser(),paymentMethod);
-            //verifico se il metodo di pagamento è effettivamente diverso
-            if(!transaction.getPaymentMethod().equals(paymentMethod)) {
-                transaction.setPaymentMethod(paymentMethod);
-                transaction.getOrder().setState(OrderState.PURCHASED);
-                transaction.getOrder().getProduct().setAvailability(Availability.UNAVAILABLE);
-                transactionRepository.save(transaction);
-            }
-        }
-
-        return mapToDTO(transaction);
-    }
-
-     */
-
-    /*
-    public void deleteTransaction(String id) throws IllegalAccessException {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        //controllo che chi effettua l'operazione sia un admin o il proprietario della transazione
-        if(loggedUser.getRole().equals(UserRole.USER) && !transaction.getOrder().getUser().getId().equals(loggedUser.getId()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access, cannot delete transaction");
-
-        if(transaction.getTransactionState().equals(TransactionState.COMPLETED))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete completed transaction");
-
-        transactionRepository.deleteById(id);
-    }
-
-     */
-
     public TransactionDTO transactionById(String id) {
        Transaction transaction = transactionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
        User loggedUser = jwtContextUtils.getUserLoggedFromContext();

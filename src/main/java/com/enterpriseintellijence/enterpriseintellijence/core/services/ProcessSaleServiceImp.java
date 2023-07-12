@@ -42,7 +42,6 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         return offer;
     }
 
-    // TODO: 09/07/2023 cancelliamo??
     @Override
     public Offer acceptOrRejectAnOffer(Offer offer, OfferDTO offerDTO, Product product, User loggedUser, boolean isAccepted) {
         if(!offer.getState().equals(OfferState.PENDING)) {
@@ -155,7 +154,6 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         delivery.setDeliveryStatus(DeliveryStatus.SHIPPED);
         delivery.setDeliveryCost(order.getProduct().getDeliveryCost());
 
-        // TODO: 03/06/2023 occhio indirizzo
         delivery.setShipper(shipper);
 
         for (Address address:loggedUser.getAddresses()){

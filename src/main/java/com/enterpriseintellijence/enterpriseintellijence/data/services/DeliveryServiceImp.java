@@ -56,25 +56,6 @@ public class DeliveryServiceImp implements DeliveryService {
         return mapToDTO(processSaleServiceImp.sendProduct(order,loggedUser,deliveryDTO.getShipper()));
     }
 
-    /*
-    @Override
-    public DeliveryDTO replaceDelivery(String id, DeliveryDTO deliveryDTO) throws IllegalAccessException {
-        // TODO: 25/05/2023 ha senso di esistere? Effettivamente non si dovrebbe poter cambiare una consegna
-        throwOnIdMismatch(id, deliveryDTO);
-
-        Delivery oldDelivery = deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Delivery newDelivery = mapToEntity(deliveryDTO);
-
-        if (!oldDelivery.getOrder().getId().equals(newDelivery.getOrder().getId())) {
-            throw new IllegalAccessException("Can't change delivery");
-        }
-
-        newDelivery = deliveryRepository.save(newDelivery);
-        return updateDelivery(id,deliveryDTO);
-    }
-
-     */
-
     @Override
     public DeliveryDTO updateDelivery(String Id, DeliveryDTO patch) throws IllegalAccessException {
 
@@ -95,25 +76,6 @@ public class DeliveryServiceImp implements DeliveryService {
 
         return mapToDTO(delivery);
     }
-
-
-    /*
-    @Transactional
-    @Override
-    public void deleteDelivery(String id) throws IllegalAccessException {
-        Delivery delivery = deliveryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Order order = delivery.getOrder();
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-
-        if(loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(order.getProduct().getSeller().getId()))
-            throw new IllegalAccessException("Only seller can update a delivery");
-
-        // TODO: 25/05/2023 perchè si dovrebbe deletare una consegna?   infatti non ha senso
-        order.setDelivery(null);
-        deliveryRepository.delete(delivery);
-    }
-
-     */
 
     @Override
     public DeliveryDTO getDeliveryById(String id) throws IllegalAccessException {
@@ -146,14 +108,6 @@ public class DeliveryServiceImp implements DeliveryService {
         addressRepository.save(address);
         return modelMapper.map(address,AddressDTO.class);
     }
-
-    /*
-    @Override
-    public AddressDTO replaceAddress(String id, AddressDTO addressDTO) throws IllegalAccessException {
-        return updateAddress(id,addressDTO);
-    }
-
-     */
 
     @Override
     @Transactional

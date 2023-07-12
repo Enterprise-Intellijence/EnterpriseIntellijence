@@ -29,9 +29,4 @@ public class ProductImage {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-
-
-/*    @OneToOne(mappedBy = "defaultImage",fetch = FetchType.LAZY)
-    private Product defaultProduct;*/
-
 }

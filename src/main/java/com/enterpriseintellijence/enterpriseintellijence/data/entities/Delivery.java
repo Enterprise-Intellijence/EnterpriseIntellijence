@@ -46,7 +46,6 @@ public class  Delivery {
     @JoinColumn(name = "sender_address",nullable = false)
     private Address senderAddress;
 
-
     @ManyToOne
     @JoinColumn(name = "receiver_address",nullable = false)
     private Address receiverAddress;

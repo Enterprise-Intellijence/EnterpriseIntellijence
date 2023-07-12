@@ -43,12 +43,10 @@ public class ProductController {
         return productService.createProduct(productCreateDTO);
     }
 
-
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") String id, @Valid @RequestBody ProductDTO productDTO) throws IllegalAccessException {
         return ResponseEntity.ok(productService.updateProduct(id, productDTO));
     }
-
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

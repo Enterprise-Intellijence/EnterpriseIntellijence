@@ -61,36 +61,6 @@ public class OrderServiceImp implements OrderService {
         return mapToDTO(order);
     }
 
-    /*
-    @Override
-    public OrderDTO replaceOrder(String id, OrderDTO orderDTO) throws IllegalAccessException {
-        // TODO: 25/05/2023 ha senso di esistere? No
-        throwOnIdMismatch(id, orderDTO);
-
-        Order oldOrder = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Order newOrder = mapToEntity(orderDTO);
-
-        UserDTO requestingUser = userService.findUserFromContext()
-            .orElseThrow(EntityNotFoundException::new);
-
-        if(!requestingUser.getId().equals(oldOrder.getUser().getId())) {
-            throw new IllegalAccessException("User cannot change order");
-        }
-
-        if(!requestingUser.getId().equals(newOrder.getUser().getId())) {
-            throw new IllegalAccessException("User cannot change order");
-        }
-
-        if(!oldOrder.getState().equals(newOrder.getState())) {
-            throw new IllegalAccessException("State cannot be changed");
-        }
-
-        newOrder = orderRepository.save(newOrder);
-        return mapToDTO(newOrder);
-    }
-
-     */
-
     @Override
     public OrderDTO updateOrder(String id, OrderDTO patch) throws IllegalAccessException {
 
@@ -126,15 +96,6 @@ public class OrderServiceImp implements OrderService {
             processSaleServiceImp.cancelOrder(order,loggedUser);
             orderRepository.save(order);
         }
-/*
-        else if(loggedUser.getId().equals(order.getProduct().getSeller().getId()) || order.getState().equals(OrderState.CANCELED)){
-            Product product = order.getProduct();
-            product.setAvailability(Availability.AVAILABLE);
-            product.setOrder(null);
-            productRepository.save(product);
-            orderRepository.delete(order);
-        }
-*/
         else
             throw new IllegalAccessException("User cannot delete order");
 

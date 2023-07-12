@@ -60,14 +60,6 @@ public class ProductServiceImp implements ProductService {
             product.setViews(0);
             product.setSeller(loggedUser);
             product.setAvailability(Availability.AVAILABLE);
-            /*
-            if (!productCatRepository.existsByIdEqualsAndPrimaryCatEqualsAndSecondaryCatEqualsAndTertiaryCatEquals(
-                productCreateDTO.getProductCategory().getId(),
-                productCreateDTO.getProductCategory().getPrimaryCat(),
-                productCreateDTO.getProductCategory().getSecondaryCat(),
-                productCreateDTO.getProductCategory().getTertiaryCat()))
-                throw new IllegalArgumentException("Category not found");
-            */
             ProductCategory category;
             if(productCreateDTO.getProductCategory().getId() == null) {
                 category = productCatRepository.findProductCategoryByTertiaryCat(productCreateDTO.getProductCategory().getTertiaryCat());
@@ -107,17 +99,6 @@ public class ProductServiceImp implements ProductService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-    /*
-    @Override
-    public ProductDTO replaceProduct(String id, ProductDTO productDTO) throws IllegalAccessException {
-        throwOnIdMismatch(id, productDTO);
-
-        return updateProduct(id, productDTO);
-    }
-
-     */
 
     @Override
     public ProductDTO updateProduct(String id, ProductDTO patch) throws IllegalAccessException {
@@ -244,24 +225,6 @@ public class ProductServiceImp implements ProductService {
 
         return new PageImpl<>(collect, PageRequest.of(page, size), messages.getTotalElements());
     }
-
-
-    /*
-    @Override
-    public OrderBasicDTO getProductOrder(String id) throws IllegalAccessException {
-        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        // TODO: 28/05/2023 metodo riservato da mettere sotto al prodotto nella pagina del seller
-
-        if (!loggedUser.getId().equals(product.getSeller().getId()))
-            throw new IllegalAccessException("Cannot see orders of others product");
-        if (product.getOrder() != null)
-            return modelMapper.map(product.getOrder(), OrderBasicDTO.class);
-        else
-            throw new EntityNotFoundException("Order not exists");
-    }
-
-     */
 
     @Override
     public Page<ProductBasicDTO> getProductFilteredPage(Specification<Product> withFilters, int page, int size, String sortBy, String sortDirection) {

@@ -34,7 +34,6 @@ public class NotificationSystem {
 
         String conversationId = conversationOptional.isPresent() ? conversationOptional.get().getConversationId() : UUID.randomUUID().toString();
 
-
         return Message.builder()
             .text("Hi, here is my offer for " + product.getTitle() + ".")
             .messageDate(LocalDateTime.now(clock))
@@ -45,8 +44,6 @@ public class NotificationSystem {
             .receivedUser(product.getSeller())
             .offer(offer)
             .build();
-
-
     }
 
     public Message offerAcceptedOrRejectedNotification(Offer offer, boolean isAccepted) {

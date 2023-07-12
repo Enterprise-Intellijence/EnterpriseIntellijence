@@ -69,12 +69,4 @@ public class ImageController {
         imageService.deleteImageProduct(id);
     }
 
-/*    @GetMapping(value = "/product/{folder_name}/{file_name:.*}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<Resource> getImageProduct(@PathVariable("folder_name")String folder_name ,@PathVariable("file_name") String file_name) {
-        return ResponseEntity.ok(imageService.getImageProduct(folder_name+"/"+file_name));
-    }*/
-
-
-
-
 }

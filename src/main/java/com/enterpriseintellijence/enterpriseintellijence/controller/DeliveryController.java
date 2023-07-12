@@ -30,28 +30,10 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.createDelivery(deliveryDTO));
     }
 
-    /*
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<DeliveryDTO> replaceDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(deliveryService.replaceDelivery(id, deliveryDTO));
-    }
-
-     */
-
-
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<DeliveryDTO> updateDelivery(@PathVariable("id") String id, @Valid @RequestBody DeliveryDTO deliveryDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.updateDelivery(id, deliveryDTO));
     }
-
-    /*
-    @DeleteMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDelivery(@PathVariable("id") String id) throws IllegalAccessException {
-        deliveryService.deleteDelivery(id);
-    }
-
-     */
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<DeliveryDTO> getDelivery(@PathVariable("id") String id) throws IllegalAccessException {
@@ -63,14 +45,6 @@ public class DeliveryController {
     public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressCreateDTO addressCreateDTO) throws IllegalAccessException {
         return ResponseEntity.ok(deliveryService.createAddress(addressCreateDTO));
     }
-
-    /*
-    @PutMapping(path = "/address/{id}", consumes = "application/json")
-    public ResponseEntity<AddressDTO> replaceAddress(@PathVariable("id") String id, @Valid @RequestBody AddressDTO addressDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(deliveryService.replaceAddress(id, addressDTO));
-    }
-    
-     */
 
     @PutMapping(path = "/address/{id}", consumes = "application/json")
     public ResponseEntity<AddressDTO> updateAddress(@PathVariable("id") String id, @Valid @RequestBody AddressDTO addressDTO) throws IllegalAccessException {

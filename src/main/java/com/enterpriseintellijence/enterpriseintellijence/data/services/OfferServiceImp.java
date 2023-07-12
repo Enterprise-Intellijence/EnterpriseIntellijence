@@ -69,25 +69,6 @@ public class OfferServiceImp implements OfferService {
         return mapToDTO(savedOffer);
     }
 
-    /*
-    @Override
-    public OfferDTO replaceOffer(String id, OfferDTO offerDTO) throws IllegalAccessException {
-        throwOnIdMismatch(id, offerDTO);
-
-        OfferState state = offerDTO.getState();
-        return updateOfferState(id, state);
-    }
-
-    @Override
-    public OfferDTO updateOffer(String id, OfferDTO patch) throws IllegalAccessException {
-        throwOnIdMismatch(id, patch);
-
-        OfferState state = patch.getState();
-        return updateOfferState(id, state);
-    }
-
-     */
-
     @Override
     public OfferDTO updateOfferState(String id, OfferState state) throws IllegalAccessException {
         if (state == null) {
@@ -143,23 +124,6 @@ public class OfferServiceImp implements OfferService {
         notificationService.notifyOffer(offer);
         return mapToDTO(offer);
     }
-
-
-    /*
-    @Override
-    public void deleteOffer(String id) throws IllegalAccessException {
-        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        Offer offer = offerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if (loggedUser.getRole().equals(UserRole.USER) && !loggedUser.getId().equals(offer.getOfferer().getId()))
-            throw new IllegalAccessException("Cannot delete offer");
-
-        if (offer.getState().equals(OfferState.ACCEPTED))
-            throw new IllegalAccessException("Cannot delete offer accepted");
-
-        offerRepository.delete(offer);
-    }
-
-     */
 
     @Override
     public OfferDTO getOffer(String id) throws IllegalAccessException {

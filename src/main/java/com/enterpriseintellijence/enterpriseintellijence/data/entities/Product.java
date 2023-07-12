@@ -52,7 +52,6 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Condition condition;
 
-
     //si riferisce alle dimensioni dell'imballo della spedizione
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_type")

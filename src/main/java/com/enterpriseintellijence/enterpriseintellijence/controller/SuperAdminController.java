@@ -32,7 +32,6 @@ public class SuperAdminController {
         return ResponseEntity.ok(userService.changeRole(userId, role));
     }
 
-
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('SUPER_ADMIN')")

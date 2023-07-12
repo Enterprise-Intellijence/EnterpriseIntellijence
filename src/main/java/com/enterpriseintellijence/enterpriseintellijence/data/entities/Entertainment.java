@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @PrimaryKeyJoinColumn(name = "product_id")
 public class Entertainment extends Product{
 
-
     @Enumerated(EnumType.STRING)
     @Column(name="entertainment_language",nullable = false)
     private EntertainmentLanguage entertainmentLanguage;

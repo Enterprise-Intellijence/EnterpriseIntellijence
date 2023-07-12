@@ -35,14 +35,6 @@ public class PaymentMethodController {
         return ResponseEntity.ok(paymentMethodService.createPaymentMethod(paymentMethodCreateDTO));
     }
 
-    /*
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<PaymentMethodDTO> replacePaymentMethod(@PathVariable("id") String id, @Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
-        return ResponseEntity.ok(paymentMethodService.replacePaymentMethod(id, paymentMethodDTO));
-    }
-
-     */
-
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<PaymentMethodDTO> updatePaymentMethod(@PathVariable("id") String id, @Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws IllegalAccessException {
         return ResponseEntity.ok(paymentMethodService.updatePaymentMethod(id, paymentMethodDTO));
