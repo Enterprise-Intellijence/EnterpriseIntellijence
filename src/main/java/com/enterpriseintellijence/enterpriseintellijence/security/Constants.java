@@ -35,7 +35,7 @@ public class Constants {
     public static final int JWT_REFRESH_EXPIRATION_TIME = 24;  // in hours
     public static final int JWT_CAPABILITY_EXPIRATION_TIME = 1;  // in hours
     public static final int EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME = 24;  // in hours
-    public static final int BASIC_USER_RATE_LIMIT_BANDWIDTH = 2500;
+    public static final int BASIC_USER_RATE_LIMIT_BANDWIDTH = 3000;
     public static final int BASIC_USER_RATE_LIMIT_REFILL = 2000;
     public static final int BASIC_USER_RATE_LIMIT_REFILL_DURATION = 1; // in minutes
 
