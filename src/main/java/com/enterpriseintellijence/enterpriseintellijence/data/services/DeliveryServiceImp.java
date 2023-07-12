@@ -133,6 +133,7 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     @Override
+    @Transactional
     public AddressDTO createAddress(AddressCreateDTO addressCreateDTO) {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
@@ -159,6 +160,7 @@ public class DeliveryServiceImp implements DeliveryService {
      */
 
     @Override
+    @Transactional
     public AddressDTO updateAddress(String id, AddressDTO addressDTO) throws IllegalAccessException {
         if(addressDTO!=null && !id.equals(addressDTO.getId()))
             throw new IdMismatchException();
@@ -194,6 +196,7 @@ public class DeliveryServiceImp implements DeliveryService {
     }
 
     @Override
+    @Transactional
     public void deleteAddress(String id) throws IllegalAccessException {
         Address address = addressRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();

@@ -21,6 +21,7 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -109,6 +110,8 @@ public class UserServiceImp implements UserService{
         return mapToDto(oldUser);
     }
 
+    @Override
+    @Transactional
     public void  deleteUser(String id) {
         try{
             User loggedUser = jwtContextUtils.getUserLoggedFromContext();
@@ -131,6 +134,7 @@ public class UserServiceImp implements UserService{
         }
     }
 
+    @Override
     public UserBasicDTO findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         if (!user.getStatus().equals(UserStatus.ACTIVE))
@@ -305,6 +309,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    @Transactional
     public void changePassword(String oldPassword, String newPassword, HttpServletRequest request) throws ParseException, JOSEException, MessagingException {
         if (newPassword.length() < 8)
             throw new RuntimeException("Password must be at least 8 characters long");
@@ -327,6 +332,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    @Transactional
     public void changePassword(String token) throws ParseException, JOSEException, MessagingException {
         tokenStore.verifyToken(token, Constants.RESET_PASSWORD_CLAIM);
         String username = tokenStore.getUser(token);
@@ -409,6 +415,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    @Transactional
     public void addLikeToProduct(String productId) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         //String userId = userRepository.findByUsername(username).getId();
@@ -431,6 +438,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    @Transactional
     public void removeLikeFromProduct(String productId) {
         String username = jwtContextUtils.getUsernameFromContext().orElseThrow(EntityNotFoundException::new);
         //String userId = userRepository.findByUsername(username).getId();

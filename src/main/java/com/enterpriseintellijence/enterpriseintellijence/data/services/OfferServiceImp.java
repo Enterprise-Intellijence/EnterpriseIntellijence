@@ -49,6 +49,7 @@ public class OfferServiceImp implements OfferService {
 
 
     @Override
+    @Transactional
     public OfferDTO createOffer(OfferCreateDTO offerCreateDTO) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(offerCreateDTO.getProduct().getId()).orElseThrow();

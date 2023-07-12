@@ -181,13 +181,13 @@ public class ProductServiceImp implements ProductService {
             throw new IllegalAccessException("Cannot delete product with order active");
 
         //Avvisiamo un utente che aveva messo like al prodotto che questo è stato venduto o rimosso dal venditore
-        notificationService.notifyProductSold(product);
         try {
             productRepository.delete(product);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        notificationService.notifyProductSold(product);
     }
 
     @Override

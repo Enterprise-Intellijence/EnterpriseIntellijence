@@ -19,6 +19,7 @@ import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchExc
 
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,7 @@ public class ReviewServiceImp implements ReviewService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public ReviewDTO createReview(ReviewCreateDTO reviewDTO) throws IllegalAccessException {
 
         Order order = orderRepository.findById(reviewDTO.getOrderBasicDTO().getId()).orElseThrow(EntityNotFoundException::new);
@@ -102,6 +104,7 @@ public class ReviewServiceImp implements ReviewService {
      */
 
     @Override
+    @Transactional
     public ReviewDTO updateReview(String id, ReviewDTO patch) throws IllegalAccessException {
         throwOnIdMismatch(id, patch);
         Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -125,6 +128,7 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void deleteReview(String id) throws IllegalAccessException {
         Review review = reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         User user = jwtContextUtils.getUserLoggedFromContext();

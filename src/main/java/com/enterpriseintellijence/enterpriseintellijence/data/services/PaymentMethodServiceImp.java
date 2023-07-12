@@ -12,6 +12,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.creation.PaymentMet
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,6 +35,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
     private final JwtContextUtils jwtContextUtils;
 
     @Override
+    @Transactional
     public PaymentMethodDTO createPaymentMethod(PaymentMethodCreateDTO paymentMethodCreateDTO) throws IllegalAccessException {
         PaymentMethod paymentMethod = modelMapper.map(paymentMethodCreateDTO,PaymentMethod.class);
 
@@ -65,6 +67,7 @@ public class PaymentMethodServiceImp implements PaymentMethodService {
 
 
     @Override
+    @Transactional
     public PaymentMethodDTO updatePaymentMethod(String id, PaymentMethodDTO patch) throws IllegalAccessException {
         throwOnIdMismatch(id,patch);
         PaymentMethod paymentMethod = paymentMethodRepository.findById(id).orElseThrow(EntityNotFoundException::new);

@@ -8,6 +8,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.FollowingFollowersD
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class FollowingServiceImp implements FollowingService{
 
 
     @Override
+    @Transactional
     public FollowingFollowersDTO follow(String id) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
@@ -63,6 +65,7 @@ public class FollowingServiceImp implements FollowingService{
     }
 
     @Override
+    @Transactional
     public void unfollow(String id) throws IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
