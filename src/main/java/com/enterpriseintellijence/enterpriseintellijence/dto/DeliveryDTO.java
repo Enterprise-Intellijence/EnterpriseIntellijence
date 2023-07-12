@@ -18,9 +18,6 @@ public class DeliveryDTO {
     private String Id;
 
     @NotNull
-    private OrderBasicDTO order;
-
-    @NotNull
     private LocalDateTime sendTime;
 
 
