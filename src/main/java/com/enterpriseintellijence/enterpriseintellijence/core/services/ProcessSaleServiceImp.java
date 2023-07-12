@@ -125,7 +125,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         //transaction.setOrder(order);
         transaction.setCreationTime(now);
         order.setOrderUpdateDate(now);
-        transaction.setPaymentMethod(paymentMethod.getCreditCard());
+        transaction.setPaymentMethod(paymentMethod.getCreditCard().substring(0,4)+" **** **** "+paymentMethod.getCreditCard().substring(16,20));
         transaction.setPaymentMethodOwner(paymentMethod.getOwner());
         Random random = new Random();
         if(random.nextInt(101)>=90)

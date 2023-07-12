@@ -57,8 +57,10 @@ public class ImageServiceImp implements ImageService{
 
 
     @Override
-    public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException {
+    public UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException, IllegalAccessException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        if(loggedUser.getPhotoProfile()!=null)
+            throw new IllegalAccessException("Cannot upload more photo, replace previous photo");
 
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
@@ -69,10 +71,8 @@ public class ImageServiceImp implements ImageService{
         userImage.setUser(loggedUser);
         loggedUser.setPhotoProfile(userImage);
 
-        userImage= userImageRepository.save(userImage);
-
-
         FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);
+        userImage= userImageRepository.save(userImage);
 
         return modelMapper.map(userImage,UserImageDTO.class);
     }
@@ -110,8 +110,6 @@ public class ImageServiceImp implements ImageService{
 
     @Override
     public ProductImageDTO saveImageProduct(MultipartFile multipartFile, String product_id, String description) throws IllegalAccessException, IOException {
-        // TODO: 25/05/2023 gestire massimo 5 immagini
-
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
         Product product = productRepository.findById(product_id).orElseThrow(EntityNotFoundException::new);
@@ -133,8 +131,8 @@ public class ImageServiceImp implements ImageService{
         productImage.setDescription(description);
         productImage.setUrlPhoto("images/product_photos/"+product.getId()+"/"+fileName);
         productImage.setProduct(product);
-        productImageRepository.save(productImage);
         FileUploadUtil.saveFile(localStorageDir, fileName, multipartFile);
+        productImageRepository.save(productImage);
 
         return modelMapper.map(productImage,ProductImageDTO.class);
         }catch (Exception e){

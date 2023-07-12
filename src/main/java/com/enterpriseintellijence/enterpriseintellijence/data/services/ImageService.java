@@ -12,7 +12,7 @@ import java.io.IOException;
 public interface ImageService {
     Resource getImage(String url) throws IOException;
 
-    UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException;
+    UserImageDTO savePhotoUser(MultipartFile multipartFile, String description) throws IOException, IllegalAccessException;
 
     void replacePhotoUser(String id, MultipartFile multipartFile) throws IOException;
 

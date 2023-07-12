@@ -35,7 +35,7 @@ public class ImageController {
 
     @PostMapping("/users/photo-profile")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserImageDTO savePhotoUser(@RequestBody MultipartFile multipartFile, @RequestParam("description") String description) throws IOException {
+    public UserImageDTO savePhotoUser(@RequestBody MultipartFile multipartFile, @RequestParam("description") String description) throws IOException, IllegalAccessException {
         return imageService.savePhotoUser(multipartFile,description);
     }
 
