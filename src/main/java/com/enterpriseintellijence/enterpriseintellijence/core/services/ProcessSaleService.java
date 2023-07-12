@@ -16,7 +16,7 @@ public interface ProcessSaleService {
 
     Transaction payProduct(Order order, User loggedUser, PaymentMethod paymentMethod);
 
-    Delivery sendProduct(Order order, User loggedUser, String shipper);
+    Delivery sendProduct(Order order, User loggedUser, String shipper, Address senderAddress);
 
     Delivery productDelivered(Order order,User loggedUser,Delivery delivery);
 

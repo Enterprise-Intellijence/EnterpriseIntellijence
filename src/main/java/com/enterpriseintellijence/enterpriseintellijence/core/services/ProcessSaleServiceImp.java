@@ -139,7 +139,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     }
 
     @Override
-    public Delivery sendProduct(Order order, User loggedUser, String shipper) {
+    public Delivery sendProduct(Order order, User loggedUser, String shipper, Address senderAddress) {
         Delivery delivery = new Delivery();
         LocalDateTime now = timeNow();
 
@@ -156,10 +156,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
 
         delivery.setShipper(shipper);
 
-        for (Address address:loggedUser.getAddresses()){
-            if(address.isDefault())
-                delivery.setSenderAddress(address);
-        }
+        delivery.setSenderAddress(senderAddress);
         delivery.setReceiverAddress(order.getDeliveryAddress());
 
         orderRepository.save(order);
