@@ -109,8 +109,10 @@ public class ProductServiceImp implements ProductService {
             throw new IllegalAccessException("Cannot update product of others");
 
         //un prodotto può essere modificato solo se non esiste un ordine in corso
-        if (product.getOrder() != null)
+        if (!product.getAvailability().equals(Availability.AVAILABLE) && !product.getOrder().isEmpty()){
             throw new IllegalAccessException("Cannot update product while order is active");
+
+        }
 
 
         if (patch.getDescription() != null && !product.getDescription().equals(patch.getDescription()))
@@ -120,9 +122,6 @@ public class ProductServiceImp implements ProductService {
         product.setTitle(patch.getTitle());
         product.setCondition(patch.getCondition());
 
-
-
-        // TODO: 28/05/2023 serve che restituisco il custom money nella funzione?
         product.setProductCost(checkAndChangeCustomMoney(product.getProductCost(), patch.getProductCost()));
         product.setDeliveryCost(checkAndChangeCustomMoney(product.getDeliveryCost(), patch.getDeliveryCost()));
 
