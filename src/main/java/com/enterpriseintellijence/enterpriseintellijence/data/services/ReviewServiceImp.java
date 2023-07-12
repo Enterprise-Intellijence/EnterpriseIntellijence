@@ -43,7 +43,7 @@ public class ReviewServiceImp implements ReviewService {
     @Transactional
     public ReviewDTO createReview(ReviewCreateDTO reviewDTO) throws IllegalAccessException {
 
-        Order order = orderRepository.findById(v.getOrderId()).orElseThrow(EntityNotFoundException::new);
+        Order order = orderRepository.findById(reviewDTO.getOrderId()).orElseThrow(EntityNotFoundException::new);
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
         if(order.getProduct().getSeller().getId().equals(loggedUser.getId()))
