@@ -563,7 +563,7 @@ public class Demo {
                     if(!isDelivered)
                         deliveryStatus = DeliveryStatus.SHIPPED;
                     Delivery delivery =Delivery.builder()
-                            .order(order)
+                            .order(null)
                             .sendTime(LocalDateTime.now())
                             .deliveredTime(LocalDateTime.now())
                             .deliveryCost(order.getProduct().getDeliveryCost())
@@ -576,7 +576,7 @@ public class Demo {
                         order.setState(OrderState.DELIVERED);
                     else
                         order.setState(OrderState.SHIPPED);
-                    deliveryRepository.save(delivery);
+                    order.setDelivery(delivery);
                     orderRepository.save(order);
                     if(order.getState().equals(OrderState.DELIVERED)){
                         order.setState(OrderState.COMPLETED);
