@@ -577,6 +577,7 @@ public class Demo {
                     else
                         order.setState(OrderState.SHIPPED);
                     deliveryRepository.save(delivery);
+                    order.setDelivery(delivery);
                     orderRepository.save(order);
                     if(order.getState().equals(OrderState.DELIVERED)){
                         order.setState(OrderState.COMPLETED);
