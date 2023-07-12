@@ -36,7 +36,6 @@ public class Demo {
     private final ArrayList<String> urlImageList = new ArrayList<>(Arrays.asList("images/product_photos/examples/1.jpeg",
             "images/product_photos/examples/2.jpeg",
             "images/product_photos/examples/3.jpeg",
-            "images/product_photos/examples/4.jpeg",
             "images/product_photos/examples/5.jpeg",
             "images/product_photos/examples/6.jpeg",
             "images/product_photos/examples/7.jpeg",
@@ -53,13 +52,14 @@ public class Demo {
             "images/product_photos/examples/18.jpeg",
             "images/product_photos/examples/19.jpeg",
             "images/product_photos/examples/20.jpeg",
-            "images/product_photos/examples/21.jpeg",
             "images/product_photos/examples/22.jpeg",
             "images/product_photos/examples/23.jpeg",
             "images/product_photos/examples/24.jpeg",
             "images/product_photos/examples/25.jpeg",
             "images/product_photos/examples/26.jpeg",
-            "images/product_photos/examples/27.jpeg"));
+            "images/product_photos/examples/27.jpeg"
+
+    ));
     private ArrayList<Product> tempProduct;
     private ArrayList<ProductCategory> categories;
     private ArrayList<Size> sizes;
@@ -100,7 +100,7 @@ public class Demo {
         try{
             for(User user:userArrays){
                 createProduct(user);
-                //setFollower(user);
+                setFollower(user);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -125,7 +125,7 @@ public class Demo {
            int m= random.nextInt(100);
            int n= random.nextInt(5);
 
-            if(m<12){
+            if(m<20){
                for(int l=0;l<n;l++){
                    Report report = new Report();
                    report.setReporterUser(user);
@@ -153,7 +153,7 @@ public class Demo {
 
     public void createUser() throws IOException {
 
-        for (int i=0; i<50;i++){
+        for (int i=0; i<55;i++){
             User user = new User();
             if(i==0) {
                 user.setUsername("superadmin");
@@ -197,7 +197,7 @@ public class Demo {
             Address address = new Address();
             setParameterToAddress(address, String.valueOf(i+1),userArrays.get(i),userArrays.get(i).getUsername(),true);
             addressRepository.save(address);
-            int n= random.nextInt(0,3);
+            int n= random.nextInt(3);
             for(int l=1;l<=n;l++){
                 address = new Address();
                 String val = (i+1) + " . " +l;
@@ -441,9 +441,9 @@ public class Demo {
             productArrayList.add(product);
 
             int n = productArrayList.indexOf(product);
-            product.setTitle("Title product "+n);
             product.setDescription(description);
             product.setBrand(brand.get(random.nextInt(size)));
+            product.setTitle(product.getProductCategory().getTertiaryCat()+" "+product.getBrand()+" "+n);
 
             Double priceProduct = price+random.nextInt(1,1500);
             product.setProductCost(new CustomMoney(priceProduct, Currency.EUR ));
