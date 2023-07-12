@@ -69,7 +69,10 @@ public class OrderServiceImp implements OrderService {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
 
         // TODO: 05/06/2023
-        if (loggedUser.getId().equals(order.getUser().getId()) && order.getState().equals(OrderState.DELIVERED) && patch.getState().equals(OrderState.COMPLETED)) {
+        if (loggedUser.getId().equals(order.getUser().getId()) && order.getState().equals(OrderState.PENDING) && patch.getState().equals(OrderState.CANCELED)) {
+            processSaleServiceImp.cancelOrder(order,loggedUser);
+        }
+        else if (loggedUser.getId().equals(order.getUser().getId()) && order.getState().equals(OrderState.DELIVERED) && patch.getState().equals(OrderState.COMPLETED)) {
             processSaleServiceImp.completeOrder(order,loggedUser);
         }
         else if(patch.getDeliveryAddress()!=null && !patch.getDeliveryAddress().getId().equals(order.getDeliveryAddress().getId())){
