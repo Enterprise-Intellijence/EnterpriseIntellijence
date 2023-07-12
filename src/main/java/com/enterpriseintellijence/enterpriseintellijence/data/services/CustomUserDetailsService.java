@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

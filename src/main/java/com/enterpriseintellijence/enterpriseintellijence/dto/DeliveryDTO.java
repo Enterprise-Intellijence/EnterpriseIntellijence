@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.DeliveryStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

@@ -6,7 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OfferState;
 
 
 public interface OfferService {
-    public OfferDTO createOffer(OfferCreateDTO offerCreateDTO) throws IllegalAccessException;
+    OfferDTO createOffer(OfferCreateDTO offerCreateDTO) throws IllegalAccessException;
 
     OfferDTO updateOfferState(String id, OfferState state) throws IllegalAccessException;
 

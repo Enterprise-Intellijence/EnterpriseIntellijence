@@ -1,10 +1,7 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
-import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;

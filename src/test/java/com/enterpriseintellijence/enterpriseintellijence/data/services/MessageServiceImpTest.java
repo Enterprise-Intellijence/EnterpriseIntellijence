@@ -1,25 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.services;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Message;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
-import com.enterpriseintellijence.enterpriseintellijence.data.repository.MessageRepository;
-import com.enterpriseintellijence.enterpriseintellijence.dto.MessageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.UserDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Provider;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
-import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

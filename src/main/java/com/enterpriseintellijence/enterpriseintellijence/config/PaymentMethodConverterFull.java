@@ -2,7 +2,6 @@ package com.enterpriseintellijence.enterpriseintellijence.config;
 
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.PaymentMethod;
 import com.enterpriseintellijence.enterpriseintellijence.dto.PaymentMethodDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.PaymentMethodBasicDTO;
 import org.modelmapper.AbstractConverter;
 import org.springframework.stereotype.Service;
 

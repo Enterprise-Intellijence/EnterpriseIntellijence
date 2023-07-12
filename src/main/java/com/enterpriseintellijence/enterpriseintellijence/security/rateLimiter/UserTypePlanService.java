@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.security.rateLimiter;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import io.github.bucket4j.Bucket;
 import org.springframework.stereotype.Component;
 

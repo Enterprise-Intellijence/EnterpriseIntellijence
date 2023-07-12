@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.repository;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Address;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.User;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import jakarta.transaction.Transactional;
@@ -11,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,String>, JpaSpecificationExecutor<User> {

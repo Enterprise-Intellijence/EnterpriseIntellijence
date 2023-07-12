@@ -1,18 +1,11 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.ProductImageDTO;
-import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
-import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.util.bcel.Const;
 import org.hibernate.annotations.GenericGenerator;
-
-import java.util.List;
 
 @Data
 @Builder

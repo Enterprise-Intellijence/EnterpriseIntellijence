@@ -1,6 +1,5 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.repository;
 
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.ProductImage;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.UserImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -17,24 +17,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
 public class Demo {
-    private ArrayList<User> userArrays = new ArrayList<>();
-    private ArrayList<Product> productArrayList =new ArrayList<>();;
-    private String description = "The standard Lorem Ipsum passage, used since the 1500s\n" ;
-    private ArrayList<String> brand =new ArrayList<>();
-    private ArrayList<String> urlImageUserList = new ArrayList<>(Arrays.asList(
+    private final ArrayList<User> userArrays = new ArrayList<>();
+    private final ArrayList<Product> productArrayList =new ArrayList<>();
+    private final String description = "The standard Lorem Ipsum passage, used since the 1500s\n" ;
+    private final ArrayList<String> brand =new ArrayList<>();
+    private final ArrayList<String> urlImageUserList = new ArrayList<>(Arrays.asList(
             "images/user_photos/examples/foto_profilo1.jpg",
             "images/user_photos/examples/foto_profilo2.jpg",
             "images/user_photos/examples/foto_profilo3.jpg",
             "images/user_photos/examples/foto_profilo4.jpg",
             "images/user_photos/examples/foto_profilo5.jpg"
     ));
-    private ArrayList<String> urlImageList = new ArrayList<>(Arrays.asList("images/product_photos/examples/1.jpeg",
+    private final ArrayList<String> urlImageList = new ArrayList<>(Arrays.asList("images/product_photos/examples/1.jpeg",
             "images/product_photos/examples/2.jpeg",
             "images/product_photos/examples/3.jpeg",
             "images/product_photos/examples/4.jpeg",
@@ -322,10 +321,7 @@ public class Demo {
             paymentMethod.setExpiryDate(LocalDate.parse("30-03-2025", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             paymentMethod.setOwner(user.getUsername()+" "+user.getUsername());
             paymentMethod.setOwnerUser(user);
-            if(i==1)
-                paymentMethod.setDefault(true);
-            else
-                paymentMethod.setDefault(false);
+            paymentMethod.setDefault(i == 1);
             paymentMethodRepository.save(paymentMethod);
 
         }
@@ -683,9 +679,7 @@ public class Demo {
     private void rejectOrAcceptOffer(Offer offer,List<Product> offerAccepted) {
         Random random = new Random();
         int prob = random.nextInt(101);
-        boolean isAccepted=false;
-        if(prob>75)
-            isAccepted=true;
+        boolean isAccepted= prob > 75;
         if(isAccepted ){
             if(offerAccepted.isEmpty() || !offerAccepted.contains(offer.getProduct())){
                 offer.setState(OfferState.ACCEPTED);

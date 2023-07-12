@@ -14,7 +14,7 @@ public interface OrderService {
     OrderDTO updateOrder(String id, OrderDTO orderDTO) throws IllegalAccessException;
     void deleteOrder(String id) throws IllegalAccessException;
     OrderDTO getOrderById(String id) throws IllegalAccessException;
-    public Page<OrderBasicDTO> findAllMyOrdersByState(Pageable pageable, OrderState state);
+    Page<OrderBasicDTO> findAllMyOrdersByState(Pageable pageable, OrderState state);
 
     Page<OrderBasicDTO> findAllMySellerOrdersByState(Pageable pageable, OrderState state);
 }

@@ -9,12 +9,10 @@ import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRe
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.CustomMoneyDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.OrderDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.AddressCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.DeliveryCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.DeliveryStatus;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.TransactionState;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
@@ -26,8 +24,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

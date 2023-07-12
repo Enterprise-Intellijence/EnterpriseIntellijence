@@ -1,8 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Availability;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Condition;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ProductSize;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
@@ -10,12 +8,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @ToString

@@ -4,9 +4,7 @@ import com.enterpriseintellijence.enterpriseintellijence.data.entities.*;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.embedded.CustomMoney;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.OrderRepository;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.NotificationService;
-import com.enterpriseintellijence.enterpriseintellijence.dto.DeliveryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.OfferDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.TransactionDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.creation.OfferCreateDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.management.modelmbean.ModelMBean;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Random;

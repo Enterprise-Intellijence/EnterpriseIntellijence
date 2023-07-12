@@ -3,7 +3,6 @@ package com.enterpriseintellijence.enterpriseintellijence.dto.creation;
 import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

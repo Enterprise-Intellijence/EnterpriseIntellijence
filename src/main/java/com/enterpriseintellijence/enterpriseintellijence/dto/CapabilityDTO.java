@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.dto;
 
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data

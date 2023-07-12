@@ -1,7 +1,6 @@
 package com.enterpriseintellijence.enterpriseintellijence.controller;
 
 import com.enterpriseintellijence.enterpriseintellijence.core.services.AdministrationService;
-import com.enterpriseintellijence.enterpriseintellijence.data.entities.Size;
 import com.enterpriseintellijence.enterpriseintellijence.data.services.UserService;
 import com.enterpriseintellijence.enterpriseintellijence.dto.ProductCategoryDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.SizeDTO;

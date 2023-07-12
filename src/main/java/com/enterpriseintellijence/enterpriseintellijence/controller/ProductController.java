@@ -7,7 +7,6 @@ import com.enterpriseintellijence.enterpriseintellijence.data.services.ProductSe
 import com.enterpriseintellijence.enterpriseintellijence.data.specification.ProductSpecification;
 import com.enterpriseintellijence.enterpriseintellijence.dto.*;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OfferBasicDTO;
-import com.enterpriseintellijence.enterpriseintellijence.dto.basics.OrderBasicDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.ProductBasicDTO;
 
 import com.enterpriseintellijence.enterpriseintellijence.dto.basics.UserBasicDTO;
@@ -17,7 +16,6 @@ import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,8 @@
 package com.enterpriseintellijence.enterpriseintellijence.data.entities;
 
-import com.enterpriseintellijence.enterpriseintellijence.dto.AddressDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.OrderState;
 
 import jakarta.persistence.*;
-import jakarta.servlet.annotation.HandlesTypes;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
