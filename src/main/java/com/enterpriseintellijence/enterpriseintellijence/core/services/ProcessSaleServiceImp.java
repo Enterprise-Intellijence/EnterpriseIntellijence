@@ -83,7 +83,6 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.setDeliveryAddress(deliveryAddress);
         product.setAvailability(Availability.PENDING);
         product.setLastUpdateDate(now);
-        // TODO: 11/07/2023 tenere d'occhio al momento del save
         product.getOrder().add(order);
         order.setProduct(product);
 
