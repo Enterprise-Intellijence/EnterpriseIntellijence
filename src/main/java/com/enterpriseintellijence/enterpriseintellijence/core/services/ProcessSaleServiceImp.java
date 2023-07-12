@@ -83,7 +83,6 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
         order.setDeliveryAddress(deliveryAddress);
         product.setAvailability(Availability.PENDING);
         product.setLastUpdateDate(now);
-        // TODO: 11/07/2023 tenere d'occhio al momento del save
         product.getOrder().add(order);
         order.setProduct(product);
 
@@ -139,7 +138,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
     }
 
     @Override
-    public Delivery sendProduct(Order order, User loggedUser, String shipper) {
+    public Delivery sendProduct(Order order, User loggedUser, String shipper, Address senderAddress) {
         Delivery delivery = new Delivery();
         LocalDateTime now = timeNow();
 
@@ -156,10 +155,7 @@ public class ProcessSaleServiceImp implements ProcessSaleService{
 
         delivery.setShipper(shipper);
 
-        for (Address address:loggedUser.getAddresses()){
-            if(address.isDefault())
-                delivery.setSenderAddress(address);
-        }
+        delivery.setSenderAddress(senderAddress);
         delivery.setReceiverAddress(order.getDeliveryAddress());
 
         orderRepository.save(order);

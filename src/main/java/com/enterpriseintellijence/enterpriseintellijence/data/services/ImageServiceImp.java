@@ -60,7 +60,7 @@ public class ImageServiceImp implements ImageService{
         if(loggedUser.getPhotoProfile()!=null)
             throw new IllegalAccessException("Cannot upload more photo, replace previous photo");
 
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())).replace(":", "");
 
         String localStorageDir = userDir + loggedUser.getUsername();
         UserImage userImage = new UserImage();
@@ -78,7 +78,8 @@ public class ImageServiceImp implements ImageService{
     @Override
     public void replacePhotoUser(String id, MultipartFile multipartFile) throws IOException {
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename()).replace(":", "");
+
         UserImage userImage = userImageRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
         String uploadDir = userDir + loggedUser.getUsername();

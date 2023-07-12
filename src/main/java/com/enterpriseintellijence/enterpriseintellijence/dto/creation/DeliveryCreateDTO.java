@@ -16,4 +16,7 @@ public class DeliveryCreateDTO {
 
     @Length(max = 50)
     private String shipper;
+
+    @NotNull
+    private String senderAddressId;
 }
