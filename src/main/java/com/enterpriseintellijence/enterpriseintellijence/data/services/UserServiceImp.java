@@ -468,7 +468,6 @@ public class UserServiceImp implements UserService{
         User user = userRepository.findByUsername(username);
 
         Page<Product> products =productRepository.findAllByVisibilityAndUsersThatLiked(Visibility.PUBLIC,user,PageRequest.of(page,size));
-        //System.out.println(products.getTotalElements());
 
         List<ProductBasicDTO> collect = products.stream().map(s->modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
         return new PageImpl<>(collect,PageRequest.of(page,size), products.getTotalElements());

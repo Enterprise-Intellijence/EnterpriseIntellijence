@@ -326,7 +326,6 @@ public class ProductServiceImp implements ProductService {
     @Override
     public String getCategoryId(String category) {
         String id =  productCatRepository.findProductCategoryByTertiaryCat(category).getId();
-        System.out.println("categoryId: " + id);
         return id;
     }
 

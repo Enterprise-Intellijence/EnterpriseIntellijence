@@ -51,7 +51,6 @@ public class Oauth2GoogleValidation {
 
 
         } else {
-            System.out.println("Invalid ID token.");
             throw new Exception("Invalid ID token.");
         }
     }

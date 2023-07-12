@@ -40,7 +40,6 @@ public class ProductController {
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@RequestBody @Valid ProductCreateDTO productCreateDTO) throws IllegalAccessException {
-        System.out.println("product: " + productCreateDTO);
         return productService.createProduct(productCreateDTO);
     }
 

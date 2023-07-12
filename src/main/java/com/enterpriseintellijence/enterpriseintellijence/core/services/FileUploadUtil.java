@@ -19,8 +19,7 @@ public class FileUploadUtil {
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
-        }else
-            System.out.println("esisto");
+        }
 
 
         byte[] compressedImage ;
