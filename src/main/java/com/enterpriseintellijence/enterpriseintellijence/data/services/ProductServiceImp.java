@@ -177,7 +177,7 @@ public class ProductServiceImp implements ProductService {
         if (loggedUser.getRole().equals(UserRole.USER) && !product.getSeller().getId().equals(loggedUser.getId()))
             throw new IllegalAccessException("Cannot delete product of others");
 
-        if (product.getOrder().isEmpty())
+        if (!product.getOrder().isEmpty())
             throw new IllegalAccessException("Cannot delete product with order active");
 
         //Avvisiamo un utente che aveva messo like al prodotto che questo è stato venduto o rimosso dal venditore
