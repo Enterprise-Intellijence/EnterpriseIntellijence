@@ -22,6 +22,11 @@ We've created an endpoint to populate the database with some fake data.
 
 You can access it at the following url: <http://localhost:8080/api/v1/demo>
 
+If you want to log in with a user created by this endpoint, the credentials are:
+
+username: 'username<user_number>'
+password: 'password<user_number>'
+
 ## Basepath setup
 
 we're assuming that you're using the default port (8080) and that you're running the application locally.
