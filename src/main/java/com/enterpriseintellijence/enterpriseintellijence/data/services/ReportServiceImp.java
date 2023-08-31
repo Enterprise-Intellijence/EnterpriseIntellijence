@@ -44,6 +44,7 @@ public class ReportServiceImp implements ReportService {
                 throw new RuntimeException("Product not found");
             }
         }
+        reportDTO.setDescription(reportDTO.getDescription().trim());
         reportDTO.setStatus(ReportStatus.PENDING);
         reportDTO.setDate(LocalDateTime.now());
         reportDTO.setLastUpdate(LocalDateTime.now());
