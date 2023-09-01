@@ -6,6 +6,7 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.ReportStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ public class ReportDTO {
 
     private UserBasicDTO reporterUser;
 
+    @Length(max = 200)
     private String description;
 
     private UserBasicDTO reportedUser;
