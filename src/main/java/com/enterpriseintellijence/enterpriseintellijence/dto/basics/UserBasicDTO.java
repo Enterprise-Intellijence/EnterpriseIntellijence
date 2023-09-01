@@ -4,6 +4,7 @@ package com.enterpriseintellijence.enterpriseintellijence.dto.basics;
 import com.enterpriseintellijence.enterpriseintellijence.dto.UserImageDTO;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -21,6 +22,7 @@ public class UserBasicDTO {
     @NotNull
     private String username;
 
+    @Length(max = 500)
     private String bio;
 
     private UserImageDTO photoProfile;
