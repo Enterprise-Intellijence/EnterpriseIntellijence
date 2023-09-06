@@ -148,7 +148,6 @@ public class ProductController {
 
     @GetMapping("/filter")
     public ResponseEntity<Page<ProductBasicDTO>> getFilteredProducts(
-        // TODO: 03/06/2023 cambiare nome a like e view
         @RequestParam(required = false) String title,
         @RequestParam(required = false) String description,
         @RequestParam(required = false) Double minProductCost,

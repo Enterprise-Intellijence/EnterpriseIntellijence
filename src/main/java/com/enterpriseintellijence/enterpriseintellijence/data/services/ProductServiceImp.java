@@ -176,6 +176,14 @@ public class ProductServiceImp implements ProductService {
             ));
 
         User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        String loggedUseridString = "";
+        if (loggedUser != null){
+           loggedUseridString = loggedUser.getId();
+        }
+
+        //TODO: to complete
+        if(!product.getSeller().getId().equals(loggedUseridString) && product.getSeller().getStatus().equals(UserStatus.HOLIDAY))
+            throw new EntityNotFoundException("Product not found HOLIDAY");
 
         if (loggedUser != null && product.getSeller().getId().equals(loggedUser.getId()) && loggedUser.getRole().equals(UserRole.USER))
             return mapToProductDetailsDTO(product);
@@ -234,8 +242,16 @@ public class ProductServiceImp implements ProductService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+        String loggedUseridString;
+        if (loggedUser != null){
+            loggedUseridString = loggedUser.getId();
+        } else {
+            loggedUseridString = "";
+        }
+
         Page<Product> products = productRepository.findAll(withFilters, pageable);
-        List<ProductBasicDTO> collect = products.stream().map(s -> modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+        List<ProductBasicDTO> collect = products.stream().filter(product -> product.getSeller().getId().equals(loggedUseridString) || product.getSeller().getStatus().equals(UserStatus.ACTIVE)).map(s -> modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect, pageable, products.getTotalElements());
     }
