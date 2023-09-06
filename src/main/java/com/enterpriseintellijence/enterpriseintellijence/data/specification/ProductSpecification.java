@@ -43,12 +43,10 @@ public class ProductSpecification {
         private HomeMaterial homeMaterial;
 
         public void setSeller(String userID) {
-            //TODO: to complete
-            if (userID != null && userRepository.findById(userID).get().getStatus() != UserStatus.HOLIDAY) {
+            if (userID != null) {
                 Optional<User> user = userRepository.findById(userID);
                 this.seller = user.get();
             }
-
         }
 
     }

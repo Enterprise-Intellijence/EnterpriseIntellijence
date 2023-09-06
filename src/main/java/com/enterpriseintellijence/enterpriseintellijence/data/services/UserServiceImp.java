@@ -128,8 +128,12 @@ public class UserServiceImp implements UserService{
     @Override
     public UserBasicDTO findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if (!user.getStatus().equals(UserStatus.ACTIVE))
+        if (!user.getStatus().equals(UserStatus.ACTIVE)){
+            if(user.getStatus().equals(UserStatus.HOLIDAY))
+                return mapToBasicDto(user);
             throw new EntityNotFoundException();
+
+        }
         return mapToBasicDto(user);
     }
 
@@ -513,6 +517,9 @@ public class UserServiceImp implements UserService{
         return mapToDto(user.getAddresses().stream().filter(Address::isDefault).findFirst().orElseThrow(EntityNotFoundException::new));
     }
 
+    @Override
+    public void userHoliday(String userId) {
+    }
 
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}

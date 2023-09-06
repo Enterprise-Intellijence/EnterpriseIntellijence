@@ -90,4 +90,6 @@ public interface UserService {
     UserDTO findMyProfile();
 
     AddressDTO getDefaultAddress(String userId);
+
+    void userHoliday(String userId);
 }

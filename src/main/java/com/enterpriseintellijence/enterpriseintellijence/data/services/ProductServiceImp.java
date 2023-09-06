@@ -251,7 +251,8 @@ public class ProductServiceImp implements ProductService {
         }
 
         Page<Product> products = productRepository.findAll(withFilters, pageable);
-        List<ProductBasicDTO> collect = products.stream().filter(product -> product.getSeller().getId().equals(loggedUseridString) || product.getSeller().getStatus().equals(UserStatus.ACTIVE)).map(s -> modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
+
+        List<ProductBasicDTO> collect = products.stream()/*.filter(/product -> product.getSeller().getId().equals(loggedUseridString) || product.getSeller().getStatus().equals(UserStatus.ACTIVE))*/.map(s -> modelMapper.map(s, ProductBasicDTO.class)).collect(Collectors.toList());
 
         return new PageImpl<>(collect, pageable, products.getTotalElements());
     }
