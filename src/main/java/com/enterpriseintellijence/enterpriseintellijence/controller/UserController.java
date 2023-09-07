@@ -130,6 +130,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping ("/userHoliday")
+    public ResponseEntity<Void> userHoliday(@RequestParam("id") String id){
+        userService.userHoliday(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/getNewPassword")
     public ResponseEntity<Void> resetPasswordToken(@RequestParam("token") String token) throws EntityNotFoundException, ParseException, JOSEException, MessagingException {
         userService.changePassword(token);

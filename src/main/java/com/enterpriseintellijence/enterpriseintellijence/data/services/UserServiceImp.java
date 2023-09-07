@@ -519,6 +519,18 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void userHoliday(String userId) {
+        User userToChange = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        User loggedUser = jwtContextUtils.getUserLoggedFromContext();
+
+        if(userToChange != loggedUser){
+            throw new IllegalArgumentException("Cannot change another user");
+        }
+
+        if (userToChange.getStatus().equals(UserStatus.ACTIVE))
+            userToChange.setStatus(UserStatus.HOLIDAY);
+        else
+            userToChange.setStatus(UserStatus.ACTIVE);
+        userRepository.save(userToChange);
     }
 
 
