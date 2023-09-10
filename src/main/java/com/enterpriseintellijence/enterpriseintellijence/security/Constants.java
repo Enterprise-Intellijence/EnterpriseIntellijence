@@ -6,7 +6,6 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class Constants {
-
     public static String BASE_PATH = "";
 
     static {
@@ -29,8 +28,9 @@ public class Constants {
     }
 
     public static final String TOKEN_SECRET_KEY = "KEcrS2JQZVNoVm1ZcTN0Nnc5eiRDJkYpSEBNY1FmVGo=";
-
     public static final String STANDARD_GOOGLE_ACCOUNT_PASSWORD = "BallSoHard-MotherfuckersWannaFineMe";
+    public static final String STANDARD_KEYCLOAK_ACCOUNT_PASSWORD = "ItWasAlwaysMeVersusTheWorld-UntilIFoundItsMeVersusMe";
+    public static final String STANDARD_USER_ACCOUNT_PHOTO_KEYCLOAK = "images/user_photos/examples/foto_profilo5.jpg";
     public static final int JWT_EXPIRATION_TIME = 60;  // in minutes
     public static final int JWT_REFRESH_EXPIRATION_TIME = 24;  // in hours
     public static final int JWT_CAPABILITY_EXPIRATION_TIME = 1;  // in hours
