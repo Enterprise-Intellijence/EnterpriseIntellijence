@@ -139,7 +139,7 @@ public class UserServiceImp implements UserService{
 
     public Optional<UserDTO> findByUsername(String username) {
         User user= userRepository.findByUsername(username);
-        if (user==null || !user.getStatus().equals(UserStatus.ACTIVE))
+        if (user==null || user.getStatus().equals(UserStatus.BANNED) || user.getStatus().equals(UserStatus.CANCELLED) || user.getStatus().equals(UserStatus.HIDDEN))
             return Optional.empty();
         return Optional.of(mapToDto(user));
     }
