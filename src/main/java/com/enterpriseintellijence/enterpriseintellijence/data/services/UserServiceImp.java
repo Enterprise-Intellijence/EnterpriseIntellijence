@@ -33,7 +33,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -222,11 +224,40 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    public Map<String, String> keycloakAuth(@AuthenticationPrincipal Jwt jwt) {
+        try {
+
+            // add jwt validation
+            // Map<String, String> userInfo = oauth2KeycloakValidation.validate(code);
+
+            Pair<Boolean, UserDTO> pair = processOAuthPostLogin(jwt.getClaimAsString("name"), jwt.getClaimAsString("email"));
+
+            if(!pair.getUserExists()) {
+                UserImage userImage = new UserImage();
+                userImage.setUrlPhoto(Constants.STANDARD_USER_ACCOUNT_PHOTO_KEYCLOAK);
+                userImage.setUser(mapToEntity(pair.getUser()));
+                imageService.saveUserImage(userImage);
+            }
+
+            return authenticateUser(pair.getUser().getUsername(), Constants.STANDARD_KEYCLOAK_ACCOUNT_PASSWORD, Provider.KEYCLOAK);
+        }
+        catch (Exception e) {
+            log.error("Error validating keycloak token: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Error validating keycloak token", e);
+        }
+    }
+
+    @Override
     public Map<String, String> authenticateUser(String username, String password, Provider provider) throws JOSEException {
         User u = userRepository.findByUsername(username);
         if(!provider.equals(Provider.GOOGLE) && password.equals(Constants.STANDARD_GOOGLE_ACCOUNT_PASSWORD)
             && u.getProvider().equals(Provider.GOOGLE))
             throw new IllegalArgumentException("You cannot login with password with a google linked account");
+
+        if(!provider.equals(Provider.KEYCLOAK) && password.equals(Constants.STANDARD_KEYCLOAK_ACCOUNT_PASSWORD)
+            && u.getProvider().equals(Provider.KEYCLOAK))
+            throw new IllegalArgumentException("You cannot login with password with a keycloak linked account");
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         String accessToken = tokenStore.createAccessToken(Map.of("username", username, "role", u.getAuthorities().toString()));
         String refreshToken = tokenStore.createRefreshToken(username);
@@ -532,7 +563,6 @@ public class UserServiceImp implements UserService{
             userToChange.setStatus(UserStatus.ACTIVE);
         userRepository.save(userToChange);
     }
-
 
     public User mapToEntity(UserDTO userDTO){return modelMapper.map(userDTO, User.class);}
     public UserDTO mapToDto(User user){return modelMapper.map(user, UserDTO.class);}

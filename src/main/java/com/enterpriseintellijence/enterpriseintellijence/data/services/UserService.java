@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,6 +36,10 @@ public interface UserService {
     Optional<UserDTO> findByUsername(String username);
 
     Map<String, String> googleAuth(String code) throws Exception;
+
+    Map<String, String> keycloakAuth(String idTokenString);
+
+    Map<String, String> keycloakAuth(@AuthenticationPrincipal Jwt jwt);
 
     Map<String, String> authenticateUser(String username, String password, Provider provider) throws JOSEException;
 
