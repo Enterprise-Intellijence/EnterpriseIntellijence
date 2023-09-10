@@ -102,6 +102,16 @@ public class UserController {
         return ResponseEntity.ok(userService.googleAuth(body.getCredential()));
     }
 
+    @PostMapping("/keycloak-auth")
+    public ResponseEntity<Map<String, String>> keycloakAuth(@RequestParam String idTokenString) throws Exception {
+        return ResponseEntity.ok(userService.keycloakAuth(idTokenString));
+    }
+
+    @PostMapping(value = "/login-with-keycloak", consumes = "application/x-www-form-urlencoded;charset=UTF-8")
+    public ResponseEntity<Map<String, String>> loginWithKeycloak(String body) throws Exception {
+        return ResponseEntity.ok(userService.keycloakAuth(body));
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserDTO> me() throws EntityNotFoundException {
         return ResponseEntity.ok(userService.findMyProfile());
