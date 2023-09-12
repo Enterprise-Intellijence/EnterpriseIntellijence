@@ -39,8 +39,6 @@ public interface UserService {
 
     Map<String, String> keycloakAuth(String idTokenString);
 
-    Map<String, String> keycloakAuth(@AuthenticationPrincipal Jwt jwt);
-
     Map<String, String> authenticateUser(String username, String password, Provider provider) throws JOSEException;
 
     ResponseEntity<String> registerUser(String username, String email, String password);

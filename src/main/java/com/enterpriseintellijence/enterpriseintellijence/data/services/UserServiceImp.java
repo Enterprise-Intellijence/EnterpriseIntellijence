@@ -10,11 +10,8 @@ import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserRole;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.UserStatus;
 import com.enterpriseintellijence.enterpriseintellijence.dto.enums.Visibility;
 import com.enterpriseintellijence.enterpriseintellijence.exception.ProductAlreadyLikedException;
-import com.enterpriseintellijence.enterpriseintellijence.security.Constants;
-import com.enterpriseintellijence.enterpriseintellijence.security.JwtContextUtils;
+import com.enterpriseintellijence.enterpriseintellijence.security.*;
 import com.enterpriseintellijence.enterpriseintellijence.exception.IdMismatchException;
-import com.enterpriseintellijence.enterpriseintellijence.security.Oauth2GoogleValidation;
-import com.enterpriseintellijence.enterpriseintellijence.security.TokenStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
@@ -33,9 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -66,8 +61,8 @@ public class UserServiceImp implements UserService{
     private final EmailService emailService;
     private final NotificationsRepository notificationsRepository;
     private final Oauth2GoogleValidation oauth2GoogleValidation;
+    private final OAuth2KeycloakValidation oauth2KeycloakValidation;
     private final ImageService imageService;
-
 
 
     public UserDTO createUser(User user) {
@@ -141,7 +136,7 @@ public class UserServiceImp implements UserService{
 
     public Optional<UserDTO> findByUsername(String username) {
         User user= userRepository.findByUsername(username);
-        if (user==null || !user.getStatus().equals(UserStatus.ACTIVE))
+        if (user==null || user.getStatus().equals(UserStatus.BANNED) || user.getStatus().equals(UserStatus.CANCELLED) || user.getStatus().equals(UserStatus.HIDDEN))
             return Optional.empty();
         return Optional.of(mapToDto(user));
     }
@@ -177,7 +172,7 @@ public class UserServiceImp implements UserService{
     }
 
 
-    private Pair<Boolean,UserDTO> processOAuthPostLogin(String username, String email) {
+    private Pair<Boolean,UserDTO> processOAuthPostGoogleLogin(String username, String email) {
 
         User existUser = userRepository.findByEmail(email);
 
@@ -201,12 +196,34 @@ public class UserServiceImp implements UserService{
         return new Pair<>(true, mapToDto(existUser));
     }
 
+    private Pair<Boolean,UserDTO> processOAuthPostKeycloakLogin(String username, String email) {
+        User existUser = userRepository.findByEmail(email);
+
+        if (existUser == null) {
+            User newUser = new User();
+            findBasicByUsername(username).ifPresentOrElse(
+                    user -> newUser.setUsername(username + "_" + UUID.randomUUID().toString().substring(0, 7)),
+                    () -> newUser.setUsername(username));
+            newUser.setUsername(username);
+            newUser.setProvider(Provider.KEYCLOAK);
+            newUser.setPassword(passwordEncoder.encode(Constants.STANDARD_KEYCLOAK_ACCOUNT_PASSWORD));
+            newUser.setEmail(email);
+            newUser.setRole(UserRole.USER);
+            newUser.setFollowersNumber(0);
+            newUser.setFollowingNumber(0);
+            newUser.setReviewsTotalSum(0);
+            newUser.setReviewsNumber(0);
+            newUser.setEmailVerified(true);
+            return new Pair<>(false, createUser(newUser));
+        }
+        return new Pair<>(true, mapToDto(existUser));
+    }
     @Override
     public Map<String, String> googleAuth(String code) throws Exception {
         try {
 
             Map<String, String> userInfo = oauth2GoogleValidation.validate(code);
-            Pair<Boolean, UserDTO> pair = processOAuthPostLogin(userInfo.get("name"), userInfo.get("email"));
+            Pair<Boolean, UserDTO> pair = processOAuthPostGoogleLogin(userInfo.get("name"), userInfo.get("email"));
 
             if(!pair.getUserExists()) {
                 UserImage userImage = new UserImage();
@@ -224,13 +241,11 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public Map<String, String> keycloakAuth(@AuthenticationPrincipal Jwt jwt) {
+    public Map<String, String> keycloakAuth(String code) {
         try {
 
-            // add jwt validation
-            // Map<String, String> userInfo = oauth2KeycloakValidation.validate(code);
-
-            Pair<Boolean, UserDTO> pair = processOAuthPostLogin(jwt.getClaimAsString("name"), jwt.getClaimAsString("email"));
+            Map<String, String> userInfo = oauth2KeycloakValidation.validate(code);
+            Pair<Boolean, UserDTO> pair = processOAuthPostKeycloakLogin(userInfo.get("name"), userInfo.get("email"));
 
             if(!pair.getUserExists()) {
                 UserImage userImage = new UserImage();
