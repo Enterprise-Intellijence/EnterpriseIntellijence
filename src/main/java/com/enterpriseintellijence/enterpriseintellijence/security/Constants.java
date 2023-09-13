@@ -28,10 +28,10 @@ public class Constants {
     }
 
     public static final String TOKEN_SECRET_KEY = "KEcrS2JQZVNoVm1ZcTN0Nnc5eiRDJkYpSEBNY1FmVGo=";
-    public static final String KEYCLOAK_SECRET_KEY ="6a4ad2a0-8a93-4ebb-b245-921847868499";
+    public static final String KEYCLOAK_SECRET_KEY ="bTJlZXBCX3N6MllreFN6ajNrUUFkcy1COEgtX0xFc0Z1Q3pTcGNhcDJsTXo5blowMGJWMkUzUE1JLU1IMnV3Q2NHc01iTTNyZUZwWlJHS2prY21FS3MyTkEzcVloZmR5dDFuOHlDY1RKbmo3U3M4eDlhNWxfelhtRUhIdnZRNHAwb2JtcWw5WkRXY2J4cVRpS3hpR3dYOWlKYnFZa1VRMzNnUTV2cVJsbTM1T0w5MnlMemhqMm5yblk2WmRGQ3JEbnNBRlUwR2Iycmh3RjJHSnlIUUpEUnlkbVYyWGtQSVVMc1VRSUwyRjZDVEFZN0lwbno2Y29weWZxNGdxMTNyRW15V3pmaUwtelhmSE8wcDBZc2RIaEY1UDFYbFFEbEgwUkFTVDZJbEQ5OXU5cFBmMUg2N1pIRnZsWkFWbWdCN3FFN29zWUc3QklrRkI3ZmMzNWRWaGJ3";
     public static final String STANDARD_GOOGLE_ACCOUNT_PASSWORD = "BallSoHard-MotherfuckersWannaFineMe";
     public static final String STANDARD_KEYCLOAK_ACCOUNT_PASSWORD = "ItWasAlwaysMeVersusTheWorld-UntilIFoundItsMeVersusMe";
-    public static final String STANDARD_USER_ACCOUNT_PHOTO_KEYCLOAK = "images/user_photos/examples/foto_profilo6.jpg";
+    public static final String STANDARD_USER_ACCOUNT_PHOTO_KEYCLOAK = "images/user_photos/examples/foto_profilo6.png";
     public static final int JWT_EXPIRATION_TIME = 60;  // in minutes
     public static final int JWT_REFRESH_EXPIRATION_TIME = 24;  // in hours
     public static final int JWT_CAPABILITY_EXPIRATION_TIME = 1;  // in hours
