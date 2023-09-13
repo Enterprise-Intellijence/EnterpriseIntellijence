@@ -3,11 +3,13 @@ package com.enterpriseintellijence.enterpriseintellijence.security;
 import com.enterpriseintellijence.enterpriseintellijence.data.entities.InvalidToken;
 import com.enterpriseintellijence.enterpriseintellijence.data.repository.InvalidTokensRepository;
 import com.enterpriseintellijence.enterpriseintellijence.exception.TokenExpiredException;
+import com.google.api.client.auth.oauth.OAuthHmacSha256Signer;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +23,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.nimbusds.oauth2.sdk.ResponseMode.JWT;
 
 @Service
 @RequiredArgsConstructor
@@ -76,14 +80,20 @@ public class TokenStore {
 
     public String getUser(String token) throws JOSEException, ParseException {
         SignedJWT signedJWT = SignedJWT.parse(token);
-        JWSVerifier jwsVerifier = new MACVerifier(secretKey.getBytes());
+        SignedJWT signedKeycloakJWT = SignedJWT.parse(token);
+        JWSVerifier jwsVerifier = new MACVerifier(Constants.TOKEN_SECRET_KEY.getBytes());
+
         if(signedJWT.verify(jwsVerifier)) {
             if(new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime()) && new Date().after(signedJWT.getJWTClaimsSet().getNotBeforeTime()))
                 return (String) signedJWT.getPayload().toJSONObject().get("username");
             else
                 throw new TokenExpiredException();
+        } else {
+            if (new Date().before(signedKeycloakJWT.getJWTClaimsSet().getExpirationTime()) && new Date().after(signedKeycloakJWT.getJWTClaimsSet().getIssueTime()))
+                return (String) signedKeycloakJWT.getPayload().toJSONObject().get("name");
+            else
+                throw new TokenExpiredException();
         }
-        throw new RuntimeException("Invalid token");
     }
 
     public String getToken(HttpServletRequest request) {
